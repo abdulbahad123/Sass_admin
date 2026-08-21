@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WhiteLabel;
 use App\Http\Controllers\Controller;
 use App\Models\Agency;
 use App\Models\AuditLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
