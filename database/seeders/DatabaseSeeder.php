@@ -21,38 +21,64 @@ class DatabaseSeeder extends Seeder
         \App\Models\Setting::set('platform_name', 'Master SaaS Engine');
 
         // 1. Create Super Admin User
-        $superAdmin = User::updateOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@platform.com'],
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make('password'),
                 'role' => 'super_admin',
                 'status' => 'active',
             ]
         );
 
-        // 2. Create Master Agency: Apex Master Ventures
+        // 2. Create Master Agency: Wezan Technologies / KKK Master
         $masterAgency = Agency::updateOrCreate(
-            ['email' => 'rahul@apexmaster.com'],
+            ['email' => 'abdulbahad.dev@gmail.com'],
             [
-                'name' => 'Apex Master Ventures',
-                'slug' => 'apex-master-ventures',
+                'name' => 'KK Master Agency',
+                'slug' => 'kk-master-agency',
                 'type' => 'master',
-                'owner_name' => 'Rahul Sharma',
-                'custom_domain' => 'app.apexmaster.com',
+                'owner_name' => 'Mohamed Sharieef',
+                'custom_domain' => 'app.kkmaster.com',
                 'status' => 'active',
                 'max_clients' => 500,
             ]
         );
 
-        // Create Master Admin User: Rahul Sharma
-        $masterUser = User::updateOrCreate(
-            ['email' => 'rahul@apexmaster.com'],
+        User::updateOrCreate(
+            ['email' => 'abdulbahad.dev@gmail.com'],
             [
-                'name' => 'Rahul Sharma',
-                'password' => Hash::make('master123'),
+                'name' => 'Mohamed Sharieef',
+                'password' => Hash::make('password'),
                 'role' => 'master_agency',
                 'agency_id' => $masterAgency->id,
+                'status' => 'active',
+            ]
+        );
+
+        // 3. Create White Label Agency: ABC Digital Agency
+        $whiteLabelAgency = Agency::updateOrCreate(
+            ['email' => 'priya@abcdigital.com'],
+            [
+                'name' => 'ABC Digital Agency',
+                'slug' => 'abc-digital-agency',
+                'type' => 'white_label',
+                'parent_id' => $masterAgency->id,
+                'owner_name' => 'Priya Patel',
+                'custom_domain' => 'app.abcdigital.com',
+                'primary_color' => '#3b82f6',
+                'status' => 'active',
+                'max_clients' => 50,
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'priya@abcdigital.com'],
+            [
+                'name' => 'Priya Patel',
+                'password' => Hash::make('password'),
+                'role' => 'white_label_agency',
+                'agency_id' => $whiteLabelAgency->id,
                 'status' => 'active',
             ]
         );
