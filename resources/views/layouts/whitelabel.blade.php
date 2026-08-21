@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'White Label Dashboard') - {{ $agency->name ?? 'Apex Digital Agency' }}</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+        .card-white {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+        }
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+    @stack('styles')
+</head>
+<body class="h-full bg-[#f8fafc] text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm hidden lg:hidden transition-opacity"></div>
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar Navigation (Fixed width 270px, Dark Black Background) -->
+        <aside id="mainSidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-[270px] bg-slate-950 border-r border-slate-800/80 text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0 overflow-y-auto">
+            
+            <div class="p-5 space-y-6">
+                
+                <!-- Brand Header -->
+                <div class="flex items-center justify-between pb-2 border-b border-slate-800/60">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center shadow-lg shadow-blue-600/30">
+                            <i data-lucide="layers" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-extrabold text-white font-heading text-base leading-snug tracking-tight">
+                                {{ $agency->name ?? 'Apex Digital Agency' }}
+                            </h2>
+                            <div class="flex items-center text-[11px] text-slate-400 font-semibold cursor-pointer hover:text-slate-200 transition">
+                                <span>White Label Dashboard</span>
+                                <i data-lucide="chevron-down" class="w-3 h-3 ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="toggleMobileSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Main Active Dashboard Button (Blue background when active) -->
+                <div>
+                    <a href="{{ route('whitelabel.dashboard') }}" 
+                       class="flex items-center space-x-3 px-4 py-3 rounded-2xl font-bold text-xs transition-all duration-200 shadow-md {{ request()->routeIs('whitelabel.dashboard') ? 'bg-blue-600 text-white shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
+                <!-- Nav Group 1: MANAGE -->
+                <div class="space-y-1">
+                    <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Manage</p>
+                    
+                    <a href="{{ route('whitelabel.clients.index') }}" 
+                       class="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.clients.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="users" class="w-4 h-4"></i>
+                            <span>Clients</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold {{ request()->routeIs('whitelabel.clients.*') ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-300' }}">
+                            {{ \App\Models\User::where('agency_id', $agency->id ?? 0)->where('role', 'client')->count() }}
+                        </span>
+                    </a>
+
+                    <a href="{{ route('whitelabel.products.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.products.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="box" class="w-4 h-4"></i>
+                        <span>Products & Access</span>
+                    </a>
+
+                    <a href="{{ route('whitelabel.subscriptions.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.subscriptions.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="repeat" class="w-4 h-4"></i>
+                        <span>Subscriptions</span>
+                    </a>
+
+                    <a href="{{ route('whitelabel.team.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.team.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="user-check" class="w-4 h-4"></i>
+                        <span>Team Members</span>
+                    </a>
+
+                    <a href="{{ route('whitelabel.activity-logs.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.activity-logs.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="activity" class="w-4 h-4"></i>
+                        <span>Activity Logs</span>
+                    </a>
+                </div>
+
+                <!-- Nav Group 2: BILLING & SUPPORT -->
+                <div class="space-y-1 pt-3 border-t border-slate-800/80">
+                    <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Billing & Support</p>
+
+                    <a href="{{ route('whitelabel.billing.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.billing.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="receipt" class="w-4 h-4"></i>
+                        <span>Billing & Invoices</span>
+                    </a>
+                </div>
+
+                <!-- Nav Group 3: CONFIGURATION -->
+                <div class="space-y-1 pt-3 border-t border-slate-800/80">
+                    <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Configuration</p>
+
+                    <a href="{{ route('whitelabel.branding.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.branding.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                        <span>Branding & Settings</span>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Bottom Card: Your Branding -->
+            <div class="p-4 m-4 rounded-2xl bg-gradient-to-tr from-blue-950 via-slate-900 to-indigo-950 border border-slate-800 text-white shadow-xl relative overflow-hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-white">Your Branding</span>
+                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase">Active</span>
+                </div>
+                <div class="space-y-1 mb-3">
+                    <span class="text-[10px] text-slate-400 block font-medium">Custom Domain</span>
+                    <span class="text-xs font-mono font-semibold text-blue-300 block truncate flex items-center">
+                        <i data-lucide="globe" class="w-3.5 h-3.5 mr-1.5 text-blue-400"></i>
+                        {{ $agency->custom_domain ?? 'app.apexdigital.com' }}
+                    </span>
+                </div>
+                <a href="https://{{ $agency->custom_domain ?? 'app.apexdigital.com' }}" target="_blank"
+                   class="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md flex items-center justify-center space-x-1.5 transition-all">
+                    <span>Visit My Store</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+
+        </aside>
+
+        <!-- Main Content View Area -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- Top Navbar -->
+            <header class="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between shrink-0 z-10">
+                
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <button onclick="toggleMobileSidebar()" class="lg:hidden text-slate-500 hover:text-slate-800 p-2 rounded-xl bg-slate-100">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Client Filter Dropdown -->
+                    <div class="hidden sm:block">
+                        <select class="bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition focus:outline-none cursor-pointer">
+                            <option>All Clients</option>
+                            <option>TechNova Solutions</option>
+                            <option>PixelCraft Studio</option>
+                            <option>GreenLeaf Retail</option>
+                            <option>NextGen Creators</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-48 sm:w-80">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+                        <input type="text" placeholder="Search clients, invoices, etc..." 
+                               class="w-full bg-slate-50 border border-slate-200/90 rounded-2xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3 sm:space-x-5">
+                    
+                    <!-- Notification Bell -->
+                    <button class="relative p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-extrabold flex items-center justify-center shadow-md">8</span>
+                    </button>
+
+                    <!-- User Profile Dropdown -->
+                    <div class="flex items-center space-x-3 pl-2 border-l border-slate-200">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold flex items-center justify-center text-xs shadow-md border-2 border-white">
+                            {{ substr($user->name ?? 'Rahul Sharma', 0, 2) }}
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <h4 class="text-xs font-bold text-slate-900 font-heading leading-tight">{{ $user->name ?? 'Rahul Sharma' }}</h4>
+                            <p class="text-[10px] text-slate-400 font-medium">Agency Owner</p>
+                        </div>
+                    </div>
+
+                    <!-- Primary Action Button: + Add New Client -->
+                    <button onclick="document.getElementById('addClientModal').classList.remove('hidden')"
+                            class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center space-x-1.5 transition-all whitespace-nowrap">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add New Client</span>
+                    </button>
+
+                </div>
+
+            </header>
+
+            <!-- Scrollable Page Content -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8">
+                
+                @if(session('success'))
+                    <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                        <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-800"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                @endif
+
+                @yield('content')
+
+                <!-- Footer (Matching Reference Image) -->
+                <footer class="pt-8 pb-4 text-center text-xs text-slate-400 font-medium border-t border-slate-200/60 mt-12">
+                    © 2026 Apex Digital Agency. All rights reserved.
+                </footer>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Modal: Add New Client -->
+    <div id="addClientModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-900 font-heading">Onboard New End-Client</h3>
+                <button onclick="document.getElementById('addClientModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form action="{{ route('whitelabel.clients.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Client / Business Name</label>
+                    <input type="text" name="name" placeholder="e.g. TechNova Solutions" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Contact Email</label>
+                    <input type="email" name="email" placeholder="owner@technova.com" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Assign Client Package</label>
+                    <select name="plan" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none">
+                        <option value="Starter">Starter Package (₹999/mo)</option>
+                        <option value="Growth">Growth Package (₹2,999/mo)</option>
+                        <option value="Enterprise">Enterprise Package (₹7,999/mo)</option>
+                    </select>
+                </div>
+
+                <div class="pt-4 flex items-center justify-end space-x-3">
+                    <button type="button" onclick="document.getElementById('addClientModal').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30">Onboard Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+        lucide.createIcons();
+    </script>
+    @stack('scripts')
+</body>
+</html>

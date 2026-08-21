@@ -1,0 +1,229 @@
+<?php
+
+namespace App\Http\Controllers\SuperAdmin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Agency;
+use App\Models\AuditLog;
+use App\Models\Plan;
+use App\Models\Product;
+use App\Models\Subscription;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
+class AgencyController extends Controller
+{
+    public function index(Request $request)
+    {
+        $type = $request->query('type');
+        $query = Agency::with(['parentAgency', 'subAgencies', 'subscription.plan', 'products']);
+
+        if ($type === 'master') {
+            $query->where('type', 'master');
+        } elseif ($type === 'white_label') {
+            $query->where('type', 'white_label');
+        }
+
+        $agencies = $query->latest()->get();
+        $masterAgencies = Agency::where('type', 'master')->where('status', 'active')->get();
+        $plans = Plan::where('is_active', true)->get();
+        $products = Product::where('is_active', true)->get();
+
+        return view('admin.agencies.index', compact('agencies', 'masterAgencies', 'plans', 'products', 'type'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:master,white_label',
+            'parent_id' => 'nullable|exists:agencies,id',
+            'owner_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:agencies,email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'phone' => 'nullable|string|max:50',
+            'custom_domain' => 'nullable|string|max:255',
+            'primary_color' => 'nullable|string|max:20',
+            'max_clients' => 'required|integer|min:1',
+            'plan_id' => 'required|exists:plans,id',
+            'products' => 'nullable|array',
+            'products.*' => 'exists:products,id',
+        ]);
+
+        $agency = Agency::create([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'type' => $validated['type'],
+            'parent_id' => $validated['type'] === 'white_label' ? $validated['parent_id'] : null,
+            'owner_name' => $validated['owner_name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'custom_domain' => $validated['custom_domain'] ?? null,
+            'primary_color' => $validated['primary_color'] ?? '#4f46e5',
+            'status' => 'active',
+            'max_clients' => $validated['max_clients'],
+            'max_products' => count($validated['products'] ?? []),
+        ]);
+
+        // Create initial agency user account
+        User::create([
+            'name' => $validated['owner_name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['type'] === 'master' ? 'master_agency' : 'white_label_agency',
+            'agency_id' => $agency->id,
+            'status' => 'active',
+        ]);
+
+        // Assign plan subscription
+        $plan = Plan::findOrFail($validated['plan_id']);
+        Subscription::create([
+            'agency_id' => $agency->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'billing_cycle' => 'monthly',
+            'amount' => $plan->price_monthly,
+            'starts_at' => now(),
+        ]);
+
+        // Assign products
+        if (!empty($validated['products'])) {
+            $syncData = [];
+            foreach ($validated['products'] as $productId) {
+                $syncData[$productId] = ['status' => 'enabled'];
+            }
+            $agency->products()->sync($syncData);
+        }
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()->name,
+            'action' => "Created Agency: {$agency->name} ({$agency->type})",
+            'ip_address' => $request->ip(),
+            'details' => ['agency_id' => $agency->id, 'type' => $agency->type, 'owner' => $agency->owner_name],
+        ]);
+
+        return redirect()->route('admin.agencies.index')->with('success', "Agency '{$agency->name}' onboarded successfully!");
+    }
+
+    public function update(Request $request, Agency $agency)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:master,white_label',
+            'parent_id' => 'nullable|exists:agencies,id',
+            'owner_name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'custom_domain' => 'nullable|string|max:255',
+            'primary_color' => 'nullable|string|max:20',
+            'status' => 'required|in:active,pending,suspended',
+            'max_clients' => 'required|integer|min:1',
+            'password' => 'nullable|string|min:6',
+            'products' => 'nullable|array',
+            'products.*' => 'exists:products,id',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['name']);
+        if ($validated['type'] === 'master') {
+            $validated['parent_id'] = null;
+        }
+
+        $agency->update($validated);
+
+        // Update corresponding User account
+        $agencyUser = User::where('agency_id', $agency->id)->first() ?? User::where('email', $agency->email)->first();
+        if ($agencyUser) {
+            $userUpdate = [
+                'name' => $validated['owner_name'],
+                'role' => $validated['type'] === 'master' ? 'master_agency' : 'white_label_agency',
+                'status' => $validated['status'],
+            ];
+            if (!empty($validated['password'])) {
+                $userUpdate['password'] = Hash::make($validated['password']);
+            }
+            $agencyUser->update($userUpdate);
+        }
+
+        if (isset($validated['products'])) {
+            $syncData = [];
+            foreach ($validated['products'] as $productId) {
+                $syncData[$productId] = ['status' => 'enabled'];
+            }
+            $agency->products()->sync($syncData);
+        }
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()->name,
+            'action' => "Updated Agency Settings: {$agency->name}",
+            'ip_address' => $request->ip(),
+            'details' => $validated,
+        ]);
+
+        return redirect()->route('admin.agencies.index')->with('success', "Agency '{$agency->name}' updated successfully!");
+    }
+
+    public function toggleProductAccess(Request $request, Agency $agency, Product $product)
+    {
+        $pivot = $agency->products()->where('product_id', $product->id)->first();
+
+        if ($pivot) {
+            $newStatus = $pivot->pivot->status === 'enabled' ? 'disabled' : 'enabled';
+            $agency->products()->updateExistingPivot($product->id, ['status' => $newStatus]);
+        } else {
+            $agency->products()->attach($product->id, ['status' => 'enabled']);
+            $newStatus = 'enabled';
+        }
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()->name,
+            'action' => "Toggled Product Access '{$product->name}' to '{$newStatus}' for Agency {$agency->name}",
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', "Access to {$product->name} updated for agency {$agency->name}.");
+    }
+
+    public function destroy(Request $request, Agency $agency)
+    {
+        $name = $agency->name;
+        $agency->delete();
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()->name,
+            'action' => "Deleted Agency: {$name}",
+            'ip_address' => $request->ip(),
+        ]);
+
+        return redirect()->route('admin.agencies.index')->with('success', "Agency '{$name}' removed.");
+    }
+
+    public function loginAsAgency(Request $request, Agency $agency)
+    {
+        // Log in as agency user account
+        $agencyUser = User::where('agency_id', $agency->id)->first() ?? User::where('email', $agency->email)->first();
+
+        if ($agencyUser) {
+            Auth::login($agencyUser);
+        }
+
+        AuditLog::create([
+            'user_id' => auth()->id() ?? $agencyUser?->id,
+            'user_name' => auth()->user()?->name ?? $agencyUser?->name ?? 'System',
+            'action' => "Credential-Free Admin Access launched for Agency: {$agency->name} ({$agency->type})",
+            'ip_address' => $request->ip(),
+            'details' => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
+        ]);
+
+        if ($agency->type === 'master') {
+            return redirect()->route('master.dashboard');
+        }
+
+        return redirect()->route('whitelabel.dashboard');
+    }
+}
