@@ -32,11 +32,16 @@
                         <span class="truncate">{{ $subdomainUrl }}</span>
                     </a>
                 </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span class="text-slate-400 font-medium">Monthly Cost: <span class="text-slate-800 font-bold">₹{{ number_format($prod->base_price ?? 99, 0) }}</span></span>
-                    <a href="{{ $subdomainUrl }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center space-x-1 shadow-sm">
-                        <span>Launch Product</span>
-                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs gap-2">
+                    <a href="{{ $subdomainUrl }}" target="_blank" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center space-x-1 border border-slate-200">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        <span>Live Preview</span>
+                    </a>
+
+                    <a href="{{ route('admin.products.admin-launch', $prod) }}" target="_blank" 
+                       class="py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl flex items-center space-x-1.5 shadow-sm">
+                        <i data-lucide="key" class="w-3.5 h-3.5"></i>
+                        <span>Admin Access</span>
                     </a>
                 </div>
             </div>
