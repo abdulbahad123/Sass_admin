@@ -79,7 +79,8 @@ class DatabaseProvisioningService
             Log::error("cPanel HTTP UAPI error: " . $ex->getMessage());
         }
 
-        // Import fresh schema tables into the newly created database
+        // Import fresh schema tables into the newly created database (pause 0.5s for MySQL privileges to sync)
+        usleep(500000);
         $this->seedFreshProductSchema($dbName, $productSlug);
 
         return $dbName;
@@ -106,14 +107,13 @@ class DatabaseProvisioningService
                 $sourceDb = 'bazaarwa_launchshop';
             }
 
-            // 1. Get list of tables from source database using default mysql connection
+            // Get list of tables from source database
             $tables = DB::select("SHOW TABLES FROM `{$sourceDb}`");
             if (empty($tables)) {
                 Log::warning("Source database {$sourceDb} has no tables to clone.");
                 return;
             }
 
-            // Find key name dynamically (e.g. Tables_in_bazaarwa_launchshop)
             $firstObj = (array)$tables[0];
             $tableKey = array_key_first($firstObj);
 
@@ -121,12 +121,35 @@ class DatabaseProvisioningService
                 $tArr = (array)$t;
                 $tableName = $tArr[$tableKey] ?? null;
                 if ($tableName) {
-                    // Create table structure in target database
-                    DB::statement("CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}` LIKE `{$sourceDb}`.`{$tableName}`;");
-                    
-                    // Seed initial essential settings and configs into new database
-                    if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
-                        DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
+                    try {
+                        // Create table structure in target database
+                        DB::statement("CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}` LIKE `{$sourceDb}`.`{$tableName}`;");
+                        
+                        // Seed initial essential settings and configs into new database
+                        if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
+                            DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
+                        }
+                    } catch (\Throwable $tbErr) {
+                        Log::error("Error cloning table {$tableName} into {$dbName}: " . $tbErr->getMessage());
+
+                        // Fallback: Get SHOW CREATE TABLE SQL and execute
+                        try {
+                            $createRes = DB::select("SHOW CREATE TABLE `{$sourceDb}`.`{$tableName}`");
+                            if (!empty($createRes)) {
+                                $cArr = (array)$createRes[0];
+                                $createSql = $cArr['Create Table'] ?? $cArr['Create View'] ?? null;
+                                if ($createSql) {
+                                    $createSql = str_replace("CREATE TABLE `{$tableName}`", "CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}`", $createSql);
+                                    DB::statement($createSql);
+
+                                    if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
+                                        DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
+                                    }
+                                }
+                            }
+                        } catch (\Throwable $fbErr) {
+                            Log::error("Fallback CREATE TABLE failed for {$tableName}: " . $fbErr->getMessage());
+                        }
                     }
                 }
             }
