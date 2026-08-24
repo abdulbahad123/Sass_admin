@@ -53,7 +53,7 @@ class DatabaseProvisioningService
         // Attempt 3: Try cPanel HTTP UAPI Call using server credentials
         $cpanelHost = env('CPANEL_HOST', 's3508.bom1.stableserver.net');
         $cpanelToken = env('CPANEL_API_TOKEN');
-        $cpanelPass = env('CPANEL_PASSWORD', 'Sallu_Admin@nooryaktechnologies9');
+        $cpanelPass = env('CPANEL_PASSWORD', 'Sallu_Admin@nooryaktechnologies99');
 
         try {
             $req = Http::withoutVerifying()->timeout(15);
