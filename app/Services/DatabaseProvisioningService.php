@@ -119,6 +119,12 @@ class DatabaseProvisioningService
                 }
             }
 
+            DB::purge('tenant_temp');
+        } catch (\Throwable $e) {
+            Log::error("Failed seeding dynamic schema into database {$dbName}: " . $e->getMessage());
+        }
+    }
+
     /**
      * Provision databases for all existing White Label agencies
      */
