@@ -50,33 +50,33 @@ class DatabaseProvisioningService
             Log::info("Direct CREATE DATABASE failed: " . $e->getMessage() . ". Attempting cPanel UAPI HTTP API...");
         }
 
-        // Attempt 3: Try cPanel HTTP UAPI Call
-        $cpanelHost = env('CPANEL_HOST', $_SERVER['HTTP_HOST'] ?? 's3508.bom1.stableserver.net');
+        // Attempt 3: Try cPanel HTTP UAPI Call using server credentials
+        $cpanelHost = env('CPANEL_HOST', 's3508.bom1.stableserver.net');
         $cpanelToken = env('CPANEL_API_TOKEN');
-        $cpanelPass = env('CPANEL_PASSWORD');
+        $cpanelPass = env('CPANEL_PASSWORD', 'Sallu_Admin@nooryaktechnologies9');
 
-        if ($cpanelToken || $cpanelPass) {
-            try {
-                $req = Http::withoutVerifying();
-                if ($cpanelToken) {
-                    $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
-                } else if ($cpanelPass) {
-                    $req->withBasicAuth($cpanelUser, $cpanelPass);
-                }
-                
-                $req->get("https://{$cpanelHost}:2083/execute/Mysql/create_database", [
-                    'name' => $dbName
-                ]);
-
-                // Grant privileges
-                $req->get("https://{$cpanelHost}:2083/execute/Mysql/set_privileges_on_database", [
-                    'user' => $cpanelUser,
-                    'database' => $dbName,
-                    'privileges' => 'ALL PRIVILEGES'
-                ]);
-            } catch (\Throwable $ex) {
-                Log::error("cPanel HTTP UAPI error: " . $ex->getMessage());
+        try {
+            $req = Http::withoutVerifying()->timeout(15);
+            if ($cpanelToken) {
+                $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
+            } else {
+                $req->withBasicAuth($cpanelUser, $cpanelPass);
             }
+            
+            $res1 = $req->get("https://{$cpanelHost}:2083/execute/Mysql/create_database", [
+                'name' => $dbName
+            ]);
+            Log::info("cPanel UAPI create_database response: " . $res1->body());
+
+            // Grant privileges to user
+            $res2 = $req->get("https://{$cpanelHost}:2083/execute/Mysql/set_privileges_on_database", [
+                'user' => $cpanelUser,
+                'database' => $dbName,
+                'privileges' => 'ALL PRIVILEGES'
+            ]);
+            Log::info("cPanel UAPI set_privileges_on_database response: " . $res2->body());
+        } catch (\Throwable $ex) {
+            Log::error("cPanel HTTP UAPI error: " . $ex->getMessage());
         }
 
         // Import fresh schema tables into the newly created database
