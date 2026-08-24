@@ -14,6 +14,17 @@
 @section('content')
 <div class="space-y-6">
 
+    @if($errors->any())
+        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-1 shadow-sm">
+            <p class="font-bold flex items-center text-rose-900"><i data-lucide="alert-triangle" class="w-4 h-4 mr-1.5 text-rose-600"></i> Onboarding / Update action failed:</p>
+            <ul class="list-disc list-inside space-y-0.5 pl-2 text-rose-700 font-medium">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Tabs & Filter Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div class="flex items-center space-x-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
@@ -143,7 +154,7 @@
 </div>
 
 <!-- Onboard Agency Modal -->
-<div id="createAgencyModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createAgencyModal" class="fixed inset-0 z-50 {{ $errors->any() ? '' : 'hidden' }} bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Onboard Agency Account</h3>
@@ -151,6 +162,17 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
+
+        @if($errors->any())
+            <div class="mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-1">
+                <p class="font-bold flex items-center text-rose-900"><i data-lucide="alert-circle" class="w-4 h-4 mr-1 text-rose-600 shrink-0"></i> Please fix the following errors:</p>
+                <ul class="list-disc list-inside space-y-0.5 text-rose-700 font-medium pl-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <form action="{{ route('admin.agencies.store') }}" method="POST" class="space-y-4">
             @csrf

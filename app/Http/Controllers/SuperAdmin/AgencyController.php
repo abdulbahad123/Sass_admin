@@ -37,6 +37,27 @@ class AgencyController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->input('parent_id') === '') {
+            $request->merge(['parent_id' => null]);
+        }
+
+        // Ensure at least one default plan exists
+        $firstPlan = Plan::first();
+        if (!$firstPlan) {
+            $firstPlan = Plan::create([
+                'name' => 'Starter Agency Plan',
+                'slug' => 'starter-agency-plan',
+                'price_monthly' => 2999,
+                'price_yearly' => 29990,
+                'max_clients' => 100,
+                'is_active' => true,
+            ]);
+        }
+
+        if (!$request->filled('plan_id')) {
+            $request->merge(['plan_id' => $firstPlan->id]);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:master,white_label',
@@ -48,7 +69,7 @@ class AgencyController extends Controller
             'custom_domain' => 'nullable|string|max:255',
             'primary_color' => 'nullable|string|max:20',
             'max_clients' => 'required|integer|min:1',
-            'plan_id' => 'required|exists:plans,id',
+            'plan_id' => 'nullable|exists:plans,id',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
         ]);
@@ -60,7 +81,7 @@ class AgencyController extends Controller
             'name' => $validated['name'],
             'slug' => Str::slug($validated['name']),
             'type' => $validated['type'],
-            'parent_id' => $validated['type'] === 'white_label' ? $validated['parent_id'] : null,
+            'parent_id' => $validated['type'] === 'white_label' ? ($validated['parent_id'] ?? null) : null,
             'owner_name' => $validated['owner_name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
@@ -82,15 +103,17 @@ class AgencyController extends Controller
         ]);
 
         // Assign plan subscription
-        $plan = Plan::findOrFail($validated['plan_id']);
-        Subscription::create([
-            'agency_id' => $agency->id,
-            'plan_id' => $plan->id,
-            'status' => 'active',
-            'billing_cycle' => 'monthly',
-            'amount' => $plan->price_monthly,
-            'starts_at' => now(),
-        ]);
+        $plan = Plan::find($validated['plan_id'] ?? null) ?? $firstPlan;
+        if ($plan) {
+            Subscription::create([
+                'agency_id' => $agency->id,
+                'plan_id' => $plan->id,
+                'status' => 'active',
+                'billing_cycle' => 'monthly',
+                'amount' => $plan->price_monthly ?? 2999,
+                'starts_at' => now(),
+            ]);
+        }
 
         // Assign products
         if (!empty($validated['products'])) {
@@ -102,8 +125,8 @@ class AgencyController extends Controller
         }
 
         AuditLog::create([
-            'user_id' => auth()->id(),
-            'user_name' => auth()->user()->name,
+            'user_id' => auth()->id() ?? 1,
+            'user_name' => auth()->user()->name ?? 'Super Admin',
             'action' => "Created Agency: {$agency->name} ({$agency->type})",
             'ip_address' => $request->ip(),
             'details' => ['agency_id' => $agency->id, 'type' => $agency->type, 'owner' => $agency->owner_name],
