@@ -119,17 +119,21 @@ class AgencyController extends Controller
         $dbService = new \App\Services\DatabaseProvisioningService();
         if (!empty($validated['products'])) {
             $syncData = [];
+            $hasDbCol = \Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name');
+
             foreach ($validated['products'] as $productId) {
                 $product = Product::find($productId);
                 $dbName = null;
                 if ($product) {
                     $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
                 }
-                $syncData[$productId] = [
-                    'status' => 'enabled',
-                    'db_name' => $dbName,
-                    'db_status' => 'active',
-                ];
+
+                $pivotData = ['status' => 'enabled'];
+                if ($hasDbCol) {
+                    $pivotData['db_name'] = $dbName;
+                    $pivotData['db_status'] = 'active';
+                }
+                $syncData[$productId] = $pivotData;
             }
             $agency->products()->sync($syncData);
         }
