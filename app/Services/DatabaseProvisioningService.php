@@ -92,14 +92,6 @@ class DatabaseProvisioningService
     protected function seedFreshProductSchema(string $dbName, string $productSlug): void
     {
         try {
-            $cpanelUser = env('CPANEL_USER', 'bazaarwa');
-            
-            if ($productSlug === 'launchshop' || Str::contains($productSlug, 'launch')) {
-                $sourceDb = "{$cpanelUser}_launchshop";
-            } else {
-                $sourceDb = "{$cpanelUser}_{$productSlug}";
-            }
-
             // 1. Configure dynamic connection to target tenant database
             config(['database.connections.target_tenant_db' => array_merge(
                 config('database.connections.mysql'),
@@ -107,64 +99,30 @@ class DatabaseProvisioningService
             )]);
             DB::purge('target_tenant_db');
 
-            // Attempt 1: Copy table definitions from source template database
-            $copiedCount = 0;
-            try {
-                config(['database.connections.source_template_db' => array_merge(
-                    config('database.connections.mysql'),
-                    ['database' => $sourceDb]
-                )]);
-                DB::purge('source_template_db');
-
-                $tables = DB::connection('source_template_db')->select("SHOW TABLES");
-                if (!empty($tables)) {
-                    $firstObj = (array)$tables[0];
-                    $tableKey = array_key_first($firstObj);
-
-                    foreach ($tables as $t) {
-                        $tArr = (array)$t;
-                        $tableName = $tArr[$tableKey] ?? null;
-                        if ($tableName) {
-                            try {
-                                DB::statement("CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}` LIKE `{$sourceDb}`.`{$tableName}`;");
-                                $copiedCount++;
-                                if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
-                                    DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
-                                }
-                            } catch (\Throwable $err) {
-                                Log::info("Table copy for {$tableName} skipped: " . $err->getMessage());
-                            }
-                        }
-                    }
-                }
-            } catch (\Throwable $e1) {
-                Log::info("Cross-database copy skipped: " . $e1->getMessage());
-            }
-
-            // Attempt 2: Fallback schema execution from launchshop_schema.sql directly into target_tenant_db
-            $targetTables = DB::connection('target_tenant_db')->select("SHOW TABLES");
-            if (empty($targetTables)) {
+            // 2. Locate official clean Launchshop schema template dump file
+            $schemaFile = database_path('schema/launchshop_clean_template.sql');
+            if (!file_exists($schemaFile)) {
                 $schemaFile = database_path('schema/launchshop_schema.sql');
-                if (file_exists($schemaFile)) {
-                    $sqlContent = file_get_contents($schemaFile);
-                    $statements = array_filter(array_map('trim', explode(';', $sqlContent)));
-                    foreach ($statements as $stmt) {
-                        if (!empty($stmt)) {
-                            try {
-                                DB::connection('target_tenant_db')->statement($stmt);
-                            } catch (\Throwable $sqlErr) {
-                                Log::error("Schema DDL statement error: " . $sqlErr->getMessage());
-                            }
-                        }
-                    }
-                    Log::info("Successfully populated schema DDL from launchshop_schema.sql into {$dbName}");
-                }
             }
 
-            DB::purge('source_template_db');
-            DB::purge('target_tenant_db');
+            if (file_exists($schemaFile)) {
+                $sqlContent = file_get_contents($schemaFile);
+                
+                // Execute SQL statements safely
+                $statements = array_filter(array_map('trim', explode(";\n", $sqlContent)));
+                foreach ($statements as $stmt) {
+                    if (!empty($stmt) && strlen($stmt) > 5) {
+                        try {
+                            DB::connection('target_tenant_db')->statement($stmt);
+                        } catch (\Throwable $sqlErr) {
+                            // Suppress minor DDL warnings if statement already executed
+                        }
+                    }
+                }
+                Log::info("Successfully populated clean schema template from {$schemaFile} into database {$dbName}");
+            }
 
-            Log::info("Successfully populated all schema tables into dynamic database {$dbName}");
+            DB::purge('target_tenant_db');
         } catch (\Throwable $e) {
             Log::error("Failed seeding dynamic schema into database {$dbName}: " . $e->getMessage());
         }

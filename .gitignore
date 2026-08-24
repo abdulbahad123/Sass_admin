@@ -1,3 +1,5 @@
+*.sql
+!database/schema/*.sql
 *.log
 .DS_Store
 .env
