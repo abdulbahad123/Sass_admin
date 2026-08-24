@@ -95,9 +95,25 @@ class DatabaseProvisioningService
                 }
             }
 
-            DB::purge('tenant_temp');
-        } catch (\Throwable $e) {
-            Log::error("Failed seeding dynamic schema into database {$dbName}: " . $e->getMessage());
+    /**
+     * Provision databases for all existing White Label agencies
+     */
+    public function provisionExistingAgencies(): void
+    {
+        $agencies = Agency::where('type', 'white_label')->get();
+        $products = Product::where('is_active', true)->get();
+
+        foreach ($agencies as $agency) {
+            foreach ($products as $product) {
+                $dbName = $this->provisionDatabaseForAgencyProduct($agency, $product);
+                $agency->products()->syncWithoutDetaching([
+                    $product->id => [
+                        'status' => 'enabled',
+                        'db_name' => $dbName,
+                        'db_status' => 'active',
+                    ]
+                ]);
+            }
         }
     }
 }
