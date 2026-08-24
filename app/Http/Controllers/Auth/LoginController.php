@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         if (Auth::check()) {
             $user = Auth::user();
@@ -17,9 +17,19 @@ class LoginController extends Controller
                 return redirect()->route('admin.dashboard');
             } elseif ($user->isMasterAgency()) {
                 return redirect()->route('master.dashboard');
+            } elseif ($user->isWhiteLabelAgency()) {
+                return redirect()->route('whitelabel.dashboard');
             }
         }
-        return view('auth.login');
+
+        $host = $request->getHost();
+        $agency = \App\Models\Agency::whereNotNull('custom_domain')
+            ->where(function ($q) use ($host) {
+                $q->where('custom_domain', $host)
+                  ->orWhere('custom_domain', 'like', "%{$host}%");
+            })->first();
+
+        return view('auth.login', compact('agency'));
     }
 
     public function login(Request $request)

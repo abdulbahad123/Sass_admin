@@ -53,6 +53,9 @@ class AgencyController extends Controller
             'products.*' => 'exists:products,id',
         ]);
 
+        $rawDomain = $validated['custom_domain'] ?? null;
+        $cleanDomain = $rawDomain ? rtrim(preg_replace('#^https?://#', '', trim($rawDomain)), '/') : null;
+
         $agency = Agency::create([
             'name' => $validated['name'],
             'slug' => Str::slug($validated['name']),
@@ -61,7 +64,7 @@ class AgencyController extends Controller
             'owner_name' => $validated['owner_name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
-            'custom_domain' => $validated['custom_domain'] ?? null,
+            'custom_domain' => $cleanDomain,
             'primary_color' => $validated['primary_color'] ?? '#4f46e5',
             'status' => 'active',
             'max_clients' => $validated['max_clients'],
@@ -129,6 +132,10 @@ class AgencyController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         if ($validated['type'] === 'master') {
             $validated['parent_id'] = null;
+        }
+
+        if (isset($validated['custom_domain'])) {
+            $validated['custom_domain'] = $validated['custom_domain'] ? rtrim(preg_replace('#^https?://#', '', trim($validated['custom_domain'])), '/') : null;
         }
 
         $agency->update($validated);

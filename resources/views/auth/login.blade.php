@@ -20,8 +20,12 @@
             <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-xl shadow-indigo-500/30 mb-4">
                 <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
             </div>
-            <h1 class="text-2xl font-bold text-white font-heading tracking-tight">Platform Admin Access</h1>
-            <p class="text-slate-400 text-sm mt-1">Authenticate for Super Admin or Master Agency Portal</p>
+            <h1 class="text-2xl font-bold text-white font-heading tracking-tight">
+                {{ isset($agency) && $agency ? $agency->name . ' Portal Access' : 'Platform Admin Access' }}
+            </h1>
+            <p class="text-slate-400 text-sm mt-1">
+                {{ isset($agency) && $agency ? 'Authenticate for ' . $agency->name . ' White Label Agency Portal' : 'Authenticate for Super Admin or Master Agency Portal' }}
+            </p>
         </div>
 
         <!-- Login Card -->

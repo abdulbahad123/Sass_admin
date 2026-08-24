@@ -17,6 +17,10 @@ Route::get('/', function () {
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/whitelabel-panel/login', [LoginController::class, 'showLoginForm'])->name('whitelabel.login');
+Route::get('/whitelabel-panel', function () {
+    return redirect()->route('whitelabel.dashboard');
+});
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

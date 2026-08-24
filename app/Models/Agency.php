@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Agency extends Model
 {
@@ -24,6 +25,29 @@ class Agency extends Model
         'max_clients',
         'max_products',
     ];
+
+    public function getCleanDomainAttribute()
+    {
+        if (empty($this->custom_domain)) {
+            return 'nooryak.in';
+        }
+        $domain = preg_replace('#^https?://#', '', trim($this->custom_domain));
+        return rtrim($domain, '/');
+    }
+
+    public function getWhitelabelLoginUrlAttribute()
+    {
+        $domain = $this->clean_domain;
+        return "https://{$domain}/whitelabel-panel/login";
+    }
+
+    public function getProductSubdomainUrl($productSlug)
+    {
+        $domain = $this->clean_domain;
+        $cleanProductSlug = Str::slug($productSlug);
+        $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
+        return "https://{$cleanProductSlug}.{$rootDomain}";
+    }
 
     // Master agency has sub-agencies
     public function subAgencies()

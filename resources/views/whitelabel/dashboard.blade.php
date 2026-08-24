@@ -147,7 +147,7 @@
                     </select>
                 </div>
                 <div class="flex items-baseline space-x-2">
-                    <span class="text-2xl font-extrabold text-slate-900 font-heading">₹3,42,800</span>
+                    <span class="text-2xl font-extrabold text-slate-900 font-heading">₹{{ number_format($mrr) }}</span>
                     <span class="text-xs font-bold text-emerald-600 flex items-center">
                         <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ 24.6% <span class="text-slate-400 font-normal ml-1">vs last month</span>
                     </span>
@@ -488,10 +488,10 @@
         new Chart(ctxRev, {
             type: 'line',
             data: {
-                labels: ['Aug 1', 'Aug 6', 'Aug 11', 'Aug 16', 'Aug 21', 'Aug 26', 'Aug 31'],
+                labels: @json($revenueChartLabels),
                 datasets: [{
                     label: 'Revenue',
-                    data: [15000, 10000, 18000, 14000, 32000, 24000, 342800],
+                    data: @json($revenueChartData),
                     borderColor: '#6366F1',
                     backgroundColor: 'rgba(99, 102, 241, 0.12)',
                     fill: true,
@@ -517,10 +517,10 @@
         new Chart(ctxDonut, {
             type: 'doughnut',
             data: {
-                labels: ['Launchshop', 'Smart CRM', 'WebBuilder Pro', 'AppConnect'],
+                labels: @json(array_column($productUsage, 'name')),
                 datasets: [{
-                    data: [128, 96, 72, 28],
-                    backgroundColor: ['#6366F1', '#0EA5E9', '#10B981', '#F59E0B'],
+                    data: @json(array_column($productUsage, 'clients')),
+                    backgroundColor: ['#6366F1', '#0EA5E9', '#10B981', '#F59E0B', '#EC4899'],
                     borderWidth: 0
                 }]
             },
