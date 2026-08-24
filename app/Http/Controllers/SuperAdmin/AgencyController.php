@@ -250,6 +250,11 @@ class AgencyController extends Controller
             'details' => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
         ]);
 
+        if ($agency->clean_domain && $agency->clean_domain !== 'nooryak.in') {
+            $targetPath = $agency->type === 'master' ? '/master/dashboard' : '/whitelabel/dashboard';
+            return redirect()->away("https://{$agency->clean_domain}{$targetPath}");
+        }
+
         if ($agency->type === 'master') {
             return redirect()->route('master.dashboard');
         }
