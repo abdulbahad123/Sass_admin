@@ -32,26 +32,50 @@ class DatabaseProvisioningService
 
         $dbName = "{$cpanelUser}_{$cleanAgencySlug}_{$cleanProductSlug}";
 
+        // Attempt 1: Execute local cPanel CLI command (Natively supported on cPanel Linux hosting)
         try {
-            // Attempt 1: Try raw SQL database creation if privileges permit
+            $cliCmd = "uapi Mysql create_database name=" . escapeshellarg($dbName) . " 2>&1";
+            @exec($cliCmd, $cliOutput, $cliReturn);
+            if ($cliReturn === 0) {
+                Log::info("cPanel CLI database creation succeeded for {$dbName}");
+            }
+        } catch (\Throwable $e) {
+            Log::info("cPanel CLI execution error: " . $e->getMessage());
+        }
+
+        // Attempt 2: Try Direct SQL CREATE DATABASE
+        try {
             DB::statement("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
         } catch (\Throwable $e) {
-            Log::info("Direct CREATE DATABASE failed: " . $e->getMessage() . ". Attempting cPanel UAPI...");
+            Log::info("Direct CREATE DATABASE failed: " . $e->getMessage() . ". Attempting cPanel UAPI HTTP API...");
+        }
 
-            // Attempt 2: cPanel UAPI call if credentials are in env
-            $cpanelHost = env('CPANEL_HOST', 's3508.bom1.stableserver.net');
-            $cpanelToken = env('CPANEL_API_TOKEN');
+        // Attempt 3: Try cPanel HTTP UAPI Call
+        $cpanelHost = env('CPANEL_HOST', $_SERVER['HTTP_HOST'] ?? 's3508.bom1.stableserver.net');
+        $cpanelToken = env('CPANEL_API_TOKEN');
+        $cpanelPass = env('CPANEL_PASSWORD');
 
-            if ($cpanelToken) {
-                try {
-                    Http::withHeaders([
-                        'Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"
-                    ])->get("https://{$cpanelHost}:2083/execute/Mysql/create_database", [
-                        'name' => $dbName
-                    ]);
-                } catch (\Throwable $ex) {
-                    Log::error("cPanel UAPI database creation error: " . $ex->getMessage());
+        if ($cpanelToken || $cpanelPass) {
+            try {
+                $req = Http::withoutVerifying();
+                if ($cpanelToken) {
+                    $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
+                } else if ($cpanelPass) {
+                    $req->withBasicAuth($cpanelUser, $cpanelPass);
                 }
+                
+                $req->get("https://{$cpanelHost}:2083/execute/Mysql/create_database", [
+                    'name' => $dbName
+                ]);
+
+                // Grant privileges
+                $req->get("https://{$cpanelHost}:2083/execute/Mysql/set_privileges_on_database", [
+                    'user' => $cpanelUser,
+                    'database' => $dbName,
+                    'privileges' => 'ALL PRIVILEGES'
+                ]);
+            } catch (\Throwable $ex) {
+                Log::error("cPanel HTTP UAPI error: " . $ex->getMessage());
             }
         }
 
