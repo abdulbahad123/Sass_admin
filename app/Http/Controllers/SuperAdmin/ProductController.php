@@ -111,11 +111,11 @@ class ProductController extends Controller
 
     public function launchAdmin(Request $request, Product $product)
     {
-        $baseUrl = rtrim($product->app_url ?? 'https://launchshop.in', '/');
-
-        if (!preg_match("~^(?:f|ht)tps?://~i", $baseUrl)) {
-            $baseUrl = "https://" . $baseUrl;
-        }
+        $currentHost = $request->getHost();
+        $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
+        $slug = $product->slug ?? Str::slug($product->name);
+        
+        $baseUrl = "https://{$slug}.{$rootDomain}";
 
         $timestamp = time() + 300;
         $nonce = Str::random(16);

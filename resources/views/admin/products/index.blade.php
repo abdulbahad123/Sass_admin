@@ -80,8 +80,16 @@
 
                     <!-- Action Buttons -->
                     <div class="space-y-2">
+                        <div class="p-2 bg-slate-50 border border-slate-100 rounded-xl">
+                            <span class="text-[10px] text-slate-400 font-semibold block">Subdomain App Preview:</span>
+                            <a href="{{ $product->getSubdomainPreviewUrl() }}" target="_blank" class="text-xs font-mono font-bold text-indigo-600 hover:underline flex items-center truncate">
+                                <i data-lucide="globe" class="w-3.5 h-3.5 mr-1 flex-shrink-0 text-indigo-500"></i>
+                                <span class="truncate">{{ $product->getSubdomainPreviewUrl() }}</span>
+                            </a>
+                        </div>
+
                         <div class="grid grid-cols-2 gap-2">
-                            <a href="{{ $product->app_url ?? '#' }}" target="_blank" 
+                            <a href="{{ $product->getSubdomainPreviewUrl() }}" target="_blank" 
                                class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl text-center border border-slate-200 transition-colors flex items-center justify-center space-x-1.5">
                                 <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                 <span>Live Preview</span>

@@ -26,6 +26,16 @@ class Product extends Model
         'is_featured' => 'boolean',
     ];
 
+    public function getSubdomainPreviewUrl($domain = null)
+    {
+        $domain = $domain ? preg_replace('#^https?://#', '', trim($domain)) : request()->getHost();
+        $domain = rtrim($domain, '/');
+        
+        $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
+        $slug = $this->slug ?? \Illuminate\Support\Str::slug($this->name);
+        return "https://{$slug}.{$rootDomain}";
+    }
+
     public function plans()
     {
         return $this->belongsToMany(Plan::class, 'plan_product');
