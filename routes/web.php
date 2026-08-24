@@ -55,7 +55,6 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
 
     // Direct One-Click Admin Access (Credential-Free Login)
     Route::get('/agencies/{agency}/admin-login', [AgencyController::class, 'loginAsAgency'])->name('agencies.admin-login');
-    Route::get('/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('products.admin-launch');
     
     // Profile & Platform Settings (Currency Switcher & Account Edit)
     Route::get('/profile', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'edit'])->name('profile.edit');
@@ -66,8 +65,11 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
 });
 
-// Shared Authenticated Product Single-Click SSO Launch Route
-Route::get('/products/{product}/sso-launch', [ProductController::class, 'launchAdmin'])->name('admin.products.admin-launch')->middleware('auth');
+// Shared Authenticated Product Single-Click SSO Launch Routes (Accessible to Super Admin, Master & White Label Agencies)
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('admin.products.admin-launch');
+    Route::get('/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('products.admin-launch');
+});
 
 // Master Agency Dedicated Portal Routes (Full Functionality Suite)
 Route::prefix('master')->name('master.')->middleware([\App\Http\Middleware\MasterAgencyMiddleware::class])->group(function () {
