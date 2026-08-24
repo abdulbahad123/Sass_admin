@@ -91,11 +91,25 @@ class DatabaseProvisioningService
     protected function seedFreshProductSchema(string $dbName, string $productSlug): void
     {
         try {
-            $sourceDb = env('DB_DATABASE', 'bazaarwa_launchshop');
+            // Explicitly resolve source template database for product
+            $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+            
+            if ($productSlug === 'launchshop' || Str::contains($productSlug, 'launch')) {
+                $sourceDb = "{$cpanelUser}_launchshop";
+            } else {
+                $sourceDb = "{$cpanelUser}_{$productSlug}";
+            }
+
+            // Fallback check if source database exists
+            $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$sourceDb]);
+            if (empty($dbExists)) {
+                $sourceDb = 'bazaarwa_launchshop';
+            }
 
             // 1. Get list of tables from source database using default mysql connection
             $tables = DB::select("SHOW TABLES FROM `{$sourceDb}`");
             if (empty($tables)) {
+                Log::warning("Source database {$sourceDb} has no tables to clone.");
                 return;
             }
 
@@ -116,7 +130,7 @@ class DatabaseProvisioningService
                     }
                 }
             }
-            Log::info("Successfully populated all schema tables into dynamic database {$dbName}");
+            Log::info("Successfully populated all schema tables from {$sourceDb} into dynamic database {$dbName}");
         } catch (\Throwable $e) {
             Log::error("Failed seeding dynamic schema into database {$dbName}: " . $e->getMessage());
         }
