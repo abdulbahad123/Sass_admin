@@ -108,17 +108,9 @@ class DatabaseProvisioningService
             if (file_exists($schemaFile)) {
                 $sqlContent = file_get_contents($schemaFile);
                 
-                // Execute SQL statements safely
-                $statements = array_filter(array_map('trim', explode(";\n", $sqlContent)));
-                foreach ($statements as $stmt) {
-                    if (!empty($stmt) && strlen($stmt) > 5) {
-                        try {
-                            DB::connection('target_tenant_db')->statement($stmt);
-                        } catch (\Throwable $sqlErr) {
-                            // Suppress minor DDL warnings if statement already executed
-                        }
-                    }
-                }
+                // Execute entire SQL dump using Laravel unprepared batch execution
+                DB::connection('target_tenant_db')->unprepared($sqlContent);
+                
                 Log::info("Successfully populated clean schema template from {$schemaFile} into database {$dbName}");
             }
 
@@ -139,13 +131,9 @@ class DatabaseProvisioningService
         foreach ($agencies as $agency) {
             foreach ($products as $product) {
                 $dbName = $this->provisionDatabaseForAgencyProduct($agency, $product);
-                $agency->products()->syncWithoutDetaching([
-                    $product->id => [
-                        'status' => 'enabled',
-                        'db_name' => $dbName,
-                        'db_status' => 'active',
-                    ]
-                ]);
+                if ($dbName) {
+                    $this->seedFreshProductSchema($dbName, $product->slug ?? 'launchshop');
+                }
             }
         }
     }
