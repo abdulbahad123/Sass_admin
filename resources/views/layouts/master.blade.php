@@ -190,11 +190,16 @@
                     <p class="text-[10px] text-slate-400 truncate">Master Admin</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-1 text-slate-400">
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
-                <a href="{{ route('master.settings.index') }}" class="hover:text-white p-1">
-                    <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+            <div class="flex items-center space-x-1">
+                <a href="{{ route('master.settings.index') }}" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors" title="Settings">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
                 </a>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors" title="Logout">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </aside>
@@ -243,6 +248,15 @@
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>Add Agency</span>
                 </a>
+
+                <!-- Logout Button -->
+                <form action="{{ route('logout') }}" method="POST" class="inline-block">
+                    @csrf
+                    <button type="submit" class="px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 rounded-xl text-xs font-bold shadow-sm flex items-center space-x-1.5 transition-all whitespace-nowrap" title="Logout">
+                        <i data-lucide="log-out" class="w-4 h-4 text-rose-600"></i>
+                        <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </form>
             </div>
         </header>
 

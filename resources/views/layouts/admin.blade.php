@@ -210,6 +210,14 @@
                 </a>
 
                 @yield('header_actions')
+
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="p-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 transition-colors flex items-center space-x-1.5 text-xs font-bold shadow-sm" title="Logout">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </form>
             </div>
         </header>
 

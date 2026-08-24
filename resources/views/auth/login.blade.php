@@ -69,7 +69,13 @@
                     <div class="relative">
                         <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500"></i>
                         <input type="password" id="password" name="password" placeholder="Enter password" required 
-                               class="w-full bg-slate-800/80 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                               class="w-full bg-slate-800/80 border border-slate-700 rounded-xl pl-10 pr-11 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                        <button type="button" onclick="togglePasswordVisibility()" 
+                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-white transition-colors focus:outline-none"
+                                title="Toggle password visibility">
+                            <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
+                            <i data-lucide="eye-off" id="eyeOffIcon" class="w-4 h-4 hidden"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -129,6 +135,23 @@
             document.getElementById('email').value = email;
             document.getElementById('password').value = password;
         }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeOffIcon = document.getElementById('eyeOffIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            }
+        }
+
         lucide.createIcons();
     </script>
 </body>
