@@ -115,11 +115,21 @@ class AgencyController extends Controller
             ]);
         }
 
-        // Assign products
+        // Assign products & provision dynamic database
+        $dbService = new \App\Services\DatabaseProvisioningService();
         if (!empty($validated['products'])) {
             $syncData = [];
             foreach ($validated['products'] as $productId) {
-                $syncData[$productId] = ['status' => 'enabled'];
+                $product = Product::find($productId);
+                $dbName = null;
+                if ($product) {
+                    $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                }
+                $syncData[$productId] = [
+                    'status' => 'enabled',
+                    'db_name' => $dbName,
+                    'db_status' => 'active',
+                ];
             }
             $agency->products()->sync($syncData);
         }
