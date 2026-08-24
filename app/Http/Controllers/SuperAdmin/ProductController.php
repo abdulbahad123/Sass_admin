@@ -111,11 +111,18 @@ class ProductController extends Controller
 
     public function launchAdmin(Request $request, Product $product)
     {
-        $currentHost = $request->getHost();
-        $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
-        $slug = $product->slug ?? Str::slug($product->name);
-        
-        $baseUrl = "https://{$slug}.{$rootDomain}";
+        $baseUrl = !empty($product->app_url) ? rtrim($product->app_url, '/') : null;
+
+        if (!$baseUrl) {
+            $currentHost = $request->getHost();
+            $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
+            $slug = $product->slug ?? Str::slug($product->name);
+            $baseUrl = "https://{$slug}.{$rootDomain}";
+        }
+
+        if (!preg_match("~^(?:f|ht)tps?://~i", $baseUrl)) {
+            $baseUrl = "https://" . $baseUrl;
+        }
 
         $timestamp = time() + 300;
         $nonce = Str::random(16);
@@ -133,8 +140,8 @@ class ProductController extends Controller
         ]);
 
         AuditLog::create([
-            'user_id' => auth()->id(),
-            'user_name' => auth()->user()->name,
+            'user_id' => auth()->id() ?? 1,
+            'user_name' => auth()->user()->name ?? 'Super Admin',
             'action' => "Credential-Free Direct Admin Launch for Product: {$product->name}",
             'ip_address' => $request->ip(),
             'details' => ['product_id' => $product->id, 'sso_url' => $ssoUrl],

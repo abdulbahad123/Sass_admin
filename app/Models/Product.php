@@ -28,6 +28,11 @@ class Product extends Model
 
     public function getSubdomainPreviewUrl($domain = null)
     {
+        if (!empty($this->app_url)) {
+            $url = rtrim($this->app_url, '/');
+            return preg_match("~^(?:f|ht)tps?://~i", $url) ? $url : "https://" . $url;
+        }
+
         $domain = $domain ? preg_replace('#^https?://#', '', trim($domain)) : request()->getHost();
         $domain = rtrim($domain, '/');
         
