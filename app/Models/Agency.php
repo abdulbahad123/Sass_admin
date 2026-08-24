@@ -81,6 +81,11 @@ class Agency extends Model
     // Products directly entitled to this agency
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'agency_products')->withPivot('status', 'db_name', 'db_status')->withTimestamps();
+        $pivotColumns = ['status'];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name')) {
+            $pivotColumns[] = 'db_name';
+            $pivotColumns[] = 'db_status';
+        }
+        return $this->belongsToMany(Product::class, 'agency_products')->withPivot($pivotColumns)->withTimestamps();
     }
 }
