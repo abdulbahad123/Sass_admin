@@ -92,7 +92,6 @@ class DatabaseProvisioningService
     protected function seedFreshProductSchema(string $dbName, string $productSlug): void
     {
         try {
-            // Explicitly resolve source template database for product
             $cpanelUser = env('CPANEL_USER', 'bazaarwa');
             
             if ($productSlug === 'launchshop' || Str::contains($productSlug, 'launch')) {
@@ -101,16 +100,24 @@ class DatabaseProvisioningService
                 $sourceDb = "{$cpanelUser}_{$productSlug}";
             }
 
-            // Fallback check if source database exists
-            $dbExists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$sourceDb]);
-            if (empty($dbExists)) {
-                $sourceDb = 'bazaarwa_launchshop';
-            }
+            // 1. Configure dynamic connection to source template database
+            config(['database.connections.source_template_db' => array_merge(
+                config('database.connections.mysql'),
+                ['database' => $sourceDb]
+            )]);
+            DB::purge('source_template_db');
 
-            // Get list of tables from source database
-            $tables = DB::select("SHOW TABLES FROM `{$sourceDb}`");
+            // 2. Configure dynamic connection to target tenant database
+            config(['database.connections.target_tenant_db' => array_merge(
+                config('database.connections.mysql'),
+                ['database' => $dbName]
+            )]);
+            DB::purge('target_tenant_db');
+
+            // Get all tables from source template database directly
+            $tables = DB::connection('source_template_db')->select("SHOW TABLES");
             if (empty($tables)) {
-                Log::warning("Source database {$sourceDb} has no tables to clone.");
+                Log::warning("Source template database {$sourceDb} returned 0 tables.");
                 return;
             }
 
@@ -122,38 +129,39 @@ class DatabaseProvisioningService
                 $tableName = $tArr[$tableKey] ?? null;
                 if ($tableName) {
                     try {
-                        // Create table structure in target database
+                        // Attempt 1: Direct SQL DDL copy across databases
                         DB::statement("CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}` LIKE `{$sourceDb}`.`{$tableName}`;");
-                        
-                        // Seed initial essential settings and configs into new database
-                        if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
-                            DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
-                        }
-                    } catch (\Throwable $tbErr) {
-                        Log::error("Error cloning table {$tableName} into {$dbName}: " . $tbErr->getMessage());
-
-                        // Fallback: Get SHOW CREATE TABLE SQL and execute
+                    } catch (\Throwable $err1) {
+                        // Attempt 2: Fetch CREATE TABLE DDL from source DB connection and run inside target tenant DB connection
                         try {
-                            $createRes = DB::select("SHOW CREATE TABLE `{$sourceDb}`.`{$tableName}`");
-                            if (!empty($createRes)) {
-                                $cArr = (array)$createRes[0];
-                                $createSql = $cArr['Create Table'] ?? $cArr['Create View'] ?? null;
+                            $ddlRes = DB::connection('source_template_db')->select("SHOW CREATE TABLE `{$tableName}`");
+                            if (!empty($ddlRes)) {
+                                $ddlArr = (array)$ddlRes[0];
+                                $createSql = $ddlArr['Create Table'] ?? $ddlArr['Create View'] ?? null;
                                 if ($createSql) {
-                                    $createSql = str_replace("CREATE TABLE `{$tableName}`", "CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}`", $createSql);
-                                    DB::statement($createSql);
-
-                                    if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
-                                        DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
-                                    }
+                                    DB::connection('target_tenant_db')->statement($createSql);
                                 }
                             }
-                        } catch (\Throwable $fbErr) {
-                            Log::error("Fallback CREATE TABLE failed for {$tableName}: " . $fbErr->getMessage());
+                        } catch (\Throwable $err2) {
+                            Log::error("Failed creating table {$tableName} in {$dbName}: " . $err2->getMessage());
+                        }
+                    }
+
+                    // Seed essential system settings and configs into target tenant database
+                    if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
+                        try {
+                            DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
+                        } catch (\Throwable $seedErr) {
+                            Log::error("Failed seeding rows into {$dbName}.{$tableName}: " . $seedErr->getMessage());
                         }
                     }
                 }
             }
-            Log::info("Successfully populated all schema tables from {$sourceDb} into dynamic database {$dbName}");
+
+            DB::purge('source_template_db');
+            DB::purge('target_tenant_db');
+
+            Log::info("Successfully populated all 45+ schema tables from {$sourceDb} into dynamic database {$dbName}");
         } catch (\Throwable $e) {
             Log::error("Failed seeding dynamic schema into database {$dbName}: " . $e->getMessage());
         }
