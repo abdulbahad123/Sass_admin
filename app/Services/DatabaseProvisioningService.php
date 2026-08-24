@@ -91,35 +91,32 @@ class DatabaseProvisioningService
     protected function seedFreshProductSchema(string $dbName, string $productSlug): void
     {
         try {
-            config(['database.connections.tenant_temp' => array_merge(
-                config('database.connections.mysql'),
-                ['database' => $dbName]
-            )]);
-
-            DB::purge('tenant_temp');
-
-            // Copy schema tables from default bazaarwa_launchshop to target dynamic database
             $sourceDb = env('DB_DATABASE', 'bazaarwa_launchshop');
-            
-            $tables = DB::connection('tenant_temp')->select("SHOW TABLES FROM `{$sourceDb}`");
-            $tableKey = "Tables_in_{$sourceDb}";
+
+            // 1. Get list of tables from source database using default mysql connection
+            $tables = DB::select("SHOW TABLES FROM `{$sourceDb}`");
+            if (empty($tables)) {
+                return;
+            }
+
+            // Find key name dynamically (e.g. Tables_in_bazaarwa_launchshop)
+            $firstObj = (array)$tables[0];
+            $tableKey = array_key_first($firstObj);
 
             foreach ($tables as $t) {
-                if (isset($t->$tableKey)) {
-                    $tableName = $t->$tableKey;
-                    DB::connection('tenant_temp')->statement("CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}` LIKE `{$sourceDb}`.`{$tableName}`;");
+                $tArr = (array)$t;
+                $tableName = $tArr[$tableKey] ?? null;
+                if ($tableName) {
+                    // Create table structure in target database
+                    DB::statement("CREATE TABLE IF NOT EXISTS `{$dbName}`.`{$tableName}` LIKE `{$sourceDb}`.`{$tableName}`;");
                     
-                    // Copy seed data for settings, admins, and basic configurations
-                    if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages'])) {
-                        $count = DB::connection('tenant_temp')->table("`{$dbName}`.`{$tableName}`")->count();
-                        if ($count === 0) {
-                            DB::connection('tenant_temp')->statement("INSERT INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
-                        }
+                    // Seed initial essential settings and configs into new database
+                    if (in_array($tableName, ['admins', 'basic_settings', 'basic_extendeds', 'email_templates', 'languages', 'packages'])) {
+                        DB::statement("INSERT IGNORE INTO `{$dbName}`.`{$tableName}` SELECT * FROM `{$sourceDb}`.`{$tableName}`;");
                     }
                 }
             }
-
-            DB::purge('tenant_temp');
+            Log::info("Successfully populated all schema tables into dynamic database {$dbName}");
         } catch (\Throwable $e) {
             Log::error("Failed seeding dynamic schema into database {$dbName}: " . $e->getMessage());
         }
