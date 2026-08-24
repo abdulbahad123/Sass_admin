@@ -65,6 +65,9 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
 });
 
+// Shared Authenticated Product Single-Click SSO Launch Route
+Route::get('/admin/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('admin.products.admin-launch')->middleware('auth');
+
 // Master Agency Dedicated Portal Routes (Full Functionality Suite)
 Route::prefix('master')->name('master.')->middleware([\App\Http\Middleware\MasterAgencyMiddleware::class])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\MasterAgency\MasterDashboardController::class, 'index'])->name('dashboard');
