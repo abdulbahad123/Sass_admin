@@ -111,11 +111,18 @@ class ProductController extends Controller
 
     public function launchAdmin(Request $request, Product $product)
     {
-        $currentHost = $request->getHost();
-        $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
-        $slug = $product->slug ?? Str::slug($product->name);
-        
-        $baseUrl = "https://{$slug}.{$rootDomain}";
+        $baseUrl = !empty($product->app_url) ? rtrim($product->app_url, '/') : null;
+
+        if (!$baseUrl) {
+            $currentHost = $request->getHost();
+            $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
+            $slug = $product->slug ?? Str::slug($product->name);
+            $baseUrl = "https://{$slug}.{$rootDomain}";
+        }
+
+        if (!preg_match("~^(?:f|ht)tps?://~i", $baseUrl)) {
+            $baseUrl = "https://" . $baseUrl;
+        }
 
         $timestamp = time() + 300;
         $nonce = Str::random(16);
