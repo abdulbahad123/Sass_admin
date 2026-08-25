@@ -41,6 +41,7 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::post('/agencies', [AgencyController::class, 'store'])->name('agencies.store');
     Route::put('/agencies/{agency}', [AgencyController::class, 'update'])->name('agencies.update');
     Route::patch('/agencies/{agency}/products/{product}', [AgencyController::class, 'toggleProductAccess'])->name('agencies.toggle-product');
+    Route::post('/agencies/{agency}/reprovision-db', [AgencyController::class, 'reprovisionDatabase'])->name('agencies.reprovision-db');
     Route::delete('/agencies/{agency}', [AgencyController::class, 'destroy'])->name('agencies.destroy');
 
     // Plans & Pricing Management

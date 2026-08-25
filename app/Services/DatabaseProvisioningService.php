@@ -38,7 +38,7 @@ class DatabaseProvisioningService
 
         $dbName = "{$cpanelUser}_{$cleanAgencySlug}_{$cleanProductSlug}";
 
-        $this->createDatabase($dbName, $cpanelUser);
+        $this->createDatabase($dbName);
 
         // Import Launchshop tables into the newly created database
         $this->seedFreshProductSchema($dbName, $productSlug);
@@ -59,6 +59,8 @@ class DatabaseProvisioningService
             throw new RuntimeException('Launchshop .sql template was not found. Place it in database/schema/launchshop_clean_template.sql');
         }
 
+        // The SaaS MySQL user (bazaarwa_sass_admindb) is not auto-linked to new DBs.
+        $this->grantAppUserOnDatabase($dbName);
         $this->waitForTenantConnection($dbName);
 
         $tableCount = $this->countTables($dbName);
@@ -104,7 +106,7 @@ class DatabaseProvisioningService
         }
     }
 
-    protected function createDatabase(string $dbName, string $cpanelUser): void
+    protected function createDatabase(string $dbName): void
     {
         try {
             $cliCmd = 'uapi Mysql create_database name='.escapeshellarg($dbName).' 2>&1';
@@ -122,32 +124,107 @@ class DatabaseProvisioningService
             Log::info('Direct CREATE DATABASE failed: '.$e->getMessage().'. Attempting cPanel UAPI HTTP API...');
         }
 
+        try {
+            $res1 = $this->cpanelMysqlRequest('create_database', ['name' => $dbName]);
+            if ($res1) {
+                Log::info('cPanel UAPI create_database response: '.$res1);
+            }
+        } catch (Throwable $ex) {
+            Log::error('cPanel HTTP UAPI create_database error: '.$ex->getMessage());
+        }
+
+        $this->grantAppUserOnDatabase($dbName);
+    }
+
+    /**
+     * cPanel creates the empty DB under the account, but Laravel connects as
+     * DB_USERNAME (e.g. bazaarwa_sass_admindb). That user must be assigned
+     * ALL PRIVILEGES on the new database or import fails with SQLSTATE 1044.
+     */
+    protected function grantAppUserOnDatabase(string $dbName): void
+    {
+        $dbUsers = $this->mysqlUsersToGrant();
+
+        foreach ($dbUsers as $dbUser) {
+            // 1. Try direct MySQL GRANT queries first (works if user has GRANT privileges)
+            foreach (['localhost', '127.0.0.1', '%'] as $host) {
+                try {
+                    DB::statement("GRANT ALL PRIVILEGES ON `{$dbName}`.* TO '{$dbUser}'@'{$host}'");
+                    @DB::statement("FLUSH PRIVILEGES");
+                } catch (Throwable $e) {
+                    // Ignored - web user may not have GRANT OPTION in cPanel
+                }
+            }
+
+            // 2. Try cPanel CLI command
+            $cliCmd = 'uapi Mysql set_privileges_on_database user='.escapeshellarg($dbUser)
+                .' database='.escapeshellarg($dbName)
+                ." privileges='ALL PRIVILEGES' 2>&1";
+            @exec($cliCmd, $cliOutput, $cliReturn);
+            if ($cliReturn === 0) {
+                Log::info("cPanel CLI granted {$dbUser} on {$dbName}: ".implode(' ', array_slice($cliOutput ?? [], 0, 8)));
+            }
+
+            // 3. Try cPanel UAPI HTTP Request
+            try {
+                $res = $this->cpanelMysqlRequest('set_privileges_on_database', [
+                    'user' => $dbUser,
+                    'database' => $dbName,
+                    'privileges' => 'ALL PRIVILEGES',
+                ]);
+                if ($res) {
+                    Log::info("cPanel UAPI grant {$dbUser} on {$dbName}: {$res}");
+                }
+            } catch (Throwable $ex) {
+                Log::error("cPanel grant failed for {$dbUser} on {$dbName}: ".$ex->getMessage());
+            }
+        }
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function mysqlUsersToGrant(): array
+    {
+        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $appUser = (string) config('database.connections.mysql.username');
+
+        $users = array_filter([
+            $appUser,
+            env('CPANEL_DB_USER'),
+            $cpanelUser,
+        ]);
+
+        // cPanel sometimes wants the suffix after account_ (sass_admindb)
+        if ($appUser && str_starts_with($appUser, $cpanelUser.'_')) {
+            $users[] = substr($appUser, strlen($cpanelUser) + 1);
+        }
+
+        return array_values(array_unique(array_filter($users)));
+    }
+
+    protected function cpanelMysqlRequest(string $function, array $query): ?string
+    {
+        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
         $cpanelHost = env('CPANEL_HOST', 's3508.bom1.stableserver.net');
         $cpanelToken = env('CPANEL_API_TOKEN');
         $cpanelPass = env('CPANEL_PASSWORD');
 
-        try {
-            $req = Http::withoutVerifying()->timeout(30);
-            if ($cpanelToken) {
-                $req = $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
-            } elseif ($cpanelPass) {
-                $req = $req->withBasicAuth($cpanelUser, $cpanelPass);
-            }
-
-            $res1 = $req->get("https://{$cpanelHost}:2083/execute/Mysql/create_database", [
-                'name' => $dbName,
-            ]);
-            Log::info('cPanel UAPI create_database response: '.$res1->body());
-
-            $res2 = $req->get("https://{$cpanelHost}:2083/execute/Mysql/set_privileges_on_database", [
-                'user' => $cpanelUser,
-                'database' => $dbName,
-                'privileges' => 'ALL PRIVILEGES',
-            ]);
-            Log::info('cPanel UAPI set_privileges_on_database response: '.$res2->body());
-        } catch (Throwable $ex) {
-            Log::error('cPanel HTTP UAPI error: '.$ex->getMessage());
+        if (!$cpanelToken && !$cpanelPass) {
+            Log::warning('CPANEL_API_TOKEN / CPANEL_PASSWORD missing; cannot call UAPI '.$function);
+            return null;
         }
+
+        $req = Http::withoutVerifying()->timeout(30);
+        if ($cpanelToken) {
+            $req = $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
+        } else {
+            $req = $req->withBasicAuth($cpanelUser, $cpanelPass);
+        }
+
+        $res = $req->get("https://{$cpanelHost}:2083/execute/Mysql/{$function}", $query);
+
+        return $res->body();
     }
 
     protected function resolveSchemaFile(string $productSlug): ?string
@@ -208,6 +285,9 @@ class DatabaseProvisioningService
             } catch (Throwable $e) {
                 $lastError = $e;
                 Log::warning("Tenant DB connect attempt {$attempt}/10 for {$dbName}: ".$e->getMessage());
+                if (str_contains($e->getMessage(), '1044') || str_contains($e->getMessage(), 'Access denied')) {
+                    $this->grantAppUserOnDatabase($dbName);
+                }
                 usleep(700000);
             }
         }

@@ -132,6 +132,17 @@
                     </a>
 
                     <div class="flex items-center space-x-2">
+                        <!-- Re-import DB Tables button -->
+                        <form action="{{ route('admin.agencies.reprovision-db', $agency) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" 
+                                    title="Import Launchshop tables into database"
+                                    class="px-2.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 transition-colors flex items-center space-x-1">
+                                <i data-lucide="database" class="w-3.5 h-3.5"></i>
+                                <span>Import Tables</span>
+                            </button>
+                        </form>
+
                         <!-- Edit Agency Button (Task 3) -->
                         <button onclick="openEditAgencyModal({{ json_encode($agency) }})" 
                                 class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-indigo-700 font-bold border border-slate-200 transition-colors flex items-center space-x-1">

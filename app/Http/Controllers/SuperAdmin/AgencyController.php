@@ -290,4 +290,28 @@ class AgencyController extends Controller
 
         return redirect()->route('whitelabel.dashboard');
     }
+
+    public function reprovisionDatabase(Request $request, Agency $agency)
+    {
+        $dbService = new \App\Services\DatabaseProvisioningService();
+        $products = $agency->products->isNotEmpty() ? $agency->products : Product::where('is_active', true)->get();
+
+        $errors = [];
+        $successes = [];
+
+        foreach ($products as $product) {
+            try {
+                $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                $successes[] = "Tables successfully imported into database '{$dbName}' for {$product->name}!";
+            } catch (\Throwable $e) {
+                $errors[] = "Failed for {$product->name}: " . $e->getMessage();
+            }
+        }
+
+        if ($errors) {
+            return redirect()->route('admin.agencies.index')->with('error', implode(' | ', $errors));
+        }
+
+        return redirect()->route('admin.agencies.index')->with('success', implode(' | ', $successes));
+    }
 }
