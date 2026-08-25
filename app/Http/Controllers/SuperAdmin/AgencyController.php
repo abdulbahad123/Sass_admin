@@ -115,8 +115,9 @@ class AgencyController extends Controller
             ]);
         }
 
-        // Assign products & provision dynamic database
+        // Assign products & provision dynamic database + Launchshop tables
         $dbService = new \App\Services\DatabaseProvisioningService();
+        $provisionErrors = [];
         if (!empty($validated['products'])) {
             $syncData = [];
             $hasDbCol = \Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name');
@@ -124,14 +125,21 @@ class AgencyController extends Controller
             foreach ($validated['products'] as $productId) {
                 $product = Product::find($productId);
                 $dbName = null;
+                $dbStatus = 'pending';
                 if ($product) {
-                    $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                    try {
+                        $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                        $dbStatus = 'active';
+                    } catch (\Throwable $e) {
+                        $provisionErrors[] = $e->getMessage();
+                        $dbStatus = 'failed';
+                    }
                 }
 
                 $pivotData = ['status' => 'enabled'];
                 if ($hasDbCol) {
                     $pivotData['db_name'] = $dbName;
-                    $pivotData['db_status'] = 'active';
+                    $pivotData['db_status'] = $dbStatus;
                 }
                 $syncData[$productId] = $pivotData;
             }
@@ -146,7 +154,14 @@ class AgencyController extends Controller
             'details' => ['agency_id' => $agency->id, 'type' => $agency->type, 'owner' => $agency->owner_name],
         ]);
 
-        return redirect()->route('admin.agencies.index')->with('success', "Agency '{$agency->name}' onboarded successfully!");
+        if ($provisionErrors) {
+            return redirect()->route('admin.agencies.index')->with(
+                'error',
+                "Agency '{$agency->name}' was created, but Launchshop tables were not imported: ".implode(' | ', $provisionErrors)
+            );
+        }
+
+        return redirect()->route('admin.agencies.index')->with('success', "Agency '{$agency->name}' onboarded successfully with Launchshop tables!");
     }
 
     public function update(Request $request, Agency $agency)
