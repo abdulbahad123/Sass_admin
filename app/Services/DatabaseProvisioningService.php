@@ -65,7 +65,8 @@ class DatabaseProvisioningService
 
         $tableCount = $this->countTables($dbName);
         if ($tableCount > 0) {
-            Log::info("Database {$dbName} already has {$tableCount} tables; skipping import.");
+            Log::info("Database {$dbName} already has {$tableCount} tables; ensuring template users are seeded...");
+            $this->seedTemplateUsersFromMainDb($dbName);
             return;
         }
 
