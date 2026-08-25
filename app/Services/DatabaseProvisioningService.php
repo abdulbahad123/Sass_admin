@@ -328,18 +328,24 @@ class DatabaseProvisioningService
      */
     protected function mysqlUsersToGrant(): array
     {
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
-        $appUser = (string) config('database.connections.mysql.username');
+        $cpanelUser     = env('CPANEL_USER', 'bazaarwa');
+        $appUser        = (string) config('database.connections.mysql.username');
+        $launchshopUser = env('LAUNCHSHOP_MAIN_DB_USER', 'bazaarwa_launchshop');
 
         $users = array_filter([
             $appUser,
+            $launchshopUser,
+            'bazaarwa_launchshop',
+            'bazaarwa_sass_admindb',
             env('CPANEL_DB_USER'),
             $cpanelUser,
         ]);
 
         // cPanel sometimes wants the suffix after account_ (sass_admindb)
-        if ($appUser && str_starts_with($appUser, $cpanelUser.'_')) {
-            $users[] = substr($appUser, strlen($cpanelUser) + 1);
+        foreach ([$appUser, $launchshopUser] as $u) {
+            if ($u && str_starts_with($u, $cpanelUser.'_')) {
+                $users[] = substr($u, strlen($cpanelUser) + 1);
+            }
         }
 
         return array_values(array_unique(array_filter($users)));
