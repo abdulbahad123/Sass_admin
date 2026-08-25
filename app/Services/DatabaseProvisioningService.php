@@ -167,19 +167,21 @@ class DatabaseProvisioningService
         $inList  = implode(',', array_map('intval', $userIds));
 
         // Tables to copy. Order matters for foreign key constraints.
+        // Tables to copy. Order matters for foreign key constraints.
         // 'fk' is the column that references the user id.
         $tablesToCopy = [
             ['table' => 'users',                      'fk' => null,      'rows' => $templateUsers],
-            ['table' => 'basic_settings',             'fk' => 'user_id', 'rows' => null],
-            ['table' => 'basic_extended',             'fk' => 'user_id', 'rows' => null],
-            ['table' => 'bcategories',                'fk' => 'user_id', 'rows' => null],
-            ['table' => 'additional_sections',        'fk' => 'user_id', 'rows' => null],
-            ['table' => 'additional_section_content', 'fk' => 'user_id', 'rows' => null],
-            ['table' => 'counter_information',        'fk' => 'user_id', 'rows' => null],
-            ['table' => 'counter_sections',           'fk' => 'user_id', 'rows' => null],
-            ['table' => 'email_templates',            'fk' => 'user_id', 'rows' => null],
-            ['table' => 'blogs',                      'fk' => 'user_id', 'rows' => null],
-            ['table' => 'faqs',                       'fk' => 'user_id', 'rows' => null],
+            ['table' => 'memberships',                'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_basic_settings',        'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_basic_extendes',        'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_counter_information',   'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_counter_sections',      'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_email_templates',       'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_blogs',                 'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_faqs',                  'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_languages',             'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_headings',              'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_seos',                  'fk' => 'user_id', 'rows' => null],
         ];
 
         // Disable FK checks in target DB for clean import
