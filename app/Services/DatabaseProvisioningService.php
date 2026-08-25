@@ -539,42 +539,20 @@ class DatabaseProvisioningService
         $pdo->exec('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
         $pdo->exec('SET NAMES utf8mb4');
 
-        $handle = fopen($schemaFile, 'r');
-        if ($handle === false) {
-            throw new RuntimeException("Unable to open SQL file: {$schemaFile}");
-        }
+        $content = file_get_contents($schemaFile);
+        $content = str_replace("\r\n", "\n", $content);
 
-        $buffer = '';
+        $statements = preg_split('/;\n(?=(?:CREATE TABLE|INSERT INTO|DROP TABLE|LOCK TABLES|UNLOCK TABLES|ALTER TABLE|\/\*!|--))/i', $content);
         $executed = 0;
 
         try {
-            while (($line = fgets($handle)) !== false) {
-                $trim = ltrim($line);
-
-                if ($buffer === '') {
-                    if ($trim === '' || str_starts_with($trim, '--') || str_starts_with($trim, '#')) {
-                        continue;
-                    }
-                    if (str_starts_with($trim, '/*') && !str_starts_with($trim, '/*!')) {
-                        continue;
-                    }
-                    if (preg_match('/^\s*(START TRANSACTION|COMMIT|ROLLBACK)\s*;/i', $trim)) {
-                        continue;
-                    }
-                    if (preg_match('/^\s*(USE\s+|CREATE\s+DATABASE)/i', $trim)) {
-                        continue;
-                    }
-                }
-
-                $buffer .= $line;
-
-                if (!preg_match('/;\s*$/', rtrim($line))) {
+            foreach ($statements as $stmt) {
+                $sql = trim($stmt);
+                if (empty($sql) || $sql === ';') {
                     continue;
                 }
 
-                $sql = trim($buffer);
-                $buffer = '';
-                if ($sql === '' || $sql === ';') {
+                if (preg_match('/^\s*(START TRANSACTION|COMMIT|ROLLBACK|USE\s+|CREATE\s+DATABASE)/i', $sql)) {
                     continue;
                 }
 
@@ -586,18 +564,7 @@ class DatabaseProvisioningService
                     Log::warning("SQL statement failed in {$dbName}: {$e->getMessage()} | {$preview}");
                 }
             }
-
-            $leftover = trim($buffer);
-            if ($leftover !== '' && $leftover !== ';') {
-                try {
-                    $pdo->exec($leftover);
-                    $executed++;
-                } catch (Throwable $e) {
-                    Log::warning("Trailing SQL failed in {$dbName}: ".$e->getMessage());
-                }
-            }
         } finally {
-            fclose($handle);
             try {
                 $pdo->exec('SET FOREIGN_KEY_CHECKS=1');
                 $pdo->exec('SET UNIQUE_CHECKS=1');
