@@ -64,15 +64,27 @@ class DatabaseProvisioningService
         $this->waitForTenantConnection($dbName);
 
         $tableCount = $this->countTables($dbName);
+        $hasPackages = false;
         if ($tableCount > 0) {
-            Log::info("Database {$dbName} already has {$tableCount} tables; ensuring template users are seeded...");
+            try {
+                config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
+                DB::purge('target_tenant_db');
+                $pkgCheck = DB::connection('target_tenant_db')->select("SHOW TABLES LIKE 'packages'");
+                $hasPackages = !empty($pkgCheck);
+            } catch (Throwable $e) {
+                $hasPackages = false;
+            }
+        }
+
+        if ($tableCount > 0 && $hasPackages) {
+            Log::info("Database {$dbName} already has {$tableCount} tables including packages; ensuring template users are seeded...");
             $this->seedTemplateUsersFromMainDb($dbName);
             return;
         }
 
         $importedViaCli = $this->importSqlViaMysqlCli($dbName, $schemaFile);
 
-        if (!$importedViaCli || $this->countTables($dbName) < 1) {
+        if (!$importedViaCli || !$hasPackages) {
             $this->importSqlViaPhp($dbName, $schemaFile);
         }
 
