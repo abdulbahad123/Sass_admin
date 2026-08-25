@@ -83,6 +83,148 @@ class DatabaseProvisioningService
         }
 
         Log::info("Populated {$tableCount} tables into {$dbName} from {$schemaFile}");
+
+        // Automatically seed template users (themes) into every new agency DB
+        $this->seedTemplateUsersFromMainDb($dbName);
+    }
+
+    /**
+     * Seed template users (preview_template = 1) and their related data from the main
+     * launchshop DB into the newly created agency DB.
+     *
+     * These template users ARE the "themes" shown on the /templates page.
+     * Every new agency DB must have them so theme previews work immediately.
+     *
+     * Requires in Sass_admin .env:
+     *   LAUNCHSHOP_MAIN_DB=bazaarwa_launchshop
+     *   LAUNCHSHOP_MAIN_DB_USER=bazaarwa_launchshop
+     *   LAUNCHSHOP_MAIN_DB_PASS=<password>
+     */
+    protected function seedTemplateUsersFromMainDb(string $targetDbName): void
+    {
+        $mainDb   = env('LAUNCHSHOP_MAIN_DB', 'bazaarwa_launchshop');
+        $mainUser = env('LAUNCHSHOP_MAIN_DB_USER', env('DB_USERNAME'));
+        $mainPass = env('LAUNCHSHOP_MAIN_DB_PASS', env('DB_PASSWORD', ''));
+        $host     = env('DB_HOST', '127.0.0.1');
+        $port     = env('DB_PORT', '3306');
+
+        if (!$mainUser) {
+            Log::info("seedTemplateUsers: LAUNCHSHOP_MAIN_DB_USER not set in .env — skipping template seeding.");
+            return;
+        }
+
+        // Connect to main launchshop DB as its own user
+        try {
+            $dsn    = "mysql:host={$host};port={$port};dbname={$mainDb};charset=utf8mb4";
+            $srcPdo = new \PDO($dsn, $mainUser, $mainPass, [
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                \PDO::ATTR_TIMEOUT            => 10,
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning("seedTemplateUsers: Cannot connect to main DB '{$mainDb}': " . $e->getMessage());
+            return;
+        }
+
+        // Connect to the newly created agency DB
+        try {
+            $tgtDsn = "mysql:host={$host};port={$port};dbname={$targetDbName};charset=utf8mb4";
+            $tgtPdo = new \PDO($tgtDsn, $mainUser, $mainPass, [
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                \PDO::ATTR_TIMEOUT            => 10,
+            ]);
+        } catch (\Throwable $e) {
+            // Try with the Sass Admin user as fallback
+            $sassUser = env('DB_USERNAME');
+            $sassPass = env('DB_PASSWORD', '');
+            try {
+                $tgtDsn = "mysql:host={$host};port={$port};dbname={$targetDbName};charset=utf8mb4";
+                $tgtPdo = new \PDO($tgtDsn, $sassUser, $sassPass, [
+                    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                ]);
+            } catch (\Throwable $e2) {
+                Log::warning("seedTemplateUsers: Cannot connect to target DB '{$targetDbName}': " . $e2->getMessage());
+                return;
+            }
+        }
+
+        // Get template users from main DB
+        try {
+            $templateUsers = $srcPdo->query("SELECT * FROM users WHERE preview_template = 1")->fetchAll();
+        } catch (\Throwable $e) {
+            Log::warning("seedTemplateUsers: Cannot query users from {$mainDb}: " . $e->getMessage());
+            return;
+        }
+
+        if (empty($templateUsers)) {
+            Log::info("seedTemplateUsers: No preview_template=1 users found in {$mainDb} — nothing to seed.");
+            return;
+        }
+
+        $userIds = array_column($templateUsers, 'id');
+        $inList  = implode(',', array_map('intval', $userIds));
+
+        // Tables to copy. Order matters for foreign key constraints.
+        // 'fk' is the column that references the user id.
+        $tablesToCopy = [
+            ['table' => 'users',                      'fk' => null,      'rows' => $templateUsers],
+            ['table' => 'basic_settings',             'fk' => 'user_id', 'rows' => null],
+            ['table' => 'basic_extended',             'fk' => 'user_id', 'rows' => null],
+            ['table' => 'bcategories',                'fk' => 'user_id', 'rows' => null],
+            ['table' => 'additional_sections',        'fk' => 'user_id', 'rows' => null],
+            ['table' => 'additional_section_content', 'fk' => 'user_id', 'rows' => null],
+            ['table' => 'counter_information',        'fk' => 'user_id', 'rows' => null],
+            ['table' => 'counter_sections',           'fk' => 'user_id', 'rows' => null],
+            ['table' => 'email_templates',            'fk' => 'user_id', 'rows' => null],
+            ['table' => 'blogs',                      'fk' => 'user_id', 'rows' => null],
+            ['table' => 'faqs',                       'fk' => 'user_id', 'rows' => null],
+        ];
+
+        // Disable FK checks in target DB for clean import
+        $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=0');
+
+        foreach ($tablesToCopy as $entry) {
+            $table = $entry['table'];
+            $fk    = $entry['fk'];
+            $rows  = $entry['rows'];
+
+            try {
+                // Check table exists in target DB before inserting
+                $tblExists = $tgtPdo->query("SHOW TABLES LIKE '{$table}'")->fetchAll();
+                if (empty($tblExists)) {
+                    Log::debug("seedTemplateUsers: Table '{$table}' not found in {$targetDbName} — skipping.");
+                    continue;
+                }
+
+                if ($rows === null) {
+                    $rows = $srcPdo->query("SELECT * FROM {$table} WHERE {$fk} IN ({$inList})")->fetchAll();
+                }
+
+                if (empty($rows)) {
+                    continue;
+                }
+
+                $cols         = '`' . implode('`, `', array_keys($rows[0])) . '`';
+                $placeholders = implode(', ', array_fill(0, count($rows[0]), '?'));
+                $insertSql    = "INSERT IGNORE INTO `{$table}` ({$cols}) VALUES ({$placeholders})";
+                $insertStmt   = $tgtPdo->prepare($insertSql);
+
+                foreach ($rows as $row) {
+                    $insertStmt->execute(array_values($row));
+                }
+
+                Log::info("seedTemplateUsers: Copied " . count($rows) . " rows → {$targetDbName}.{$table}");
+
+            } catch (\Throwable $e) {
+                Log::warning("seedTemplateUsers: Failed copying '{$table}' to {$targetDbName}: " . $e->getMessage());
+            }
+        }
+
+        $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=1');
+
+        Log::info("seedTemplateUsers: " . count($templateUsers) . " template users seeded into {$targetDbName}.");
     }
 
     /**
