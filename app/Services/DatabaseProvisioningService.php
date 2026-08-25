@@ -33,10 +33,10 @@ class DatabaseProvisioningService
         $productSlug = Str::slug($product->slug ?? $product->name);
 
         // Sanitize name for MySQL DB format
-        $cleanAgencySlug = str_replace('-', '_', substr($agencySlug, 0, 24));
+        $cleanAgencySlug = str_replace('-', '_', substr($agencySlug, 0, 16));
         $cleanProductSlug = str_replace('-', '_', substr($productSlug, 0, 12));
 
-        $dbName = "{$cpanelUser}_{$cleanAgencySlug}_{$cleanProductSlug}";
+        $dbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
 
         $this->createDatabase($dbName);
 
