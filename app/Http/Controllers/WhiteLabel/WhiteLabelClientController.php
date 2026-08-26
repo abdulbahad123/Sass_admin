@@ -69,7 +69,15 @@ class WhiteLabelClientController extends Controller
 
             if ($foundDb) {
                 try {
-                    $tenantUsers = DB::table("{$foundDb}.users")->get();
+                    // Exclude theme preview template users (preview_template = 1) so only real end-clients are counted
+                    $tenantUsers = DB::table("{$foundDb}.users")
+                        ->where(function ($q) {
+                            $q->whereNull('preview_template')
+                              ->orWhere('preview_template', 0)
+                              ->orWhere('preview_template', '0')
+                              ->orWhere('preview_template', '');
+                        })
+                        ->get();
                     foreach ($tenantUsers as $tu) {
                         $name = trim(($tu->first_name ?? '') . ' ' . ($tu->last_name ?? ''));
                         if (empty($name)) {
