@@ -92,12 +92,34 @@ class WhiteLabelDashboardController extends Controller
                         })
                         ->get();
                     $dbOnline = true;
+                    $totalDbMrr = 0;
                     foreach ($tenantUsers as $tu) {
                         $name = trim(($tu->first_name ?? '') . ' ' . ($tu->last_name ?? ''));
                         if (empty($name)) {
                             $name = $tu->username ?? $tu->email ?? 'Client';
                         }
                         $status = ($tu->status ?? 1) == 1 ? 'active' : 'inactive';
+
+                        // Fetch real plan title & price from memberships table
+                        $planTitle = 'Standard';
+                        $planPrice = 2999;
+                        try {
+                            $memb = DB::table("{$foundDb}.memberships")
+                                ->where('user_id', $tu->id)
+                                ->orderBy('id', 'desc')
+                                ->first();
+                            if ($memb) {
+                                $planPrice = floatval($memb->price ?? 0);
+                                $pkg = DB::table("{$foundDb}.packages")->where('id', $memb->package_id)->first();
+                                if ($pkg) {
+                                    $planTitle = $pkg->title;
+                                    if ($planPrice <= 0) {
+                                        $planPrice = floatval($pkg->price ?? 2999);
+                                    }
+                                }
+                            }
+                        } catch (\Throwable $mEx) {}
+
                         $allClients[] = [
                             'id'           => $tu->id,
                             'name'         => $name,
@@ -106,7 +128,8 @@ class WhiteLabelDashboardController extends Controller
                             'product_id'   => $ap->product_id,
                             'product_name' => $prodName,
                             'db_name'      => $foundDb,
-                            'plan'         => 'Growth',
+                            'plan'         => $planTitle,
+                            'price'        => $planPrice,
                             'status'       => $status,
                             'status_color' => $status === 'active' ? 'emerald' : 'amber',
                             'joined'       => !empty($tu->created_at) ? \Carbon\Carbon::parse($tu->created_at)->format('M d, Y') : now()->format('M d, Y'),
@@ -114,6 +137,8 @@ class WhiteLabelDashboardController extends Controller
                         ];
 
                         $countInThisDb++;
+                        $totalDbMrr += $planPrice;
+
                         if (!isset($productCounts[$prodName])) {
                             $productCounts[$prodName] = 0;
                         }
@@ -132,7 +157,7 @@ class WhiteLabelDashboardController extends Controller
                 'is_online' => $dbOnline,
                 'color'     => $colors[$idx % count($colors)],
                 'icon'      => $icons[$idx % count($icons)],
-                'mrr'       => $countInThisDb * 2999,
+                'mrr'       => $totalDbMrr,
             ];
         }
 
@@ -194,8 +219,8 @@ class WhiteLabelDashboardController extends Controller
             }
         }
 
-        // Calculated MRR & revenue trend
-        $mrr = ($activeClients * 2999) + ($pendingClients * 999);
+        // Calculated MRR & revenue trend dynamically from real customer plan prices
+        $mrr = array_sum(array_column($allClients, 'price'));
 
         $revenueChartLabels = ['Aug 1', 'Aug 6', 'Aug 11', 'Aug 16', 'Aug 21', 'Aug 26', 'Aug 31'];
         if ($mrr > 0) {

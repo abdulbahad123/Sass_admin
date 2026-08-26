@@ -84,6 +84,22 @@ class WhiteLabelClientController extends Controller
                             $name = $tu->username ?? $tu->email ?? 'Client';
                         }
                         $status = ($tu->status ?? 1) == 1 ? 'Active' : 'Inactive';
+
+                        // Fetch real plan title from memberships
+                        $planTitle = 'Standard';
+                        try {
+                            $memb = DB::table("{$foundDb}.memberships")
+                                ->where('user_id', $tu->id)
+                                ->orderBy('id', 'desc')
+                                ->first();
+                            if ($memb) {
+                                $pkg = DB::table("{$foundDb}.packages")->where('id', $memb->package_id)->first();
+                                if ($pkg) {
+                                    $planTitle = $pkg->title;
+                                }
+                            }
+                        } catch (\Throwable $mEx) {}
+
                         $clients[] = [
                             'id'           => $tu->id,
                             'name'         => $name,
@@ -91,7 +107,7 @@ class WhiteLabelClientController extends Controller
                             'email'        => $tu->email ?? 'N/A',
                             'product_name' => $prodName,
                             'product_id'   => $ap->product_id,
-                            'plan'         => 'Growth',
+                            'plan'         => $planTitle,
                             'status'       => $status,
                             'joined'       => !empty($tu->created_at) ? \Carbon\Carbon::parse($tu->created_at)->format('M d, Y') : now()->format('M d, Y'),
                         ];
