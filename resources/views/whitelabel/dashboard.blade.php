@@ -133,6 +133,62 @@
 
     </div>
 
+    <!-- Task 2: Product Client Distribution Section (Below Top KPI Cards) -->
+    <div>
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-base font-bold text-slate-900 font-heading flex items-center gap-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i> Product Client Distribution
+                </h3>
+                <p class="text-xs text-slate-500">Live breakdown of onboarded end-clients per agency product database</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {{ count($productCards ?? []) }} Products Registered
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            @foreach($productCards ?? [] as $pCard)
+                <div class="card-white rounded-2xl p-5 hover:shadow-md transition-all border border-slate-100 relative overflow-hidden group">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-md" style="background-color: {{ $pCard['color'] }}">
+                                <i data-lucide="{{ $pCard['icon'] }}" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-extrabold text-slate-900 leading-tight">{{ $pCard['name'] }}</h4>
+                                <span class="text-[10px] text-slate-400 font-medium block truncate max-w-[140px]" title="{{ $pCard['db_name'] }}">
+                                    🗄️ {{ $pCard['db_name'] }}
+                                </span>
+                            </div>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $pCard['is_online'] ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
+                            {{ $pCard['is_online'] ? 'ONLINE' : 'OFFLINE' }}
+                        </span>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-end justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Clients Onboarded</span>
+                            <span class="text-2xl font-extrabold text-slate-900 font-heading">{{ number_format($pCard['count']) }}</span>
+                            <span class="text-[11px] text-slate-500 font-medium ml-1">Clients</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Monthly MRR</span>
+                            <span class="text-sm font-extrabold text-emerald-600 font-heading">₹{{ number_format($pCard['mrr']) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500" 
+                             style="width: {{ $totalClients > 0 ? min(100, max(12, round(($pCard['count'] / max(1, $totalClients)) * 100))) : 0 }}%; background-color: {{ $pCard['color'] }};">
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
     <!-- 2. Middle Row 1: Revenue Overview + Product Usage Donut + Top Performing Products -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
