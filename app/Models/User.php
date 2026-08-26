@@ -18,6 +18,7 @@ class User extends Authenticatable
         'password',
         'role',
         'agency_id',
+        'product_id',
         'status',
     ];
 
@@ -36,6 +37,11 @@ class User extends Authenticatable
     public function agency()
     {
         return $this->belongsTo(Agency::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 
     public function roles()

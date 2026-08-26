@@ -5,13 +5,27 @@
 @section('content')
 <div class="space-y-6">
 
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h2 class="text-xl font-bold text-slate-900 font-heading">Network Clients Directory</h2>
-            <p class="text-xs text-slate-500">248 End-Clients active across your sub-agency reseller network</p>
+            <div class="flex items-center space-x-3">
+                <h2 class="text-xl font-bold text-slate-900 font-heading">Network Clients Directory</h2>
+                <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-indigo-100 text-indigo-700">
+                    {{ count($clients) }} Total Network Clients
+                </span>
+            </div>
+            <div class="flex items-center space-x-2 mt-1.5 flex-wrap gap-y-1">
+                <span class="text-xs text-slate-500 font-medium">Product Allocation:</span>
+                @forelse($productCounts as $pName => $pCount)
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-violet-50 text-violet-700 border border-violet-100">
+                        {{ $pName }}: {{ $pCount }}
+                    </span>
+                @empty
+                    <span class="text-xs text-slate-400">No active products yet</span>
+                @endforelse
+            </div>
         </div>
         <button onclick="document.getElementById('createClientModal').classList.remove('hidden')" 
-                class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition-all">
+                class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition-all self-start sm:self-auto">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
             <span>+ Add End Client</span>
         </button>
@@ -32,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs">
-                    @foreach($clients as $c)
+                    @forelse($clients as $c)
                         <tr class="hover:bg-slate-50/80 transition-colors">
                             <td class="py-4 font-bold text-slate-900">
                                 {{ $c['name'] }}
@@ -40,7 +54,12 @@
                             </td>
                             <td class="py-4 text-indigo-600 font-mono text-[11px]">{{ $c['email'] }}</td>
                             <td class="py-4 font-medium text-slate-700">{{ $c['sub_agency'] }}</td>
-                            <td class="py-4 font-bold text-violet-600">{{ $c['product'] }}</td>
+                            <td class="py-4">
+                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-violet-50 text-violet-700 border border-violet-100 inline-flex items-center space-x-1">
+                                    <i data-lucide="box" class="w-3 h-3 text-violet-500 mr-1"></i>
+                                    <span>{{ $c['product'] }}</span>
+                                </span>
+                            </td>
                             <td class="py-4 text-slate-500">{{ $c['plan'] }}</td>
                             <td class="py-4">
                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">
@@ -49,7 +68,13 @@
                             </td>
                             <td class="py-4 text-right text-slate-400 font-mono text-[11px]">{{ $c['joined'] }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="py-8 text-center text-slate-400 text-xs font-medium">
+                                No network end-clients found. Click <strong>+ Add End Client</strong> to create one!
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -87,20 +112,19 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Managing Sub-Agency</label>
-                    <select name="sub_agency" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                        <option>Digital Solutions Hub</option>
-                        <option>TechBoost Agency</option>
-                        <option>WebCraft Studio</option>
-                        <option>Branding Experts</option>
+                    <select name="sub_agency_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                        <option value="">Direct Master Client</option>
+                        @foreach($subAgencies as $sub)
+                            <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Product</label>
-                    <select name="product" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                        <option>Launchshop</option>
-                        <option>Smart CRM</option>
-                        <option>WebBuilder Pro</option>
-                        <option>AppConnect</option>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Product Allocated</label>
+                    <select name="product_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                        @foreach($products as $p)
+                            <option value="{{ $p->id }}" {{ $p->slug === 'launchshop' ? 'selected' : '' }}>{{ $p->name }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

@@ -91,8 +91,10 @@
                 <!-- Quotas & Domain -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                        <span class="text-slate-400 block text-[11px]">Client Quota</span>
-                        <span class="font-bold text-slate-900 mt-0.5 block">{{ $agency->max_clients }} Allowed</span>
+                        <span class="text-slate-400 block text-[11px]">Registered Clients Count</span>
+                        <span class="font-bold text-indigo-700 mt-0.5 block">
+                            {{ $agency->users()->where('role', 'client')->count() }} / {{ $agency->max_clients }} Clients
+                        </span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="text-slate-400 block text-[11px]">Custom Branding Domain</span>
