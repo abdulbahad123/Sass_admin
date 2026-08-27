@@ -214,9 +214,11 @@ class DatabaseProvisioningService
             ['table' => 'banners',                          'fk' => 'user_id', 'rows' => null],
             ['table' => 'tabs',                             'fk' => 'user_id', 'rows' => null],
             ['table' => 'testimonials',                     'fk' => 'user_id', 'rows' => null],
-            ['table' => 'variant_contents',                 'fk' => 'user_id', 'rows' => null],
             ['table' => 'user_item_images',                 'fk' => 'item_id', 'rows' => null],
             ['table' => 'product_variations',               'fk' => 'item_id', 'rows' => null],
+            ['table' => 'product_variation_contents',       'fk' => 'product_variation_id', 'rows' => null],
+            ['table' => 'product_variant_options',          'fk' => 'product_variation_id', 'rows' => null],
+            ['table' => 'product_variant_option_contents',   'fk' => 'product_variant_option_id', 'rows' => null],
         ];
 
 
@@ -239,6 +241,10 @@ class DatabaseProvisioningService
                 if ($rows === null) {
                     if ($fk === 'item_id') {
                         $rows = $srcPdo->query("SELECT * FROM {$table} WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))")->fetchAll();
+                    } elseif ($fk === 'product_variation_id') {
+                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE product_variation_id IN (SELECT id FROM product_variations WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList})))")->fetchAll();
+                    } elseif ($fk === 'product_variant_option_id') {
+                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE product_variant_option_id IN (SELECT id FROM product_variant_options WHERE product_variation_id IN (SELECT id FROM product_variations WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))))")->fetchAll();
                     } else {
                         $rows = $srcPdo->query("SELECT * FROM {$table} WHERE {$fk} IN ({$inList})")->fetchAll();
                     }
