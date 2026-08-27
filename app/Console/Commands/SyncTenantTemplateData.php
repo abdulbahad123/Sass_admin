@@ -37,26 +37,48 @@ class SyncTenantTemplateData extends Command
             return 0;
         }
 
-        // Get all tenant databases matching bazaarwa_ps_%
+        $targetDbs = [];
+
+        // 1. Fetch db_name from agency_products
+        try {
+            $fromProducts = DB::table('agency_products')->whereNotNull('db_name')->where('db_name', '!=', '')->pluck('db_name')->toArray();
+            $targetDbs = array_merge($targetDbs, $fromProducts);
+        } catch (\Throwable $e) {
+            $this->warn("Could not query agency_products: " . $e->getMessage());
+        }
+
+        // 2. INFORMATION_SCHEMA attempt
         try {
             $dbs = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME LIKE '%_ps_%'");
-            if (empty($dbs)) {
-                $this->warn("No tenant databases found matching %_ps_%.");
-                return 0;
-            }
-
-            foreach ($dbs as $row) {
-                $dbName = $row->SCHEMA_NAME;
-                $this->info("Syncing template data into {$dbName}...");
-                try {
-                    $provisioningService->seedFreshProductSchema($dbName);
-                    $this->info("Successfully synced {$dbName}.");
-                } catch (\Throwable $e) {
-                    $this->error("Failed syncing {$dbName}: " . $e->getMessage());
+            if (!empty($dbs)) {
+                foreach ($dbs as $row) {
+                    $targetDbs[] = $row->SCHEMA_NAME;
                 }
             }
         } catch (\Throwable $e) {
-            $this->error("Error querying INFORMATION_SCHEMA: " . $e->getMessage());
+            // ignore
+        }
+
+        // 3. Fallback standard DB names
+        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $targetDbs[] = "{$cpanelUser}_ps_ysquare_launchshop";
+        $targetDbs[] = "bazaarwa_ps_ysquare_launchshop";
+
+        $targetDbs = array_unique(array_filter($targetDbs));
+
+        if (empty($targetDbs)) {
+            $this->warn("No tenant databases found.");
+            return 0;
+        }
+
+        foreach ($targetDbs as $dbName) {
+            $this->info("Syncing template data into {$dbName}...");
+            try {
+                $provisioningService->seedFreshProductSchema($dbName);
+                $this->info("Successfully synced {$dbName}.");
+            } catch (\Throwable $e) {
+                $this->error("Failed syncing {$dbName}: " . $e->getMessage());
+            }
         }
 
         return 0;
