@@ -165,7 +165,7 @@ class DatabaseProvisioningService
 
         // Get template users from main DB
         try {
-            $templateUsers = $srcPdo->query("SELECT * FROM users WHERE preview_template = 1 OR username IN ('grocery', 'manti', 'skinflow', 'fashclo', 'electi', 'furial', 'kidsfa', 'petrashop', 'jewellery', 'clothing', 'fashion', 'furniture', 'pet', 'vegetables')")->fetchAll();
+            $templateUsers = $srcPdo->query("SELECT * FROM users WHERE preview_template = 1 OR template_serial_number IS NOT NULL OR username IN ('grocery', 'ecomgrocery', 'manti', 'skinflow', 'fashclo', 'electi', 'furial', 'kidsfa', 'petrashop', 'jewellery', 'clothing', 'fashion', 'furniture', 'pet', 'vegetables')")->fetchAll();
         } catch (\Throwable $e) {
             Log::warning("seedTemplateUsers: Cannot query users from {$mainDb}: " . $e->getMessage());
             return;
