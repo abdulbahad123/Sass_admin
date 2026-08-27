@@ -226,9 +226,9 @@ class DatabaseProvisioningService
         $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=0');
 
         foreach ($tablesToCopy as $entry) {
-            $table = $entry['table'];
-            $fk    = $entry['fk'];
-            $rows  = $entry['rows'];
+            $table     = $entry['table'];
+            $fk        = $entry['fk'];
+            $tableRows = $entry['rows'];
 
             try {
                 // Check table exists in target DB before inserting
@@ -238,28 +238,28 @@ class DatabaseProvisioningService
                     continue;
                 }
 
-                if ($rows === null) {
+                if ($tableRows === null) {
                     if ($fk === 'item_id') {
-                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))")->fetchAll();
+                        $tableRows = $srcPdo->query("SELECT * FROM {$table} WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))")->fetchAll();
                     } elseif ($fk === 'product_variation_id') {
-                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE product_variation_id IN (SELECT id FROM product_variations WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList})))")->fetchAll();
+                        $tableRows = $srcPdo->query("SELECT * FROM {$table} WHERE product_variation_id IN (SELECT id FROM product_variations WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList})))")->fetchAll();
                     } elseif ($fk === 'product_variant_option_id') {
-                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE product_variant_option_id IN (SELECT id FROM product_variant_options WHERE product_variation_id IN (SELECT id FROM product_variations WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))))")->fetchAll();
+                        $tableRows = $srcPdo->query("SELECT * FROM {$table} WHERE product_variant_option_id IN (SELECT id FROM product_variant_options WHERE product_variation_id IN (SELECT id FROM product_variations WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))))")->fetchAll();
                     } else {
-                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE {$fk} IN ({$inList})")->fetchAll();
+                        $tableRows = $srcPdo->query("SELECT * FROM {$table} WHERE {$fk} IN ({$inList})")->fetchAll();
                     }
                 }
 
-                if (empty($rows)) {
+                if (empty($tableRows)) {
                     continue;
                 }
 
-                $cols         = '`' . implode('`, `', array_keys($rows[0])) . '`';
-                $placeholders = implode(', ', array_fill(0, count($rows[0]), '?'));
+                $cols         = '`' . implode('`, `', array_keys($tableRows[0])) . '`';
+                $placeholders = implode(', ', array_fill(0, count($tableRows[0]), '?'));
                 $insertSql    = "INSERT IGNORE INTO `{$table}` ({$cols}) VALUES ({$placeholders})";
                 $insertStmt   = $tgtPdo->prepare($insertSql);
 
-                foreach ($rows as $row) {
+                foreach ($tableRows as $row) {
                     $insertStmt->execute(array_values($row));
                 }
 
