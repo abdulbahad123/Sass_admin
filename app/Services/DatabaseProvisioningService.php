@@ -165,21 +165,20 @@ class DatabaseProvisioningService
 
         // Get template users from main DB
         try {
-            $templateUsers = $srcPdo->query("SELECT * FROM users WHERE preview_template = 1")->fetchAll();
+            $templateUsers = $srcPdo->query("SELECT * FROM users WHERE preview_template = 1 OR username IN ('grocery', 'manti', 'skinflow', 'fashclo', 'electi', 'furial', 'kidsfa', 'petrashop', 'jewellery', 'clothing', 'fashion', 'furniture', 'pet', 'vegetables')")->fetchAll();
         } catch (\Throwable $e) {
             Log::warning("seedTemplateUsers: Cannot query users from {$mainDb}: " . $e->getMessage());
             return;
         }
 
         if (empty($templateUsers)) {
-            Log::info("seedTemplateUsers: No preview_template=1 users found in {$mainDb} — nothing to seed.");
+            Log::info("seedTemplateUsers: No template users found in {$mainDb} — nothing to seed.");
             return;
         }
 
         $userIds = array_column($templateUsers, 'id');
         $inList  = implode(',', array_map('intval', $userIds));
 
-        // Tables to copy. Order matters for foreign key constraints.
         // Tables to copy. Order matters for foreign key constraints.
         // 'fk' is the column that references the user id.
         $tablesToCopy = [
@@ -256,14 +255,14 @@ class DatabaseProvisioningService
 
                 $cols         = '`' . implode('`, `', array_keys($tableRows[0])) . '`';
                 $placeholders = implode(', ', array_fill(0, count($tableRows[0]), '?'));
-                $insertSql    = "INSERT IGNORE INTO `{$table}` ({$cols}) VALUES ({$placeholders})";
+                $insertSql    = "REPLACE INTO `{$table}` ({$cols}) VALUES ({$placeholders})";
                 $insertStmt   = $tgtPdo->prepare($insertSql);
 
                 foreach ($tableRows as $row) {
                     $insertStmt->execute(array_values($row));
                 }
 
-                Log::info("seedTemplateUsers: Copied " . count($rows) . " rows → {$targetDbName}.{$table}");
+                Log::info("seedTemplateUsers: Copied " . count($tableRows) . " rows → {$targetDbName}.{$table}");
 
             } catch (\Throwable $e) {
                 Log::warning("seedTemplateUsers: Failed copying '{$table}' to {$targetDbName}: " . $e->getMessage());
