@@ -215,6 +215,8 @@ class DatabaseProvisioningService
             ['table' => 'tabs',                             'fk' => 'user_id', 'rows' => null],
             ['table' => 'testimonials',                     'fk' => 'user_id', 'rows' => null],
             ['table' => 'variant_contents',                 'fk' => 'user_id', 'rows' => null],
+            ['table' => 'user_item_images',                 'fk' => 'item_id', 'rows' => null],
+            ['table' => 'product_variations',               'fk' => 'item_id', 'rows' => null],
         ];
 
 
@@ -235,7 +237,11 @@ class DatabaseProvisioningService
                 }
 
                 if ($rows === null) {
-                    $rows = $srcPdo->query("SELECT * FROM {$table} WHERE {$fk} IN ({$inList})")->fetchAll();
+                    if ($fk === 'item_id') {
+                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE item_id IN (SELECT id FROM user_items WHERE user_id IN ({$inList}))")->fetchAll();
+                    } else {
+                        $rows = $srcPdo->query("SELECT * FROM {$table} WHERE {$fk} IN ({$inList})")->fetchAll();
+                    }
                 }
 
                 if (empty($rows)) {
