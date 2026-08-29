@@ -7,7 +7,7 @@
 <button onclick="document.getElementById('createPlanModal').classList.remove('hidden')" 
         class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition-all">
     <i data-lucide="plus" class="w-4 h-4"></i>
-    <span>+ Create New Plan</span>
+    <span>Create New Plan</span>
 </button>
 @endsection
 
@@ -81,8 +81,9 @@
     </div>
 </div>
 
+@push('modals')
 <!-- Create Plan Modal -->
-<div id="createPlanModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createPlanModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Create Pricing Plan</h3>
@@ -151,4 +152,5 @@
         </form>
     </div>
 </div>
+@endpush
 @endsection

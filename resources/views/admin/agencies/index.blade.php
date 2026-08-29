@@ -7,7 +7,7 @@
 <button onclick="document.getElementById('createAgencyModal').classList.remove('hidden')" 
         class="px-2.5 py-1.5 sm:px-4 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-1.5 sm:space-x-2 transition-all whitespace-nowrap">
     <i data-lucide="building" class="w-4 h-4"></i>
-    <span>+ Onboard Agency</span>
+    <span>Onboard Agency</span>
 </button>
 @endsection
 
@@ -166,8 +166,9 @@
     </div>
 </div>
 
+@push('modals')
 <!-- Onboard Agency Modal -->
-<div id="createAgencyModal" class="fixed inset-0 z-50 {{ $errors->any() ? '' : 'hidden' }} bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createAgencyModal" class="fixed inset-0 z-[100] {{ $errors->any() ? '' : 'hidden' }} bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Onboard Agency Account</h3>
@@ -271,8 +272,8 @@
     </div>
 </div>
 
-<!-- Edit Agency Modal (Task 3 Implementation) -->
-<div id="editAgencyModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<!-- Edit Agency Modal -->
+<div id="editAgencyModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Edit Agency Settings</h3>
@@ -347,6 +348,7 @@
         </form>
     </div>
 </div>
+@endpush
 
 @push('scripts')
 <script>

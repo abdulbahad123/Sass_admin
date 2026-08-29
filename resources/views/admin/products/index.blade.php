@@ -7,7 +7,7 @@
 <button onclick="document.getElementById('createProductModal').classList.remove('hidden')" 
         class="px-2.5 py-1.5 sm:px-4 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-1.5 sm:space-x-2 transition-all whitespace-nowrap">
     <i data-lucide="plus" class="w-4 h-4"></i>
-    <span>+ Add Product</span>
+    <span>Add Product</span>
 </button>
 @endsection
 
@@ -126,8 +126,9 @@
     </div>
 </div>
 
+@push('modals')
 <!-- Add Product Modal -->
-<div id="createProductModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createProductModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Add SaaS Product (e.g. Launchshop)</h3>
@@ -177,8 +178,8 @@
     </div>
 </div>
 
-<!-- Edit Product Modal (Task 1 Implementation) -->
-<div id="editProductModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<!-- Edit Product Modal -->
+<div id="editProductModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Edit Product Parameters</h3>
@@ -229,6 +230,7 @@
         </form>
     </div>
 </div>
+@endpush
 
 @push('scripts')
 <script>

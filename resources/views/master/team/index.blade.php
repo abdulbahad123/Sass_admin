@@ -155,8 +155,9 @@
 
 </div>
 
+@push('modals')
 <!-- Invite Member Modal -->
-<div id="createTeamModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createTeamModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Invite Team Member</h3>
@@ -201,7 +202,7 @@
 </div>
 
 <!-- Create Role Modal -->
-<div id="createRoleModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createRoleModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Create Role</h3>
@@ -250,7 +251,7 @@
 </div>
 
 <!-- Edit Role Modal -->
-<div id="editRoleModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="editRoleModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Edit Role</h3>
@@ -298,6 +299,7 @@
         </form>
     </div>
 </div>
+@endpush
 
 @push('scripts')
 <script>

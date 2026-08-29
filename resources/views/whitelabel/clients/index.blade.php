@@ -2,6 +2,14 @@
 
 @section('title', 'End-Clients Directory')
 
+@section('header_actions')
+    <button onclick="document.getElementById('addClientModal').classList.remove('hidden')" 
+            class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center space-x-1.5 transition-all whitespace-nowrap">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>Add New Client</span>
+    </button>
+@endsection
+
 @section('content')
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -26,7 +34,7 @@
         <button onclick="document.getElementById('addClientModal').classList.remove('hidden')" 
                 class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/30 flex items-center space-x-1.5 self-start sm:self-auto">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            <span>+ Add New Client</span>
+            <span>Add New Client</span>
         </button>
     </div>
 
@@ -67,7 +75,7 @@
                     @empty
                         <tr>
                             <td colspan="8" class="py-8 text-center text-slate-400 text-xs font-medium">
-                                No end-clients onboarded yet. Click <strong>+ Add New Client</strong> to add one!
+                                No end-clients onboarded yet. Click <strong>Add New Client</strong> to add one!
                             </td>
                         </tr>
                     @endforelse
@@ -77,8 +85,9 @@
     </div>
 </div>
 
+@push('modals')
 <!-- Add Client Modal -->
-<div id="addClientModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="addClientModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Onboard New End-Client</h3>
@@ -125,4 +134,5 @@
         </form>
     </div>
 </div>
+@endpush
 @endsection

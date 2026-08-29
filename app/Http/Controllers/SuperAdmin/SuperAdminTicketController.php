@@ -93,7 +93,10 @@ class SuperAdminTicketController extends Controller
 
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('tickets/replies', 'public');
+            $file = $request->file('attachment');
+            $filename = time() . '_' . bin2hex(random_bytes(5)) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/tickets/replies'), $filename);
+            $attachmentPath = 'uploads/tickets/replies/' . $filename;
         }
 
         TicketReply::create([

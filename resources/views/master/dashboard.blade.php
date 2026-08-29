@@ -292,7 +292,7 @@
                             <tr>
                                 <td colspan="7" class="py-8 text-center text-slate-400 text-xs font-medium">
                                     No sub-agencies onboarded yet under {{ $agency->name ?? 'this master agency' }}. 
-                                    <a href="{{ route('master.sub-agencies.index') }}" class="text-indigo-600 font-bold underline ml-1">+ Onboard Sub-Agency</a>
+                                    <a href="{{ route('master.sub-agencies.index') }}" class="text-indigo-600 font-bold underline ml-1">Onboard Sub-Agency</a>
                                 </td>
                             </tr>
                         @endforelse

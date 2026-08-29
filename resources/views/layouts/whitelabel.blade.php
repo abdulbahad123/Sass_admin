@@ -240,12 +240,7 @@
                         </div>
                     </div>
 
-                    <!-- Primary Action Button: + Add New Client -->
-                    <button onclick="document.getElementById('addClientModal').classList.remove('hidden')"
-                            class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center space-x-1.5 transition-all whitespace-nowrap">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span>Add New Client</span>
-                    </button>
+                    @yield('header_actions')
 
                     <!-- Header Logout Button -->
                     <form action="{{ route('logout') }}" method="POST" class="inline-block">
@@ -284,44 +279,7 @@
 
     </div>
 
-    <!-- Modal: Add New Client -->
-    <div id="addClientModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5">
-            <div class="flex items-center justify-between">
-                <h3 class="text-base font-bold text-slate-900 font-heading">Onboard New End-Client</h3>
-                <button onclick="document.getElementById('addClientModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <form action="{{ route('whitelabel.clients.store') }}" method="POST" class="space-y-4">
-                @csrf
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Client / Business Name</label>
-                    <input type="text" name="name" placeholder="e.g. TechNova Solutions" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Contact Email</label>
-                    <input type="email" name="email" placeholder="owner@technova.com" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Assign Client Package</label>
-                    <select name="plan" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none">
-                        <option value="Starter">Starter Package (₹999/mo)</option>
-                        <option value="Growth">Growth Package (₹2,999/mo)</option>
-                        <option value="Enterprise">Enterprise Package (₹7,999/mo)</option>
-                    </select>
-                </div>
-
-                <div class="pt-4 flex items-center justify-end space-x-3">
-                    <button type="button" onclick="document.getElementById('addClientModal').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30">Onboard Client</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    @stack('modals')
 
     <script>
         function toggleMobileSidebar() {

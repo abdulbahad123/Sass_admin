@@ -7,7 +7,7 @@
 <a href="{{ route('admin.agencies.index') }}#onboard" 
    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition-all">
     <i data-lucide="plus" class="w-4 h-4"></i>
-    <span>+ Add Agency</span>
+    <span>Add Agency</span>
 </a>
 @endsection
 

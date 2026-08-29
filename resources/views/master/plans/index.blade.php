@@ -144,8 +144,72 @@
 
 </div>
 
+@push('modals')
+@if($whiteLabelPlan)
+<!-- Edit Plan Modal -->
+<div id="editPlanModal_{{ $whiteLabelPlan->id }}" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-slate-900 font-heading">Edit {{ $whiteLabelPlan->name }}</h3>
+            <button onclick="document.getElementById('editPlanModal_{{ $whiteLabelPlan->id }}').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('master.plans.update', $whiteLabelPlan) }}" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Plan Name</label>
+                <input type="text" name="name" value="{{ $whiteLabelPlan->name }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Description</label>
+                <input type="text" name="description" value="{{ $whiteLabelPlan->description }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Monthly Price</label>
+                    <input type="number" step="0.01" name="price_monthly" value="{{ $whiteLabelPlan->price_monthly }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Yearly Price</label>
+                    <input type="number" step="0.01" name="price_yearly" value="{{ $whiteLabelPlan->price_yearly }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Quota</label>
+                <input type="number" name="max_clients" value="{{ $whiteLabelPlan->max_clients }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">Include SaaS Products</label>
+                <div class="grid grid-cols-2 gap-2">
+                    @foreach($products as $prod)
+                        <label class="flex items-center space-x-2 text-xs text-slate-700 p-2 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                            <input type="checkbox" name="products[]" value="{{ $prod->id }}" 
+                                {{ $whiteLabelPlan->products->contains($prod->id) ? 'checked' : '' }} 
+                                class="rounded bg-slate-100 border-slate-300 text-indigo-600">
+                            <span>{{ $prod->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="pt-4 flex items-center justify-end space-x-3">
+                <button type="button" onclick="document.getElementById('editPlanModal_{{ $whiteLabelPlan->id }}').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30">Update Plan</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 <!-- Create Plan Modal -->
-<div id="createPlanModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createPlanModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Create Pricing Plan</h3>
@@ -201,4 +265,5 @@
         </form>
     </div>
 </div>
+@endpush
 @endsection

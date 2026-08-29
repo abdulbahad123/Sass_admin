@@ -27,7 +27,7 @@
         <button onclick="document.getElementById('createClientModal').classList.remove('hidden')" 
                 class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-2 transition-all self-start sm:self-auto">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
-            <span>+ Add End Client</span>
+            <span>Add End Client</span>
         </button>
     </div>
 
@@ -71,7 +71,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="py-8 text-center text-slate-400 text-xs font-medium">
-                                No network end-clients found. Click <strong>+ Add End Client</strong> to create one!
+                                No network end-clients found. Click <strong>Add End Client</strong> to create one!
                             </td>
                         </tr>
                     @endforelse
@@ -81,8 +81,9 @@
     </div>
 </div>
 
+@push('modals')
 <!-- Add Client Modal -->
-<div id="createClientModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="createClientModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-bold text-slate-900 font-heading">Add End Client Account</h3>
@@ -136,4 +137,5 @@
         </form>
     </div>
 </div>
+@endpush
 @endsection

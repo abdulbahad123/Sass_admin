@@ -9,7 +9,7 @@
             <h2 class="text-xl font-bold text-slate-900 font-heading">Team Members & Staff Access</h2>
             <p class="text-xs text-slate-500">Manage internal team members for your White Label agency</p>
         </div>
-        <button class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/30">+ Invite Member</button>
+        <button class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/30">Invite Member</button>
     </div>
 
     <div class="card-white rounded-2xl p-6">

@@ -284,6 +284,8 @@
         </main>
     </div>
 
+    @stack('modals')
+
     <script>
         lucide.createIcons();
     </script>

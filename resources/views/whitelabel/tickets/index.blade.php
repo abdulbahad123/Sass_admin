@@ -15,7 +15,7 @@
         <button onclick="document.getElementById('createTicketModal').classList.remove('hidden')" 
                 class="px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all shrink-0">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
-            <span>+ Raise Support Ticket</span>
+            <span>Raise Support Ticket</span>
         </button>
     </div>
 
@@ -253,8 +253,9 @@
 
 </div>
 
-<!-- Modal: Raise Support Ticket (Task 2 Inputs & Responsive UI) -->
-<div id="createTicketModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+@push('modals')
+<!-- Modal: Raise Support Ticket -->
+<div id="createTicketModal" class="fixed inset-0 z-[100] hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl space-y-6 my-8">
         
         <!-- Header -->
@@ -287,7 +288,7 @@
             <!-- Grid: Select Product & Priority -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                <!-- Product Selection (Task 2 requirement) -->
+                <!-- Product Selection -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Select Purchased Product</label>
                     <select name="product_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-500 transition-all cursor-pointer">
@@ -318,7 +319,7 @@
                           class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"></textarea>
             </div>
 
-            <!-- File / Image Upload (Task 2 requirement) -->
+            <!-- File / Image Upload -->
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Attach Image / Screenshot / File (Optional)</label>
                 <div class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-4 bg-slate-50/60 transition-colors text-center cursor-pointer relative">
@@ -347,6 +348,7 @@
         </form>
     </div>
 </div>
+@endpush
 
 @push('scripts')
 <script>

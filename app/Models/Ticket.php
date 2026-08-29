@@ -67,7 +67,29 @@ class Ticket extends Model
 
     public function getAttachmentUrlAttribute()
     {
-        return $this->attachment ? Storage::url($this->attachment) : null;
+        if (!$this->attachment) {
+            return null;
+        }
+
+        if (str_starts_with($this->attachment, 'http://') || str_starts_with($this->attachment, 'https://')) {
+            return $this->attachment;
+        }
+
+        $cleanPath = ltrim($this->attachment, '/');
+
+        if (file_exists(public_path($cleanPath))) {
+            return asset($cleanPath);
+        }
+
+        if (file_exists(public_path('storage/' . $cleanPath))) {
+            return asset('storage/' . $cleanPath);
+        }
+
+        if (file_exists(storage_path('app/public/' . $cleanPath))) {
+            return asset('storage/' . $cleanPath);
+        }
+
+        return asset($cleanPath);
     }
 
     public function getStatusBadgeAttribute(): array
