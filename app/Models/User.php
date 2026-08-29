@@ -49,6 +49,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_to');
+    }
+
     public function hasRole($role)
     {
         return $this->roles()->where('slug', $role)->exists();

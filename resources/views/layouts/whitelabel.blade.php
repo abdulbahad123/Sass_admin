@@ -138,6 +138,23 @@
                         <i data-lucide="receipt" class="w-4 h-4"></i>
                         <span>Billing & Invoices</span>
                     </a>
+
+                    <a href="{{ route('whitelabel.tickets.index') }}" 
+                       class="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.tickets.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i>
+                            <span>Support Tickets</span>
+                        </div>
+                        @php 
+                            $agencyId = auth()->user()->agency_id ?? 0;
+                            $openAgencyCount = \App\Models\Ticket::where('agency_id', $agencyId)->whereIn('status', ['open', 'in_progress', 'pending_reply'])->count(); 
+                        @endphp
+                        @if($openAgencyCount > 0)
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400">
+                                {{ $openAgencyCount }}
+                            </span>
+                        @endif
+                    </a>
                 </div>
 
                 <!-- Nav Group 3: CONFIGURATION -->

@@ -88,4 +88,9 @@ class Agency extends Model
         }
         return $this->belongsToMany(Product::class, 'agency_products')->withPivot($pivotColumns)->withTimestamps();
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

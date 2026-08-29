@@ -126,6 +126,20 @@
                 <i data-lucide="shield-check" class="w-4 h-4 mr-3"></i>
                 Audit Logs
             </a>
+
+            <a href="{{ route('admin.tickets.index') }}" 
+               class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.tickets.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                <div class="flex items-center">
+                    <i data-lucide="life-buoy" class="w-4 h-4 mr-3"></i>
+                    <span>Support Tickets</span>
+                </div>
+                @php $openTicketCount = \App\Models\Ticket::whereIn('status', ['open', 'pending_reply'])->count(); @endphp
+                @if($openTicketCount > 0)
+                    <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-amber-500 text-slate-950">
+                        {{ $openTicketCount }}
+                    </span>
+                @endif
+            </a>
         </nav>
 
         <!-- Platform Health Box -->

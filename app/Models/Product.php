@@ -45,4 +45,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Agency::class, 'agency_products')->withPivot('status')->withTimestamps();
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

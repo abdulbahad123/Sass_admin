@@ -64,6 +64,14 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
 
     // Audit Logs
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+
+    // Support Tickets Management (Staff & Agency Tickets)
+    Route::get('/tickets', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{ticket}', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/reply', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'reply'])->name('tickets.reply');
+    Route::patch('/tickets/{ticket}/assign-staff', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'assignStaff'])->name('tickets.assign-staff');
+    Route::patch('/tickets/{ticket}/status', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'updateStatus'])->name('tickets.update-status');
+    Route::delete('/tickets/{ticket}', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'destroy'])->name('tickets.destroy');
 });
 
 // Shared Authenticated Product Single-Click SSO Launch Routes (Accessible to Super Admin, Master & White Label Agencies)
@@ -142,6 +150,10 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
 
     // Billing & Support Section
     Route::get('/billing', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'billing'])->name('billing.index');
+    Route::get('/tickets', [\App\Http\Controllers\WhiteLabel\WhiteLabelTicketController::class, 'index'])->name('tickets.index');
+    Route::post('/tickets', [\App\Http\Controllers\WhiteLabel\WhiteLabelTicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{ticket}', [\App\Http\Controllers\WhiteLabel\WhiteLabelTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/reply', [\App\Http\Controllers\WhiteLabel\WhiteLabelTicketController::class, 'reply'])->name('tickets.reply');
 
     // Configuration Section
     Route::get('/branding', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'branding'])->name('branding.index');
