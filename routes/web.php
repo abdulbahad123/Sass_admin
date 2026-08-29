@@ -19,6 +19,8 @@ Route::get('/', function () {
 // Public SaaS Checkout & Store Launch Routes
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
 Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+Route::get('/membership/checkout', [CheckoutController::class, 'showCheckout'])->name('membership.checkout.show');
+Route::post('/membership/checkout', [CheckoutController::class, 'processCheckout'])->name('membership.checkout.process');
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
 // Authentication Routes
