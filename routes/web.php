@@ -7,6 +7,7 @@ use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\PlanController;
 use App\Http\Controllers\SuperAdmin\ProductController;
 use App\Http\Controllers\SuperAdmin\SubscriptionController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('admin.dashboard');
 });
+
+// Public SaaS Checkout & Store Launch Routes
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
