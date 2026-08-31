@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Portal Access - Super Admin & Master Agency</title>
+    <title>{{ (isset($agency) && $agency) ? $agency->name . ' Agency Portal Access' : 'SaaS Platform Portal Access' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,14 +17,21 @@
     <div class="w-full max-w-md">
         <!-- Logo & Header -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-xl shadow-indigo-500/30 mb-4">
-                <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
-            </div>
+            @if(isset($agency) && !empty($agency->logo))
+                <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl mb-4">
+                    <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" class="h-10 w-auto object-contain">
+                </div>
+            @else
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-xl shadow-indigo-500/30 mb-4">
+                    <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
+                </div>
+            @endif
+            
             <h1 class="text-2xl font-bold text-white font-heading tracking-tight">
-                {{ isset($agency) && $agency ? $agency->name . ' Portal Access' : 'Platform Admin Access' }}
+                {{ (isset($agency) && $agency) ? $agency->name . ' Portal Access' : 'Platform Admin Access' }}
             </h1>
             <p class="text-slate-400 text-sm mt-1">
-                {{ isset($agency) && $agency ? 'Authenticate for ' . $agency->name . ' White Label Agency Portal' : 'Authenticate for Super Admin or Master Agency Portal' }}
+                {{ (isset($agency) && $agency) ? 'Authenticate for ' . $agency->name . ' White Label Agency Portal' : 'Authenticate for Super Admin or Master Agency Portal' }}
             </p>
         </div>
 
@@ -56,8 +63,14 @@
                 </div>
             @endif
 
+            @php
+                $agencyPortalMode = (isset($isAgencyPortal) && $isAgencyPortal) || request()->is('whitelabel-panel*') || request()->is('agency-portal*') || request()->is('agency_portal*') || (isset($agency) && !empty($agency->custom_domain));
+            @endphp
+
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
                 @csrf
+
+                <input type="hidden" name="is_agency_portal" value="{{ $agencyPortalMode ? '1' : '0' }}">
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Account Email</label>
@@ -99,37 +112,56 @@
 
             <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
                 <p class="text-xs text-slate-400 font-medium text-center">Click a Demo Account to Fill Credentials:</p>
-                <div class="grid grid-cols-3 gap-2 text-xs">
-                    <button type="button" onclick="fillCredentials('admin@platform.com', 'password')" 
-                            class="p-2.5 rounded-xl bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-700/40 text-indigo-200 transition text-left space-y-0.5 group">
-                        <div class="font-semibold text-indigo-400 flex items-center justify-between text-[11px]">
-                            <span>Super Admin</span>
-                            <i data-lucide="shield" class="w-3 h-3"></i>
-                        </div>
-                        <div class="text-[10px] text-slate-300 truncate">admin@platform.com</div>
-                        <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-indigo-300">password</span></div>
-                    </button>
 
-                    <button type="button" onclick="fillCredentials('abdulbahad.dev@gmail.com', 'password')" 
-                            class="p-2.5 rounded-xl bg-purple-950/50 hover:bg-purple-900/60 border border-purple-700/40 text-purple-200 transition text-left space-y-0.5 group">
-                        <div class="font-semibold text-purple-400 flex items-center justify-between text-[11px]">
-                            <span>KKK Master</span>
-                            <i data-lucide="building" class="w-3 h-3"></i>
-                        </div>
-                        <div class="text-[10px] text-slate-300 truncate">abdulbahad...</div>
-                        <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-purple-300">password</span></div>
-                    </button>
+                @if($agencyPortalMode)
+                    <!-- Agency Only Demo Quick Fill -->
+                    <div class="grid grid-cols-1 gap-2 text-xs">
+                        <button type="button" onclick="fillCredentials('priya@abcdigital.com', 'password')" 
+                                class="p-3 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-700/40 text-emerald-200 transition text-left flex items-center justify-between group">
+                            <div class="space-y-0.5">
+                                <div class="font-semibold text-emerald-400 flex items-center space-x-1 text-[11px]">
+                                    <span>White Label Agency Account</span>
+                                </div>
+                                <div class="text-[11px] text-slate-300">priya@abcdigital.com</div>
+                                <div class="text-[10px] text-slate-400 font-mono">Pass: <span class="text-emerald-300">password</span></div>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 font-bold rounded-lg text-[10px]">1-Click Apply</span>
+                        </button>
+                    </div>
+                @else
+                    <!-- Full Demo Quick Fill for Platform Admin -->
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        <button type="button" onclick="fillCredentials('admin@platform.com', 'password')" 
+                                class="p-2.5 rounded-xl bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-700/40 text-indigo-200 transition text-left space-y-0.5 group">
+                            <div class="font-semibold text-indigo-400 flex items-center justify-between text-[11px]">
+                                <span>Super Admin</span>
+                                <i data-lucide="shield" class="w-3 h-3"></i>
+                            </div>
+                            <div class="text-[10px] text-slate-300 truncate">admin@platform.com</div>
+                            <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-indigo-300">password</span></div>
+                        </button>
 
-                    <button type="button" onclick="fillCredentials('priya@abcdigital.com', 'password')" 
-                            class="p-2.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-700/40 text-emerald-200 transition text-left space-y-0.5 group">
-                        <div class="font-semibold text-emerald-400 flex items-center justify-between text-[11px]">
-                            <span>White Label</span>
-                            <i data-lucide="layers" class="w-3 h-3"></i>
-                        </div>
-                        <div class="text-[10px] text-slate-300 truncate">priya@abcdigital...</div>
-                        <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-emerald-300">password</span></div>
-                    </button>
-                </div>
+                        <button type="button" onclick="fillCredentials('abdulbahad.dev@gmail.com', 'password')" 
+                                class="p-2.5 rounded-xl bg-purple-950/50 hover:bg-purple-900/60 border border-purple-700/40 text-purple-200 transition text-left space-y-0.5 group">
+                            <div class="font-semibold text-purple-400 flex items-center justify-between text-[11px]">
+                                <span>KKK Master</span>
+                                <i data-lucide="building" class="w-3 h-3"></i>
+                            </div>
+                            <div class="text-[10px] text-slate-300 truncate">abdulbahad...</div>
+                            <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-purple-300">password</span></div>
+                        </button>
+
+                        <button type="button" onclick="fillCredentials('priya@abcdigital.com', 'password')" 
+                                class="p-2.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-700/40 text-emerald-200 transition text-left space-y-0.5 group">
+                            <div class="font-semibold text-emerald-400 flex items-center justify-between text-[11px]">
+                                <span>White Label</span>
+                                <i data-lucide="layers" class="w-3 h-3"></i>
+                            </div>
+                            <div class="text-[10px] text-slate-300 truncate">priya@abcdigital...</div>
+                            <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-emerald-300">password</span></div>
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

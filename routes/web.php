@@ -68,7 +68,15 @@ Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) {
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/whitelabel-panel/login', [LoginController::class, 'showLoginForm'])->name('whitelabel.login');
+Route::get('/agency-portal/login', [LoginController::class, 'showLoginForm'])->name('agency.login');
+Route::get('/agency_portal/login', [LoginController::class, 'showLoginForm']);
 Route::get('/whitelabel-panel', function () {
+    return redirect()->route('whitelabel.dashboard');
+});
+Route::get('/agency-portal', function () {
+    return redirect()->route('whitelabel.dashboard');
+});
+Route::get('/agency_portal', function () {
     return redirect()->route('whitelabel.dashboard');
 });
 Route::post('/login', [LoginController::class, 'login']);

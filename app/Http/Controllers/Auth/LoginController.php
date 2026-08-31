@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Agency;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +24,22 @@ class LoginController extends Controller
         }
 
         $host = $request->getHost();
-        $agency = \App\Models\Agency::whereNotNull('custom_domain')
-            ->where(function ($q) use ($host) {
+        $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($host));
+
+        $agency = Agency::whereNotNull('custom_domain')
+            ->where(function ($q) use ($host, $cleanHost) {
                 $q->where('custom_domain', $host)
-                  ->orWhere('custom_domain', 'like', "%{$host}%");
+                  ->orWhere('custom_domain', $cleanHost)
+                  ->orWhere('custom_domain', 'like', "%{$cleanHost}%");
             })->first();
 
-        return view('auth.login', compact('agency'));
+        if (!$agency) {
+            $agency = Agency::where('type', 'white_label')->first() ?? Agency::first();
+        }
+
+        $isAgencyPortal = $request->is('whitelabel-panel*') || $request->is('agency-portal*') || $request->is('agency_portal*') || ($agency && !empty($agency->custom_domain));
+
+        return view('auth.login', compact('agency', 'isAgencyPortal'));
     }
 
     public function login(Request $request)
@@ -45,6 +55,14 @@ class LoginController extends Controller
             if ($user->status !== 'active') {
                 Auth::logout();
                 return back()->withErrors(['email' => 'Account is inactive. Please contact support.']);
+            }
+
+            $isAgencyPortal = $request->boolean('is_agency_portal') || str_contains($request->header('referer', ''), 'whitelabel') || str_contains($request->header('referer', ''), 'agency');
+
+            // Restrict Agency Portal Login strictly to White Label Agency users
+            if ($isAgencyPortal && !$user->isWhiteLabelAgency()) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please use the Admin Portal.']);
             }
 
             if (!$user->isSuperAdmin() && !$user->isMasterAgency() && !$user->isWhiteLabelAgency()) {
