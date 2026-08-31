@@ -8,6 +8,9 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -157,7 +160,73 @@
                     </a>
                 </div>
 
-                <!-- Nav Group 3: CONFIGURATION -->
+                <!-- Nav Group 3: WEBSITE & LANDING PAGE -->
+                <div class="space-y-1 pt-3 border-t border-slate-800/80">
+                    <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Website Management</p>
+
+                    <!-- Website Dropdown Header -->
+                    <div x-data="{ open: {{ request()->routeIs('whitelabel.website.*') ? 'true' : 'false' }} }">
+                        <button @click="open = !open" 
+                                class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.website.*') ? 'bg-slate-900 text-white font-bold' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="globe" class="w-4 h-4 text-blue-400"></i>
+                                <span>Website</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                        </button>
+
+                        <!-- Sub-navigation Items -->
+                        <div x-show="open" x-cloak class="mt-1 pl-4 space-y-1 border-l-2 border-slate-800 ml-5 py-1">
+                            <a href="{{ route('whitelabel.website.landing') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.landing') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="layout" class="w-3.5 h-3.5"></i>
+                                <span>Landing Page</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.about') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.about') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                                <span>About</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.services') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.services') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+                                <span>Services</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.testimonials') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.testimonials') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                                <span>Testimonials</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.faq') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.faq') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                                <span>FAQ</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.contact') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.contact') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                                <span>Contact</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.privacy') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.privacy') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                                <span>Privacy Policy</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.terms') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.terms') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                                <span>Terms & Conditions</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.cookies') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.cookies') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="cookie" class="w-3.5 h-3.5"></i>
+                                <span>Cookie Policy</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nav Group 4: CONFIGURATION -->
                 <div class="space-y-1 pt-3 border-t border-slate-800/80">
                     <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Configuration</p>
 

@@ -87,9 +87,16 @@ class AgencyController extends Controller
             'phone' => $validated['phone'] ?? null,
             'custom_domain' => $cleanDomain,
             'primary_color' => $validated['primary_color'] ?? '#4f46e5',
+            'secondary_color' => '#9333ea',
             'status' => 'active',
             'max_clients' => $validated['max_clients'],
             'max_products' => count($validated['products'] ?? []),
+            'hero_title' => 'Grow, Manage & Automate Your Business — All in One Place',
+            'hero_subtitle' => 'The most powerful SaaS platform for local businesses to get more customers, save time and grow faster.',
+            'cta_text' => 'Start Free Today',
+            'cta_url' => '/login',
+            'contact_email' => $validated['email'],
+            'contact_phone' => $validated['phone'] ?? null,
         ]);
 
         // Create initial agency user account

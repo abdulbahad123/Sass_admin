@@ -158,4 +158,36 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
     // Configuration Section
     Route::get('/branding', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'branding'])->name('branding.index');
     Route::post('/branding', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'updateBranding'])->name('branding.update');
+
+    // Website & Landing Page Management Section
+    Route::prefix('website')->name('website.')->group(function () {
+        Route::get('/landing', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'landing'])->name('landing');
+        Route::post('/landing', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateLanding'])->name('landing.update');
+
+        Route::get('/about', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'about'])->name('about');
+        Route::post('/about', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateAbout'])->name('about.update');
+
+        Route::get('/services', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'services'])->name('services');
+        Route::post('/services', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateServices'])->name('services.update');
+
+        Route::get('/testimonials', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'testimonials'])->name('testimonials');
+        Route::post('/testimonials', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateTestimonials'])->name('testimonials.update');
+
+        Route::get('/faq', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'faq'])->name('faq');
+        Route::post('/faq', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateFaq'])->name('faq.update');
+
+        Route::get('/contact', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'contact'])->name('contact');
+        Route::post('/contact', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateContact'])->name('contact.update');
+
+        Route::get('/privacy', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'privacy'])->name('privacy');
+        Route::post('/privacy', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updatePrivacy'])->name('privacy.update');
+
+        Route::get('/terms', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'terms'])->name('terms');
+        Route::post('/terms', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateTerms'])->name('terms.update');
+
+        Route::get('/cookies', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'cookies'])->name('cookies');
+        Route::post('/cookies', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateCookies'])->name('cookies.update');
+
+        Route::get('/preview', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'preview'])->name('preview');
+    });
 });
