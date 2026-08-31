@@ -10,10 +10,48 @@ use App\Http\Controllers\SuperAdmin\SubscriptionController;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
-// Redirect root to dashboard or login
-Route::get('/', function () {
-    return redirect()->route('admin.dashboard');
-});
+// Public Agency Landing Page & Legal Routes
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    $host = $request->getHost();
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($host));
+
+    $agency = \App\Models\Agency::where(function ($q) use ($cleanHost, $host) {
+        $q->where('custom_domain', $cleanHost)
+          ->orWhere('custom_domain', $host)
+          ->orWhere('custom_domain', 'www.' . $cleanHost)
+          ->orWhere('custom_domain', 'https://' . $cleanHost)
+          ->orWhere('custom_domain', 'http://' . $cleanHost)
+          ->orWhere('custom_domain', 'LIKE', "%{$cleanHost}%");
+    })->first();
+
+    if (!$agency) {
+        $agency = \App\Models\Agency::where('type', 'white_label')->first() ?? \App\Models\Agency::first();
+    }
+
+    if ($agency) {
+        return view('whitelabel.website.public_landing', compact('agency'));
+    }
+
+    return redirect()->route('login');
+})->name('agency.public_home');
+
+Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'privacy', 'agency' => $agency]);
+})->name('agency.privacy');
+
+Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'terms', 'agency' => $agency]);
+})->name('agency.terms');
+
+Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'cookie', 'agency' => $agency]);
+})->name('agency.cookies');
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
