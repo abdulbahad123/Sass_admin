@@ -110,4 +110,54 @@ class WhiteLabelGeneralController extends Controller
 
         return back()->with('success', "Custom branding & agency settings for '{$agency->name}' saved successfully!");
     }
+
+    public function aiSettings()
+    {
+        $user = Auth::user();
+        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+
+        return view('whitelabel.ai.index', compact('user', 'agency'));
+    }
+
+    public function updateAiSettings(Request $request)
+    {
+        $user = Auth::user();
+        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+
+        if (!$agency) {
+            return back()->with('error', 'Agency profile not found in database.');
+        }
+
+        $validated = $request->validate([
+            'gemini_api_key' => 'nullable|string|max:255',
+            'openai_api_key' => 'nullable|string|max:255',
+            'is_gemini_active' => 'nullable|boolean',
+            'is_openai_active' => 'nullable|boolean',
+        ]);
+
+        $updateData = [];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'gemini_api_key')) {
+            $updateData['gemini_api_key'] = $request->input('gemini_api_key');
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'openai_api_key')) {
+            $updateData['openai_api_key'] = $request->input('openai_api_key');
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
+            $updateData['is_gemini_active'] = $request->has('is_gemini_active') ? (int)$request->input('is_gemini_active') : 1;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_openai_active')) {
+            $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : 1;
+        }
+
+        $agency->update($updateData);
+
+        AuditLog::create([
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'action' => "Updated White-Label Agency AI Settings: {$agency->name}",
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', "White-Label AI Engine & API Keys for '{$agency->name}' saved successfully!");
+    }
 }

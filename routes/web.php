@@ -218,6 +218,8 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
     // Configuration Section
     Route::get('/branding', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'branding'])->name('branding.index');
     Route::post('/branding', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'updateBranding'])->name('branding.update');
+    Route::get('/ai-settings', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'aiSettings'])->name('ai-settings.index');
+    Route::post('/ai-settings', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'updateAiSettings'])->name('ai-settings.update');
 
     // Website & Landing Page Management Section
     Route::prefix('website')->name('website.')->group(function () {

@@ -245,6 +245,12 @@
                         <i data-lucide="settings" class="w-4 h-4"></i>
                         <span>Branding & Settings</span>
                     </a>
+
+                    <a href="{{ route('whitelabel.ai-settings.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.ai-settings.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="cpu" class="w-4 h-4 text-purple-400"></i>
+                        <span>AI Engine & API Keys</span>
+                    </a>
                 </div>
 
             </div>
