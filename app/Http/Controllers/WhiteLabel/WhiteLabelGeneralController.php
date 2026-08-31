@@ -111,12 +111,137 @@ class WhiteLabelGeneralController extends Controller
         return back()->with('success', "Custom branding & agency settings for '{$agency->name}' saved successfully!");
     }
 
-    public function aiSettings()
+    private function getRealAgencyClients($agency)
+    {
+        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $agencySlug = str_replace('-', '_', strtolower($agency->slug ?? 'ysquare'));
+
+        $agencyProducts = DB::table('agency_products')
+            ->join('products', 'products.id', '=', 'agency_products.product_id')
+            ->where('agency_products.agency_id', $agency->id ?? 0)
+            ->select('products.id as product_id', 'products.name as product_name', 'products.slug as product_slug', 'agency_products.db_name')
+            ->get();
+
+        if ($agencyProducts->isEmpty()) {
+            $allProds = DB::table('products')->get();
+            $agencyProducts = collect();
+            foreach ($allProds as $p) {
+                $agencyProducts->push((object)[
+                    'product_id'   => $p->id,
+                    'product_name' => $p->name,
+                    'product_slug' => $p->slug,
+                    'db_name'      => "{$cpanelUser}_ps_{$agencySlug}_{$p->slug}",
+                ]);
+            }
+        }
+
+        $clients = [];
+
+        foreach ($agencyProducts as $ap) {
+            $prodSlug = $ap->product_slug ?? 'launchshop';
+            $dbCandidates = array_unique(array_filter([
+                $ap->db_name ?? null,
+                "{$cpanelUser}_ps_{$agencySlug}_{$prodSlug}",
+                "{$cpanelUser}_ps_{$agencySlug}_launchshop",
+                "bazaarwa_ps_{$agencySlug}_{$prodSlug}",
+                "bazaarwa_ps_{$agencySlug}_launchshop",
+                env('DB_DATABASE'),
+            ]));
+
+            $foundDb = null;
+            foreach ($dbCandidates as $cand) {
+                try {
+                    $rows = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$cand]);
+                    if (!empty($rows)) {
+                        $foundDb = $cand;
+                        break;
+                    }
+                } catch (\Throwable $e) {}
+            }
+
+            if ($foundDb) {
+                try {
+                    // EXCLUDE preview template users (preview_template = 1)
+                    $tenantUsers = DB::table("{$foundDb}.users")
+                        ->where(function ($q) {
+                            $q->whereNull('preview_template')
+                              ->orWhere('preview_template', 0)
+                              ->orWhere('preview_template', '0')
+                              ->orWhere('preview_template', '');
+                        })
+                        ->get();
+
+                    foreach ($tenantUsers as $tu) {
+                        $name = trim(($tu->first_name ?? '') . ' ' . ($tu->last_name ?? ''));
+                        if (empty($name)) {
+                            $name = $tu->username ?? $tu->email ?? ('Client #' . $tu->id);
+                        }
+                        $clients[] = [
+                            'id'       => $tu->id,
+                            'db_name'  => $foundDb,
+                            'name'     => $name,
+                            'username' => $tu->username ?? '',
+                            'email'    => $tu->email ?? '',
+                        ];
+                    }
+                } catch (\Throwable $e) {}
+            }
+        }
+
+        return $clients;
+    }
+
+    public function aiSettings(Request $request)
     {
         $user = Auth::user();
         $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $clients = $this->getRealAgencyClients($agency);
 
-        return view('whitelabel.ai.index', compact('user', 'agency'));
+        $selectedClientId = $request->query('client_id', 'global');
+        $selectedClient = null;
+        $isGeminiActive = 1;
+        $geminiApiKey = '';
+        $isOpenaiActive = 1;
+        $openaiApiKey = '';
+
+        if (!empty($selectedClientId) && $selectedClientId !== 'global') {
+            foreach ($clients as $c) {
+                if ((string)$c['id'] === (string)$selectedClientId) {
+                    $selectedClient = $c;
+                    break;
+                }
+            }
+            if ($selectedClient) {
+                try {
+                    $bs = DB::table("{$selectedClient['db_name']}.user_basic_settings")
+                        ->where('user_id', $selectedClient['id'])
+                        ->first();
+                    if ($bs) {
+                        $isGeminiActive = $bs->is_gemini ?? 1;
+                        $geminiApiKey = $bs->gemini_api_key ?? '';
+                        $isOpenaiActive = $bs->is_openai ?? 1;
+                        $openaiApiKey = $bs->openai_api_key ?? '';
+                    }
+                } catch (\Throwable $e) {}
+            }
+        } else {
+            $isGeminiActive = $agency->is_gemini_active ?? 1;
+            $geminiApiKey = $agency->gemini_api_key ?? '';
+            $isOpenaiActive = $agency->is_openai_active ?? 1;
+            $openaiApiKey = $agency->openai_api_key ?? '';
+        }
+
+        return view('whitelabel.ai.index', compact(
+            'user',
+            'agency',
+            'clients',
+            'selectedClientId',
+            'selectedClient',
+            'isGeminiActive',
+            'geminiApiKey',
+            'isOpenaiActive',
+            'openaiApiKey'
+        ));
     }
 
     public function updateAiSettings(Request $request)
@@ -129,12 +254,61 @@ class WhiteLabelGeneralController extends Controller
         }
 
         $validated = $request->validate([
+            'client_id' => 'nullable|string',
             'gemini_api_key' => 'nullable|string|max:255',
             'openai_api_key' => 'nullable|string|max:255',
             'is_gemini_active' => 'nullable|boolean',
             'is_openai_active' => 'nullable|boolean',
         ]);
 
+        $clientId = $request->input('client_id', 'global');
+
+        if (!empty($clientId) && $clientId !== 'global') {
+            $clients = $this->getRealAgencyClients($agency);
+            $targetClient = null;
+            foreach ($clients as $c) {
+                if ((string)$c['id'] === (string)$clientId) {
+                    $targetClient = $c;
+                    break;
+                }
+            }
+
+            if ($targetClient) {
+                try {
+                    $db = $targetClient['db_name'];
+                    $uId = $targetClient['id'];
+                    $bs = DB::table("{$db}.user_basic_settings")->where('user_id', $uId)->first();
+
+                    $updateArr = [
+                        'is_gemini' => $request->has('is_gemini_active') ? (int)$request->input('is_gemini_active') : 1,
+                        'is_openai' => $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : 1,
+                        'gemini_api_key' => $request->input('gemini_api_key'),
+                        'openai_api_key' => $request->input('openai_api_key'),
+                    ];
+
+                    if ($bs) {
+                        DB::table("{$db}.user_basic_settings")->where('user_id', $uId)->update($updateArr);
+                    } else {
+                        $updateArr['user_id'] = $uId;
+                        DB::table("{$db}.user_basic_settings")->insert($updateArr);
+                    }
+
+                    AuditLog::create([
+                        'user_id' => $user->id,
+                        'user_name' => $user->name,
+                        'action' => "Updated AI Settings for Client: {$targetClient['name']} (ID: {$uId})",
+                        'ip_address' => $request->ip(),
+                    ]);
+
+                    return redirect()->route('whitelabel.ai-settings.index', ['client_id' => $clientId])
+                        ->with('success', "AI Engine API Keys & Access updated successfully for Client '{$targetClient['name']}'!");
+                } catch (\Throwable $e) {
+                    return back()->with('error', "Failed to update client AI settings: " . $e->getMessage());
+                }
+            }
+        }
+
+        // Global Agency Update
         $updateData = [];
         if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'gemini_api_key')) {
             $updateData['gemini_api_key'] = $request->input('gemini_api_key');
@@ -154,10 +328,11 @@ class WhiteLabelGeneralController extends Controller
         AuditLog::create([
             'user_id' => $user->id,
             'user_name' => $user->name,
-            'action' => "Updated White-Label Agency AI Settings: {$agency->name}",
+            'action' => "Updated Global White-Label Agency AI Settings: {$agency->name}",
             'ip_address' => $request->ip(),
         ]);
 
-        return back()->with('success', "White-Label AI Engine & API Keys for '{$agency->name}' saved successfully!");
+        return redirect()->route('whitelabel.ai-settings.index', ['client_id' => 'global'])
+            ->with('success', "Global Agency Default AI Settings saved successfully!");
     }
 }
