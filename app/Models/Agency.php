@@ -35,6 +35,7 @@ class Agency extends Model
         'cta_text',
         'cta_url',
         'hero_image',
+        'cta_image',
         'about_content',
         'about_image',
         'services_data',

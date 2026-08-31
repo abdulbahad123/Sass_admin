@@ -91,20 +91,35 @@
                         <input type="text" name="cta_url" value="{{ old('cta_url', $agency->cta_url ?? '/login') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Hero Dashboard Preview Image</label>
-                        <input type="file" name="hero_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        @if($agency->hero_image)
-                            <img src="{{ asset($agency->hero_image) }}" alt="Hero Graphic" class="h-20 mt-2 rounded-xl border border-slate-200 object-cover">
-                        @endif
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <!-- 1. Hero Banner Image -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
+                        <label class="block text-xs font-bold text-slate-800">1. Hero Dashboard Image</label>
+                        <input type="file" name="hero_image" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <div class="mt-2">
+                            <p class="text-[10px] text-slate-400 font-medium mb-1">Current Graphic:</p>
+                            <img src="{{ asset($agency->hero_image ?? 'assets/landing_page/herobanner_dashboard.png') }}" alt="Hero Dashboard" class="h-24 w-full object-cover rounded-xl border border-slate-200">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">About Section Entrepreneur Image</label>
-                        <input type="file" name="about_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        @if($agency->about_image)
-                            <img src="{{ asset($agency->about_image) }}" alt="About Graphic" class="h-20 mt-2 rounded-xl border border-slate-200 object-cover">
-                        @endif
+
+                    <!-- 2. About Section Features Image -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
+                        <label class="block text-xs font-bold text-slate-800">2. About / Features Image</label>
+                        <input type="file" name="about_image" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <div class="mt-2">
+                            <p class="text-[10px] text-slate-400 font-medium mb-1">Current Graphic:</p>
+                            <img src="{{ asset($agency->about_image ?? 'assets/landing_page/features_leftside.png') }}" alt="About Features" class="h-24 w-full object-cover rounded-xl border border-slate-200">
+                        </div>
+                    </div>
+
+                    <!-- 3. CTA Footer Card Image -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
+                        <label class="block text-xs font-bold text-slate-800">3. CTA Footer Banner Image</label>
+                        <input type="file" name="cta_image" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <div class="mt-2">
+                            <p class="text-[10px] text-slate-400 font-medium mb-1">Current Graphic:</p>
+                            <img src="{{ asset($agency->cta_image ?? 'assets/landing_page/footer_card.png') }}" alt="CTA Banner Graphic" class="h-24 w-full object-cover rounded-xl border border-slate-200">
+                        </div>
                     </div>
                 </div>
             </div>
