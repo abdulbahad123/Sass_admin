@@ -217,6 +217,16 @@
                                 <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                 <span>Terms & Conditions</span>
                             </a>
+                            <a href="{{ route('whitelabel.website.shipping') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.shipping') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+                                <span>Shipping Policy</span>
+                            </a>
+                            <a href="{{ route('whitelabel.website.refund') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.refund') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                <span>Refund & Cancellation</span>
+                            </a>
                             <a href="{{ route('whitelabel.website.cookies') }}" 
                                class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.cookies') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                                 <i data-lucide="cookie" class="w-3.5 h-3.5"></i>

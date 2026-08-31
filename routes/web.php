@@ -47,6 +47,18 @@ Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) {
     return view('whitelabel.website.public_legal', ['type' => 'terms', 'agency' => $agency]);
 })->name('agency.terms');
 
+Route::get('/shipping-policy', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'shipping', 'agency' => $agency]);
+})->name('agency.shipping');
+
+Route::get('/refund-policy', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'refund', 'agency' => $agency]);
+})->name('agency.refund');
+
 Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) {
     $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
     $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
@@ -222,6 +234,12 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
 
         Route::get('/terms', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'terms'])->name('terms');
         Route::post('/terms', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateTerms'])->name('terms.update');
+
+        Route::get('/shipping', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'shipping'])->name('shipping');
+        Route::post('/shipping', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateShipping'])->name('shipping.update');
+
+        Route::get('/refund', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'refund'])->name('refund');
+        Route::post('/refund', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateRefund'])->name('refund.update');
 
         Route::get('/cookies', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'cookies'])->name('cookies');
         Route::post('/cookies', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateCookies'])->name('cookies.update');

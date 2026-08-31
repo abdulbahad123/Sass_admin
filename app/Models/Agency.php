@@ -49,6 +49,8 @@ class Agency extends Model
         'privacy_policy',
         'terms_conditions',
         'cookie_policy',
+        'shipping_policy',
+        'refund_policy',
         'disclaimer',
         'meta_title',
         'meta_description',

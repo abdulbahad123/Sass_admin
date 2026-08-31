@@ -277,6 +277,48 @@ class WhiteLabelWebsiteController extends Controller
         return back()->with('success', 'Terms & Conditions updated successfully!');
     }
 
+    public function shipping()
+    {
+        $user = Auth::user();
+        $agency = $this->getAgency();
+        return view('whitelabel.website.shipping', compact('user', 'agency'));
+    }
+
+    public function updateShipping(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $validated = $request->validate([
+            'shipping_policy' => 'required|string',
+        ]);
+
+        $agency->update($validated);
+
+        return back()->with('success', 'Shipping & Delivery Policy updated successfully!');
+    }
+
+    public function refund()
+    {
+        $user = Auth::user();
+        $agency = $this->getAgency();
+        return view('whitelabel.website.refund', compact('user', 'agency'));
+    }
+
+    public function updateRefund(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $validated = $request->validate([
+            'refund_policy' => 'required|string',
+        ]);
+
+        $agency->update($validated);
+
+        return back()->with('success', 'Cancellation & Refund Policy updated successfully!');
+    }
+
     public function cookies()
     {
         $user = Auth::user();
