@@ -91,12 +91,21 @@
                         <input type="text" name="cta_url" value="{{ old('cta_url', $agency->cta_url ?? '/login') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Hero Dashboard Preview Image</label>
-                    <input type="file" name="hero_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                    @if($agency->hero_image)
-                        <img src="{{ asset($agency->hero_image) }}" alt="Hero Graphic" class="h-24 mt-2 rounded-xl border border-slate-200 object-cover">
-                    @endif
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Hero Dashboard Preview Image</label>
+                        <input type="file" name="hero_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        @if($agency->hero_image)
+                            <img src="{{ asset($agency->hero_image) }}" alt="Hero Graphic" class="h-20 mt-2 rounded-xl border border-slate-200 object-cover">
+                        @endif
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">About Section Entrepreneur Image</label>
+                        <input type="file" name="about_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        @if($agency->about_image)
+                            <img src="{{ asset($agency->about_image) }}" alt="About Graphic" class="h-20 mt-2 rounded-xl border border-slate-200 object-cover">
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

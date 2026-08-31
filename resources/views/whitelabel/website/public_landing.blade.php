@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $agency->meta_title ?? ($agency->name . ' — All-in-One Business Growth Platform') }}</title>
-    <meta name="description" content="{{ $agency->meta_description ?? ($agency->hero_subtitle ?? 'Empowering businesses with smart digital tools.') }}">
+    <meta name="description" content="{{ $agency->meta_description ?? ($agency->hero_subtitle ?? 'Empowering Indian businesses with smart digital tools.') }}">
     
     @if(!empty($agency->favicon))
         <link rel="icon" type="image/png" href="{{ asset($agency->favicon) }}">
@@ -31,11 +31,33 @@
         $secondaryColor = $agency->secondary_color ?? '#9333ea';
         $accentColor = $agency->accent_color ?? '#3b82f6';
         
-        $services = $agency->parsed_services;
-        $testimonials = $agency->parsed_testimonials;
-        $features = $agency->parsed_features;
-        $faqs = $agency->parsed_faq;
-        $socialLinks = is_array($agency->social_links ?? null) ? $agency->social_links : (json_decode($agency->social_links ?? '[]', true) ?: []);
+        $services = is_array($agency->services_data ?? null) ? $agency->services_data : (json_decode($agency->services_data ?? '[]', true) ?: [
+            ['title' => 'AI Reviews + CRM', 'desc' => 'Get more 5-star reviews & manage customers easily', 'icon' => 'star'],
+            ['title' => 'Website Builder', 'desc' => 'Create stunning websites in minutes with AI', 'icon' => 'monitor'],
+            ['title' => 'Digital V-Card', 'desc' => 'Share your business digitally, smartly', 'icon' => 'user'],
+            ['title' => 'QR Menu & Ordering', 'desc' => 'Contactless menu for restaurants & cafes', 'icon' => 'qr-code'],
+            ['title' => 'Loyalty Program', 'desc' => 'Reward your customers and increase repeat sales', 'icon' => 'gift'],
+            ['title' => 'Business Analytics', 'desc' => 'Track growth with real-time insights', 'icon' => 'bar-chart-3'],
+        ]);
+
+        $testimonials = is_array($agency->testimonials_data ?? null) ? $agency->testimonials_data : (json_decode($agency->testimonials_data ?? '[]', true) ?: [
+            ['name' => 'Rahul Sharma', 'role' => 'Restaurant Owner, Delhi', 'rating' => 5, 'comment' => "{$agency->name} helped us get 3x more online orders in just 2 months. The QR menu and reviews feature is amazing!"],
+            ['name' => 'Priya Mehta', 'role' => 'Salon Owner, Mumbai', 'rating' => 5, 'comment' => 'Super easy to use and really effective. Our customer engagement has never been better!'],
+            ['name' => 'Amit Verma', 'role' => 'Clinic Owner, Bengaluru', 'rating' => 5, 'comment' => 'The digital tools, CRM and reminders have saved us hours of work every week.'],
+        ]);
+
+        $features = is_array($agency->features_data ?? null) ? $agency->features_data : (json_decode($agency->features_data ?? '[]', true) ?: [
+            ['title' => 'Get More Customers', 'desc' => 'Build trust with reviews, smart websites and digital presence.', 'icon' => 'rocket', 'bg' => 'bg-purple-100 text-purple-600'],
+            ['title' => 'Save Time & Effort', 'desc' => 'Automate repetitive tasks and focus on what matters most.', 'icon' => 'clock', 'bg' => 'bg-emerald-100 text-emerald-600'],
+            ['title' => 'Increase Revenue', 'desc' => 'Drive repeat business with loyalty programs & digital tools.', 'icon' => 'trending-up', 'bg' => 'bg-orange-100 text-orange-600'],
+            ['title' => 'Reliable & Secure', 'desc' => 'Your business data is safe with enterprise-grade security.', 'icon' => 'shield-check', 'bg' => 'bg-blue-100 text-blue-600'],
+        ]);
+
+        $faqs = is_array($agency->faq_data ?? null) ? $agency->faq_data : (json_decode($agency->faq_data ?? '[]', true) ?: [
+            ['q' => 'How does the platform work?', 'a' => 'Our platform provides an all-in-one suite of growth tools designed to help local businesses manage orders, reviews, websites, and customer retention from a single place.'],
+            ['q' => 'Can I customize the features for my business?', 'a' => 'Yes, you can enable and configure the exact tools you need in just a few clicks from your dashboard.'],
+            ['q' => 'Is technical knowledge required?', 'a' => 'Not at all! Our software is built for non-technical business owners with clean, easy-to-use interfaces.'],
+        ]);
     @endphp
 
     <style>
@@ -74,10 +96,10 @@
 
     <!-- Top Announcement Bar -->
     <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white text-[11px] font-semibold py-1.5 px-4 text-center">
-        <span>🎉 Special Launch Offer: Get Started with <strong>{{ $agency->name }}</strong> Today & Automate Your Business!</span>
+        <span>🎉 Special Offer: Get Started with <strong>{{ $agency->name }}</strong> Today & Automate Your Business!</span>
     </div>
 
-    <!-- Header Navigation -->
+    <!-- Header Navigation (Pixel-Perfect Match with Image 2) -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
@@ -99,18 +121,19 @@
             <nav class="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-600">
                 <a href="#products" class="hover:text-indigo-600 transition">Products</a>
                 <a href="#features" class="hover:text-indigo-600 transition">Solutions</a>
+                <a href="#about" class="hover:text-indigo-600 transition">About Us</a>
                 <a href="#how-it-works" class="hover:text-indigo-600 transition">How It Works</a>
                 <a href="#testimonials" class="hover:text-indigo-600 transition">Reviews</a>
                 <a href="#faq" class="hover:text-indigo-600 transition">FAQ</a>
             </nav>
 
             <!-- Header Action Buttons -->
-            <div class="flex items-center space-x-4">
-                <a href="{{ route('login') }}" class="text-xs font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <a href="{{ $agency->cta_url ?? '/login' }}" class="text-xs font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
                     Login
                 </a>
-                <a href="{{ route('login') }}" class="bg-brand-gradient text-white text-xs font-extrabold px-5 py-2.5 rounded-full shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center space-x-2">
-                    <span>{{ $agency->cta_text ?? 'Get Started' }}</span>
+                <a href="{{ $agency->cta_url ?? '/login' }}" class="bg-brand-gradient text-white text-xs font-extrabold px-5 py-2.5 rounded-full shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center space-x-2">
+                    <span>{{ $agency->cta_text ?? 'Get Started Free' }}</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
@@ -118,7 +141,7 @@
         </div>
     </header>
 
-    <!-- HERO SECTION (Matching Image 1 SaaS Yaari Pixel-Perfect Design) -->
+    <!-- HERO SECTION (Pixel-Perfect Match with Image 2) -->
     <section class="relative pt-12 pb-20 md:pt-16 md:pb-28 hero-bg-glow overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -128,129 +151,118 @@
                     
                     <!-- Tagline Pill Badge -->
                     <div class="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold shadow-sm">
-                        <span>⚡ Empowering Local Businesses</span>
+                        <span>⚡ All-in-One Growth Platform for Indian Businesses</span>
                     </div>
 
-                    <!-- Hero Main Heading -->
+                    <!-- Hero Main Heading (Image 2) -->
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 font-heading leading-[1.15] tracking-tight">
-                        {{ $agency->hero_title ?? 'Grow, Manage & Automate Your Business —' }}
-                        <span class="text-brand-gradient block">All in One Place</span>
+                        {{ $agency->hero_title ?? 'Build. Automate.' }}
+                        <span class="text-brand-gradient block">Scale. All in One</span>
                     </h1>
 
                     <!-- Hero Subtitle -->
                     <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                        {{ $agency->hero_subtitle ?? 'The most powerful SaaS platform for local businesses to get more customers, save time and grow faster.' }}
+                        {{ $agency->hero_subtitle ?? ($agency->name . ' helps Indian businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation — all in one place.') }}
                     </p>
-
-                    <!-- Feature Bullet Pills -->
-                    <div class="flex flex-wrap justify-center lg:justify-start gap-3 text-xs font-bold text-slate-700 pt-1">
-                        <span class="inline-flex items-center space-x-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl shadow-sm">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600"></i>
-                            <span>All-in-One Business Toolkit</span>
-                        </span>
-                        <span class="inline-flex items-center space-x-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl shadow-sm">
-                            <i data-lucide="zap" class="w-4 h-4 text-indigo-600"></i>
-                            <span>Easy to Use, No Tech Skills</span>
-                        </span>
-                    </div>
 
                     <!-- CTA Buttons -->
                     <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-3">
-                        <a href="{{ route('login') }}" class="w-full sm:w-auto bg-brand-gradient text-white text-sm font-extrabold px-8 py-4 rounded-2xl shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
-                            <span>{{ $agency->cta_text ?? 'Start Free Today' }}</span>
+                        <a href="{{ $agency->cta_url ?? '/login' }}" class="w-full sm:w-auto bg-brand-gradient text-white text-sm font-extrabold px-8 py-4 rounded-2xl shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
+                            <span>Start Your Free Trial</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
                         <a href="#how-it-works" class="w-full sm:w-auto bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-sm font-bold px-7 py-4 rounded-2xl shadow-sm transition-all flex items-center justify-center space-x-2">
                             <i data-lucide="play-circle" class="w-4 h-4 text-indigo-600"></i>
-                            <span>Watch Demo</span>
+                            <span>Book a Live Demo</span>
                         </a>
                     </div>
 
-                    <!-- Trust Micro-Subtext -->
-                    <div class="flex items-center justify-center lg:justify-start space-x-6 text-xs text-slate-500 font-medium pt-2">
-                        <span class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 mr-1"></i> No Credit Card Required</span>
-                        <span class="flex items-center"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 mr-1"></i> Setup in 2 Minutes</span>
+                    <!-- Trust Badges (Image 2) -->
+                    <div class="flex items-center justify-center lg:justify-start space-x-6 text-xs text-slate-500 font-bold pt-2">
+                        <span class="flex items-center"><i data-lucide="percent" class="w-3.5 h-3.5 text-indigo-600 mr-1.5"></i> No Credit Card</span>
+                        <span class="flex items-center"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600 mr-1.5"></i> Easy Setup</span>
+                        <span class="flex items-center"><i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-600 mr-1.5"></i> Cancel Anytime</span>
                     </div>
 
                 </div>
 
-                <!-- Right Hero Graphic / Mockup -->
+                <!-- Right Hero Graphic / Mockup (Pixel-Perfect Image 2 Match or Dynamic Image) -->
                 <div class="lg:col-span-6 relative">
-                    <div class="relative mx-auto max-w-lg lg:max-w-none">
-                        
-                        <!-- Main Dashboard Card Mockup -->
-                        <div class="bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl text-white border border-slate-800/80 relative z-10">
-                            
-                            <!-- Mockup Top Bar -->
-                            <div class="flex items-center justify-between pb-6 border-b border-slate-800">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 rounded-xl bg-brand-gradient flex items-center justify-center font-bold text-xs">
-                                        <i data-lucide="layout" class="w-4 h-4"></i>
+                    @if(!empty($agency->hero_image))
+                        <!-- Dynamically Uploaded Hero Graphic Image -->
+                        <div class="relative mx-auto max-w-lg lg:max-w-none">
+                            <img src="{{ asset($agency->hero_image) }}" alt="{{ $agency->name }}" class="w-full h-auto rounded-3xl shadow-2xl border border-slate-200 object-cover">
+                        </div>
+                    @else
+                        <!-- Dashboard UI Mockup Graphic (Image 2 Pixel Match) -->
+                        <div class="relative mx-auto max-w-lg lg:max-w-none">
+                            <div class="bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl text-white border border-slate-800/80 relative z-10">
+                                
+                                <!-- Mockup Header -->
+                                <div class="flex items-center justify-between pb-6 border-b border-slate-800">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-xl bg-brand-gradient flex items-center justify-center font-bold text-xs">
+                                            <i data-lucide="layers" class="w-4 h-4"></i>
+                                        </div>
+                                        <span class="font-bold text-sm tracking-tight">Welcome back, Ankit 👋</span>
                                     </div>
-                                    <span class="font-bold text-sm tracking-tight">{{ $agency->name }} Dashboard</span>
+                                    <div class="flex space-x-1.5">
+                                        <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
+                                        <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                                        <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                                    </div>
                                 </div>
-                                <div class="flex space-x-1.5">
-                                    <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
-                                    <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
-                                    <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-                                </div>
-                            </div>
 
-                            <!-- Dashboard Stats Grid Mockup -->
-                            <div class="grid grid-cols-2 gap-4 mt-6">
-                                <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4">
-                                    <p class="text-[11px] font-semibold text-slate-400">Total Customers</p>
-                                    <h4 class="text-2xl font-black text-white font-heading mt-1">12,458</h4>
-                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full inline-block mt-2">↑ +12.5% vs last month</span>
+                                <!-- Stats Grid -->
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+                                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-3">
+                                        <p class="text-[10px] text-slate-400 font-semibold">Total Revenue</p>
+                                        <h4 class="text-base font-extrabold text-white font-heading mt-0.5">₹24,50,000</h4>
+                                        <span class="text-[9px] font-bold text-emerald-400 mt-1 inline-block">↑ 12.5%</span>
+                                    </div>
+                                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-3">
+                                        <p class="text-[10px] text-slate-400 font-semibold">New Customers</p>
+                                        <h4 class="text-base font-extrabold text-white font-heading mt-0.5">1,245</h4>
+                                        <span class="text-[9px] font-bold text-emerald-400 mt-1 inline-block">↑ 18.2%</span>
+                                    </div>
+                                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-3">
+                                        <p class="text-[10px] text-slate-400 font-semibold">Orders</p>
+                                        <h4 class="text-base font-extrabold text-white font-heading mt-0.5">2,356</h4>
+                                        <span class="text-[9px] font-bold text-emerald-400 mt-1 inline-block">↑ 8.1%</span>
+                                    </div>
+                                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-3">
+                                        <p class="text-[10px] text-slate-400 font-semibold">Growth Rate</p>
+                                        <h4 class="text-base font-extrabold text-white font-heading mt-0.5">24.5%</h4>
+                                        <span class="text-[9px] font-bold text-emerald-400 mt-1 inline-block">↑ 4.6%</span>
+                                    </div>
                                 </div>
-                                <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4">
-                                    <p class="text-[11px] font-semibold text-slate-400">New Reviews</p>
-                                    <h4 class="text-2xl font-black text-white font-heading mt-1">1,248</h4>
-                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full inline-block mt-2">↑ +18.3% vs last month</span>
-                                </div>
-                            </div>
 
-                            <!-- Growth Chart Mockup Graphic -->
-                            <div class="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-2xl p-4">
-                                <div class="flex items-center justify-between text-xs font-bold mb-3">
-                                    <span>Business Growth</span>
-                                    <span class="text-emerald-400">+28.4% This Month</span>
+                                <!-- Growth Chart Curve -->
+                                <div class="mt-6 bg-slate-800/40 border border-slate-700/40 rounded-2xl p-4">
+                                    <div class="flex items-center justify-between text-xs font-bold mb-2">
+                                        <span>Revenue Overview</span>
+                                        <span class="text-indigo-400">This Month</span>
+                                    </div>
+                                    <div class="h-24 flex items-end justify-between gap-2 pt-2">
+                                        <div class="w-full bg-indigo-500/20 rounded-t-lg h-[40%]"></div>
+                                        <div class="w-full bg-indigo-500/30 rounded-t-lg h-[55%]"></div>
+                                        <div class="w-full bg-indigo-500/40 rounded-t-lg h-[45%]"></div>
+                                        <div class="w-full bg-indigo-500/60 rounded-t-lg h-[70%]"></div>
+                                        <div class="w-full bg-indigo-500/80 rounded-t-lg h-[60%]"></div>
+                                        <div class="w-full bg-brand-gradient rounded-t-lg h-[95%]"></div>
+                                    </div>
                                 </div>
-                                <div class="h-20 flex items-end justify-between gap-2 pt-2">
-                                    <div class="w-full bg-indigo-500/20 rounded-t-lg h-[40%]"></div>
-                                    <div class="w-full bg-indigo-500/30 rounded-t-lg h-[55%]"></div>
-                                    <div class="w-full bg-indigo-500/40 rounded-t-lg h-[45%]"></div>
-                                    <div class="w-full bg-indigo-500/60 rounded-t-lg h-[70%]"></div>
-                                    <div class="w-full bg-indigo-500/80 rounded-t-lg h-[60%]"></div>
-                                    <div class="w-full bg-brand-gradient rounded-t-lg h-[95%]"></div>
-                                </div>
-                            </div>
 
-                        </div>
-
-                        <!-- Floating Rating Badge -->
-                        <div class="absolute -bottom-6 -left-4 sm:-left-6 bg-white border border-slate-100 rounded-2xl p-4 shadow-xl z-20 flex items-center space-x-3">
-                            <span class="text-3xl font-black text-slate-900 font-heading">4.9</span>
-                            <div>
-                                <div class="flex text-amber-400">
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                </div>
-                                <p class="text-[10px] font-bold text-slate-500 mt-0.5">2,000+ Verified Reviews</p>
                             </div>
                         </div>
-
-                    </div>
+                    @endif
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- TRUST BAR CATEGORIES -->
+    <!-- TRUST BAR CATEGORIES (Pixel-Perfect Image 1 Match) -->
     <section class="py-12 bg-white border-y border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">
@@ -269,7 +281,7 @@
         </div>
     </section>
 
-    <!-- WHY CHOOSE SECTION -->
+    <!-- WHY CHOOSE SECTION (Pixel-Perfect Image 1 Match: 4 Value Cards) -->
     <section id="features" class="py-20 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             <div class="text-center max-w-3xl mx-auto space-y-3">
@@ -284,8 +296,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($features as $f)
                     <div class="bg-white border border-slate-200/80 rounded-3xl p-8 card-hover-effect space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-                            <i data-lucide="zap" class="w-6 h-6"></i>
+                        <div class="w-12 h-12 rounded-2xl {{ $f['bg'] ?? 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center font-bold">
+                            <i data-lucide="{{ $f['icon'] ?? 'zap' }}" class="w-6 h-6"></i>
                         </div>
                         <h3 class="text-lg font-bold text-slate-900 font-heading">{{ $f['title'] }}</h3>
                         <p class="text-xs text-slate-600 leading-relaxed">{{ $f['desc'] }}</p>
@@ -295,20 +307,20 @@
         </div>
     </section>
 
-    <!-- SMART TOOLS / PRODUCTS SUITE SECTION -->
+    <!-- SMART TOOLS FOR SMARTER BUSINESSES (Pixel-Perfect Image 1 Match: 6 Cards with Arrows) -->
     <section id="products" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div class="space-y-3 max-w-2xl">
-                    <span class="px-3 py-1 bg-indigo-50 text-indigo-700 font-bold text-xs rounded-full">Our Products</span>
+                    <span class="px-3.5 py-1 bg-indigo-50 text-indigo-700 font-bold text-xs rounded-full">Our Products</span>
                     <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading">
                         Smart Tools for <span class="text-brand-gradient">Smarter Businesses</span>
                     </h2>
                     <p class="text-sm text-slate-600">
-                        A complete suite of business growth tools designed for entrepreneurs and local businesses.
+                        A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.
                     </p>
                 </div>
-                <a href="{{ route('login') }}" class="bg-brand-gradient text-white text-xs font-bold px-6 py-3 rounded-2xl shadow-md flex items-center space-x-2 self-start md:self-auto">
+                <a href="{{ $agency->cta_url ?? '/login' }}" class="bg-brand-gradient text-white text-xs font-extrabold px-6 py-3 rounded-2xl shadow-md flex items-center space-x-2 self-start md:self-auto">
                     <span>Explore All Products</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
@@ -316,20 +328,108 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($services as $s)
-                    <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-8 card-hover-effect space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-brand-gradient text-white flex items-center justify-center font-bold shadow-md shadow-indigo-500/20">
-                            <i data-lucide="{{ $s['icon'] ?? 'box' }}" class="w-6 h-6"></i>
+                    <div class="bg-white border border-slate-200/80 rounded-3xl p-8 card-hover-effect space-y-4 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                                    <i data-lucide="{{ $s['icon'] ?? 'box' }}" class="w-6 h-6"></i>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition">
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 font-heading">{{ $s['title'] }}</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">{{ $s['desc'] }}</p>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 font-heading">{{ $s['title'] }}</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">{{ $s['desc'] }}</p>
                     </div>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <!-- HOW IT WORKS SECTION -->
-    <section id="how-it-works" class="py-20 bg-slate-50 border-y border-slate-200/60">
+    <!-- BUILT FOR ENTREPRENEURS SECTION (Pixel-Perfect Image 3 Match) -->
+    <section id="about" class="py-24 bg-slate-50 border-t border-slate-200/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Image/Graphic Column -->
+                <div class="lg:col-span-6 relative">
+                    @if(!empty($agency->about_image))
+                        <img src="{{ asset($agency->about_image) }}" alt="{{ $agency->name }}" class="w-full h-auto rounded-3xl shadow-xl border border-slate-200 object-cover">
+                    @else
+                        <!-- Dynamic Entrepreneur Graphic Container -->
+                        <div class="relative bg-gradient-to-tr from-indigo-100 via-purple-50 to-blue-50 rounded-3xl p-8 border border-slate-200/80 shadow-lg text-center space-y-6">
+                            <div class="w-24 h-24 rounded-full bg-brand-gradient text-white flex items-center justify-center font-bold text-3xl mx-auto shadow-xl">
+                                👨‍💼
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="text-xl font-bold text-slate-900 font-heading">Empowering Indian Businesses</h4>
+                                <p class="text-xs text-slate-600 max-w-md mx-auto">Built to help local business owners automate operations, boost sales, and delight customers.</p>
+                            </div>
+                            <!-- Floating Stat Pills -->
+                            <div class="grid grid-cols-2 gap-3 pt-2">
+                                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-left">
+                                    <span class="text-[10px] text-slate-400 font-bold block">New Order</span>
+                                    <span class="text-xs font-bold text-emerald-600">#ORD-125 ✓</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-left">
+                                    <span class="text-[10px] text-slate-400 font-bold block">Total Revenue</span>
+                                    <span class="text-xs font-bold text-indigo-600">₹24,50,000 (+12.5%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Right Content Column -->
+                <div class="lg:col-span-6 space-y-8">
+                    
+                    <!-- 4 Metric Cards Row (Image 3) -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1">
+                            <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
+                            <h4 class="text-lg font-black text-slate-900 font-heading">10,000+</h4>
+                            <p class="text-[10px] font-semibold text-slate-500">Happy Businesses</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1">
+                            <i data-lucide="package" class="w-5 h-5 text-purple-600"></i>
+                            <h4 class="text-lg font-black text-slate-900 font-heading">1M+</h4>
+                            <p class="text-[10px] font-semibold text-slate-500">Orders Processed</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1">
+                            <i data-lucide="shield" class="w-5 h-5 text-emerald-600"></i>
+                            <h4 class="text-lg font-black text-slate-900 font-heading">500K+</h4>
+                            <p class="text-[10px] font-semibold text-slate-500">Active Customers</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i>
+                            <h4 class="text-lg font-black text-slate-900 font-heading">99.8%</h4>
+                            <p class="text-[10px] font-semibold text-slate-500">Uptime & Secure</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading">
+                            Built for entrepreneurs, by entrepreneurs.
+                        </h2>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            {{ $agency->about_content ?? ("We understand the challenges of growing a business in India. That's why we built " . $agency->name . " — to make technology simple, affordable, and accessible for everyone.") }}
+                        </p>
+                    </div>
+
+                    <a href="{{ $agency->cta_url ?? '/login' }}" class="inline-flex items-center space-x-2 bg-brand-gradient text-white text-xs font-extrabold px-7 py-3.5 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition">
+                        <span>Explore All Features</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION (Pixel-Perfect Image 1 Match: 3 Connected Steps) -->
+    <section id="how-it-works" class="py-20 bg-white border-y border-slate-200/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             <div class="text-center max-w-3xl mx-auto space-y-3">
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading">
@@ -343,21 +443,21 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
                 
                 <!-- Step 1 -->
-                <div class="bg-white border border-slate-200/80 rounded-3xl p-8 text-center space-y-4 relative">
+                <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-8 text-center space-y-4 relative">
                     <span class="w-10 h-10 rounded-full bg-indigo-600 text-white font-extrabold text-sm flex items-center justify-center mx-auto shadow-md">01</span>
                     <h3 class="text-lg font-bold text-slate-900 font-heading">Sign Up</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Create your account in less than 2 minutes and get instant access.</p>
                 </div>
 
                 <!-- Step 2 -->
-                <div class="bg-white border border-slate-200/80 rounded-3xl p-8 text-center space-y-4 relative">
+                <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-8 text-center space-y-4 relative">
                     <span class="w-10 h-10 rounded-full bg-purple-600 text-white font-extrabold text-sm flex items-center justify-center mx-auto shadow-md">02</span>
                     <h3 class="text-lg font-bold text-slate-900 font-heading">Set Up Your Business</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Choose the tools you need and customize in minutes.</p>
                 </div>
 
                 <!-- Step 3 -->
-                <div class="bg-white border border-slate-200/80 rounded-3xl p-8 text-center space-y-4 relative">
+                <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-8 text-center space-y-4 relative">
                     <span class="w-10 h-10 rounded-full bg-emerald-600 text-white font-extrabold text-sm flex items-center justify-center mx-auto shadow-md">03</span>
                     <h3 class="text-lg font-bold text-slate-900 font-heading">Grow Faster</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Get more customers, more reviews and increase your revenue.</p>
@@ -367,8 +467,8 @@
         </div>
     </section>
 
-    <!-- TESTIMONIALS SECTION -->
-    <section id="testimonials" class="py-24 bg-white">
+    <!-- TESTIMONIALS SECTION (Pixel-Perfect Image 1 Match) -->
+    <section id="testimonials" class="py-24 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             <div class="text-center max-w-3xl mx-auto space-y-3">
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading">
@@ -381,7 +481,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach($testimonials as $t)
-                    <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-8 space-y-4 flex flex-col justify-between">
+                    <div class="bg-white border border-slate-200/80 rounded-3xl p-8 space-y-4 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex text-amber-400 space-x-1">
                                 @for($i = 0; $i < ($t['rating'] ?? 5); $i++)
@@ -406,7 +506,7 @@
     </section>
 
     <!-- FAQ SECTION -->
-    <section id="faq" class="py-20 bg-slate-50 border-t border-slate-200/60">
+    <section id="faq" class="py-20 bg-white border-t border-slate-200/60">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div class="text-center space-y-3">
                 <h2 class="text-3xl font-extrabold text-slate-900 font-heading">Frequently Asked Questions</h2>
@@ -415,7 +515,7 @@
 
             <div class="space-y-4">
                 @foreach($faqs as $item)
-                    <div class="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-2">
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-2">
                         <h4 class="text-sm font-bold text-slate-900 font-heading">{{ $item['q'] }}</h4>
                         <p class="text-xs text-slate-600 leading-relaxed">{{ $item['a'] }}</p>
                     </div>
@@ -424,7 +524,7 @@
         </div>
     </section>
 
-    <!-- CTA BANNER SECTION -->
+    <!-- CTA BANNER SECTION (Pixel-Perfect Image 1 Match) -->
     <section class="py-16 bg-slate-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-brand-gradient rounded-3xl p-8 sm:p-14 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
@@ -441,14 +541,14 @@
                         <span>✓ 24/7 Support</span>
                     </div>
                 </div>
-                <a href="{{ route('login') }}" class="bg-white text-slate-900 hover:bg-slate-100 text-sm font-extrabold px-8 py-4 rounded-2xl shadow-xl transition-all whitespace-nowrap">
+                <a href="{{ $agency->cta_url ?? '/login' }}" class="bg-white text-slate-900 hover:bg-slate-100 text-sm font-extrabold px-8 py-4 rounded-2xl shadow-xl transition-all whitespace-nowrap">
                     Get Started Free →
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER SECTION -->
+    <!-- FOOTER SECTION (Pixel-Perfect Image 1 Match) -->
     <footer class="bg-slate-950 text-slate-400 pt-16 pb-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
@@ -481,12 +581,10 @@
                     </ul>
                 </div>
 
-                <!-- Col 3: Legal & Policies (Razorpay Compliant) -->
+                <!-- Col 3: Legal & Policies -->
                 <div class="space-y-3">
                     <h4 class="text-xs font-extrabold uppercase tracking-wider text-white">Legal & Policies</h4>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="/about" class="hover:text-white transition">About Us</a></li>
-                        <li><a href="/contact" class="hover:text-white transition">Contact Us</a></li>
                         <li><a href="/privacy-policy" class="hover:text-white transition">Privacy Policy</a></li>
                         <li><a href="/terms-conditions" class="hover:text-white transition">Terms & Conditions</a></li>
                         <li><a href="/shipping-policy" class="hover:text-white transition">Shipping Policy</a></li>
@@ -505,8 +603,9 @@
 
             </div>
 
-            <div class="pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
-                © 2026 {{ $agency->name }}. All rights reserved.
+            <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <div>© 2026 {{ $agency->name }}. All rights reserved.</div>
+                <div>Made with ❤️ in India 🇮🇳</div>
             </div>
 
         </div>

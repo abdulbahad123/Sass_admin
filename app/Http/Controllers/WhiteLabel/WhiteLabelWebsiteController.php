@@ -57,6 +57,11 @@ class WhiteLabelWebsiteController extends Controller
             $validated['hero_image'] = '/storage/' . $heroImgPath;
         }
 
+        if ($request->hasFile('about_image')) {
+            $aboutImgPath = $request->file('about_image')->store('uploads/agency', 'public');
+            $validated['about_image'] = '/storage/' . $aboutImgPath;
+        }
+
         // Section toggles
         if ($request->has('sections')) {
             $validated['sections_enabled'] = json_encode($request->input('sections'));
