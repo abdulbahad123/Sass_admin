@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ (isset($agency) && $agency) ? $agency->name . ' Agency Portal Access' : 'SaaS Platform Portal Access' }}</title>
+    <title>{{ (!empty($isMainDomain) ? 'Platform Portal Access — Nooryak' : (isset($agency) && $agency ? $agency->name . ' Portal Access' : 'Agency Portal Access')) }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
     <div class="w-full max-w-md">
         <!-- Logo & Header -->
         <div class="text-center mb-8">
-            @if(isset($agency) && !empty($agency->logo))
+            @if(empty($isMainDomain) && isset($agency) && !empty($agency->logo))
                 <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl mb-4">
                     <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" class="h-10 w-auto object-contain">
                 </div>
@@ -28,10 +28,10 @@
             @endif
             
             <h1 class="text-2xl font-bold text-white font-heading tracking-tight">
-                {{ (isset($agency) && $agency) ? $agency->name . ' Portal Access' : 'Platform Admin Access' }}
+                {{ !empty($isMainDomain) ? 'Platform Portal Access' : (isset($agency) && $agency ? $agency->name . ' Portal Access' : 'Agency Portal Access') }}
             </h1>
             <p class="text-slate-400 text-sm mt-1">
-                {{ (isset($agency) && $agency) ? 'Authenticate for ' . $agency->name . ' White Label Agency Portal' : 'Authenticate for Super Admin or Master Agency Portal' }}
+                {{ !empty($isMainDomain) ? 'Authenticate for Super Admin, Master Agency, or White Label' : (isset($agency) && $agency ? 'Authenticate for ' . $agency->name . ' White Label Agency Portal' : 'Authenticate for White Label Agency Portal') }}
             </p>
         </div>
 
@@ -63,14 +63,10 @@
                 </div>
             @endif
 
-            @php
-                $agencyPortalMode = (isset($isAgencyPortal) && $isAgencyPortal) || request()->is('whitelabel-panel*') || request()->is('agency-portal*') || request()->is('agency_portal*') || (isset($agency) && !empty($agency->custom_domain));
-            @endphp
-
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
                 @csrf
 
-                <input type="hidden" name="is_agency_portal" value="{{ $agencyPortalMode ? '1' : '0' }}">
+                <input type="hidden" name="is_agency_portal" value="{{ empty($isMainDomain) ? '1' : '0' }}">
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Account Email</label>
@@ -110,26 +106,10 @@
                 </button>
             </form>
 
-            <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
-                <p class="text-xs text-slate-400 font-medium text-center">Click a Demo Account to Fill Credentials:</p>
-
-                @if($agencyPortalMode)
-                    <!-- Agency Only Demo Quick Fill -->
-                    <div class="grid grid-cols-1 gap-2 text-xs">
-                        <button type="button" onclick="fillCredentials('priya@abcdigital.com', 'password')" 
-                                class="p-3 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-700/40 text-emerald-200 transition text-left flex items-center justify-between group">
-                            <div class="space-y-0.5">
-                                <div class="font-semibold text-emerald-400 flex items-center space-x-1 text-[11px]">
-                                    <span>White Label Agency Account</span>
-                                </div>
-                                <div class="text-[11px] text-slate-300">priya@abcdigital.com</div>
-                                <div class="text-[10px] text-slate-400 font-mono">Pass: <span class="text-emerald-300">password</span></div>
-                            </div>
-                            <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 font-bold rounded-lg text-[10px]">1-Click Apply</span>
-                        </button>
-                    </div>
-                @else
-                    <!-- Full Demo Quick Fill for Platform Admin -->
+            @if(!empty($isMainDomain))
+                <!-- Demo Quick Fill ONLY shown on main domain (nooryak.in / localhost) -->
+                <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
+                    <p class="text-xs text-slate-400 font-medium text-center">Click a Demo Account to Fill Credentials:</p>
                     <div class="grid grid-cols-3 gap-2 text-xs">
                         <button type="button" onclick="fillCredentials('admin@platform.com', 'password')" 
                                 class="p-2.5 rounded-xl bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-700/40 text-indigo-200 transition text-left space-y-0.5 group">
@@ -161,8 +141,8 @@
                             <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-emerald-300">password</span></div>
                         </button>
                     </div>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
     </div>
 

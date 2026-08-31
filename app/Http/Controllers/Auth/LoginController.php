@@ -23,23 +23,32 @@ class LoginController extends Controller
             }
         }
 
-        $host = $request->getHost();
-        $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($host));
+        $host = strtolower($request->getHost());
+        $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-        $agency = Agency::whereNotNull('custom_domain')
-            ->where(function ($q) use ($host, $cleanHost) {
-                $q->where('custom_domain', $host)
-                  ->orWhere('custom_domain', $cleanHost)
-                  ->orWhere('custom_domain', 'like', "%{$cleanHost}%");
-            })->first();
+        // Check if current domain is main platform domain (nooryak.in or localhost)
+        $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
-        if (!$agency) {
-            $agency = Agency::where('type', 'white_label')->first() ?? Agency::first();
+        if ($isMainDomain) {
+            $agency = null;
+            $isAgencyPortal = false;
+        } else {
+            // Resolve white-label agency for custom agency domain (e.g. maturednature.com)
+            $agency = Agency::whereNotNull('custom_domain')
+                ->where(function ($q) use ($host, $cleanHost) {
+                    $q->where('custom_domain', $host)
+                      ->orWhere('custom_domain', $cleanHost)
+                      ->orWhere('custom_domain', 'like', "%{$cleanHost}%");
+                })->first();
+
+            if (!$agency) {
+                $agency = Agency::where('type', 'white_label')->first() ?? Agency::first();
+            }
+
+            $isAgencyPortal = true;
         }
 
-        $isAgencyPortal = $request->is('whitelabel-panel*') || $request->is('agency-portal*') || $request->is('agency_portal*') || ($agency && !empty($agency->custom_domain));
-
-        return view('auth.login', compact('agency', 'isAgencyPortal'));
+        return view('auth.login', compact('agency', 'isAgencyPortal', 'isMainDomain'));
     }
 
     public function login(Request $request)
@@ -57,12 +66,16 @@ class LoginController extends Controller
                 return back()->withErrors(['email' => 'Account is inactive. Please contact support.']);
             }
 
-            $isAgencyPortal = $request->boolean('is_agency_portal') || str_contains($request->header('referer', ''), 'whitelabel') || str_contains($request->header('referer', ''), 'agency');
+            $host = strtolower($request->getHost());
+            $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
+            $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
-            // Restrict Agency Portal Login strictly to White Label Agency users
+            $isAgencyPortal = $request->boolean('is_agency_portal') || (!$isMainDomain);
+
+            // On agency domains (e.g. maturednature.com), restrict login strictly to White Label Agency users
             if ($isAgencyPortal && !$user->isWhiteLabelAgency()) {
                 Auth::logout();
-                return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please use the Admin Portal.']);
+                return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please log in via nooryak.in']);
             }
 
             if (!$user->isSuperAdmin() && !$user->isMasterAgency() && !$user->isWhiteLabelAgency()) {
