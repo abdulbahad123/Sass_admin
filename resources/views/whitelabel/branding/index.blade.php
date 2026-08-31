@@ -42,6 +42,23 @@
             </div>
         </div>
 
+        <div class="space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">White-Label AI Engine API Keys</h3>
+            <p class="text-xs text-slate-500">Provide default Gemini and OpenAI API keys for your white-label clients</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Agency Gemini API Key</label>
+                    <input type="text" name="gemini_api_key" value="{{ $agency->gemini_api_key ?? '' }}" placeholder="AIzaSy..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-mono text-slate-900 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Agency OpenAI API Key</label>
+                    <input type="text" name="openai_api_key" value="{{ $agency->openai_api_key ?? '' }}" placeholder="sk-proj-..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-mono text-slate-900 focus:outline-none">
+                </div>
+            </div>
+        </div>
+
         <div class="pt-4 flex justify-end">
             <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md shadow-indigo-600/30">Save Branding Settings</button>
         </div>

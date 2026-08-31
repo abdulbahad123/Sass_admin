@@ -186,6 +186,10 @@ class AgencyController extends Controller
             'password' => 'nullable|string|min:6',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
+            'gemini_api_key' => 'nullable|string|max:255',
+            'openai_api_key' => 'nullable|string|max:255',
+            'is_gemini_active' => 'nullable|boolean',
+            'is_openai_active' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);

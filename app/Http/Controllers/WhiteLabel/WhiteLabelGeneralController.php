@@ -75,13 +75,31 @@ class WhiteLabelGeneralController extends Controller
             'agency_name' => 'required|string|max:255',
             'custom_domain' => 'nullable|string|max:255',
             'primary_color' => 'nullable|string|max:50',
+            'gemini_api_key' => 'nullable|string|max:255',
+            'openai_api_key' => 'nullable|string|max:255',
+            'is_gemini_active' => 'nullable|boolean',
+            'is_openai_active' => 'nullable|boolean',
         ]);
 
-        $agency->update([
+        $updateData = [
             'name' => $validated['agency_name'],
             'custom_domain' => $validated['custom_domain'] ?? $agency->custom_domain,
             'primary_color' => $validated['primary_color'] ?? $agency->primary_color,
-        ]);
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'gemini_api_key')) {
+            $updateData['gemini_api_key'] = $request->input('gemini_api_key');
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'openai_api_key')) {
+            $updateData['openai_api_key'] = $request->input('openai_api_key');
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
+            $updateData['is_gemini_active'] = $request->has('is_gemini_active') ? (int)$request->input('is_gemini_active') : 1;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_openai_active')) {
+            $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : 1;
+        }
+
+        $agency->update($updateData);
 
         AuditLog::create([
             'user_id' => $user->id,

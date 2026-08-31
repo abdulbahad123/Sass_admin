@@ -56,6 +56,10 @@ class Agency extends Model
         'meta_description',
         'og_image',
         'sections_enabled',
+        'gemini_api_key',
+        'openai_api_key',
+        'is_gemini_active',
+        'is_openai_active',
     ];
 
     public function getParsedServicesAttribute()
