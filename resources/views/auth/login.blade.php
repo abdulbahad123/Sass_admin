@@ -142,6 +142,24 @@
                         </button>
                     </div>
                 </div>
+            @else
+                <!-- 1-Click Auto Assign Credentials Button for Agency Domain -->
+                <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
+                    @php
+                        $targetEmail = isset($agencyUser) && !empty($agencyUser->email) ? $agencyUser->email : 'priya@abcdigital.com';
+                    @endphp
+                    <button type="button" onclick="fillCredentials('{{ $targetEmail }}', 'password')" 
+                            class="w-full p-3.5 rounded-xl bg-gradient-to-r from-emerald-950/70 to-teal-950/70 hover:from-emerald-900/80 hover:to-teal-900/80 border border-emerald-700/50 text-emerald-200 transition text-left flex items-center justify-between group shadow-lg">
+                        <div class="space-y-0.5">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5 text-xs">
+                                <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i>
+                                <span>Auto Assign {{ isset($agency) && $agency ? $agency->name : 'Agency' }} Credentials</span>
+                            </div>
+                            <div class="text-[11px] text-slate-300">{{ $targetEmail }}</div>
+                        </div>
+                        <span class="px-3 py-1.5 bg-emerald-500/20 text-emerald-300 font-extrabold rounded-lg text-xs border border-emerald-500/30 group-hover:bg-emerald-500/30 transition">1-Click Apply</span>
+                    </button>
+                </div>
             @endif
         </div>
     </div>

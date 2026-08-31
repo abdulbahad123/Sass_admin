@@ -31,6 +31,7 @@ class LoginController extends Controller
 
         if ($isMainDomain) {
             $agency = null;
+            $agencyUser = null;
             $isAgencyPortal = false;
         } else {
             // Resolve white-label agency for custom agency domain (e.g. maturednature.com)
@@ -45,10 +46,17 @@ class LoginController extends Controller
                 $agency = Agency::where('type', 'white_label')->first() ?? Agency::first();
             }
 
+            $agencyUser = null;
+            if ($agency) {
+                $agencyUser = \App\Models\User::where('agency_id', $agency->id)->first() 
+                    ?? \App\Models\User::where('email', 'like', "%priya%")->first() 
+                    ?? \App\Models\User::where('role', 'agency')->first();
+            }
+
             $isAgencyPortal = true;
         }
 
-        return view('auth.login', compact('agency', 'isAgencyPortal', 'isMainDomain'));
+        return view('auth.login', compact('agency', 'agencyUser', 'isAgencyPortal', 'isMainDomain'));
     }
 
     public function login(Request $request)

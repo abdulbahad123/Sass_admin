@@ -12,8 +12,14 @@ use Illuminate\Support\Facades\Route;
 
 // Public Agency Landing Page & Legal Routes
 Route::get('/', function (\Illuminate\Http\Request $request) {
-    $host = $request->getHost();
-    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($host));
+    $host = strtolower($request->getHost());
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
+
+    $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+
+    if ($isMainDomain) {
+        return redirect()->route('login');
+    }
 
     $agency = \App\Models\Agency::where(function ($q) use ($cleanHost, $host) {
         $q->where('custom_domain', $cleanHost)
@@ -23,10 +29,6 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
           ->orWhere('custom_domain', 'http://' . $cleanHost)
           ->orWhere('custom_domain', 'LIKE', "%{$cleanHost}%");
     })->first();
-
-    if (!$agency) {
-        $agency = \App\Models\Agency::where('type', 'white_label')->first() ?? \App\Models\Agency::first();
-    }
 
     if ($agency) {
         return view('whitelabel.website.public_landing', compact('agency'));
