@@ -37,6 +37,18 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     return redirect()->route('login');
 })->name('agency.public_home');
 
+Route::get('/about', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'about', 'agency' => $agency]);
+})->name('agency.about');
+
+Route::get('/contact', function (\Illuminate\Http\Request $request) {
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
+    $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
+    return view('whitelabel.website.public_legal', ['type' => 'contact', 'agency' => $agency]);
+})->name('agency.contact');
+
 Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) {
     $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', strtolower($request->getHost()));
     $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")->first() ?? \App\Models\Agency::first();
