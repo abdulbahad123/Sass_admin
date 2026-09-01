@@ -58,8 +58,8 @@
                 <!-- Domain & Quota -->
                 <div class="grid grid-cols-2 gap-3 text-xs">
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                        <span class="text-slate-400 block text-[11px]">Client Quota</span>
-                        <span class="font-bold text-slate-900 mt-0.5 block">{{ $sub->max_clients }} Allowed</span>
+                        <span class="text-slate-400 block text-[11px]">Client Capacity</span>
+                        <span class="font-bold text-emerald-600 mt-0.5 block">Unlimited Clients</span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="text-slate-400 block text-[11px]">Branding Domain</span>

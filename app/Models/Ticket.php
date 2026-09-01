@@ -65,31 +65,31 @@ class Ticket extends Model
         return $this->hasMany(TicketReply::class)->orderBy('created_at', 'asc');
     }
 
+    public function getAttachmentsListAttribute(): array
+    {
+        if (empty($this->attachment)) {
+            return [];
+        }
+
+        $decoded = json_decode($this->attachment, true);
+        $paths = is_array($decoded) ? $decoded : [$this->attachment];
+
+        $urls = [];
+        foreach ($paths as $path) {
+            if (empty($path)) continue;
+            if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                $urls[] = $path;
+            } else {
+                $urls[] = asset(ltrim($path, '/'));
+            }
+        }
+        return $urls;
+    }
+
     public function getAttachmentUrlAttribute()
     {
-        if (!$this->attachment) {
-            return null;
-        }
-
-        if (str_starts_with($this->attachment, 'http://') || str_starts_with($this->attachment, 'https://')) {
-            return $this->attachment;
-        }
-
-        $cleanPath = ltrim($this->attachment, '/');
-
-        if (file_exists(public_path($cleanPath))) {
-            return asset($cleanPath);
-        }
-
-        if (file_exists(public_path('storage/' . $cleanPath))) {
-            return asset('storage/' . $cleanPath);
-        }
-
-        if (file_exists(storage_path('app/public/' . $cleanPath))) {
-            return asset('storage/' . $cleanPath);
-        }
-
-        return asset($cleanPath);
+        $list = $this->attachments_list;
+        return $list[0] ?? null;
     }
 
     public function getStatusBadgeAttribute(): array

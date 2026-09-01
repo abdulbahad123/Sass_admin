@@ -90,10 +90,11 @@
 
                 <!-- Quotas & Domain -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                        <span class="text-slate-400 block text-[11px]">Registered Clients Count</span>
-                        <span class="font-bold text-indigo-700 mt-0.5 block">
-                            {{ $agency->users()->where('role', 'client')->count() }} / {{ $agency->max_clients }} Clients
+                    <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100/80">
+                        <span class="text-emerald-700/80 block text-[11px] font-bold uppercase tracking-wider">End-Clients Capacity</span>
+                        <span class="font-extrabold text-emerald-800 text-xs mt-0.5 inline-flex items-center space-x-1">
+                            <i data-lucide="infinity" class="w-4 h-4 text-emerald-600"></i>
+                            <span>Unlimited Clients</span>
                         </span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
@@ -237,19 +238,14 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Select Subscription Plan</label>
-                    <select name="plan_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                        @foreach($plans as $plan)
-                            <option value="{{ $plan->id }}">{{ $plan->name }} ({{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($plan->price_monthly, 0) }}/mo)</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Quota</label>
-                    <input type="number" name="max_clients" value="50" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                </div>
+            <input type="hidden" name="max_clients" value="999999">
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Select Subscription Plan</label>
+                <select name="plan_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                    @foreach($plans as $plan)
+                        <option value="{{ $plan->id }}">{{ $plan->name }} ({{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($plan->price_monthly, 0) }}/mo)</option>
+                    @endforeach
+                </select>
             </div>
 
             <div>
@@ -325,15 +321,10 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Custom Domain</label>
-                    <input type="text" id="ea_custom_domain" name="custom_domain" placeholder="app.agency.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Quota</label>
-                    <input type="number" id="ea_max_clients" name="max_clients" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                </div>
+            <input type="hidden" id="ea_max_clients" name="max_clients" value="999999">
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Custom Domain</label>
+                <input type="text" id="ea_custom_domain" name="custom_domain" placeholder="app.agency.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
             </div>
 
             <div>

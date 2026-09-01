@@ -321,13 +321,13 @@
 
             <!-- File / Image Upload -->
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Attach Image / Screenshot / File (Optional)</label>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Attach Images / Screenshots / Files (Optional)</label>
                 <div class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-4 bg-slate-50/60 transition-colors text-center cursor-pointer relative">
-                    <input type="file" name="attachment" id="ticketAttachment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileName(this)">
+                    <input type="file" name="attachments[]" id="ticketAttachment" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileName(this)">
                     <div class="space-y-1">
                         <i data-lucide="upload-cloud" class="w-7 h-7 mx-auto text-slate-400"></i>
-                        <p class="text-xs font-bold text-slate-700" id="fileLabel">Click or drag images, PDFs, doc, or zip files (Max 10MB)</p>
-                        <p class="text-[10px] text-slate-400">Supports JPG, PNG, GIF, WEBP, PDF, DOCX, ZIP</p>
+                        <p class="text-xs font-bold text-slate-700" id="fileLabel">Click or drag images, PDFs, doc, or zip files (Multiple files allowed)</p>
+                        <p class="text-[10px] text-slate-400">Supports JPG, PNG, GIF, WEBP, PDF, DOCX, ZIP (Select multiple files)</p>
                     </div>
                 </div>
             </div>
@@ -354,8 +354,12 @@
 <script>
     function updateFileName(input) {
         const label = document.getElementById('fileLabel');
-        if (input.files && input.files[0]) {
-            label.innerText = "Selected file: " + input.files[0].name;
+        if (input.files && input.files.length > 0) {
+            if (input.files.length === 1) {
+                label.innerText = "Selected file: " + input.files[0].name;
+            } else {
+                label.innerText = "Selected " + input.files.length + " files for upload";
+            }
             label.classList.add("text-blue-600");
         }
     }

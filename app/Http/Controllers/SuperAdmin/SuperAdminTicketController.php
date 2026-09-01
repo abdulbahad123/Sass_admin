@@ -86,24 +86,36 @@ class SuperAdminTicketController extends Controller
 
         $request->validate([
             'message' => 'required|string',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
             'status' => 'nullable|in:open,in_progress,pending_reply,resolved,closed',
             'is_internal_note' => 'nullable|boolean',
         ]);
 
-        $attachmentPath = null;
-        if ($request->hasFile('attachment')) {
+        $uploadedPaths = [];
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                if ($file->isValid()) {
+                    $filename = time() . '_' . bin2hex(random_bytes(4)) . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('uploads/tickets/replies'), $filename);
+                    $uploadedPaths[] = 'uploads/tickets/replies/' . $filename;
+                }
+            }
+        } elseif ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $filename = time() . '_' . bin2hex(random_bytes(5)) . '.' . $file->getClientOriginalExtension();
+            $filename = time() . '_' . bin2hex(random_bytes(4)) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/tickets/replies'), $filename);
-            $attachmentPath = 'uploads/tickets/replies/' . $filename;
+            $uploadedPaths[] = 'uploads/tickets/replies/' . $filename;
         }
+
+        $attachmentData = count($uploadedPaths) > 1 ? json_encode($uploadedPaths) : ($uploadedPaths[0] ?? null);
 
         TicketReply::create([
             'ticket_id' => $ticket->id,
             'user_id' => $user->id,
             'message' => $request->message,
-            'attachment' => $attachmentPath,
+            'attachment' => $attachmentData,
             'is_internal_note' => $request->boolean('is_internal_note', false),
         ]);
 

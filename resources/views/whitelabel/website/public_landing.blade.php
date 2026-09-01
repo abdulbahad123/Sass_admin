@@ -709,7 +709,7 @@
                 </div>
 
                 {{-- Right: 3 review cards --}}
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px" id="rev-grid" class="rev-cards-3">
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; overflow-x:auto; scroll-behavior:smooth; scrollbar-width:none;" id="rev-grid" class="rev-cards-3">
                     @foreach($testimonials as $t)
                         @php
                             $initials = strtoupper(substr(trim($t['name'] ?? 'U'), 0, 1));
@@ -1013,18 +1013,25 @@
         m.classList.toggle('open');
     }
 
-    let curRev = 0;
     function nextRev() {
-        const cards = document.querySelectorAll('#rev-grid .review-card');
-        if (!cards.length) return;
-        curRev = (curRev + 1) % cards.length;
-        cards[curRev].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        const revGrid = document.getElementById('rev-grid');
+        if (!revGrid) return;
+        const cardWidth = revGrid.children[0] ? (revGrid.children[0].offsetWidth + 16) : 320;
+        if (revGrid.scrollLeft + revGrid.clientWidth >= revGrid.scrollWidth - 15) {
+            revGrid.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            revGrid.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
     }
     function prevRev() {
-        const cards = document.querySelectorAll('#rev-grid .review-card');
-        if (!cards.length) return;
-        curRev = (curRev - 1 + cards.length) % cards.length;
-        cards[curRev].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        const revGrid = document.getElementById('rev-grid');
+        if (!revGrid) return;
+        const cardWidth = revGrid.children[0] ? (revGrid.children[0].offsetWidth + 16) : 320;
+        if (revGrid.scrollLeft <= 15) {
+            revGrid.scrollTo({ left: revGrid.scrollWidth, behavior: 'smooth' });
+        } else {
+            revGrid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+        }
     }
 
     // Auto-slide reviews every 3.5 seconds
