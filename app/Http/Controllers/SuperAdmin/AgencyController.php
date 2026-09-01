@@ -275,31 +275,45 @@ class AgencyController extends Controller
 
     public function loginAsAgency(Request $request, Agency $agency)
     {
-        // Log in as agency user account
+        // Find the agency user
         $agencyUser = User::where('agency_id', $agency->id)->first() ?? User::where('email', $agency->email)->first();
 
-        if ($agencyUser) {
-            Auth::login($agencyUser);
-        }
-
         AuditLog::create([
-            'user_id' => auth()->id() ?? $agencyUser?->id,
-            'user_name' => auth()->user()?->name ?? $agencyUser?->name ?? 'System',
-            'action' => "Credential-Free Admin Access launched for Agency: {$agency->name} ({$agency->type})",
-            'ip_address' => $request->ip(),
-            'details' => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
+            'user_id'   => auth()->id(),
+            'user_name' => auth()->user()?->name ?? 'Super Admin',
+            'action'    => "Credential-Free Admin Access launched for Agency: {$agency->name} ({$agency->type})",
+            'ip_address'=> $request->ip(),
+            'details'   => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
         ]);
 
-        if ($agency->clean_domain && $agency->clean_domain !== 'nooryak.in') {
-            $targetPath = $agency->type === 'master' ? '/master/dashboard' : '/whitelabel/dashboard';
-            return redirect()->away("https://{$agency->clean_domain}{$targetPath}");
+        // --- Build SSO signed URL for Launchshop product ---
+        $launchshopProduct = $agency->products
+            ->first(fn ($p) => stripos($p->name, 'launchshop') !== false || stripos($p->slug ?? '', 'launchshop') !== false);
+
+        // Determine the launchshop base URL
+        $launchshopBaseUrl = null;
+        if ($launchshopProduct && !empty($launchshopProduct->app_url)) {
+            $launchshopBaseUrl = rtrim($launchshopProduct->app_url, '/');
+        } else {
+            // Fallback: derive from agency domain or use env
+            $launchshopBaseUrl = env('LAUNCHSHOP_URL', 'http://localhost/launchshop_dev/public');
         }
 
-        if ($agency->type === 'master') {
-            return redirect()->route('master.dashboard');
-        }
+        // Generate time-limited SSO token (valid 5 min)
+        $email   = $agency->email;
+        $expires = time() + 300;
+        $nonce   = \Illuminate\Support\Str::random(16);
+        $secret  = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
+        $signature = hash_hmac('sha256', "{$email}|{$expires}|{$nonce}", $secret);
 
-        return redirect()->route('whitelabel.dashboard');
+        $ssoUrl = $launchshopBaseUrl . '/sso-agency-login?' . http_build_query([
+            'email'     => $email,
+            'expires'   => $expires,
+            'nonce'     => $nonce,
+            'signature' => $signature,
+        ]);
+
+        return redirect()->away($ssoUrl);
     }
 
     public function reprovisionDatabase(Request $request, Agency $agency)

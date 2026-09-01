@@ -656,8 +656,8 @@
 <footer class="site-footer" style="padding:56px 0 32px">
     <div style="max-width:1200px;margin:0 auto;padding:0 24px">
 
-        {{-- 4-column grid: Brand | Products | Policies | Newsletter --}}
-        <div style="display:grid;grid-template-columns:220px 1fr 1fr 220px;gap:40px;padding-bottom:40px;border-bottom:1px solid #1e293b" class="footer-grid">
+        {{-- 5-column grid: Brand | Products | Solutions | Company | Newsletter --}}
+        <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr 200px;gap:32px;padding-bottom:40px;border-bottom:1px solid #1e293b" class="footer-grid">
 
             {{-- Col 1: Brand + Social --}}
             <div style="display:flex;flex-direction:column;gap:14px">
@@ -698,17 +698,37 @@
                 </ul>
             </div>
 
-            {{-- Col 3: Policies (replaces Solutions + Company) --}}
+            {{-- Col 3: Solutions --}}
             <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Policies</h4>
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Solutions</h4>
                 <ul style="list-style:none;display:flex;flex-direction:column;gap:9px">
                     @foreach([
-                        ['/about',           'About Us'],
-                        ['/contact',         'Contact Us'],
-                        ['/privacy-policy',  'Privacy Policy'],
-                        ['/refund-policy',   'Refund Policy'],
-                        ['/shipping-policy', 'Shipping Policy'],
-                        ['/terms-conditions','Terms & Conditions'],
+                        'Restaurants & Cafes',
+                        'Clinics & Hospitals',
+                        'Salons & Spas',
+                        'Retail Shops',
+                        'Hotels & Resorts',
+                    ] as $sol)
+                        <li>
+                            <a href="#features" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">
+                                <i data-lucide="chevron-right" style="width:12px;height:12px;flex-shrink:0"></i>
+                                {{ $sol }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            {{-- Col 4: Company --}}
+            <div style="display:flex;flex-direction:column;gap:14px">
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Company</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:9px">
+                    @foreach([
+                        ['/about',    'About Us'],
+                        ['/pricing',  'Pricing'],
+                        ['/blog',     'Blog'],
+                        ['/careers',  'Careers'],
+                        ['/contact',  'Contact Us'],
                     ] as [$href, $label])
                         <li>
                             <a href="{{ $href }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">
@@ -720,7 +740,7 @@
                 </ul>
             </div>
 
-            {{-- Col 4: Newsletter --}}
+            {{-- Col 5: Newsletter --}}
             <div style="display:flex;flex-direction:column;gap:14px">
                 <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Subscribe to our newsletter</h4>
                 <p style="font-size:12px;color:#64748b">Get updates, tips and offers.</p>
@@ -743,8 +763,11 @@
 
 <style>
     /* ── Responsive overrides ── */
+    @media (max-width: 1280px) {
+        .footer-grid  { grid-template-columns: 1fr 1fr 1fr !important; }
+    }
     @media (max-width: 1024px) {
-        .footer-grid  { grid-template-columns: 1fr 1fr !important; }
+        .footer-grid  { grid-template-columns: 1fr 1fr 1fr !important; }
         .products-grid{ grid-template-columns: 1fr !important; }
         .products-grid > div:first-child { position: static !important; }
         .about-grid   { grid-template-columns: 1fr !important; }
