@@ -29,42 +29,68 @@ class WhiteLabelWebsiteController extends Controller
         if (!$agency) return back()->with('error', 'Agency profile not found.');
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'custom_domain' => 'nullable|string|max:255',
-            'primary_color' => 'nullable|string|max:20',
-            'secondary_color' => 'nullable|string|max:20',
-            'hero_title' => 'nullable|string',
-            'hero_subtitle' => 'nullable|string',
+            'name'             => 'required|string|max:255',
+            'custom_domain'    => 'nullable|string|max:255',
+            'primary_color'    => 'nullable|string|max:20',
+            'secondary_color'  => 'nullable|string|max:20',
+            'hero_title'       => 'nullable|string',
+            'hero_subtitle'    => 'nullable|string',
             'hero_description' => 'nullable|string',
-            'cta_text' => 'nullable|string|max:255',
-            'cta_url' => 'nullable|string|max:255',
-            'meta_title' => 'nullable|string|max:255',
+            'cta_text'         => 'nullable|string|max:255',
+            'cta_url'          => 'nullable|string|max:255',
+            'meta_title'       => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'footer_content'   => 'nullable|string',
+            'about_title'      => 'nullable|string',
+            'about_mission'    => 'nullable|string',
+            'about_content'    => 'nullable|string',
+            'contact_email'    => 'nullable|string|max:255',
+            'contact_phone'    => 'nullable|string|max:255',
+            'facebook_url'     => 'nullable|string|max:500',
+            'instagram_url'    => 'nullable|string|max:500',
+            'youtube_url'      => 'nullable|string|max:500',
+            'linkedin_url'     => 'nullable|string|max:500',
+            'twitter_url'      => 'nullable|string|max:500',
         ]);
 
+        $uploadDir = public_path('uploads/agency');
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
+
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('uploads/agency', 'public');
-            $validated['logo'] = '/storage/' . $logoPath;
+            $file = $request->file('logo');
+            $fileName = 'logo_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fileName);
+            $validated['logo'] = 'uploads/agency/' . $fileName;
         }
 
         if ($request->hasFile('favicon')) {
-            $faviconPath = $request->file('favicon')->store('uploads/agency', 'public');
-            $validated['favicon'] = '/storage/' . $faviconPath;
+            $file = $request->file('favicon');
+            $fileName = 'favicon_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fileName);
+            $validated['favicon'] = 'uploads/agency/' . $fileName;
         }
 
         if ($request->hasFile('hero_image')) {
-            $heroImgPath = $request->file('hero_image')->store('uploads/agency', 'public');
-            $validated['hero_image'] = '/storage/' . $heroImgPath;
+            $file = $request->file('hero_image');
+            $fileName = 'hero_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fileName);
+            $validated['hero_image'] = 'uploads/agency/' . $fileName;
         }
 
         if ($request->hasFile('about_image')) {
-            $aboutImgPath = $request->file('about_image')->store('uploads/agency', 'public');
-            $validated['about_image'] = '/storage/' . $aboutImgPath;
+            $file = $request->file('about_image');
+            $fileName = 'about_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fileName);
+            $validated['about_image'] = 'uploads/agency/' . $fileName;
         }
 
         if ($request->hasFile('cta_image')) {
-            $ctaImgPath = $request->file('cta_image')->store('uploads/agency', 'public');
-            $validated['cta_image'] = '/storage/' . $ctaImgPath;
+            $file = $request->file('cta_image');
+            $fileName = 'cta_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fileName);
+            $validated['cta_image'] = 'uploads/agency/' . $fileName;
         }
 
         // Section toggles
@@ -97,12 +123,20 @@ class WhiteLabelWebsiteController extends Controller
         if (!$agency) return back()->with('error', 'Agency profile not found.');
 
         $validated = $request->validate([
+            'about_title'   => 'nullable|string',
+            'about_mission' => 'nullable|string',
             'about_content' => 'required|string',
         ]);
 
         if ($request->hasFile('about_image')) {
-            $aboutImgPath = $request->file('about_image')->store('uploads/agency', 'public');
-            $validated['about_image'] = '/storage/' . $aboutImgPath;
+            $uploadDir = public_path('uploads/agency');
+            if (!file_exists($uploadDir)) {
+                @mkdir($uploadDir, 0777, true);
+            }
+            $file = $request->file('about_image');
+            $fileName = 'about_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $fileName);
+            $validated['about_image'] = 'uploads/agency/' . $fileName;
         }
 
         $agency->update($validated);

@@ -53,14 +53,14 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">Agency Logo</label>
                     <input type="file" name="logo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     @if($agency->logo)
-                        <img src="{{ asset($agency->logo) }}" alt="Logo" class="h-9 mt-2 object-contain">
+                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="Logo" class="h-9 mt-2 object-contain">
                     @endif
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Favicon</label>
                     <input type="file" name="favicon" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     @if($agency->favicon)
-                        <img src="{{ asset($agency->favicon) }}" alt="Favicon" class="h-6 mt-2 object-contain">
+                        <img src="{{ asset(ltrim($agency->favicon, '/')) }}" alt="Favicon" class="h-6 mt-2 object-contain">
                     @endif
                 </div>
             </div>
@@ -98,19 +98,19 @@
                         <label class="block text-xs font-bold text-slate-800">1. Hero Dashboard Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 900×600px PNG/JPG</p>
                         <input type="file" name="hero_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset($agency->hero_image ?? 'assets/landing_page/herobanner_dashboard.png') }}" alt="Hero" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->hero_image ?? 'assets/landing_page/herobanner_dashboard.png', '/')) }}" alt="Hero" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                     <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
                         <label class="block text-xs font-bold text-slate-800">2. About / Features Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 800×600px PNG/JPG</p>
                         <input type="file" name="about_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset($agency->about_image ?? 'assets/landing_page/features_leftside.png') }}" alt="About" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->about_image ?? 'assets/landing_page/features_leftside.png', '/')) }}" alt="About" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                     <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
                         <label class="block text-xs font-bold text-slate-800">3. CTA Banner Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 400×500px PNG/JPG</p>
                         <input type="file" name="cta_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset($agency->cta_image ?? 'assets/landing_page/footer_card.png') }}" alt="CTA" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->cta_image ?? 'assets/landing_page/footer_card.png', '/')) }}" alt="CTA" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                 </div>
             </div>
@@ -124,11 +124,19 @@
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Footer Tagline</label>
-                    <textarea name="footer_content" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('footer_content', $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.') }}</textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">About Main Heading</label>
+                    <input type="text" name="about_title" value="{{ old('about_title', $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">About Us Content</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Footer Tagline</label>
+                    <textarea name="footer_content" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('footer_content', $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.') }}</textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">About Mission Statement</label>
+                    <textarea name="about_mission" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('about_mission', $agency->about_mission ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.') }}</textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">About Us Detailed Content</label>
                     <textarea name="about_content" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('about_content', $agency->about_content ?? '') }}</textarea>
                 </div>
                 <div>

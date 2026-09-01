@@ -17,7 +17,7 @@
         $primaryColor = $agency->primary_color ?? '#4f46e5';
         $secondaryColor = $agency->secondary_color ?? '#9333ea';
         $accentColor = $agency->accent_color ?? '#3b82f6';
-        $aboutImg = !empty($agency->about_image) ? asset($agency->about_image) : asset('assets/landing_page/features_leftside.png');
+        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/features_leftside.png');
     @endphp
     <title>{{ $pageTitle }} — {{ $agency->name }}</title>
     <meta name="description" content="{{ $pageTitle }} for {{ $agency->name }}. Powering the growth of local businesses.">
@@ -155,13 +155,15 @@
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                             <div class="lg:col-span-7 space-y-4">
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
-                                    Built for entrepreneurs, by entrepreneurs.
+                                    {{ $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.' }}
                                 </h2>
+                                @if(!empty($agency->about_content))
+                                    <p class="text-slate-600 leading-relaxed">
+                                        {{ $agency->about_content }}
+                                    </p>
+                                @endif
                                 <p class="text-slate-600 leading-relaxed">
-                                    {{ $agency->about_content ?? ("At " . $agency->name . ", we understand the challenges of growing a business in India. That's why we built an all-in-one platform to make digital technology simple, affordable, and accessible for local business owners.") }}
-                                </p>
-                                <p class="text-slate-600 leading-relaxed">
-                                    Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.
+                                    {{ $agency->about_mission ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.' }}
                                 </p>
                             </div>
                             <div class="lg:col-span-5">
