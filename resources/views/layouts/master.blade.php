@@ -66,7 +66,22 @@
         @endif
     </style>
 </head>
-<body class="h-full flex overflow-hidden text-slate-800" x-data="{ mobileMenuOpen: false }">
+<body class="h-full flex flex-col overflow-hidden text-slate-800" x-data="{ mobileMenuOpen: false }">
+
+    @if(session()->has('impersonator_user_id'))
+        <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 text-white px-6 py-2.5 text-xs font-bold flex items-center justify-between shadow-md border-b border-indigo-500/30 shrink-0 z-[100]">
+            <div class="flex items-center space-x-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Super Admin Impersonation Mode — Viewing Master Agency: <strong class="text-indigo-300 font-heading text-sm">{{ $currentAgency->name ?? 'Master Agency' }}</strong></span>
+            </div>
+            <a href="{{ route('admin.agencies.stop-impersonating') }}" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-sm flex items-center space-x-1.5">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                <span>Exit & Return to Super Admin</span>
+            </a>
+        </div>
+    @endif
+
+    <div class="flex-1 flex overflow-hidden">
 
     <!-- Mobile Drawer Overlay Backdrop -->
     <div x-show="mobileMenuOpen" 
@@ -282,6 +297,8 @@
 
             @yield('content')
         </main>
+    </div>
+
     </div>
 
     @stack('modals')

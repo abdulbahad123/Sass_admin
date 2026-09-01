@@ -52,6 +52,19 @@
 </head>
 <body class="h-full bg-[#f8fafc] text-slate-800 antialiased flex flex-col min-h-screen">
 
+    @if(session()->has('impersonator_user_id'))
+        <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 text-white px-6 py-2.5 text-xs font-bold flex items-center justify-between shadow-md border-b border-indigo-500/30 shrink-0 z-[100]">
+            <div class="flex items-center space-x-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Super Admin Impersonation Mode — Viewing Agency: <strong class="text-indigo-300 font-heading text-sm">{{ $agency->name ?? 'Agency' }}</strong></span>
+            </div>
+            <a href="{{ route('admin.agencies.stop-impersonating') }}" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-sm flex items-center space-x-1.5">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                <span>Exit & Return to Super Admin</span>
+            </a>
+        </div>
+    @endif
+
     <!-- Mobile Sidebar Backdrop -->
     <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm hidden lg:hidden transition-opacity"></div>
 

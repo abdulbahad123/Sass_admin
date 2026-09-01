@@ -287,14 +287,10 @@ class AgencyController extends Controller
             'details'   => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
         ]);
 
-        if ($agencyUser) {
-            Auth::login($agencyUser);
-        }
-
         $targetPath = $agency->type === 'master' ? '/master/dashboard' : '/whitelabel/dashboard';
-
-        // If agency has a custom domain (e.g. funkiddoz.in or maturednature.com), use signed SSO link
         $cleanDomain = $agency->clean_domain;
+
+        // If agency has a custom domain (e.g. youverse.in, funkiddoz.in, maturednature.com), use signed SSO link WITHOUT logging out Super Admin on nooryak.in!
         if ($cleanDomain && !str_contains($cleanDomain, 'nooryak') && !str_contains($cleanDomain, 'localhost') && !str_contains($cleanDomain, '127.0.0.1')) {
             $email   = $agencyUser ? $agencyUser->email : $agency->email;
             $expires = time() + 300;
@@ -309,6 +305,12 @@ class AgencyController extends Controller
             ]);
 
             return redirect()->away($ssoUrl);
+        }
+
+        // For same-domain / local impersonation: store impersonator ID so Super Admin can return with 1 click
+        if ($agencyUser) {
+            session(['impersonator_user_id' => auth()->id()]);
+            Auth::login($agencyUser);
         }
 
         if ($agency->type === 'master') {

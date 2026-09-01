@@ -163,6 +163,15 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
 
     // Direct One-Click Admin Access (Credential-Free Login)
     Route::get('/agencies/{agency}/admin-login', [AgencyController::class, 'loginAsAgency'])->name('agencies.admin-login');
+    Route::get('/stop-impersonating', function () {
+        if (session()->has('impersonator_user_id')) {
+            $adminId = session('impersonator_user_id');
+            session()->forget('impersonator_user_id');
+            \Illuminate\Support\Facades\Auth::loginUsingId($adminId);
+            return redirect()->route('admin.agencies.index')->with('success', 'Returned to Super Admin panel.');
+        }
+        return redirect()->route('admin.dashboard');
+    })->name('agencies.stop-impersonating');
     
     // Profile & Platform Settings (Currency Switcher & Account Edit)
     Route::get('/profile', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'edit'])->name('profile.edit');
