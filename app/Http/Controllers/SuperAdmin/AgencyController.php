@@ -276,7 +276,8 @@ class AgencyController extends Controller
     public function loginAsAgency(Request $request, Agency $agency)
     {
         // Find the agency user
-        $agencyUser = User::where('agency_id', $agency->id)->first() ?? User::where('email', $agency->email)->first();
+        $agencyUser = User::where('agency_id', $agency->id)->first() 
+            ?? User::where('email', $agency->email)->first();
 
         AuditLog::create([
             'user_id'   => auth()->id(),
@@ -286,34 +287,35 @@ class AgencyController extends Controller
             'details'   => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
         ]);
 
-        // --- Build SSO signed URL for Launchshop product ---
-        $launchshopProduct = $agency->products
-            ->first(fn ($p) => stripos($p->name, 'launchshop') !== false || stripos($p->slug ?? '', 'launchshop') !== false);
-
-        // Determine the launchshop base URL
-        $launchshopBaseUrl = null;
-        if ($launchshopProduct && !empty($launchshopProduct->app_url)) {
-            $launchshopBaseUrl = rtrim($launchshopProduct->app_url, '/');
-        } else {
-            // Fallback: derive from agency domain or use env
-            $launchshopBaseUrl = env('LAUNCHSHOP_URL', 'http://localhost/launchshop_dev/public');
+        if ($agencyUser) {
+            Auth::login($agencyUser);
         }
 
-        // Generate time-limited SSO token (valid 5 min)
-        $email   = $agency->email;
-        $expires = time() + 300;
-        $nonce   = \Illuminate\Support\Str::random(16);
-        $secret  = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
-        $signature = hash_hmac('sha256', "{$email}|{$expires}|{$nonce}", $secret);
+        $targetPath = $agency->type === 'master' ? '/master/dashboard' : '/whitelabel/dashboard';
 
-        $ssoUrl = $launchshopBaseUrl . '/sso-agency-login?' . http_build_query([
-            'email'     => $email,
-            'expires'   => $expires,
-            'nonce'     => $nonce,
-            'signature' => $signature,
-        ]);
+        // If agency has a custom domain (e.g. funkiddoz.in or maturednature.com), use signed SSO link
+        $cleanDomain = $agency->clean_domain;
+        if ($cleanDomain && !str_contains($cleanDomain, 'nooryak') && !str_contains($cleanDomain, 'localhost') && !str_contains($cleanDomain, '127.0.0.1')) {
+            $email   = $agencyUser ? $agencyUser->email : $agency->email;
+            $expires = time() + 300;
+            $secret  = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
+            $signature = hash_hmac('sha256', "{$email}|{$expires}", $secret);
 
-        return redirect()->away($ssoUrl);
+            $ssoUrl = "https://{$cleanDomain}/agency-sso-login?" . http_build_query([
+                'email'     => $email,
+                'expires'   => $expires,
+                'signature' => $signature,
+                'redirect'  => $targetPath,
+            ]);
+
+            return redirect()->away($ssoUrl);
+        }
+
+        if ($agency->type === 'master') {
+            return redirect()->route('master.dashboard');
+        }
+
+        return redirect()->route('whitelabel.dashboard');
     }
 
     public function reprovisionDatabase(Request $request, Agency $agency)

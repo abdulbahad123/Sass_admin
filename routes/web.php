@@ -93,6 +93,44 @@ Route::get('/agency-portal', function () {
 Route::get('/agency_portal', function () {
     return redirect()->route('whitelabel.dashboard');
 });
+
+// One-Click Admin Access Signed SSO Route for Whitelabel / Master Agency Portals
+Route::get('/agency-sso-login', function (\Illuminate\Http\Request $request) {
+    $email = $request->query('email');
+    $expires = $request->query('expires');
+    $signature = $request->query('signature');
+    $redirectPath = $request->query('redirect', '/whitelabel/dashboard');
+
+    if (!$email || !$expires || !$signature) {
+        return redirect()->route('login')->withErrors(['email' => 'Invalid SSO parameters.']);
+    }
+
+    if (time() > (int)$expires) {
+        return redirect()->route('login')->withErrors(['email' => 'SSO link expired.']);
+    }
+
+    $secret = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
+    $expectedSignature = hash_hmac('sha256', "{$email}|{$expires}", $secret);
+
+    if (!hash_equals($expectedSignature, $signature)) {
+        return redirect()->route('login')->withErrors(['email' => 'SSO signature verification failed.']);
+    }
+
+    $user = \App\Models\User::where('email', $email)->first();
+    if (!$user) {
+        $agency = \App\Models\Agency::where('email', $email)->first();
+        if ($agency) {
+            $user = \App\Models\User::where('agency_id', $agency->id)->first();
+        }
+    }
+
+    if ($user) {
+        \Illuminate\Support\Facades\Auth::login($user);
+        return redirect($redirectPath);
+    }
+
+    return redirect()->route('login')->withErrors(['email' => 'User account not found for this agency.']);
+})->name('agency.sso_login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
