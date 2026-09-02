@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class StaffController extends Controller
 {
     public function index(Request $request)
     {
         $query = User::where('role', 'super_admin')
+            ->with(['roles'])
             ->withCount([
                 'assignedTickets as total_assigned_tickets',
                 'assignedTickets as active_tickets_count' => function ($q) {
@@ -33,16 +37,20 @@ class StaffController extends Controller
 
         $staffMembers = $query->orderBy('id', 'asc')->get();
 
+        $roles = Role::with(['permissions', 'users'])->orderBy('id', 'asc')->get();
+        $permissions = Permission::all()->groupBy('category');
+
         $stats = [
             'total_staff' => User::where('role', 'super_admin')->count(),
             'active_staff' => User::where('role', 'super_admin')->where(function($q){
                 $q->whereNull('status')->orWhere('status', 'active');
             })->count(),
+            'total_roles' => Role::count(),
             'total_assigned' => \App\Models\Ticket::whereNotNull('assigned_to')->count(),
             'unassigned_tickets' => \App\Models\Ticket::whereNull('assigned_to')->whereIn('status', ['open', 'in_progress'])->count(),
         ];
 
-        return view('admin.staff.index', compact('staffMembers', 'stats'));
+        return view('admin.staff.index', compact('staffMembers', 'roles', 'permissions', 'stats'));
     }
 
     public function store(Request $request)
@@ -52,10 +60,11 @@ class StaffController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'designation' => 'nullable|string|max:255',
+            'role_id' => 'nullable|exists:roles,id',
             'status' => 'required|in:active,inactive',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -63,6 +72,10 @@ class StaffController extends Controller
             'designation' => $request->designation ?: 'Support Specialist',
             'status' => $request->status,
         ]);
+
+        if ($request->filled('role_id')) {
+            $user->roles()->sync([$request->role_id]);
+        }
 
         return redirect()->route('admin.staff.index')->with('success', 'New Super Admin staff member created successfully.');
     }
@@ -78,6 +91,7 @@ class StaffController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $staff->id,
             'password' => 'nullable|string|min:8',
             'designation' => 'nullable|string|max:255',
+            'role_id' => 'nullable|exists:roles,id',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -93,6 +107,12 @@ class StaffController extends Controller
         }
 
         $staff->update($data);
+
+        if ($request->filled('role_id')) {
+            $staff->roles()->sync([$request->role_id]);
+        } else {
+            $staff->roles()->detach();
+        }
 
         return redirect()->route('admin.staff.index')->with('success', "Staff member '{$staff->name}' updated successfully.");
     }
@@ -114,5 +134,64 @@ class StaffController extends Controller
         $staff->delete();
 
         return redirect()->route('admin.staff.index')->with('success', "Staff member '{$name}' deleted successfully.");
+    }
+
+    public function storeRole(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        $role = Role::create([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'] ?? null,
+            'is_system' => false,
+        ]);
+
+        if (!empty($validated['permissions'])) {
+            $role->permissions()->sync($validated['permissions']);
+        }
+
+        return redirect()->route('admin.staff.index')->with('success', "Role '{$role->name}' created successfully with menu permissions!");
+    }
+
+    public function updateRole(Request $request, Role $role)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        $role->update([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        if (isset($validated['permissions'])) {
+            $role->permissions()->sync($validated['permissions']);
+        } else {
+            $role->permissions()->detach();
+        }
+
+        return redirect()->route('admin.staff.index')->with('success', "Role '{$role->name}' menu permissions updated successfully!");
+    }
+
+    public function destroyRole(Role $role)
+    {
+        if ($role->is_system) {
+            return redirect()->back()->with('error', 'System roles cannot be deleted.');
+        }
+
+        $name = $role->name;
+        $role->delete();
+
+        return redirect()->route('admin.staff.index')->with('success', "Role '{$name}' deleted successfully.");
     }
 }

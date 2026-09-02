@@ -188,6 +188,11 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
     Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');
 
+    // Roles & Menu Permissions Management
+    Route::post('/roles', [StaffController::class, 'storeRole'])->name('roles.store');
+    Route::put('/roles/{role}', [StaffController::class, 'updateRole'])->name('roles.update');
+    Route::delete('/roles/{role}', [StaffController::class, 'destroyRole'])->name('roles.destroy');
+
     // Support Tickets Management (Staff & Agency Tickets)
     Route::get('/tickets', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/{ticket}', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'show'])->name('tickets.show');

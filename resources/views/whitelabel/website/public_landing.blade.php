@@ -611,6 +611,163 @@
     </div>
 </section>
 
+{{-- ══ PRODUCT-WISE PRICING PLANS SECTION ════════════════════════════════ --}}
+<section id="pricing" style="padding:64px 0 72px; background:#fff; border-top:1px solid #f1f5f9;" x-data="{ billing: 'monthly', selectedProduct: 'all' }">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
+        
+        {{-- Section Header --}}
+        <div style="text-align:center; margin-bottom:44px; display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 16px; border-radius:999px; width:fit-content; letter-spacing:.02em;">
+                💎 Flexible Pricing Plans
+            </span>
+            <h2 style="font-size:clamp(1.75rem,3.2vw,2.5rem); font-weight:900; color:#0f172a; letter-spacing:-.5px; margin:0;">
+                Product-Wise <span class="text-brand">Pricing & Plans</span>
+            </h2>
+            <p style="font-size:14px; color:#64748b; max-width:560px; line-height:1.7; margin:0;">
+                Choose the right plan tailored specifically for your product needs. Scale seamlessly with zero hidden fees.
+            </p>
+
+            {{-- Product Filter Pills --}}
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:14px;" class="pricing-prod-pills">
+                <button @click="selectedProduct = 'all'" :class="selectedProduct === 'all' ? 'bg-indigo-600 text-white shadow-md font-extrabold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold'" style="padding:8px 18px; border-radius:999px; font-size:12px; border:none; cursor:pointer; transition:all .2s;">
+                    All Products
+                </button>
+                @foreach($services as $svc)
+                    <button @click="selectedProduct = '{{ Str::slug($svc['title']) }}'" :class="selectedProduct === '{{ Str::slug($svc['title']) }}' ? 'bg-indigo-600 text-white shadow-md font-extrabold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold'" style="padding:8px 18px; border-radius:999px; font-size:12px; border:none; cursor:pointer; transition:all .2s;">
+                        {{ $svc['title'] }}
+                    </button>
+                @endforeach
+            </div>
+
+            {{-- Monthly / Yearly Billing Toggle --}}
+            <div style="display:flex; align-items:center; gap:12px; background:#f8fafc; border:1px solid #e2e8f0; padding:6px 12px; border-radius:999px; margin-top:8px;">
+                <span style="font-size:13px; font-weight:700;" :class="billing === 'monthly' ? 'text-slate-900 font-extrabold' : 'text-slate-500'">Monthly Billing</span>
+                
+                <button @click="billing = (billing === 'monthly' ? 'yearly' : 'monthly')" type="button" style="width:48px; height:26px; border-radius:999px; background:#4f46e5; border:none; cursor:pointer; position:relative; padding:3px; transition:background .2s;">
+                    <div style="width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .2s;" :style="billing === 'yearly' ? 'transform: translateX(22px);' : 'transform: translateX(0px);'"></div>
+                </button>
+
+                <span style="font-size:13px; font-weight:700;" :class="billing === 'yearly' ? 'text-slate-900 font-extrabold' : 'text-slate-500'">
+                    Annual Billing
+                    <span style="background:#d1fae5; color:#059669; font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; margin-left:4px;">Save 20%</span>
+                </span>
+            </div>
+        </div>
+
+        {{-- Pricing Cards Grid (3 Columns) --}}
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch;" class="pricing-cards-grid">
+            
+            {{-- Plan 1: Starter / Basic --}}
+            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:24px; padding:36px 28px; display:flex; flex-direction:column; justify-between:space-between; gap:24px; box-shadow:0 6px 24px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,.08)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 24px rgba(0,0,0,.03)'">
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <span style="background:#f1f5f9; color:#475569; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase;">Starter Tier</span>
+                        <span style="font-size:11px; font-weight:700; color:#64748b;">For Solopreneurs</span>
+                    </div>
+
+                    <h3 style="font-size:20px; font-weight:900; color:#0f172a; margin:0;">Starter Growth</h3>
+                    <p style="font-size:12.5px; color:#64748b; margin:0; line-height:1.6;">Essential digital tools to launch your business presence online.</p>
+
+                    <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
+                        <span style="font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; color:#0f172a;" x-text="billing === 'monthly' ? '₹499' : '₹4,999'">₹499</span>
+                        <span style="font-size:13px; color:#64748b; font-weight:600;" x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
+                    </div>
+
+                    <div style="border-t:1px solid #f1f5f9; padding-top:18px; display:flex; flex-direction:column; gap:12px;">
+                        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94a3b8; letter-spacing:.05em;">Included Features:</span>
+                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13px; color:#334155; font-weight:600;">
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> 1 Selected Product Module</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Up to 1,000 Orders / Customers</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Basic Analytics & Reports</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Standard Email Support</li>
+                            <li style="display:flex; align-items:center; gap:8px; color:#94a3b8;"><i data-lucide="x" style="width:16px; height:16px; color:#cbd5e1;"></i> Custom Subdomain Setup</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-outline" style="width:100%; justify-content:center; border-radius:14px; padding:13px; font-size:13px;">
+                    Get Started Free
+                </a>
+            </div>
+
+            {{-- Plan 2: Professional Growth (MOST POPULAR HIGHLIGHT CARD) --}}
+            <div style="background:#fff; border:2px solid #6366f1; border-radius:24px; padding:36px 28px; display:flex; flex-direction:column; justify-between:space-between; gap:24px; box-shadow:0 16px 40px rgba(99,102,241,0.15); position:relative; transform:scale(1.03); z-index:2;">
+                
+                {{-- Top Badge --}}
+                <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; font-size:10px; font-weight:900; padding:4px 16px; border-radius:999px; text-transform:uppercase; letter-spacing:.08em; box-shadow:0 4px 12px rgba(99,102,241,0.4);">
+                    🔥 Most Popular
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
+                        <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase;">Pro Business Suite</span>
+                        <span style="font-size:11px; font-weight:700; color:#6366f1;">Best Value</span>
+                    </div>
+
+                    <h3 style="font-size:20px; font-weight:900; color:#0f172a; margin:0;">Professional Pro</h3>
+                    <p style="font-size:12.5px; color:#64748b; margin:0; line-height:1.6;">Full product access to automate marketing, sales, and customer reviews.</p>
+
+                    <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
+                        <span style="font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; color:#4f46e5;" x-text="billing === 'monthly' ? '₹1,499' : '₹14,999'">₹1,499</span>
+                        <span style="font-size:13px; color:#64748b; font-weight:600;" x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
+                    </div>
+
+                    <div style="border-t:1px solid #f1f5f9; padding-top:18px; display:flex; flex-direction:column; gap:12px;">
+                        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94a3b8; letter-spacing:.05em;">Included Features:</span>
+                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13px; color:#1e293b; font-weight:700;">
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> Full Access to All 6 Product Suites</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> Unlimited Orders & Customer CRM</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> AI Reviews & Automated Reminders</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> Custom Branding & Subdomain</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> 24/7 Priority Live Support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-brand" style="width:100%; justify-content:center; border-radius:14px; padding:14px; font-size:14px;">
+                    Start 14-Day Free Trial
+                    <i data-lucide="arrow-right" style="width:15px; height:15px;"></i>
+                </a>
+            </div>
+
+            {{-- Plan 3: Enterprise Suite --}}
+            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:24px; padding:36px 28px; display:flex; flex-direction:column; justify-between:space-between; gap:24px; box-shadow:0 6px 24px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,.08)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 24px rgba(0,0,0,.03)'">
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <span style="background:#fef3c7; color:#b45309; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase;">Enterprise</span>
+                        <span style="font-size:11px; font-weight:700; color:#64748b;">Multi-Location</span>
+                    </div>
+
+                    <h3 style="font-size:20px; font-weight:900; color:#0f172a; margin:0;">Enterprise Growth</h3>
+                    <p style="font-size:12.5px; color:#64748b; margin:0; line-height:1.6;">For growing brands needing multi-branch management and custom APIs.</p>
+
+                    <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
+                        <span style="font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; color:#0f172a;" x-text="billing === 'monthly' ? '₹3,499' : '₹34,999'">₹3,499</span>
+                        <span style="font-size:13px; color:#64748b; font-weight:600;" x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
+                    </div>
+
+                    <div style="border-t:1px solid #f1f5f9; padding-top:18px; display:flex; flex-direction:column; gap:12px;">
+                        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94a3b8; letter-spacing:.05em;">Included Features:</span>
+                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13px; color:#334155; font-weight:600;">
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Everything in Pro Suite</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Multi-Branch & Chain Management</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Custom API Access & Webhooks</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Dedicated Account Manager</li>
+                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> 99.98% Uptime SLA Commitment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-outline" style="width:100%; justify-content:center; border-radius:14px; padding:13px; font-size:13px;">
+                    Contact Sales & Choose
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
 {{-- ══ HOW IT WORKS — 3 Steps (Pixel-Perfect 3rd Reference) ══════════════════════ --}}
 <section id="how-it-works" style="background:#f0efff; padding:80px 0; overflow:visible;">
     <div style="max-width:1100px; margin:0 auto; padding:0 24px">

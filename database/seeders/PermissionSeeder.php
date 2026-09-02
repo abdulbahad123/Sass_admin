@@ -44,10 +44,19 @@ class PermissionSeeder extends Seeder
             ['name' => 'View Branding', 'slug' => 'view-branding', 'category' => 'branding', 'description' => 'View branding settings'],
             ['name' => 'Manage Branding', 'slug' => 'manage-branding', 'category' => 'branding', 'description' => 'Update branding settings'],
             
-            // Team
-            ['name' => 'View Team', 'slug' => 'view-team', 'category' => 'team', 'description' => 'View team members'],
-            ['name' => 'Manage Team', 'slug' => 'manage-team', 'category' => 'team', 'description' => 'Add/remove team members'],
-            ['name' => 'Manage Roles', 'slug' => 'manage-roles', 'category' => 'team', 'description' => 'Create and edit roles'],
+            // Team & Staff
+            ['name' => 'View Team & Staff', 'slug' => 'view-team', 'category' => 'team', 'description' => 'View team members and staff roster'],
+            ['name' => 'Manage Team & Staff', 'slug' => 'manage-team', 'category' => 'team', 'description' => 'Add, edit, or remove team members'],
+            ['name' => 'Manage Roles & Permissions', 'slug' => 'manage-roles', 'category' => 'team', 'description' => 'Create and edit roles & menu permissions'],
+
+            // Support Tickets
+            ['name' => 'View Support Tickets', 'slug' => 'view-tickets', 'category' => 'tickets', 'description' => 'View support tickets list and conversations'],
+            ['name' => 'Reply Support Tickets', 'slug' => 'reply-tickets', 'category' => 'tickets', 'description' => 'Reply to agency tickets'],
+            ['name' => 'Assign Staff to Tickets', 'slug' => 'assign-tickets', 'category' => 'tickets', 'description' => 'Assign support agents to tickets'],
+            ['name' => 'Manage Ticket Status', 'slug' => 'manage-tickets', 'category' => 'tickets', 'description' => 'Change ticket status and priority'],
+
+            // Audit Logs
+            ['name' => 'View Audit Logs', 'slug' => 'view-audit-logs', 'category' => 'audit_logs', 'description' => 'Access platform activity and audit logs'],
             
             // Settings
             ['name' => 'View Settings', 'slug' => 'view-settings', 'category' => 'settings', 'description' => 'View platform settings'],
