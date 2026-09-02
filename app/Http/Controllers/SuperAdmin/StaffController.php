@@ -14,6 +14,8 @@ class StaffController extends Controller
 {
     public function index(Request $request)
     {
+        $this->ensurePermissionsExist();
+
         $query = User::where('role', 'super_admin')
             ->with(['roles'])
             ->withCount([
@@ -197,6 +199,8 @@ class StaffController extends Controller
 
     public function managePermissions(Role $role)
     {
+        $this->ensurePermissionsExist();
+
         $role->load('permissions');
         $permissions = Permission::all()->groupBy('category');
         $assignedPermissionIds = $role->permissions->pluck('id')->toArray();
@@ -219,5 +223,12 @@ class StaffController extends Controller
 
         return redirect()->route('admin.roles.permissions', $role->id)
             ->with('success', "Permissions for role '{$role->name}' updated successfully!");
+    }
+
+    private function ensurePermissionsExist()
+    {
+        if (Permission::count() === 0) {
+            (new \Database\Seeders\PermissionSeeder())->run();
+        }
     }
 }
