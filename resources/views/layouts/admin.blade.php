@@ -148,27 +148,7 @@
             </a>
         </nav>
 
-        <!-- Platform Health Box -->
-        <div class="p-4 mx-3 mb-3 rounded-2xl bg-[#121B3B] border border-indigo-900/40 text-slate-300">
-            <div class="flex items-center justify-between text-xs font-semibold text-white mb-1">
-                <span class="flex items-center">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-                    Platform Health
-                </span>
-            </div>
-            <p class="text-[10px] text-emerald-400 font-medium">All Systems Operational</p>
-            
-            <div class="mt-3 grid grid-cols-2 gap-2 text-[10px] border-t border-indigo-900/40 pt-2 text-slate-400">
-                <div>
-                    <span class="block">Uptime</span>
-                    <span class="font-bold text-white">99.98%</span>
-                </div>
-                <div>
-                    <span class="block">Response Time</span>
-                    <span class="font-bold text-white">320ms</span>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Super Admin User Profile Footer -->
         <div class="p-4 border-t border-slate-800/80 flex items-center justify-between">
