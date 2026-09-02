@@ -66,7 +66,11 @@ class SuperAdminTicketController extends Controller
 
         $agencies = Agency::orderBy('name')->get();
         $products = Product::orderBy('name')->get();
-        $staffMembers = User::where('role', 'super_admin')->orderBy('name')->get();
+        $staffMembers = User::where('role', 'super_admin')
+            ->withCount(['assignedTickets as active_tickets_count' => function ($q) {
+                $q->whereIn('status', ['open', 'in_progress', 'pending_reply']);
+            }])
+            ->orderBy('name')->get();
 
         return view('admin.tickets.index', compact('tickets', 'stats', 'agencies', 'products', 'staffMembers'));
     }
@@ -74,7 +78,11 @@ class SuperAdminTicketController extends Controller
     public function show($id)
     {
         $ticket = Ticket::with(['agency', 'product', 'user', 'assignedStaff', 'replies.user'])->findOrFail($id);
-        $staffMembers = User::where('role', 'super_admin')->orderBy('name')->get();
+        $staffMembers = User::where('role', 'super_admin')
+            ->withCount(['assignedTickets as active_tickets_count' => function ($q) {
+                $q->whereIn('status', ['open', 'in_progress', 'pending_reply']);
+            }])
+            ->orderBy('name')->get();
 
         return view('admin.tickets.show', compact('ticket', 'staffMembers'));
     }

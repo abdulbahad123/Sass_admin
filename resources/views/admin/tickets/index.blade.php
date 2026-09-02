@@ -221,7 +221,7 @@
                                     </span>
                                 </td>
 
-                                <!-- Assigned Staff (Task 3 Inline Dropdown) -->
+                                <!-- Assigned Staff (Inline Quick Assignment) -->
                                 <td class="py-4 px-4 whitespace-nowrap">
                                     <form action="{{ route('admin.tickets.assign-staff', $ticket->id) }}" method="POST" class="inline-block">
                                         @csrf
@@ -231,7 +231,7 @@
                                             <option value="">-- Unassigned --</option>
                                             @foreach($staffMembers as $staff)
                                                 <option value="{{ $staff->id }}" {{ $ticket->assigned_to == $staff->id ? 'selected' : '' }}>
-                                                    {{ $staff->name }}
+                                                    {{ $staff->name }} ({{ $staff->designation ?: 'Staff' }} - {{ $staff->active_tickets_count ?? 0 }} active)
                                                 </option>
                                             @endforeach
                                         </select>

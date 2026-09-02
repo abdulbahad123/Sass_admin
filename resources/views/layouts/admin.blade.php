@@ -127,6 +127,12 @@
                 Audit Logs
             </a>
 
+            <a href="{{ route('admin.staff.index') }}" 
+               class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.staff.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+                Staff Management
+            </a>
+
             <a href="{{ route('admin.tickets.index') }}" 
                class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.tickets.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <div class="flex items-center">

@@ -46,7 +46,7 @@
                 <p>Created: <span class="text-slate-700 font-semibold">{{ $ticket->created_at->format('M d, Y h:i A') }}</span></p>
                 <p class="mt-0.5">Assigned Agent: 
                     @if($ticket->assignedStaff)
-                        <span class="text-indigo-600 font-bold">{{ $ticket->assignedStaff->name }}</span>
+                        <span class="text-indigo-600 font-bold">{{ $ticket->assignedStaff->name }} ({{ $ticket->assignedStaff->designation ?: 'Super Admin Support' }})</span>
                     @else
                         <span class="text-amber-600 font-semibold">Super Admin Support</span>
                     @endif
@@ -96,41 +96,83 @@
 
     <!-- Replies Conversation Thread -->
     <div class="space-y-4">
-        <h3 class="text-base font-extrabold text-slate-900 font-heading flex items-center space-x-2">
-            <i data-lucide="message-square" class="w-5 h-5 text-blue-600"></i>
-            <span>Conversation Thread ({{ $ticket->replies->count() }} {{ Str::plural('Reply', $ticket->replies->count()) }})</span>
+        <h3 class="text-base font-extrabold text-slate-900 font-heading flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="message-square" class="w-5 h-5 text-blue-600"></i>
+                <span>Conversation Thread ({{ $ticket->replies->where('is_internal_note', false)->count() }} {{ Str::plural('Reply', $ticket->replies->where('is_internal_note', false)->count()) }})</span>
+            </div>
+            @if($ticket->replies->where('is_internal_note', false)->count() > 0)
+                <span class="text-xs text-slate-400 font-medium">Sorted chronologically</span>
+            @endif
         </h3>
 
         @foreach($ticket->replies as $reply)
-            @php $isSuperAdmin = $reply->user && ($reply->user->role === 'super_admin'); @endphp
+            @if($reply->is_internal_note)
+                @continue
+            @endif
             
-            <div class="card-white p-5 rounded-2xl border {{ $isSuperAdmin ? 'border-indigo-100 bg-gradient-to-r from-indigo-50/30 to-white' : 'border-slate-100' }} shadow-sm space-y-3">
+            @php 
+                $isSuperAdmin = $reply->user && ($reply->user->role === 'super_admin');
+                $isLatest = $loop->last;
+            @endphp
+            
+            <div class="card-white p-5 rounded-2xl border transition-all duration-200 
+                {{ $isSuperAdmin 
+                    ? 'border-l-4 border-l-indigo-600 border-indigo-200/80 bg-gradient-to-r from-indigo-50/60 via-purple-50/30 to-white shadow-sm' 
+                    : 'border-l-4 border-l-blue-600 border-blue-200/80 bg-blue-50/40 shadow-sm' 
+                }} {{ $isLatest ? 'ring-2 ring-emerald-500/40 shadow-md' : '' }} space-y-3">
+                
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-full {{ $isSuperAdmin ? 'bg-gradient-to-tr from-indigo-600 to-violet-600 text-white' : 'bg-gradient-to-tr from-blue-600 to-cyan-600 text-white' }} font-bold text-xs flex items-center justify-center shadow-md">
-                            {{ substr($reply->user->name ?? ($isSuperAdmin ? 'SA' : 'AG'), 0, 2) }}
+                        <div class="w-10 h-10 rounded-2xl {{ $isSuperAdmin ? 'bg-gradient-to-tr from-indigo-600 via-purple-600 to-violet-600 text-white' : 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white' }} font-bold text-xs flex items-center justify-center shadow-md">
+                            @if($isSuperAdmin)
+                                <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+                            @else
+                                <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                            @endif
                         </div>
                         <div>
-                            <div class="flex items-center space-x-2">
+                            <div class="flex items-center space-x-2 flex-wrap gap-y-1">
                                 <span class="font-extrabold text-slate-900 text-xs font-heading">{{ $reply->user->name ?? 'User' }}</span>
                                 @if($isSuperAdmin)
-                                    <span class="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[9px] font-extrabold uppercase tracking-wider">Super Admin Support</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-extrabold uppercase tracking-wider inline-flex items-center space-x-1 shadow-sm">
+                                        <i data-lucide="shield-check" class="w-3 h-3 text-indigo-200"></i>
+                                        <span>Super Admin Support</span>
+                                    </span>
+                                    @if($reply->user && $reply->user->designation)
+                                        <span class="px-2 py-0.5 rounded-md bg-indigo-100/80 text-indigo-700 text-[10px] font-bold">
+                                            {{ $reply->user->designation }}
+                                        </span>
+                                    @endif
                                 @else
-                                    <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[9px] font-bold">Agency</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold uppercase tracking-wider inline-flex items-center space-x-1">
+                                        <i data-lucide="building" class="w-3 h-3 text-blue-600"></i>
+                                        <span>Agency Reply</span>
+                                    </span>
                                 @endif
                             </div>
-                            <p class="text-[10px] text-slate-400 font-medium">{{ $reply->created_at->format('M d, Y • h:i A') }} ({{ $reply->created_at->diffForHumans() }})</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-0.5">{{ $reply->created_at->format('M d, Y • h:i A') }} ({{ $reply->created_at->diffForHumans() }})</p>
                         </div>
                     </div>
+
+                    <!-- NEW MESSAGE Highlight Badge for latest reply -->
+                    @if($isLatest)
+                        <div class="flex items-center space-x-1">
+                            <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-md shadow-emerald-500/30 animate-pulse flex items-center space-x-1">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                <span>NEW MESSAGE</span>
+                            </span>
+                        </div>
+                    @endif
                 </div>
 
-                <div class="text-xs text-slate-700 leading-relaxed font-medium pl-12 whitespace-pre-line">
+                <div class="text-xs text-slate-700 leading-relaxed font-medium pl-13 whitespace-pre-line">
                     {{ $reply->message }}
                 </div>
 
                 <!-- Reply Attachments -->
                 @if(count($reply->attachments_list) > 0)
-                    <div class="pl-12 pt-2 flex flex-wrap gap-2">
+                    <div class="pl-13 pt-2 flex flex-wrap gap-2">
                         @foreach($reply->attachments_list as $url)
                             @if(Str::endsWith(strtolower($url), ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
                                 <a href="{{ $url }}" target="_blank" class="inline-block group">

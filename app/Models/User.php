@@ -17,6 +17,7 @@ class User extends Authenticatable
         'avatar',
         'password',
         'role',
+        'designation',
         'agency_id',
         'product_id',
         'status',
@@ -57,6 +58,11 @@ class User extends Authenticatable
     public function assignedTickets()
     {
         return $this->hasMany(Ticket::class, 'assigned_to');
+    }
+
+    public function activeAssignedTicketsCount(): int
+    {
+        return $this->assignedTickets()->whereIn('status', ['open', 'in_progress', 'pending_reply'])->count();
     }
 
     public function hasRole($role)

@@ -99,43 +99,89 @@
 
             <!-- Conversation Thread -->
             <div class="space-y-4">
-                <h3 class="text-base font-extrabold text-slate-900 font-heading flex items-center space-x-2">
-                    <i data-lucide="message-square" class="w-5 h-5 text-indigo-600"></i>
-                    <span>Ticket Conversation Thread ({{ $ticket->replies->count() }})</span>
+                <h3 class="text-base font-extrabold text-slate-900 font-heading flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="message-square" class="w-5 h-5 text-indigo-600"></i>
+                        <span>Ticket Conversation Thread ({{ $ticket->replies->count() }})</span>
+                    </div>
+                    @if($ticket->replies->count() > 0)
+                        <span class="text-xs text-slate-400 font-medium">Sorted chronologically</span>
+                    @endif
                 </h3>
 
                 @foreach($ticket->replies as $reply)
-                    @php $isStaff = $reply->user && ($reply->user->role === 'super_admin'); @endphp
+                    @php 
+                        $isStaff = $reply->user && ($reply->user->role === 'super_admin');
+                        $isLatest = $loop->last;
+                    @endphp
                     
-                    <div class="card-white p-5 rounded-2xl border {{ $reply->is_internal_note ? 'border-amber-200 bg-amber-50/40' : ($isStaff ? 'border-indigo-100 bg-gradient-to-r from-indigo-50/20 to-white' : 'border-slate-100') }} shadow-sm space-y-3">
+                    <div class="card-white p-5 rounded-2xl border transition-all duration-200 
+                        {{ $reply->is_internal_note 
+                            ? 'border-l-4 border-l-amber-500 border-amber-200/80 bg-amber-50/70 shadow-sm' 
+                            : ($isStaff 
+                                ? 'border-l-4 border-l-indigo-600 border-indigo-200/80 bg-gradient-to-r from-indigo-50/60 via-purple-50/30 to-white shadow-sm' 
+                                : 'border-l-4 border-l-blue-600 border-blue-200/80 bg-blue-50/40 shadow-sm') 
+                        }} {{ $isLatest ? 'ring-2 ring-emerald-500/40 shadow-md' : '' }} space-y-3">
+                        
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="w-9 h-9 rounded-full {{ $isStaff ? 'bg-indigo-600 text-white' : 'bg-blue-600 text-white' }} font-bold text-xs flex items-center justify-center shadow-md">
-                                    {{ substr($reply->user->name ?? 'SA', 0, 2) }}
+                                <div class="w-10 h-10 rounded-2xl {{ $reply->is_internal_note ? 'bg-amber-500 text-slate-950 font-black' : ($isStaff ? 'bg-gradient-to-tr from-indigo-600 via-purple-600 to-violet-600 text-white' : 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white') }} font-bold text-xs flex items-center justify-center shadow-md">
+                                    @if($reply->is_internal_note)
+                                        <i data-lucide="lock" class="w-4 h-4 text-slate-950"></i>
+                                    @elseif($isStaff)
+                                        <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+                                    @else
+                                        <i data-lucide="building" class="w-4 h-4 text-white"></i>
+                                    @endif
                                 </div>
                                 <div>
-                                    <div class="flex items-center space-x-2">
+                                    <div class="flex items-center space-x-2 flex-wrap gap-y-1">
                                         <span class="font-extrabold text-slate-900 text-xs font-heading">{{ $reply->user->name ?? 'User' }}</span>
+                                        
                                         @if($reply->is_internal_note)
-                                            <span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 text-[9px] font-extrabold uppercase tracking-wider">Internal Staff Note</span>
+                                            <span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black uppercase tracking-wider inline-flex items-center space-x-1 shadow-sm">
+                                                <i data-lucide="eye-off" class="w-3 h-3"></i>
+                                                <span>Internal Staff Note</span>
+                                            </span>
                                         @elseif($isStaff)
-                                            <span class="px-2 py-0.5 rounded bg-indigo-600 text-white text-[9px] font-extrabold uppercase tracking-wider">Super Admin Staff</span>
+                                            <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-extrabold uppercase tracking-wider inline-flex items-center space-x-1 shadow-sm">
+                                                <i data-lucide="shield-check" class="w-3 h-3 text-indigo-200"></i>
+                                                <span>Super Admin Support</span>
+                                            </span>
+                                            @if($reply->user && $reply->user->designation)
+                                                <span class="px-2 py-0.5 rounded-md bg-indigo-100/80 text-indigo-700 text-[10px] font-bold">
+                                                    {{ $reply->user->designation }}
+                                                </span>
+                                            @endif
                                         @else
-                                            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[9px] font-bold">Agency</span>
+                                            <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold uppercase tracking-wider inline-flex items-center space-x-1">
+                                                <i data-lucide="building" class="w-3 h-3 text-blue-600"></i>
+                                                <span>Agency Reply</span>
+                                            </span>
                                         @endif
                                     </div>
-                                    <p class="text-[10px] text-slate-400 font-medium">{{ $reply->created_at->format('M d, Y • h:i A') }} ({{ $reply->created_at->diffForHumans() }})</p>
+                                    <p class="text-[10px] text-slate-400 font-medium mt-0.5">{{ $reply->created_at->format('M d, Y • h:i A') }} ({{ $reply->created_at->diffForHumans() }})</p>
                                 </div>
                             </div>
+
+                            <!-- NEW MESSAGE Highlight Badge for latest reply -->
+                            @if($isLatest)
+                                <div class="flex items-center space-x-1">
+                                    <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-md shadow-emerald-500/30 animate-pulse flex items-center space-x-1">
+                                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                        <span>NEW MESSAGE</span>
+                                    </span>
+                                </div>
+                            @endif
                         </div>
 
-                        <div class="text-xs text-slate-700 leading-relaxed font-medium pl-12 whitespace-pre-line">
+                        <div class="text-xs text-slate-700 leading-relaxed font-medium pl-13 whitespace-pre-line">
                             {{ $reply->message }}
                         </div>
 
                         <!-- Reply Attachments -->
                         @if(count($reply->attachments_list) > 0)
-                            <div class="pl-12 pt-2 flex flex-wrap gap-2">
+                            <div class="pl-13 pt-2 flex flex-wrap gap-2">
                                 @foreach($reply->attachments_list as $url)
                                     @if(Str::endsWith(strtolower($url), ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
                                         <a href="{{ $url }}" target="_blank" class="inline-block group">
@@ -155,7 +201,7 @@
                 @endforeach
             </div>
 
-            <!-- Super Admin Reply Form (Task 2 & Task 3) -->
+            <!-- Super Admin Reply Form -->
             <div class="card-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-4">
                 <h4 class="text-sm font-extrabold text-slate-900 font-heading flex items-center space-x-2">
                     <i data-lucide="corner-down-right" class="w-4 h-4 text-indigo-600"></i>
@@ -215,25 +261,47 @@
         <!-- Right Column: Sidebar Control Card (Staff Assignment, Status & Agency Context) -->
         <div class="space-y-6">
             
-            <!-- Staff & Ticket Controls Card (Task 3 Requirement) -->
+            <!-- Staff & Ticket Controls Card -->
             <div class="card-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-5">
-                <h3 class="text-sm font-extrabold text-slate-900 font-heading uppercase tracking-wider flex items-center space-x-2 border-b border-slate-100 pb-3">
-                    <i data-lucide="sliders" class="w-4 h-4 text-indigo-600"></i>
-                    <span>Ticket Management</span>
+                <h3 class="text-sm font-extrabold text-slate-900 font-heading uppercase tracking-wider flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-indigo-600"></i>
+                        <span>Ticket Management</span>
+                    </div>
+                    <a href="{{ route('admin.staff.index') }}" class="text-[11px] text-indigo-600 hover:underline font-bold">Manage Staff</a>
                 </h3>
 
-                <!-- 1. Assign Staff Member (Task 3 requirement) -->
+                <!-- Active Assigned Staff Highlight -->
+                @if($ticket->assignedStaff)
+                    <div class="p-3 bg-indigo-50/60 border border-indigo-200/80 rounded-2xl flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-md">
+                            {{ substr($ticket->assignedStaff->name, 0, 2) }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">Assigned Support Agent</p>
+                            <h4 class="font-extrabold text-slate-900 text-xs font-heading truncate">{{ $ticket->assignedStaff->name }}</h4>
+                            <p class="text-[10px] text-slate-500 truncate">{{ $ticket->assignedStaff->designation ?: 'Super Admin Staff' }}</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="p-3 bg-amber-50/60 border border-amber-200/80 rounded-2xl flex items-center space-x-2 text-amber-800 text-xs">
+                        <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600 shrink-0"></i>
+                        <span class="font-bold">Currently Unassigned</span>
+                    </div>
+                @endif
+
+                <!-- 1. Assign Staff Member -->
                 <form action="{{ route('admin.tickets.assign-staff', $ticket->id) }}" method="POST" class="space-y-2">
                     @csrf
                     @method('PATCH')
 
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Assigned Support Staff</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Change Assigned Staff</label>
                     <div class="flex items-center space-x-2">
                         <select name="assigned_to" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-indigo-500">
                             <option value="">-- Unassigned --</option>
                             @foreach($staffMembers as $staff)
                                 <option value="{{ $staff->id }}" {{ $ticket->assigned_to == $staff->id ? 'selected' : '' }}>
-                                    {{ $staff->name }} (Super Admin Staff)
+                                    {{ $staff->name }} ({{ $staff->designation ?: 'Staff' }} - {{ $staff->active_tickets_count ?? 0 }} active)
                                 </option>
                             @endforeach
                         </select>
