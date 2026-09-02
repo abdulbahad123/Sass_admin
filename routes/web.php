@@ -192,6 +192,8 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::post('/roles', [StaffController::class, 'storeRole'])->name('roles.store');
     Route::put('/roles/{role}', [StaffController::class, 'updateRole'])->name('roles.update');
     Route::delete('/roles/{role}', [StaffController::class, 'destroyRole'])->name('roles.destroy');
+    Route::get('/roles/{role}/permissions', [StaffController::class, 'managePermissions'])->name('roles.permissions');
+    Route::post('/roles/{role}/permissions', [StaffController::class, 'updatePermissions'])->name('roles.permissions.update');
 
     // Support Tickets Management (Staff & Agency Tickets)
     Route::get('/tickets', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'index'])->name('tickets.index');

@@ -194,4 +194,30 @@ class StaffController extends Controller
 
         return redirect()->route('admin.staff.index')->with('success', "Role '{$name}' deleted successfully.");
     }
+
+    public function managePermissions(Role $role)
+    {
+        $role->load('permissions');
+        $permissions = Permission::all()->groupBy('category');
+        $assignedPermissionIds = $role->permissions->pluck('id')->toArray();
+
+        return view('admin.roles.permissions', compact('role', 'permissions', 'assignedPermissionIds'));
+    }
+
+    public function updatePermissions(Request $request, Role $role)
+    {
+        $request->validate([
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        if (isset($request->permissions)) {
+            $role->permissions()->sync($request->permissions);
+        } else {
+            $role->permissions()->detach();
+        }
+
+        return redirect()->route('admin.roles.permissions', $role->id)
+            ->with('success', "Permissions for role '{$role->name}' updated successfully!");
+    }
 }
