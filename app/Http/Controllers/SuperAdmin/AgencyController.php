@@ -321,9 +321,20 @@ class AgencyController extends Controller
 
     public function loginAsAgency(Request $request, Agency $agency)
     {
-        // Find the agency user
+        // Find or create the agency user
         $agencyUser = User::where('agency_id', $agency->id)->first() 
             ?? User::where('email', $agency->email)->first();
+
+        if (!$agencyUser) {
+            $agencyUser = User::create([
+                'name' => $agency->owner_name,
+                'email' => $agency->email,
+                'password' => Hash::make(Str::random(16)),
+                'role' => $agency->type === 'master' ? 'master_agency' : 'white_label_agency',
+                'agency_id' => $agency->id,
+                'status' => 'active',
+            ]);
+        }
 
         AuditLog::create([
             'user_id'   => auth()->id(),
@@ -333,37 +344,15 @@ class AgencyController extends Controller
             'details'   => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
         ]);
 
-        $targetPath = $agency->type === 'master' ? '/master/dashboard' : '/whitelabel/dashboard';
-        $cleanDomain = $agency->clean_domain;
-
-        // If agency has a custom domain (e.g. youverse.in, funkiddoz.in, maturednature.com), use signed SSO link WITHOUT logging out Super Admin on nooryak.in!
-        if ($cleanDomain && !str_contains($cleanDomain, 'nooryak') && !str_contains($cleanDomain, 'localhost') && !str_contains($cleanDomain, '127.0.0.1')) {
-            $email   = $agencyUser ? $agencyUser->email : $agency->email;
-            $expires = time() + 300;
-            $secret  = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
-            $signature = hash_hmac('sha256', "{$email}|{$expires}", $secret);
-
-            $ssoUrl = "https://{$cleanDomain}/sso-agency-login?" . http_build_query([
-                'email'     => $email,
-                'expires'   => $expires,
-                'signature' => $signature,
-                'redirect'  => $targetPath,
-            ]);
-
-            return redirect()->away($ssoUrl);
-        }
-
-        // For same-domain / local impersonation: store impersonator ID so Super Admin can return with 1 click
-        if ($agencyUser) {
-            session(['impersonator_user_id' => auth()->id()]);
-            Auth::login($agencyUser);
-        }
+        // Store impersonator ID so Super Admin can return with 1 click
+        session(['impersonator_user_id' => auth()->id()]);
+        Auth::login($agencyUser);
 
         if ($agency->type === 'master') {
-            return redirect()->route('master.dashboard');
+            return redirect()->route('master.dashboard')->with('success', "Logged in as Master Agency Admin: {$agency->name}");
         }
 
-        return redirect()->route('whitelabel.dashboard');
+        return redirect()->route('whitelabel.dashboard')->with('success', "Logged in as White Label Agency Admin: {$agency->name}");
     }
 
     public function reprovisionDatabase(Request $request, Agency $agency)
