@@ -145,27 +145,14 @@ class ProductController extends Controller
         $signature = hash_hmac('sha256', $dataToSign, $secret);
 
         if ($slug === 'website-builder' || $slug === 'websitebuilder') {
-            if (str_contains($rootDomain, 'nooryak') || str_contains($rootDomain, 'localhost')) {
-                $ssoUrl = "https://websitebuilder.{$rootDomain}/admin/sso-login?" . http_build_query([
-                    'user' => $targetUser,
-                    'expires' => $timestamp,
-                    'nonce' => $nonce,
-                    'signature' => $signature,
-                ]);
-            } else {
-                $ssoUrl = "https://{$rootDomain}/website-builder/admin/sso-login?" . http_build_query([
-                    'user' => $targetUser,
-                    'expires' => $timestamp,
-                    'nonce' => $nonce,
-                    'signature' => $signature,
-                ]);
-            }
+            $ssoUrl = "https://websitebuilder.{$rootDomain}/admin/sso-login?" . http_build_query([
+                'user' => $targetUser,
+                'expires' => $timestamp,
+                'nonce' => $nonce,
+                'signature' => $signature,
+            ]);
         } else {
-            if (str_contains($rootDomain, 'nooryak') || str_contains($rootDomain, 'localhost')) {
-                $baseUrl = "https://{$slug}.{$rootDomain}";
-            } else {
-                $baseUrl = "https://{$rootDomain}";
-            }
+            $baseUrl = "https://{$slug}.{$rootDomain}";
             $ssoUrl = "{$baseUrl}/X9_AdMiN-Portal_V7/sso-login?" . http_build_query([
                 'user' => $targetUser,
                 'expires' => $timestamp,
