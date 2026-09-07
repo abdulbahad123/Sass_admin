@@ -103,11 +103,7 @@
                 Products Catalog
             </a>
 
-            <a href="{{ route('admin.plans.index') }}" 
-               class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.plans.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
-                <i data-lucide="tags" class="w-4 h-4 mr-3"></i>
-                Plans & Pricing
-            </a>
+
 
             <a href="{{ route('admin.subscriptions.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.subscriptions.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">

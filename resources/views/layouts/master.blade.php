@@ -143,12 +143,7 @@
                 <span>Products & Access</span>
             </a>
 
-            <!-- 4. Plans & Pricing -->
-            <a href="{{ route('master.plans.index') }}" 
-               class="flex items-center px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 {{ request()->routeIs('master.plans.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
-                <i data-lucide="check-square" class="w-4 h-4 mr-3"></i>
-                <span>Plans & Pricing</span>
-            </a>
+
 
             <!-- 5. Subscriptions -->
             <a href="{{ route('master.subscriptions.index') }}" 

@@ -106,7 +106,7 @@
                         <span class="text-violet-700/80 block text-[11px] font-bold uppercase tracking-wider">Agency Price</span>
                         <span class="font-extrabold text-violet-800 text-xs mt-0.5 inline-flex items-center space-x-1">
                             <i data-lucide="tag" class="w-3.5 h-3.5 text-violet-600"></i>
-                            <span>{{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($agency->subscription?->amount ?? 0) }}/mo</span>
+                            <span>{{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($agency->subscription?->amount ?? 0) }}/{{ $agency->subscription?->billing_cycle === 'yearly' ? 'yr' : 'mo' }}</span>
                         </span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
@@ -250,14 +250,21 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Monthly Subscription Price (₹)</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Subscription Price (₹)</label>
                     <input type="number" name="price_monthly" placeholder="e.g. 2999" value="2999" step="1" min="0" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Allowed</label>
-                    <input type="number" name="max_clients" placeholder="e.g. 100 or 999999 for Unlimited" value="100" min="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Billing Cycle</label>
+                    <select name="billing_cycle" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                        <option value="monthly" selected>Per Month (/mo)</option>
+                        <option value="yearly">Per Year (/yr)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients</label>
+                    <input type="number" name="max_clients" placeholder="e.g. 100 or 999999" value="100" min="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
                 </div>
             </div>
 
@@ -334,14 +341,21 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Monthly Subscription Price (₹)</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Subscription Price (₹)</label>
                     <input type="number" id="ea_price_monthly" name="price_monthly" placeholder="e.g. 2999" step="1" min="0" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Allowed</label>
-                    <input type="number" id="ea_max_clients" name="max_clients" placeholder="e.g. 100 or 999999 for Unlimited" min="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Billing Cycle</label>
+                    <select id="ea_billing_cycle" name="billing_cycle" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                        <option value="monthly">Per Month (/mo)</option>
+                        <option value="yearly">Per Year (/yr)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients</label>
+                    <input type="number" id="ea_max_clients" name="max_clients" placeholder="e.g. 100 or 999999" min="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
                 </div>
             </div>
 
@@ -376,6 +390,7 @@
         document.getElementById('ea_custom_domain').value = agency.custom_domain || '';
         document.getElementById('ea_max_clients').value = agency.max_clients || 100;
         document.getElementById('ea_price_monthly').value = (agency.subscription && agency.subscription.amount != null) ? agency.subscription.amount : 2999;
+        document.getElementById('ea_billing_cycle').value = (agency.subscription && agency.subscription.billing_cycle) ? agency.subscription.billing_cycle : 'monthly';
 
         document.getElementById('editAgencyModal').classList.remove('hidden');
     }

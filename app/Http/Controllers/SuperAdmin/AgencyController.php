@@ -70,6 +70,7 @@ class AgencyController extends Controller
             'primary_color' => 'nullable|string|max:20',
             'max_clients' => 'required|integer|min:1',
             'price_monthly' => 'nullable|numeric|min:0',
+            'billing_cycle' => 'nullable|in:monthly,yearly',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
         ]);
@@ -109,15 +110,16 @@ class AgencyController extends Controller
             'status' => 'active',
         ]);
 
-        // Assign subscription with custom monthly price
-        $priceMonthly = $validated['price_monthly'] ?? 2999;
+        // Assign subscription with custom price and billing cycle (monthly vs yearly)
+        $priceAmount = $validated['price_monthly'] ?? 2999;
+        $billingCycle = $validated['billing_cycle'] ?? 'monthly';
         $firstPlan = Plan::first();
         Subscription::create([
             'agency_id' => $agency->id,
             'plan_id' => $firstPlan?->id ?? 1,
             'status' => 'active',
-            'billing_cycle' => 'monthly',
-            'amount' => $priceMonthly,
+            'billing_cycle' => $billingCycle,
+            'amount' => $priceAmount,
             'starts_at' => now(),
         ]);
 
@@ -183,6 +185,7 @@ class AgencyController extends Controller
             'status' => 'required|in:active,pending,suspended',
             'max_clients' => 'required|integer|min:1',
             'price_monthly' => 'nullable|numeric|min:0',
+            'billing_cycle' => 'nullable|in:monthly,yearly',
             'password' => 'nullable|string|min:6',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
@@ -203,18 +206,24 @@ class AgencyController extends Controller
 
         $agency->update($validated);
 
-        if (isset($validated['price_monthly'])) {
+        if (isset($validated['price_monthly']) || isset($validated['billing_cycle'])) {
             $sub = $agency->subscription;
+            $billingCycle = $validated['billing_cycle'] ?? ($sub->billing_cycle ?? 'monthly');
+            $priceAmount = $validated['price_monthly'] ?? ($sub->amount ?? 2999);
+
             if ($sub) {
-                $sub->update(['amount' => $validated['price_monthly']]);
+                $sub->update([
+                    'amount' => $priceAmount,
+                    'billing_cycle' => $billingCycle,
+                ]);
             } else {
                 $firstPlan = Plan::first();
                 Subscription::create([
                     'agency_id' => $agency->id,
                     'plan_id' => $firstPlan?->id ?? 1,
                     'status' => 'active',
-                    'billing_cycle' => 'monthly',
-                    'amount' => $validated['price_monthly'],
+                    'billing_cycle' => $billingCycle,
+                    'amount' => $priceAmount,
                     'starts_at' => now(),
                 ]);
             }
