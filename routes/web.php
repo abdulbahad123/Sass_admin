@@ -129,6 +129,9 @@ Route::get('/agency-sso-login', function (\Illuminate\Http\Request $request) {
 
     return redirect()->route('login')->withErrors(['email' => 'User account not found for this agency.']);
 })->name('agency.sso_login');
+Route::get('/sso-agency-login', function (\Illuminate\Http\Request $request) {
+    return redirect()->to('/agency-sso-login?' . http_build_query($request->all()));
+});
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

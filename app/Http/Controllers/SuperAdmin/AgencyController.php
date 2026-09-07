@@ -343,7 +343,7 @@ class AgencyController extends Controller
             $secret  = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
             $signature = hash_hmac('sha256', "{$email}|{$expires}", $secret);
 
-            $ssoUrl = "https://{$cleanDomain}/agency-sso-login?" . http_build_query([
+            $ssoUrl = "https://{$cleanDomain}/sso-agency-login?" . http_build_query([
                 'email'     => $email,
                 'expires'   => $expires,
                 'signature' => $signature,
