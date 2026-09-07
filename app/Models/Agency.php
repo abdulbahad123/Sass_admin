@@ -182,10 +182,17 @@ class Agency extends Model
         $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
 
         if ($cleanProductSlug === 'website-builder' || $cleanProductSlug === 'websitebuilder') {
-            return "https://websitebuilder.{$rootDomain}";
+            if (str_contains($rootDomain, 'nooryak') || str_contains($rootDomain, 'localhost')) {
+                return "https://websitebuilder.{$rootDomain}";
+            }
+            return "https://{$rootDomain}/website-builder";
         }
 
-        return "https://{$cleanProductSlug}.{$rootDomain}";
+        if (str_contains($rootDomain, 'nooryak') || str_contains($rootDomain, 'localhost')) {
+            return "https://{$cleanProductSlug}.{$rootDomain}";
+        }
+
+        return "https://{$rootDomain}";
     }
 
     // Master agency has sub-agencies

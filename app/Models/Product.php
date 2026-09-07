@@ -35,10 +35,17 @@ class Product extends Model
         $slug = $this->slug ?? \Illuminate\Support\Str::slug($this->name);
 
         if ($slug === 'website-builder' || $slug === 'websitebuilder') {
-            return "https://websitebuilder.{$rootDomain}";
+            if (str_contains($rootDomain, 'nooryak') || str_contains($rootDomain, 'localhost')) {
+                return "https://websitebuilder.{$rootDomain}";
+            }
+            return "https://{$rootDomain}/website-builder";
         }
 
-        return "https://{$slug}.{$rootDomain}";
+        if (str_contains($rootDomain, 'nooryak') || str_contains($rootDomain, 'localhost')) {
+            return "https://{$slug}.{$rootDomain}";
+        }
+
+        return "https://{$rootDomain}";
     }
 
     public function plans()
