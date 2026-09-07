@@ -114,8 +114,7 @@ class ProductController extends Controller
         $currentHost = $request->getHost();
         $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
         $slug = $product->slug ?? Str::slug($product->name);
-        
-        $baseUrl = "https://{$slug}.{$rootDomain}";
+        $scheme = $request->getScheme() ?: 'https';
 
         $timestamp = time() + 300;
         $nonce = Str::random(16);
@@ -125,12 +124,22 @@ class ProductController extends Controller
         $dataToSign = "{$targetUser}|{$timestamp}|{$nonce}";
         $signature = hash_hmac('sha256', $dataToSign, $secret);
 
-        $ssoUrl = "{$baseUrl}/X9_AdMiN-Portal_V7/sso-login?" . http_build_query([
-            'user' => $targetUser,
-            'expires' => $timestamp,
-            'nonce' => $nonce,
-            'signature' => $signature,
-        ]);
+        if ($slug === 'website-builder') {
+            $ssoUrl = "{$scheme}://{$currentHost}/website-builder/admin/sso-login?" . http_build_query([
+                'user' => $targetUser,
+                'expires' => $timestamp,
+                'nonce' => $nonce,
+                'signature' => $signature,
+            ]);
+        } else {
+            $baseUrl = "https://{$slug}.{$rootDomain}";
+            $ssoUrl = "{$baseUrl}/X9_AdMiN-Portal_V7/sso-login?" . http_build_query([
+                'user' => $targetUser,
+                'expires' => $timestamp,
+                'nonce' => $nonce,
+                'signature' => $signature,
+            ]);
+        }
 
         AuditLog::create([
             'user_id' => auth()->id() ?? 1,
