@@ -12,12 +12,20 @@ class ProductController extends Controller
 {
     public function index()
     {
+        if (!auth()->user()->hasPermission(['view-products', 'manage-product-access'])) {
+            abort(403, 'Access Denied: You do not have permission to view products.');
+        }
+
         $products = Product::withCount(['plans', 'agencies'])->latest()->get();
         return view('admin.products.index', compact('products'));
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermission('manage-product-access')) {
+            abort(403, 'Access Denied: You do not have permission to create products.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'tagline' => 'nullable|string|max:255',
@@ -48,6 +56,10 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        if (!auth()->user()->hasPermission('manage-product-access')) {
+            abort(403, 'Access Denied: You do not have permission to edit products.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'tagline' => 'nullable|string|max:255',
@@ -78,6 +90,10 @@ class ProductController extends Controller
 
     public function toggleStatus(Request $request, Product $product)
     {
+        if (!auth()->user()->hasPermission('manage-product-access')) {
+            abort(403, 'Access Denied: You do not have permission to toggle product status.');
+        }
+
         $product->is_active = !$product->is_active;
         $product->save();
 
@@ -96,6 +112,10 @@ class ProductController extends Controller
 
     public function destroy(Request $request, Product $product)
     {
+        if (!auth()->user()->hasPermission('manage-product-access')) {
+            abort(403, 'Access Denied: You do not have permission to delete products.');
+        }
+
         $name = $product->name;
         $product->delete();
 

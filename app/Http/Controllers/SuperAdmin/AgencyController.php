@@ -18,6 +18,10 @@ class AgencyController extends Controller
 {
     public function index(Request $request)
     {
+        if (!$request->user()->hasPermission('view-agencies')) {
+            abort(403, 'Access Denied: You do not have permission to view agencies.');
+        }
+
         $type = $request->query('type');
         $query = Agency::with(['parentAgency', 'subAgencies', 'subscription.plan', 'products']);
 
@@ -37,6 +41,10 @@ class AgencyController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->user()->hasPermission('create-agencies')) {
+            abort(403, 'Access Denied: You do not have permission to create agencies.');
+        }
+
         if ($request->input('parent_id') === '') {
             $request->merge(['parent_id' => null]);
         }
@@ -174,6 +182,10 @@ class AgencyController extends Controller
 
     public function update(Request $request, Agency $agency)
     {
+        if (!$request->user()->hasPermission('edit-agencies')) {
+            abort(403, 'Access Denied: You do not have permission to edit agencies.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:master,white_label',
@@ -264,6 +276,10 @@ class AgencyController extends Controller
 
     public function toggleProductAccess(Request $request, Agency $agency, Product $product)
     {
+        if (!$request->user()->hasPermission(['manage-product-access', 'edit-agencies'])) {
+            abort(403, 'Access Denied: You do not have permission to manage product access.');
+        }
+
         $pivot = $agency->products()->where('product_id', $product->id)->first();
 
         if ($pivot) {
@@ -286,6 +302,10 @@ class AgencyController extends Controller
 
     public function destroy(Request $request, Agency $agency)
     {
+        if (!$request->user()->hasPermission('delete-agencies')) {
+            abort(403, 'Access Denied: You do not have permission to remove agencies.');
+        }
+
         $name = $agency->name;
         $agency->delete();
 
@@ -348,6 +368,10 @@ class AgencyController extends Controller
 
     public function reprovisionDatabase(Request $request, Agency $agency)
     {
+        if (!$request->user()->hasPermission(['edit-agencies', 'create-agencies'])) {
+            abort(403, 'Access Denied: You do not have permission to import database tables.');
+        }
+
         $dbService = new \App\Services\DatabaseProvisioningService();
         $products = $agency->products->isNotEmpty() ? $agency->products : Product::where('is_active', true)->get();
 

@@ -11,6 +11,10 @@ class SubscriptionController extends Controller
 {
     public function index()
     {
+        if (!auth()->user()->hasPermission(['view-subscriptions', 'view-billing', 'manage-subscriptions', 'manage-billing'])) {
+            abort(403, 'Access Denied: You do not have permission to view subscriptions & billing.');
+        }
+
         $subscriptions = Subscription::with(['agency', 'plan'])->latest()->get();
         $totalRevenue = Subscription::where('status', 'active')->sum('amount');
         $activeCount = Subscription::where('status', 'active')->count();
@@ -20,6 +24,10 @@ class SubscriptionController extends Controller
 
     public function updateStatus(Request $request, Subscription $subscription)
     {
+        if (!auth()->user()->hasPermission(['manage-subscriptions', 'manage-billing'])) {
+            abort(403, 'Access Denied: You do not have permission to update subscriptions.');
+        }
+
         $validated = $request->validate([
             'status' => 'required|in:active,trial,past_due,cancelled',
         ]);

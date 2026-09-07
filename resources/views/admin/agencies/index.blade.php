@@ -4,11 +4,13 @@
 @section('page_title', 'Master Agencies & White-Label Agencies Management')
 
 @section('header_actions')
+@if(auth()->user()->hasPermission('create-agencies'))
 <button onclick="document.getElementById('createAgencyModal').classList.remove('hidden')" 
         class="px-2.5 py-1.5 sm:px-4 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-1.5 sm:space-x-2 transition-all whitespace-nowrap">
     <i data-lucide="building" class="w-4 h-4"></i>
     <span>Onboard Agency</span>
 </button>
+@endif
 @endsection
 
 @section('content')
@@ -117,13 +119,14 @@
 
                 <!-- Product Entitlements Section (Launchshop, CRM, Builder) -->
                 <div>
-                    <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Authorized SaaS Products (Click to Toggle Access)</span>
+                    <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Authorized SaaS Products @if(auth()->user()->hasPermission(['manage-product-access', 'edit-agencies']))(Click to Toggle Access)@endif</span>
                     <div class="flex flex-wrap gap-2">
                         @foreach($products as $prod)
                             @php
                                 $assigned = $agency->products->firstWhere('id', $prod->id);
                                 $isEnabled = $assigned && $assigned->pivot->status === 'enabled';
                             @endphp
+                            @if(auth()->user()->hasPermission(['manage-product-access', 'edit-agencies']))
                             <form action="{{ route('admin.agencies.toggle-product', [$agency, $prod]) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PATCH')
@@ -134,6 +137,12 @@
                                     <span>{{ $prod->name }}</span>
                                 </button>
                             </form>
+                            @else
+                            <div class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 border {{ $isEnabled ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-slate-50 text-slate-400 border-slate-200' }}">
+                                <i data-lucide="{{ $isEnabled ? 'check-circle-2' : 'circle' }}" class="w-3.5 h-3.5 {{ $isEnabled ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                                <span>{{ $prod->name }}</span>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -148,6 +157,7 @@
 
                     <div class="flex items-center space-x-2">
                         <!-- Re-import DB Tables button -->
+                        @if(auth()->user()->hasPermission(['edit-agencies', 'create-agencies']))
                         <form action="{{ route('admin.agencies.reprovision-db', $agency) }}" method="POST" class="inline">
                             @csrf
                             <button type="submit" 
@@ -157,14 +167,18 @@
                                 <span>Import Tables</span>
                             </button>
                         </form>
+                        @endif
 
                         <!-- Edit Agency Button (Task 3) -->
+                        @if(auth()->user()->hasPermission('edit-agencies'))
                         <button onclick="openEditAgencyModal({{ json_encode($agency) }})" 
                                 class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-indigo-700 font-bold border border-slate-200 transition-colors flex items-center space-x-1">
                             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                             <span>Edit</span>
                         </button>
+                        @endif
 
+                        @if(auth()->user()->hasPermission('delete-agencies'))
                         <form action="{{ route('admin.agencies.destroy', $agency) }}" method="POST" onsubmit="return confirm('Suspend/Remove agency {{ $agency->name }}?');">
                             @csrf
                             @method('DELETE')
@@ -172,6 +186,7 @@
                                 Remove
                             </button>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>

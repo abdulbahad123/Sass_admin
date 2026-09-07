@@ -76,6 +76,12 @@ class User extends Authenticatable
             return true;
         }
 
+        if (is_array($permission)) {
+            return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+                $query->whereIn('slug', $permission);
+            })->exists();
+        }
+
         return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
             $query->where('slug', $permission);
         })->exists();
