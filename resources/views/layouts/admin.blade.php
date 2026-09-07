@@ -85,50 +85,63 @@
 
         <!-- Navigation Links -->
         <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+            @if(auth()->user()->canAccessMenu('view-dashboard'))
             <a href="{{ route('admin.dashboard') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 mr-3"></i>
                 Dashboard
             </a>
+            @endif
 
+            @if(auth()->user()->canAccessMenu('view-agencies'))
             <a href="{{ route('admin.agencies.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.agencies.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="building-2" class="w-4 h-4 mr-3"></i>
                 Agencies
             </a>
+            @endif
 
+            @if(auth()->user()->canAccessMenu(['view-products', 'manage-product-access']))
             <a href="{{ route('admin.products.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.products.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="box" class="w-4 h-4 mr-3"></i>
                 Products Catalog
             </a>
+            @endif
 
-
-
+            @if(auth()->user()->canAccessMenu(['view-subscriptions', 'manage-subscriptions', 'view-billing', 'manage-billing', 'view-plans', 'create-plans', 'edit-plans', 'delete-plans']))
             <a href="{{ route('admin.subscriptions.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.subscriptions.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="receipt" class="w-4 h-4 mr-3"></i>
                 Subscriptions & Billing
             </a>
+            @endif
 
+            @if(auth()->user()->canAccessMenu(['view-settings', 'manage-settings']))
             <a href="{{ route('admin.profile.edit') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.profile.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="settings" class="w-4 h-4 mr-3"></i>
                 Profile & Settings
             </a>
+            @endif
 
+            @if(auth()->user()->canAccessMenu('view-audit-logs'))
             <a href="{{ route('admin.audit-logs.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.audit-logs.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="shield-check" class="w-4 h-4 mr-3"></i>
                 Audit Logs
             </a>
+            @endif
 
+            @if(auth()->user()->canAccessMenu(['view-team', 'manage-team', 'manage-roles']))
             <a href="{{ route('admin.staff.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.staff.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="users" class="w-4 h-4 mr-3"></i>
                 Staff Management
             </a>
+            @endif
 
+            @if(auth()->user()->canAccessMenu(['view-tickets', 'reply-tickets', 'assign-tickets', 'manage-tickets']))
             <a href="{{ route('admin.tickets.index') }}" 
                class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.tickets.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <div class="flex items-center">
@@ -142,6 +155,7 @@
                     </span>
                 @endif
             </a>
+            @endif
         </nav>
 
 
