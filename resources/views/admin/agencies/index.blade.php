@@ -88,17 +88,29 @@
                     </div>
                 @endif
 
-                <!-- Quotas & Domain -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <!-- Quotas, Price & Domain -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100/80">
-                        <span class="text-emerald-700/80 block text-[11px] font-bold uppercase tracking-wider">End-Clients Capacity</span>
+                        <span class="text-emerald-700/80 block text-[11px] font-bold uppercase tracking-wider">Clients Capacity</span>
                         <span class="font-extrabold text-emerald-800 text-xs mt-0.5 inline-flex items-center space-x-1">
-                            <i data-lucide="infinity" class="w-4 h-4 text-emerald-600"></i>
-                            <span>Unlimited Clients</span>
+                            @if($agency->max_clients >= 99999)
+                                <i data-lucide="infinity" class="w-4 h-4 text-emerald-600"></i>
+                                <span>Unlimited</span>
+                            @else
+                                <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
+                                <span>{{ number_format($agency->max_clients) }} Clients</span>
+                            @endif
+                        </span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-violet-50/70 border border-violet-100/80">
+                        <span class="text-violet-700/80 block text-[11px] font-bold uppercase tracking-wider">Agency Price</span>
+                        <span class="font-extrabold text-violet-800 text-xs mt-0.5 inline-flex items-center space-x-1">
+                            <i data-lucide="tag" class="w-3.5 h-3.5 text-violet-600"></i>
+                            <span>{{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($agency->subscription?->amount ?? 0) }}/mo</span>
                         </span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                        <span class="text-slate-400 block text-[11px]">Custom Branding Domain</span>
+                        <span class="text-slate-400 block text-[11px]">Custom Domain</span>
                         <span class="font-mono text-indigo-600 mt-0.5 block truncate">{{ $agency->custom_domain ?? 'Not configured' }}</span>
                     </div>
                 </div>
@@ -238,14 +250,15 @@
                 </div>
             </div>
 
-            <input type="hidden" name="max_clients" value="999999">
-            <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Select Subscription Plan</label>
-                <select name="plan_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
-                    @foreach($plans as $plan)
-                        <option value="{{ $plan->id }}">{{ $plan->name }} ({{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($plan->price_monthly, 0) }}/mo)</option>
-                    @endforeach
-                </select>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Monthly Subscription Price (₹)</label>
+                    <input type="number" name="price_monthly" placeholder="e.g. 2999" value="2999" step="1" min="0" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Allowed</label>
+                    <input type="number" name="max_clients" placeholder="e.g. 100 or 999999 for Unlimited" value="100" min="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                </div>
             </div>
 
             <div>
@@ -321,7 +334,17 @@
                 </div>
             </div>
 
-            <input type="hidden" id="ea_max_clients" name="max_clients" value="999999">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Monthly Subscription Price (₹)</label>
+                    <input type="number" id="ea_price_monthly" name="price_monthly" placeholder="e.g. 2999" step="1" min="0" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Max End-Clients Allowed</label>
+                    <input type="number" id="ea_max_clients" name="max_clients" placeholder="e.g. 100 or 999999 for Unlimited" min="1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                </div>
+            </div>
+
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Custom Domain</label>
                 <input type="text" id="ea_custom_domain" name="custom_domain" placeholder="app.agency.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
@@ -351,7 +374,8 @@
         document.getElementById('ea_owner_name').value = agency.owner_name || '';
         document.getElementById('ea_status').value = agency.status || 'active';
         document.getElementById('ea_custom_domain').value = agency.custom_domain || '';
-        document.getElementById('ea_max_clients').value = agency.max_clients || 50;
+        document.getElementById('ea_max_clients').value = agency.max_clients || 100;
+        document.getElementById('ea_price_monthly').value = (agency.subscription && agency.subscription.amount != null) ? agency.subscription.amount : 2999;
 
         document.getElementById('editAgencyModal').classList.remove('hidden');
     }

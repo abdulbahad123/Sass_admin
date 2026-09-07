@@ -69,7 +69,7 @@ class AgencyController extends Controller
             'custom_domain' => 'nullable|string|max:255',
             'primary_color' => 'nullable|string|max:20',
             'max_clients' => 'required|integer|min:1',
-            'plan_id' => 'nullable|exists:plans,id',
+            'price_monthly' => 'nullable|numeric|min:0',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
         ]);
@@ -109,18 +109,17 @@ class AgencyController extends Controller
             'status' => 'active',
         ]);
 
-        // Assign plan subscription
-        $plan = Plan::find($validated['plan_id'] ?? null) ?? $firstPlan;
-        if ($plan) {
-            Subscription::create([
-                'agency_id' => $agency->id,
-                'plan_id' => $plan->id,
-                'status' => 'active',
-                'billing_cycle' => 'monthly',
-                'amount' => $plan->price_monthly ?? 2999,
-                'starts_at' => now(),
-            ]);
-        }
+        // Assign subscription with custom monthly price
+        $priceMonthly = $validated['price_monthly'] ?? 2999;
+        $firstPlan = Plan::first();
+        Subscription::create([
+            'agency_id' => $agency->id,
+            'plan_id' => $firstPlan?->id ?? 1,
+            'status' => 'active',
+            'billing_cycle' => 'monthly',
+            'amount' => $priceMonthly,
+            'starts_at' => now(),
+        ]);
 
         // Assign products & provision dynamic database + Launchshop tables
         $dbService = new \App\Services\DatabaseProvisioningService();
@@ -183,6 +182,7 @@ class AgencyController extends Controller
             'primary_color' => 'nullable|string|max:20',
             'status' => 'required|in:active,pending,suspended',
             'max_clients' => 'required|integer|min:1',
+            'price_monthly' => 'nullable|numeric|min:0',
             'password' => 'nullable|string|min:6',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
@@ -202,6 +202,23 @@ class AgencyController extends Controller
         }
 
         $agency->update($validated);
+
+        if (isset($validated['price_monthly'])) {
+            $sub = $agency->subscription;
+            if ($sub) {
+                $sub->update(['amount' => $validated['price_monthly']]);
+            } else {
+                $firstPlan = Plan::first();
+                Subscription::create([
+                    'agency_id' => $agency->id,
+                    'plan_id' => $firstPlan?->id ?? 1,
+                    'status' => 'active',
+                    'billing_cycle' => 'monthly',
+                    'amount' => $validated['price_monthly'],
+                    'starts_at' => now(),
+                ]);
+            }
+        }
 
         // Update corresponding User account
         $agencyUser = User::where('agency_id', $agency->id)->first() ?? User::where('email', $agency->email)->first();
