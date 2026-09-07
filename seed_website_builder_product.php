@@ -1,117 +1,80 @@
 <?php
 
-$host = '127.0.0.1';
-$port = '3306';
-$dbName = 'sass_admin';
-$user = 'root';
-$passwords = ['', 'root'];
+require __DIR__ . '/vendor/autoload.php';
+$app = require_once __DIR__ . '/bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
 
-$pdo = null;
-foreach ($passwords as $pass) {
-    try {
-        $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset=utf8mb4";
-        $pdo = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-        ]);
-        break;
-    } catch (\Throwable $e) {
-        // try next password
-    }
-}
-
-if (!$pdo) {
-    // Try creating database if sass_admin does not exist yet
-    foreach ($passwords as $pass) {
-        try {
-            $dsn = "mysql:host={$host};port={$port};charset=utf8mb4";
-            $pdoRaw = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-            $pdoRaw->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            $pdoRaw->exec("USE `{$dbName}`;");
-            $pdo = $pdoRaw;
-            break;
-        } catch (\Throwable $e) {}
-    }
-}
-
-if (!$pdo) {
-    die("Error: Could not connect to MySQL server.\n");
-}
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 echo "=== SEEDING Website Builder Product ===\n";
 
-// Check if products table exists
-$stmt = $pdo->query("SHOW TABLES LIKE 'products'");
-$hasProductsTable = $stmt->fetch();
-
-if (!$hasProductsTable) {
-    echo "Creating 'products' table in {$dbName}...\n";
-    $pdo->exec("CREATE TABLE IF NOT EXISTS `products` (
-        `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-        `name` varchar(255) NOT NULL,
-        `slug` varchar(255) NOT NULL,
-        `tagline` varchar(255) DEFAULT NULL,
-        `description` text DEFAULT NULL,
-        `icon` varchar(50) DEFAULT 'fas fa-cubes',
-        `app_url` varchar(255) DEFAULT NULL,
-        `api_key` varchar(255) DEFAULT NULL,
-        `is_active` tinyint(1) NOT NULL DEFAULT 1,
-        `is_featured` tinyint(1) NOT NULL DEFAULT 1,
-        `created_at` timestamp NULL DEFAULT NULL,
-        `updated_at` timestamp NULL DEFAULT NULL,
-        PRIMARY KEY (`id`),
-        UNIQUE KEY `products_slug_unique` (`slug`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+try {
+    $pdo = DB::connection()->getPdo();
+    $dbName = DB::connection()->getDatabaseName();
+    echo "Connected to database: {$dbName}\n";
+} catch (\Throwable $e) {
+    die("Error connecting to database: " . $e->getMessage() . "\n");
 }
 
 // 1. Seed/Insert Launchshop if missing
-$stmt = $pdo->prepare("SELECT id FROM products WHERE slug = ?");
-$stmt->execute(['launchshop']);
-$launchshop = $stmt->fetch();
+$launchshop = DB::table('products')->where('slug', 'launchshop')->first();
 if (!$launchshop) {
-    $stmtIns = $pdo->prepare("INSERT INTO products (name, slug, tagline, description, icon, app_url, is_active, is_featured, api_key, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, 1, 1, ?, NOW(), NOW())");
-    $stmtIns->execute(['Launchshop', 'launchshop', 'E-Commerce Store Builder', 'White-label SaaS e-commerce platform for agencies', 'fas fa-store', 'https://launchshop.in', 'pk_' . bin2hex(random_bytes(12))]);
+    DB::table('products')->insert([
+        'name' => 'Launchshop',
+        'slug' => 'launchshop',
+        'tagline' => 'E-Commerce Store Builder',
+        'description' => 'White-label SaaS e-commerce platform for agencies',
+        'icon' => 'fas fa-store',
+        'app_url' => 'https://launchshop.in',
+        'is_active' => 1,
+        'is_featured' => 1,
+        'api_key' => 'pk_' . bin2hex(random_bytes(12)),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
     echo "Seeded 'Launchshop' product.\n";
 }
 
 // 2. Seed/Insert Website Builder if missing
-$stmt = $pdo->prepare("SELECT id FROM products WHERE slug = ?");
-$stmt->execute(['website-builder']);
-$wbProduct = $stmt->fetch();
+$wbProduct = DB::table('products')->where('slug', 'website-builder')->first();
 
 if ($wbProduct) {
     echo "Product 'Website Builder' already exists (ID: {$wbProduct->id}).\n";
     $wbId = $wbProduct->id;
 } else {
-    $stmtIns = $pdo->prepare("INSERT INTO products (name, slug, tagline, description, icon, app_url, is_active, is_featured, api_key, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, 1, 1, ?, NOW(), NOW())");
-    $stmtIns->execute([
-        'Website Builder',
-        'website-builder',
-        'No-Code Multi-Theme Page Builder & Portfolio Suite',
-        'Complete digital agency website builder & custom domain suite for agencies and clients',
-        'fas fa-cubes',
-        'https://cockroachjantaparty.top/website-builder',
-        'pk_' . bin2hex(random_bytes(12))
+    $wbId = DB::table('products')->insertGetId([
+        'name' => 'Website Builder',
+        'slug' => 'website-builder',
+        'tagline' => 'No-Code Multi-Theme Page Builder & Portfolio Suite',
+        'description' => 'Complete digital agency website builder & custom domain suite for agencies and clients',
+        'icon' => 'fas fa-cubes',
+        'app_url' => 'https://nooryak.in/website-builder',
+        'is_active' => 1,
+        'is_featured' => 1,
+        'api_key' => 'pk_' . bin2hex(random_bytes(12)),
+        'created_at' => now(),
+        'updated_at' => now(),
     ]);
-    $wbId = $pdo->lastInsertId();
     echo "Created product 'Website Builder' with ID: {$wbId}\n";
 }
 
 // 3. Assign Website Builder to existing agencies in agency_products pivot table
-$stmt = $pdo->query("SHOW TABLES LIKE 'agency_products'");
-$hasAgencyProducts = $stmt->fetch();
-
-if ($hasAgencyProducts && $wbId) {
-    $agencies = $pdo->query("SELECT id, name FROM agencies")->fetchAll();
-    foreach ($agencies as $a) {
-        $chk = $pdo->prepare("SELECT agency_id FROM agency_products WHERE agency_id = ? AND product_id = ?");
-        $chk->execute([$a->id, $wbId]);
-        if (!$chk->fetch()) {
-            $ins = $pdo->prepare("INSERT INTO agency_products (agency_id, product_id, status, created_at, updated_at) VALUES (?, ?, 'enabled', NOW(), NOW())");
-            $ins->execute([$a->id, $wbId]);
-            echo "Assigned 'Website Builder' product to Agency: {$a->name}\n";
-        }
+$agencies = DB::table('agencies')->get();
+foreach ($agencies as $a) {
+    $exists = DB::table('agency_products')->where('agency_id', $a->id)->where('product_id', $wbId)->exists();
+    if (!$exists) {
+        DB::table('agency_products')->insert([
+            'agency_id' => $a->id,
+            'product_id' => $wbId,
+            'status' => 'enabled',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        echo "Assigned 'Website Builder' product to Agency: {$a->name}\n";
     }
 }
 
 echo "=== SUCCESS! Website Builder product is seeded & assigned ===\n";
+
