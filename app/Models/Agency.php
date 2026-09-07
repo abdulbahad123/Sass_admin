@@ -181,9 +181,8 @@ class Agency extends Model
         $cleanProductSlug = Str::slug($productSlug);
         $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
 
-        if ($cleanProductSlug === 'website-builder') {
-            $scheme = request()->getScheme() ?: 'https';
-            return "{$scheme}://{$domain}/website-builder";
+        if ($cleanProductSlug === 'website-builder' || $cleanProductSlug === 'websitebuilder') {
+            return "https://websitebuilder.{$rootDomain}";
         }
 
         return "https://{$cleanProductSlug}.{$rootDomain}";

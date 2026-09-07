@@ -124,8 +124,8 @@ class ProductController extends Controller
         $dataToSign = "{$targetUser}|{$timestamp}|{$nonce}";
         $signature = hash_hmac('sha256', $dataToSign, $secret);
 
-        if ($slug === 'website-builder') {
-            $ssoUrl = "{$scheme}://{$currentHost}/website-builder/admin/sso-login?" . http_build_query([
+        if ($slug === 'website-builder' || $slug === 'websitebuilder') {
+            $ssoUrl = "https://websitebuilder.{$rootDomain}/admin/sso-login?" . http_build_query([
                 'user' => $targetUser,
                 'expires' => $timestamp,
                 'nonce' => $nonce,

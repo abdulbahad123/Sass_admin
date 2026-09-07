@@ -34,9 +34,8 @@ class Product extends Model
         $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
         $slug = $this->slug ?? \Illuminate\Support\Str::slug($this->name);
 
-        if ($slug === 'website-builder') {
-            $scheme = request()->getScheme() ?: 'https';
-            return "{$scheme}://{$domain}/website-builder";
+        if ($slug === 'website-builder' || $slug === 'websitebuilder') {
+            return "https://websitebuilder.{$rootDomain}";
         }
 
         return "https://{$slug}.{$rootDomain}";
