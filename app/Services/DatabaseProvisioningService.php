@@ -56,7 +56,7 @@ class DatabaseProvisioningService
 
         $schemaFile = $this->resolveSchemaFile($productSlug);
         if (!$schemaFile) {
-            throw new RuntimeException('Launchshop .sql template was not found. Place it in database/schema/launchshop_clean_template.sql');
+            throw new RuntimeException("SQL template for product '{$productSlug}' was not found. Place it in database/schema/");
         }
 
         // The SaaS MySQL user (bazaarwa_sass_admindb) is not auto-linked to new DBs.
@@ -64,27 +64,32 @@ class DatabaseProvisioningService
         $this->waitForTenantConnection($dbName);
 
         $tableCount = $this->countTables($dbName);
-        $hasPackages = false;
+        $hasRequiredTables = false;
+        $isWb = in_array(Str::slug($productSlug), ['website-builder', 'websitebuilder']);
+
         if ($tableCount > 0) {
             try {
                 config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
                 DB::purge('target_tenant_db');
-                $pkgCheck = DB::connection('target_tenant_db')->select("SHOW TABLES LIKE 'packages'");
-                $hasPackages = !empty($pkgCheck);
+                $checkTable = $isWb ? 'wb_customers' : 'packages';
+                $pkgCheck = DB::connection('target_tenant_db')->select("SHOW TABLES LIKE '{$checkTable}'");
+                $hasRequiredTables = !empty($pkgCheck);
             } catch (Throwable $e) {
-                $hasPackages = false;
+                $hasRequiredTables = false;
             }
         }
 
-        if ($tableCount > 0 && $hasPackages) {
-            Log::info("Database {$dbName} already has {$tableCount} tables including packages; ensuring template users are seeded...");
-            $this->seedTemplateUsersFromMainDb($dbName);
+        if ($tableCount > 0 && $hasRequiredTables) {
+            Log::info("Database {$dbName} already has {$tableCount} tables including required tables; skipping fresh schema import...");
+            if (!$isWb) {
+                $this->seedTemplateUsersFromMainDb($dbName);
+            }
             return;
         }
 
         $importedViaCli = $this->importSqlViaMysqlCli($dbName, $schemaFile);
 
-        if (!$importedViaCli || !$hasPackages) {
+        if (!$importedViaCli || !$hasRequiredTables) {
             $this->importSqlViaPhp($dbName, $schemaFile);
         }
 
@@ -97,8 +102,10 @@ class DatabaseProvisioningService
 
         Log::info("Populated {$tableCount} tables into {$dbName} from {$schemaFile}");
 
-        // Automatically seed template users (themes) into every new agency DB
-        $this->seedTemplateUsersFromMainDb($dbName);
+        // Automatically seed template users (themes) into every new agency DB (for Launchshop)
+        if (!$isWb) {
+            $this->seedTemplateUsersFromMainDb($dbName);
+        }
     }
 
     /**
@@ -471,11 +478,16 @@ class DatabaseProvisioningService
             database_path("schema/{$productSlug}_clean_template.sql"),
             database_path("schema/{$slug}_schema.sql"),
             database_path("schema/{$productSlug}_schema.sql"),
+            database_path('schema/website_builder_clean_template.sql'),
             database_path('schema/launchshop_clean_template.sql'),
             database_path('schema/launchshop_schema.sql'),
             base_path('bazaarwa_launchshop (1).sql'),
             base_path('bazaarwa_launchshop.sql'),
         ];
+
+        if (in_array($slug, ['website_builder', 'websitebuilder'])) {
+            array_unshift($candidates, database_path('schema/website_builder_clean_template.sql'));
+        }
 
         foreach ($candidates as $file) {
             if (is_file($file) && filesize($file) > 100) {

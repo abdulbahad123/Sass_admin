@@ -256,9 +256,31 @@ class AgencyController extends Controller
         }
 
         if (isset($validated['products'])) {
+            $dbService = new \App\Services\DatabaseProvisioningService();
             $syncData = [];
+            $hasDbCol = \Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name');
+
             foreach ($validated['products'] as $productId) {
-                $syncData[$productId] = ['status' => 'enabled'];
+                $product = Product::find($productId);
+                $existingPivot = $agency->products()->where('product_id', $productId)->first()?->pivot;
+                $dbName = $existingPivot->db_name ?? null;
+                $dbStatus = $existingPivot->db_status ?? 'active';
+
+                if (!$dbName && $product) {
+                    try {
+                        $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                        $dbStatus = 'active';
+                    } catch (\Throwable $e) {
+                        $dbStatus = 'failed';
+                    }
+                }
+
+                $pivotData = ['status' => 'enabled'];
+                if ($hasDbCol) {
+                    $pivotData['db_name'] = $dbName;
+                    $pivotData['db_status'] = $dbStatus;
+                }
+                $syncData[$productId] = $pivotData;
             }
             $agency->products()->sync($syncData);
         }
@@ -280,13 +302,36 @@ class AgencyController extends Controller
             abort(403, 'Access Denied: You do not have permission to manage product access.');
         }
 
+        $dbService = new \App\Services\DatabaseProvisioningService();
         $pivot = $agency->products()->where('product_id', $product->id)->first();
+        $hasDbCol = \Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name');
 
         if ($pivot) {
             $newStatus = $pivot->pivot->status === 'enabled' ? 'disabled' : 'enabled';
-            $agency->products()->updateExistingPivot($product->id, ['status' => $newStatus]);
+            $dbName = $pivot->pivot->db_name ?? null;
+            if (!$dbName && $newStatus === 'enabled') {
+                try {
+                    $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                } catch (\Throwable $e) {}
+            }
+            $updateData = ['status' => $newStatus];
+            if ($hasDbCol && $dbName) {
+                $updateData['db_name'] = $dbName;
+                $updateData['db_status'] = 'active';
+            }
+            $agency->products()->updateExistingPivot($product->id, $updateData);
         } else {
-            $agency->products()->attach($product->id, ['status' => 'enabled']);
+            $dbName = null;
+            try {
+                $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+            } catch (\Throwable $e) {}
+
+            $attachData = ['status' => 'enabled'];
+            if ($hasDbCol) {
+                $attachData['db_name'] = $dbName;
+                $attachData['db_status'] = $dbName ? 'active' : 'failed';
+            }
+            $agency->products()->attach($product->id, $attachData);
             $newStatus = 'enabled';
         }
 
