@@ -43,7 +43,7 @@
                 </div>
                 <div class="text-right">
                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Clients</p>
-                    <h3 class="text-3xl font-extrabold text-slate-900 font-heading mt-1">{{ number_format($totalClientsEstimate) }}</h3>
+                    <h3 class="text-3xl font-extrabold text-slate-900 font-heading mt-1">{{ is_numeric($totalClientsEstimate) ? number_format($totalClientsEstimate) : $totalClientsEstimate }}</h3>
                 </div>
             </div>
             <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">

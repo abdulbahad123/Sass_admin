@@ -18,7 +18,15 @@ class DashboardController extends Controller
         $totalAgencies = Agency::count();
         $masterAgenciesCount = Agency::where('type', 'master')->count();
         $whiteLabelAgenciesCount = Agency::where('type', 'white_label')->count();
-        $totalClientsEstimate = Agency::sum('max_clients');
+        $limitedClientsSum = Agency::where('max_clients', '<', 99999)->sum('max_clients');
+        $unlimitedAgenciesCount = Agency::where('max_clients', '>=', 99999)->count();
+        if ($limitedClientsSum > 0) {
+            $totalClientsEstimate = $limitedClientsSum;
+        } elseif ($unlimitedAgenciesCount > 0) {
+            $totalClientsEstimate = 'Unlimited';
+        } else {
+            $totalClientsEstimate = 0;
+        }
 
         $activeSubscriptions = Subscription::where('status', 'active')->count();
         $monthlyRevenue = Subscription::where('status', 'active')

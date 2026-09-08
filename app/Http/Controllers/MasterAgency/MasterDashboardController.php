@@ -34,7 +34,15 @@ class MasterDashboardController extends Controller
             ->get();
 
         $totalSubAgencies = $subAgencies->count();
-        $totalClients = $subAgencies->sum('max_clients');
+        $limitedSubClients = $subAgencies->where('max_clients', '<', 99999)->sum('max_clients');
+        $unlimitedSubCount = $subAgencies->where('max_clients', '>=', 99999)->count();
+        if ($limitedSubClients > 0) {
+            $totalClients = $limitedSubClients;
+        } elseif ($unlimitedSubCount > 0) {
+            $totalClients = 'Unlimited';
+        } else {
+            $totalClients = 0;
+        }
         
         $mrr = 0;
         $activeSubscriptions = 0;
