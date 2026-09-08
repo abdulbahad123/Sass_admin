@@ -637,9 +637,8 @@ class DatabaseProvisioningService
         $pdo->exec('SET NAMES utf8mb4');
 
         $content = file_get_contents($schemaFile);
-        $content = str_replace("\r\n", "\n", $content);
 
-        $statements = preg_split('/;\n(?=(?:CREATE TABLE|INSERT INTO|DROP TABLE|LOCK TABLES|UNLOCK TABLES|ALTER TABLE|\/\*!|--))/i', $content);
+        $statements = preg_split('/;\s*[\r\n]+/', $content);
         $executed = 0;
 
         try {
