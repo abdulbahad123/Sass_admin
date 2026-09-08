@@ -254,6 +254,34 @@ CREATE TABLE IF NOT EXISTS `wb_sections` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Base Table 8: roles
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `permissions` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Base Table 9: payment_gateways
+CREATE TABLE IF NOT EXISTS `payment_gateways` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `subtitle` text DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `details` text DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `information` text DEFAULT NULL,
+  `keyword` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `payment_gateways` (`id`, `title`, `name`, `type`, `keyword`, `status`, `information`) VALUES
+(1, 'Razorpay', 'Razorpay', 'automatic', 'razorpay', 1, '{"key":"rzp_test_samplekey123","secret":"sample_secret_key_456","currency":"INR","status":1}')
+ON DUPLICATE KEY UPDATE `status` = 1;
+
 -- Table 8: wb_agency_settings
 CREATE TABLE IF NOT EXISTS `wb_agency_settings` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -278,12 +306,14 @@ CREATE TABLE IF NOT EXISTS `wb_agency_settings` (
   `testimonials_data` json DEFAULT NULL,
   `about_hero_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `about_hero_subtitle` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `about_hero_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'assets/website_builder/agency_team_meeting.png',
   `story_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `story_text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mission_vision_data` json DEFAULT NULL,
   `team_members_data` json DEFAULT NULL,
   `contact_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `contact_subtitle` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'assets/website_builder/Templates/Digital_agency/contact_footer.png',
   `faqs_data` json DEFAULT NULL,
   `social_links` json DEFAULT NULL,
   `footer_text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
