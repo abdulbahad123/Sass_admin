@@ -36,7 +36,8 @@ class DatabaseProvisioningService
         $cleanAgencySlug = str_replace('-', '_', substr($agencySlug, 0, 16));
         $cleanProductSlug = str_replace('-', '_', substr($productSlug, 0, 12));
 
-        $dbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
+        $rawDbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
+        $dbName = substr($rawDbName, 0, 32);
 
         $this->createDatabase($dbName);
 
