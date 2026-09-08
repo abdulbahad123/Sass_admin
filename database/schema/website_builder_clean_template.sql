@@ -3,6 +3,106 @@ SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET NAMES utf8mb4;
 
+-- Base Table 1: admins
+CREATE TABLE IF NOT EXISTS `admins` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `admins` (`id`, `role_id`, `username`, `email`, `first_name`, `last_name`, `image`, `password`, `status`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'Admin1@Launchshop', 'admin@example.com', 'Launchshop', 'Admin', NULL, '$2y$10$gcG9UIs4OvLNlxKQ9UWNyeX4XfF8hw0yhDsOK3usRNSaD.4sCfQrG', 1, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `updated_at` = NOW();
+
+-- Base Table 2: languages
+CREATE TABLE IF NOT EXISTS `languages` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `is_default` tinyint(4) NOT NULL DEFAULT 0,
+  `rtl` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `languages` (`id`, `name`, `code`, `is_default`, `rtl`, `created_at`, `updated_at`) VALUES
+(1, 'English', 'en', 1, 0, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `updated_at` = NOW();
+
+-- Base Table 3: basic_settings
+CREATE TABLE IF NOT EXISTS `basic_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `language_id` int(11) DEFAULT NULL,
+  `website_title` varchar(255) DEFAULT 'Website Builder',
+  `base_color` varchar(30) DEFAULT '6366f1',
+  `base_color_2` varchar(255) DEFAULT '8b5cf6',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `basic_settings` (`id`, `language_id`, `website_title`, `base_color`, `base_color_2`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Website Builder', '6366f1', '8b5cf6', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `updated_at` = NOW();
+
+-- Base Table 4: basic_extendeds
+CREATE TABLE IF NOT EXISTS `basic_extendeds` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `language_id` int(11) DEFAULT NULL,
+  `timezone` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `basic_extendeds` (`id`, `language_id`, `timezone`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Asia/Kolkata', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `updated_at` = NOW();
+
+-- Base Table 5: socials
+CREATE TABLE IF NOT EXISTS `socials` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `icon` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `serial_number` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Base Table 6: users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Base Table 7: packages
+CREATE TABLE IF NOT EXISTS `packages` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT 0.00,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Table 1: wb_landing_settings
 CREATE TABLE IF NOT EXISTS `wb_landing_settings` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
