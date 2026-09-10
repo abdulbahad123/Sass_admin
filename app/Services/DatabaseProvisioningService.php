@@ -431,6 +431,7 @@ class DatabaseProvisioningService
             $appUser,
             $launchshopUser,
             'bazaarwa_launchshop',
+            'bazaarwa_launchshopdevuser',
             'bazaarwa_sass_admindb',
             env('CPANEL_DB_USER'),
             $cpanelUser,
