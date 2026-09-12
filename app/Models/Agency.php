@@ -251,16 +251,6 @@ class Agency extends Model
 
     public function getParsedPricingPlansAttribute()
     {
-        if (!empty($this->pricing_plans_data)) {
-            $decoded = is_array($this->pricing_plans_data)
-                ? $this->pricing_plans_data
-                : (json_decode($this->pricing_plans_data, true) ?: []);
-            if (!empty($decoded)) {
-                return $decoded;
-            }
-        }
-
-        // Auto-generate defaults from enabled products matching 3rd reference image
         $productDefaults = [
             'launchshop'       => [
                 'color' => '#ea580c',
@@ -280,10 +270,10 @@ class Agency extends Model
                 'plan_subtitle' => 'Everything you need to start your online business.',
                 'price_monthly' => '499',
                 'price_yearly' => '4999',
-                'trust_count' => 'Trusted by 10,000+ Sellers',
+                'trust_count' => '',
                 'is_popular' => false,
                 'features' => ['1 Online Store (Product Module)', 'Up to 1,000 Orders / Customers', 'Inventory & Order Management', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Domain Setup'],
-                'cta_text' => 'Get Started with Ecom Builder →',
+                'cta_text' => 'View Details →',
                 'cta_subnote' => 'No credit card required • Setup in minutes',
             ],
             'website-builder'  => [
@@ -304,10 +294,10 @@ class Agency extends Model
                 'plan_subtitle' => 'All the tools to create, manage, and grow your professional website.',
                 'price_monthly' => '1499',
                 'price_yearly' => '14999',
-                'trust_count' => 'Trusted by 50,000+ Creators',
+                'trust_count' => '',
                 'is_popular' => true,
                 'features' => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
-                'cta_text' => 'Start 14-Day Free Trial →',
+                'cta_text' => 'View Details →',
                 'cta_subnote' => 'No credit card required • Cancel anytime',
             ],
             'websitebuilder'   => [
@@ -328,15 +318,49 @@ class Agency extends Model
                 'plan_subtitle' => 'All the tools to create, manage, and grow your professional website.',
                 'price_monthly' => '1499',
                 'price_yearly' => '14999',
-                'trust_count' => 'Trusted by 50,000+ Creators',
+                'trust_count' => '',
                 'is_popular' => true,
                 'features' => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
-                'cta_text' => 'Start 14-Day Free Trial →',
+                'cta_text' => 'View Details →',
                 'cta_subnote' => 'No credit card required • Cancel anytime',
             ],
-            'ai-reviews'       => ['color' => '#7c3aed', 'gradient' => 'linear-gradient(135deg,#7c3aed,#6d28d9)', 'icon' => 'star', 'plan_badge' => 'GROWTH PLAN', 'plan_badge_bg' => '#ede9fe', 'plan_badge_color' => '#6d28d9', 'plan_name' => 'Growth Plan', 'price_monthly' => '999', 'price_yearly' => '9999', 'trust_count' => 'Trusted by 8,000+ Businesses', 'is_popular' => false, 'features' => ['AI Review Responses', 'Multi-Platform Reviews', 'Customer CRM', 'Reputation Reports', 'Smart Automations'], 'cta_text' => 'Get Started Free →', 'cta_subnote' => 'No setup fees'],
-            'vcard'            => ['color' => '#059669', 'gradient' => 'linear-gradient(135deg,#059669,#047857)', 'icon' => 'user', 'plan_badge' => 'STARTER TIER', 'plan_badge_bg' => '#d1fae5', 'plan_badge_color' => '#059669', 'plan_name' => 'Business Card Pro', 'price_monthly' => '299', 'price_yearly' => '2999', 'trust_count' => 'Trusted by 20,000+ Professionals', 'is_popular' => false, 'features' => ['Digital V-Card', 'QR Code Sharing', 'Analytics Dashboard', 'Custom Branding', 'Unlimited Shares'], 'cta_text' => 'Get Started Free →', 'cta_subnote' => 'Setup in 2 minutes'],
+            'ai-reviews'       => ['color' => '#7c3aed', 'gradient' => 'linear-gradient(135deg,#7c3aed,#6d28d9)', 'icon' => 'star', 'plan_badge' => 'GROWTH PLAN', 'plan_badge_bg' => '#ede9fe', 'plan_badge_color' => '#6d28d9', 'plan_name' => 'Growth Plan', 'price_monthly' => '999', 'price_yearly' => '9999', 'trust_count' => '', 'is_popular' => false, 'features' => ['AI Review Responses', 'Multi-Platform Reviews', 'Customer CRM', 'Reputation Reports', 'Smart Automations'], 'cta_text' => 'View Details →', 'cta_subnote' => 'No setup fees'],
+            'vcard'            => ['color' => '#059669', 'gradient' => 'linear-gradient(135deg,#059669,#047857)', 'icon' => 'user', 'plan_badge' => 'STARTER TIER', 'plan_badge_bg' => '#d1fae5', 'plan_badge_color' => '#059669', 'plan_name' => 'Business Card Pro', 'price_monthly' => '299', 'price_yearly' => '2999', 'trust_count' => '', 'is_popular' => false, 'features' => ['Digital V-Card', 'QR Code Sharing', 'Analytics Dashboard', 'Custom Branding', 'Unlimited Shares'], 'cta_text' => 'View Details →', 'cta_subnote' => 'Setup in 2 minutes'],
         ];
+
+        if (!empty($this->pricing_plans_data)) {
+            $decoded = is_array($this->pricing_plans_data)
+                ? $this->pricing_plans_data
+                : (json_decode($this->pricing_plans_data, true) ?: []);
+            if (!empty($decoded)) {
+                foreach ($decoded as $idx => &$plan) {
+                    $slug = strtolower(trim($plan['product_slug'] ?? Str::slug($plan['product_name'] ?? '')));
+                    if (empty($slug)) {
+                        $slug = ($idx === 0) ? 'launchshop' : (($idx === 1) ? 'websitebuilder' : 'product');
+                    }
+                    $isEcom = ($slug === 'launchshop' || str_contains($slug, 'ecom') || str_contains(strtolower($plan['product_name'] ?? ''), 'ecom'));
+                    if (empty($plan['product_logo'])) {
+                        $plan['product_logo'] = $isEcom ? 'assets/landing_page/ecom_logo.png' : 'assets/landing_page/websitebuilder_logo.png';
+                    }
+                    if (empty($plan['product_image'])) {
+                        $plan['product_image'] = $isEcom ? 'assets/landing_page/ecombuilder_image.png' : 'assets/landing_page/websitebuilder_image.png';
+                    }
+                    if (empty($plan['left_bg'])) {
+                        $plan['left_bg'] = $isEcom ? '#fff5ee' : '#f0f6ff';
+                    }
+                    if (empty($plan['product_tagline'])) {
+                        $plan['product_tagline'] = $isEcom ? 'Build • Sell • Grow' : 'Design • Build • Grow';
+                    }
+                    if (empty($plan['product_title'])) {
+                        $plan['product_title'] = $isEcom ? 'Complete E-Commerce Solution' : 'Professional Website Solution';
+                    }
+                    if (empty($plan['cta_text']) || $plan['cta_text'] === 'Get Started Free' || $plan['cta_text'] === 'Get Started') {
+                        $plan['cta_text'] = 'View Details →';
+                    }
+                }
+                return $decoded;
+            }
+        }
 
         $enabledProds = $this->enabled_products;
         $plans = [];
@@ -346,7 +370,7 @@ class Agency extends Model
                 'color' => '#6366f1', 'gradient' => 'linear-gradient(135deg,#6366f1,#4f46e5)', 'icon' => 'layers',
                 'plan_badge' => 'PRO PLAN', 'plan_badge_bg' => '#e0e7ff', 'plan_badge_color' => '#4f46e5',
                 'plan_name' => 'Growth Plan', 'price_monthly' => '799', 'price_yearly' => '7999',
-                'trust_count' => '5,000+ Users',
+                'trust_count' => '',
                 'is_popular' => false,
                 'features' => ['Full Product Access', 'Priority Support', 'Advanced Analytics', 'Custom Branding', 'Dedicated Manager'],
             ];
@@ -355,7 +379,7 @@ class Agency extends Model
                 'product_slug'     => $slug,
                 'product_tagline'  => $prod->tagline ?? 'Smart Business Tool',
                 'product_subtitle' => $prod->description ?? 'Powerful tools to grow your business.',
-                'cta_text'         => 'Get Started Free →',
+                'cta_text'         => 'View Details →',
                 'cta_url'          => $this->cta_url ?? '/login',
             ], $def);
         }
@@ -383,10 +407,10 @@ class Agency extends Model
                     'plan_subtitle' => 'Everything you need to start your online business.',
                     'price_monthly' => '499',
                     'price_yearly' => '4999',
-                    'trust_count' => 'Trusted by 10,000+ Sellers',
+                    'trust_count' => '',
                     'is_popular' => false,
                     'features' => ['1 Online Store (Product Module)', 'Up to 1,000 Orders / Customers', 'Inventory & Order Management', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Domain Setup'],
-                    'cta_text' => 'Get Started with Ecom Builder →',
+                    'cta_text' => 'View Details →',
                     'cta_subnote' => 'No credit card required • Setup in minutes',
                     'cta_url' => $this->cta_url ?? '/login',
                 ],
@@ -410,10 +434,10 @@ class Agency extends Model
                     'plan_subtitle' => 'All the tools to create, manage, and grow your professional website.',
                     'price_monthly' => '1499',
                     'price_yearly' => '14999',
-                    'trust_count' => 'Trusted by 50,000+ Creators',
+                    'trust_count' => '',
                     'is_popular' => true,
                     'features' => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
-                    'cta_text' => 'Start 14-Day Free Trial →',
+                    'cta_text' => 'View Details →',
                     'cta_subnote' => 'No credit card required • Cancel anytime',
                     'cta_url' => $this->cta_url ?? '/login',
                 ],

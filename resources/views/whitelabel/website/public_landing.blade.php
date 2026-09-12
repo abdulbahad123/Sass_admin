@@ -741,9 +741,24 @@
                 $isPopular    = !empty($plan['is_popular']);
                 $planFeatures = $plan['features'] ?? [];
                 
-                // Resolving logo and mockup image paths correctly
-                $logoImgPath  = !empty($plan['product_logo']) ? asset($plan['product_logo']) : null;
-                $mockupImgPath= !empty($plan['product_image']) ? asset($plan['product_image']) : null;
+                $pSlugLower   = strtolower($plan['product_slug'] ?? \Illuminate\Support\Str::slug($plan['product_name'] ?? ''));
+                $isEcom       = $loop->first || str_contains($pSlugLower, 'launch') || str_contains($pSlugLower, 'ecom') || str_contains(strtolower($plan['product_name'] ?? ''), 'ecom');
+
+                // Image path fallbacks (ensuring images load on all subdomains like checkout.youverse.in)
+                $rawLogo   = !empty($plan['product_logo'])  ? $plan['product_logo']  : ($isEcom ? 'assets/landing_page/ecom_logo.png' : 'assets/landing_page/websitebuilder_logo.png');
+                $rawMockup = !empty($plan['product_image']) ? $plan['product_image'] : ($isEcom ? 'assets/landing_page/ecombuilder_image.png' : 'assets/landing_page/websitebuilder_image.png');
+
+                $logoImgPath   = str_starts_with($rawLogo, 'http')   ? $rawLogo   : asset(ltrim($rawLogo, '/'));
+                $mockupImgPath = str_starts_with($rawMockup, 'http') ? $rawMockup : asset(ltrim($rawMockup, '/'));
+
+                // Dynamic Product Landing Page Link Resolution
+                if ($isEcom) {
+                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecom.youverse.in';
+                } elseif (str_contains($pSlugLower, 'website')) {
+                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.youverse.in';
+                } else {
+                    $prodLink = !empty($plan['cta_url']) && $plan['cta_url'] !== '/login' ? $plan['cta_url'] : (isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : '/login');
+                }
             @endphp
 
             <div style="border-radius:24px; overflow:hidden; border:1.5px solid {{ $isPopular ? '#3b82f6' : '#e2e8f0' }}; box-shadow:0 12px 40px rgba(0,0,0,.06); display:grid; grid-template-columns:1fr 1fr; background:#fff; transition:transform .3s, box-shadow .3s;"
@@ -751,15 +766,15 @@
                  onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.06)'">
 
                 {{-- LEFT PANEL: Product Visual & Branding --}}
-                <div style="background:{{ $leftBg }}; padding:32px 24px; display:flex; flex-direction:column; justify-content:space-between; border-right:1px solid rgba(226,232,240,0.8); position:relative;">
+                <div style="background:{{ $leftBg }}; padding:36px 28px; display:flex; flex-direction:column; justify-content:space-between; border-right:1px solid rgba(226,232,240,0.8); position:relative;">
                     
                     <div>
-                        {{-- Product Logo / Name --}}
-                        <div style="margin-bottom:12px; min-height:40px; display:flex; align-items:center;">
+                        {{-- Product Logo --}}
+                        <div style="margin-bottom:14px; min-height:55px; display:flex; align-items:center;">
                             @if(!empty($logoImgPath))
-                            <img src="{{ $logoImgPath }}" alt="{{ $plan['product_name'] ?? 'Product' }}" style="height:36px; max-width:180px; object-fit:contain;">
+                            <img src="{{ $logoImgPath }}" alt="{{ $plan['product_name'] ?? 'Product' }}" style="height:52px; max-width:220px; object-fit:contain;">
                             @else
-                            <h3 style="font-family:'Outfit',sans-serif; font-size:22px; font-weight:900; color:#0f172a; margin:0;">
+                            <h3 style="font-family:'Outfit',sans-serif; font-size:24px; font-weight:900; color:#0f172a; margin:0;">
                                 {{ $plan['product_name'] ?? 'Product' }}
                             </h3>
                             @endif
@@ -767,39 +782,31 @@
 
                         {{-- Tagline Bullets --}}
                         @if(!empty($plan['product_tagline']))
-                        <div style="font-size:11.5px; font-weight:800; color:{{ $planColor }}; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">
+                        <div style="font-size:12px; font-weight:800; color:{{ $planColor }}; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">
                             {{ $plan['product_tagline'] }}
                         </div>
                         @endif
 
                         {{-- Product Title --}}
-                        <h4 style="font-family:'Outfit',sans-serif; font-size:17px; font-weight:900; color:#0f172a; margin:0 0 6px; line-height:1.25;">
+                        <h4 style="font-family:'Outfit',sans-serif; font-size:18px; font-weight:900; color:#0f172a; margin:0 0 6px; line-height:1.25;">
                             {{ $plan['product_title'] ?? ($plan['product_name'] . ' Solution') }}
                         </h4>
 
                         {{-- Subtitle Paragraph --}}
                         @if(!empty($plan['product_subtitle']))
-                        <p style="font-size:12px; color:#64748b; line-height:1.6; margin:0;">
+                        <p style="font-size:12.5px; color:#64748b; line-height:1.6; margin:0;">
                             {{ $plan['product_subtitle'] }}
                         </p>
                         @endif
 
-                        {{-- Center Product Image Mockup --}}
+                        {{-- Center Product Image Mockup (Prominent & Clear) --}}
                         @if(!empty($mockupImgPath))
-                        <div style="margin-top:20px; text-align:center;">
+                        <div style="margin-top:24px; text-align:center;">
                             <img src="{{ $mockupImgPath }}" alt="{{ $plan['product_name'] ?? '' }}"
-                                 style="width:100%; max-height:170px; object-fit:contain; border-radius:12px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));">
+                                 style="width:100%; max-height:240px; object-fit:contain; border-radius:14px; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.12));">
                         </div>
                         @endif
                     </div>
-
-                    {{-- Bottom Trust Pill --}}
-                    @if(!empty($plan['trust_count']))
-                    <div style="margin-top:20px; background:#fff; border:1px solid #e2e8f0; border-radius:999px; padding:6px 14px; font-size:11px; font-weight:800; color:#475569; display:inline-flex; align-items:center; gap:8px; width:fit-content; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
-                        <i data-lucide="users" style="width:14px; height:14px; color:{{ $planColor }};"></i>
-                        <span>{{ $plan['trust_count'] }}</span>
-                    </div>
-                    @endif
                 </div>
 
                 {{-- RIGHT PANEL: Plan & Pricing Details --}}
@@ -857,13 +864,13 @@
                         </ul>
                     </div>
 
-                    {{-- CTA Button & Subnote --}}
+                    {{-- CTA Button (View Details -> Product Landing Page) --}}
                     <div>
-                        <a href="{{ $plan['cta_url'] ?? ($agencyGet('cta_url') ?? '/login') }}"
-                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $planGradient }}; color:#fff; font-weight:800; font-size:13px; padding:13px 20px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s;"
+                        <a href="{{ $prodLink }}" target="_blank"
+                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $planGradient }}; color:#fff; font-weight:800; font-size:13.5px; padding:14px 22px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span>{{ $plan['cta_text'] ?? 'Get Started →' }}</span>
+                            <span>View Details →</span>
                         </a>
                         @if(!empty($plan['cta_subnote']))
                         <div style="text-align:center; font-size:10.5px; color:#94a3b8; font-weight:600; margin-top:7px;">
