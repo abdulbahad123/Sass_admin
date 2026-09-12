@@ -402,21 +402,33 @@ class WhiteLabelWebsiteController extends Controller
         $trustBar        = $request->input('pricing_trust_bar', '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses');
 
         // Build per-product plan array from repeater inputs
-        $productNames    = $request->input('product_name', []);
-        $productTaglines = $request->input('product_tagline', []);
-        $productSubtitles= $request->input('product_subtitle', []);
-        $productColors   = $request->input('product_color', []);
-        $productGrads    = $request->input('product_gradient', []);
-        $productIcons    = $request->input('product_icon', []);
-        $planBadges      = $request->input('plan_badge', []);
-        $planNames       = $request->input('plan_name', []);
-        $pricesMonthly   = $request->input('price_monthly', []);
-        $pricesYearly    = $request->input('price_yearly', []);
-        $trustCounts     = $request->input('trust_count', []);
-        $ctaTexts        = $request->input('cta_text', []);
-        $ctaUrls         = $request->input('cta_url', []);
-        $isPopulars      = $request->input('is_popular', []);
-        $featuresRaw     = $request->input('features', []);
+        $productNames     = $request->input('product_name', []);
+        $productLogos     = $request->input('product_logo', []);
+        $productImages    = $request->input('product_image', []);
+        $productTaglines  = $request->input('product_tagline', []);
+        $productTitles    = $request->input('product_title', []);
+        $productSubtitles = $request->input('product_subtitle', []);
+        $leftBgs          = $request->input('left_bg', []);
+        $productColors    = $request->input('product_color', []);
+        $productGrads     = $request->input('product_gradient', []);
+        $productIcons     = $request->input('product_icon', []);
+        $planBadges       = $request->input('plan_badge', []);
+        $planSubbadges    = $request->input('plan_subbadge', []);
+        $planNames        = $request->input('plan_name', []);
+        $planSubtitles    = $request->input('plan_subtitle', []);
+        $pricesMonthly    = $request->input('price_monthly', []);
+        $pricesYearly     = $request->input('price_yearly', []);
+        $trustCounts      = $request->input('trust_count', []);
+        $ctaTexts         = $request->input('cta_text', []);
+        $ctaSubnotes      = $request->input('cta_subnote', []);
+        $ctaUrls          = $request->input('cta_url', []);
+        $isPopulars       = $request->input('is_popular', []);
+        $featuresRaw      = $request->input('features', []);
+
+        $uploadDir = public_path('uploads/agency_pricing');
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
 
         $plans = [];
         for ($i = 0; $i < count($productNames); $i++) {
@@ -424,19 +436,45 @@ class WhiteLabelWebsiteController extends Controller
                 $featureLines = array_filter(
                     array_map('trim', explode("\n", $featuresRaw[$i] ?? ''))
                 );
+
+                // Handle product_logo file upload if provided
+                $logoPath = $productLogos[$i] ?? '';
+                if ($request->hasFile("product_logo_file.{$i}")) {
+                    $file = $request->file("product_logo_file.{$i}");
+                    $fileName = 'logo_' . time() . '_' . $i . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+                    $file->move($uploadDir, $fileName);
+                    $logoPath = 'uploads/agency_pricing/' . $fileName;
+                }
+
+                // Handle product_image mockup file upload if provided
+                $imagePath = $productImages[$i] ?? '';
+                if ($request->hasFile("product_image_file.{$i}")) {
+                    $file = $request->file("product_image_file.{$i}");
+                    $fileName = 'mockup_' . time() . '_' . $i . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
+                    $file->move($uploadDir, $fileName);
+                    $imagePath = 'uploads/agency_pricing/' . $fileName;
+                }
+
                 $plans[] = [
                     'product_name'     => $productNames[$i],
+                    'product_logo'     => $logoPath,
+                    'product_image'    => $imagePath,
                     'product_tagline'  => $productTaglines[$i]  ?? '',
+                    'product_title'    => $productTitles[$i]    ?? '',
                     'product_subtitle' => $productSubtitles[$i] ?? '',
-                    'color'            => $productColors[$i]    ?? '#6366f1',
-                    'gradient'         => $productGrads[$i]     ?? 'linear-gradient(135deg,#6366f1,#4f46e5)',
+                    'left_bg'          => $leftBgs[$i]          ?? '#fff5ee',
+                    'color'            => $productColors[$i]    ?? '#ea580c',
+                    'gradient'         => $productGrads[$i]     ?? 'linear-gradient(135deg,#f97316,#ea580c)',
                     'icon'             => $productIcons[$i]     ?? 'layers',
                     'plan_badge'       => $planBadges[$i]       ?? 'PRO PLAN',
+                    'plan_subbadge'    => $planSubbadges[$i]    ?? '',
                     'plan_name'        => $planNames[$i]        ?? '',
+                    'plan_subtitle'    => $planSubtitles[$i]    ?? '',
                     'price_monthly'    => $pricesMonthly[$i]    ?? '0',
                     'price_yearly'     => $pricesYearly[$i]     ?? '0',
                     'trust_count'      => $trustCounts[$i]      ?? '',
                     'cta_text'         => $ctaTexts[$i]         ?? 'Get Started',
+                    'cta_subnote'      => $ctaSubnotes[$i]      ?? '',
                     'cta_url'          => $ctaUrls[$i]          ?? ($agency->cta_url ?? '/login'),
                     'is_popular'       => !empty($isPopulars[$i]),
                     'features'         => array_values($featureLines),
