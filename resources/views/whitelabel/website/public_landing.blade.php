@@ -602,8 +602,11 @@
                 {{-- Right 3×2 product grid --}}
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px" class="prod-cards-3x2">
                     @foreach($services as $s)
-                        @php $ps = $pIconMap[$s['title']] ?? ['icon' => $s['icon'] ?? 'box', 'bg' => '#ede9fe', 'clr' => '#7c3aed']; @endphp
-                        <div class="prod-card" style="background:#fff; border:1px solid #f1f5f9; border-radius:20px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;">
+                        @php
+                            $ps = $pIconMap[$s['title']] ?? ['icon' => $s['icon'] ?? 'box', 'bg' => '#ede9fe', 'clr' => '#7c3aed'];
+                            $prodLink = !empty($s['link']) && $s['link'] !== '#' ? $s['link'] : (isset($agency) ? $agency->getProductSubdomainUrl($s['title']) : '#');
+                        @endphp
+                        <a href="{{ $prodLink }}" target="_blank" class="prod-card" style="display:block; text-decoration:none; background:#fff; border:1px solid #f1f5f9; border-radius:20px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;">
                             <div class="prod-card-top" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
                                 <div class="prod-icon" style="width:42px; height:42px; border-radius:12px; background:{{ $ps['bg'] }}; display:flex; align-items:center; justify-content:center;">
                                     <i data-lucide="{{ $ps['icon'] }}" style="width:20px; height:20px; color:{{ $ps['clr'] }}"></i>
@@ -616,7 +619,7 @@
                                 <h3 style="font-size:14px; font-weight:800; color:#0f172a; margin-bottom:6px">{{ $s['title'] }}</h3>
                                 <p style="font-size:12px; color:#64748b; line-height:1.6">{{ $s['desc'] }}</p>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             </div>
