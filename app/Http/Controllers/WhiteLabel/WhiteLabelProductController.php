@@ -14,7 +14,20 @@ class WhiteLabelProductController extends Controller
     {
         $user = Auth::user();
         $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
-        $products = Product::where('is_active', true)->get();
+        $agencyProducts = null;
+        if ($agency) {
+            $agencyProducts = $agency->products()
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereNull('agency_products.status')
+                      ->orWhere('agency_products.status', 'enabled');
+                })
+                ->get();
+        }
+
+        $products = ($agencyProducts && $agencyProducts->isNotEmpty()) 
+            ? $agencyProducts 
+            : Product::where('is_active', true)->get();
 
         return view('whitelabel.products.index', compact('user', 'agency', 'products'));
     }

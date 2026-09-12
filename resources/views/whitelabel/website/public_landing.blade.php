@@ -51,16 +51,29 @@
                 'customer_month'  => '+192 this month',
             ]);
 
-        $services = is_array($agency->services_data ?? null)
-            ? $agency->services_data
-            : (json_decode($agency->services_data ?? '[]', true) ?: [
-                ['title' => 'AI Reviews + CRM',    'desc' => 'Get more 5-star reviews & manage customers easily',     'icon' => 'star'],
-                ['title' => 'Website Builder',      'desc' => 'Create stunning websites in minutes with AI',           'icon' => 'monitor'],
-                ['title' => 'Digital V-Card',       'desc' => 'Share your business digitally, smartly',               'icon' => 'user'],
-                ['title' => 'QR Menu & Ordering',   'desc' => 'Contactless menu for restaurants & cafes',             'icon' => 'qr-code'],
-                ['title' => 'Loyalty Program',      'desc' => 'Reward your customers and increase repeat sales',      'icon' => 'gift'],
-                ['title' => 'Business Analytics',   'desc' => 'Track growth with real-time insights',                 'icon' => 'bar-chart-3'],
-            ]);
+        $dynamicProducts = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? $agency->enabled_products : collect();
+        if ($dynamicProducts->isNotEmpty() && empty($agency->services_data)) {
+            $services = [];
+            foreach ($dynamicProducts as $dp) {
+                $services[] = [
+                    'title' => $dp->name,
+                    'desc'  => $dp->tagline ?? $dp->description ?? 'White-label SaaS product suite enabled for your end-clients.',
+                    'icon'  => $dp->icon ?? 'box',
+                    'link'  => method_exists($agency, 'getProductSubdomainUrl') ? $agency->getProductSubdomainUrl($dp->slug ?? $dp->name) : '#',
+                ];
+            }
+        } else {
+            $services = is_array($agency->services_data ?? null)
+                ? $agency->services_data
+                : (json_decode($agency->services_data ?? '[]', true) ?: [
+                    ['title' => 'AI Reviews + CRM',    'desc' => 'Get more 5-star reviews & manage customers easily',     'icon' => 'star'],
+                    ['title' => 'Website Builder',      'desc' => 'Create stunning websites in minutes with AI',           'icon' => 'monitor'],
+                    ['title' => 'Digital V-Card',       'desc' => 'Share your business digitally, smartly',               'icon' => 'user'],
+                    ['title' => 'QR Menu & Ordering',   'desc' => 'Contactless menu for restaurants & cafes',             'icon' => 'qr-code'],
+                    ['title' => 'Loyalty Program',      'desc' => 'Reward your customers and increase repeat sales',      'icon' => 'gift'],
+                    ['title' => 'Business Analytics',   'desc' => 'Track growth with real-time insights',                 'icon' => 'bar-chart-3'],
+                ]);
+        }
 
         $testimonials = is_array($agency->testimonials_data ?? null)
             ? $agency->testimonials_data

@@ -228,6 +228,23 @@ class Agency extends Model
         return $this->belongsToMany(Product::class, 'agency_products')->withPivot($pivotColumns)->withTimestamps();
     }
 
+    public function getEnabledProductsAttribute()
+    {
+        $enabled = $this->products()
+            ->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('agency_products.status')
+                  ->orWhere('agency_products.status', 'enabled');
+            })
+            ->get();
+
+        if ($enabled->isNotEmpty()) {
+            return $enabled;
+        }
+
+        return Product::where('is_active', true)->get();
+    }
+
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
