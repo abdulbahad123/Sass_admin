@@ -736,7 +736,6 @@
             @foreach($pricingPlans as $plan)
             @php
                 $planColor    = $plan['color'] ?? '#ea580c';
-                $planGradient = $plan['gradient'] ?? 'linear-gradient(135deg,#f97316,#ea580c)';
                 $leftBg       = $plan['left_bg'] ?? ($loop->first ? '#fff5ee' : '#f0f6ff');
                 $isPopular    = !empty($plan['is_popular']);
                 $planFeatures = $plan['features'] ?? [];
@@ -758,6 +757,14 @@
                     $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.youverse.in';
                 } else {
                     $prodLink = !empty($plan['cta_url']) && $plan['cta_url'] !== '/login' ? $plan['cta_url'] : (isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : '/login');
+                }
+
+                // Vibrant CTA Button Gradient & Text Contrast Fix
+                $btnGradient = $isEcom 
+                    ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' 
+                    : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)';
+                if (!empty($plan['gradient']) && !str_contains($plan['gradient'], '#fff') && !str_contains($plan['gradient'], '#ffedd5') && !str_contains($plan['gradient'], '#f0f6ff') && !str_contains($plan['gradient'], '#e0e7ff')) {
+                    $btnGradient = $plan['gradient'];
                 }
             @endphp
 
@@ -867,10 +874,10 @@
                     {{-- CTA Button (View Details -> Product Landing Page) --}}
                     <div>
                         <a href="{{ $prodLink }}" target="_blank"
-                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $planGradient }}; color:#fff; font-weight:800; font-size:13.5px; padding:14px 22px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s;"
+                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:13.5px; padding:14px 22px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span>View Details →</span>
+                            <span style="color:#ffffff !important; font-weight:800; font-size:13.5px;">View Details →</span>
                         </a>
                         @if(!empty($plan['cta_subnote']))
                         <div style="text-align:center; font-size:10.5px; color:#94a3b8; font-weight:600; margin-top:7px;">

@@ -254,7 +254,7 @@ class Agency extends Model
         $productDefaults = [
             'launchshop'       => [
                 'color' => '#ea580c',
-                'gradient' => 'linear-gradient(135deg, #ffedd5 0%, #fff8f5 100%)',
+                'gradient' => 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
                 'left_bg' => '#fff5ee',
                 'product_logo' => 'assets/landing_page/ecom_logo.png',
                 'product_image' => 'assets/landing_page/ecombuilder_image.png',
@@ -278,7 +278,7 @@ class Agency extends Model
             ],
             'website-builder'  => [
                 'color' => '#2563eb',
-                'gradient' => 'linear-gradient(135deg, #e0e7ff 0%, #f0f6ff 100%)',
+                'gradient' => 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
                 'left_bg' => '#f0f6ff',
                 'product_logo' => 'assets/landing_page/websitebuilder_logo.png',
                 'product_image' => 'assets/landing_page/websitebuilder_image.png',
@@ -302,7 +302,7 @@ class Agency extends Model
             ],
             'websitebuilder'   => [
                 'color' => '#2563eb',
-                'gradient' => 'linear-gradient(135deg, #e0e7ff 0%, #f0f6ff 100%)',
+                'gradient' => 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
                 'left_bg' => '#f0f6ff',
                 'product_logo' => 'assets/landing_page/websitebuilder_logo.png',
                 'product_image' => 'assets/landing_page/websitebuilder_image.png',
