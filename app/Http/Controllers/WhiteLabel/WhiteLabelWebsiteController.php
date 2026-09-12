@@ -384,6 +384,83 @@ class WhiteLabelWebsiteController extends Controller
         return back()->with('success', 'Cookie Policy updated successfully!');
     }
 
+    public function pricing()
+    {
+        $user = Auth::user();
+        $agency = $this->getAgency();
+        $pricingPlans = $agency ? $agency->parsed_pricing_plans : [];
+        return view('whitelabel.website.pricing', compact('user', 'agency', 'pricingPlans'));
+    }
+
+    public function updatePricing(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $sectionTitle    = $request->input('pricing_section_title', 'Choose Your Perfect Plan');
+        $sectionSubtitle = $request->input('pricing_section_subtitle', 'Scale seamlessly with zero hidden fees.');
+        $trustBar        = $request->input('pricing_trust_bar', '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses');
+
+        // Build per-product plan array from repeater inputs
+        $productNames    = $request->input('product_name', []);
+        $productTaglines = $request->input('product_tagline', []);
+        $productSubtitles= $request->input('product_subtitle', []);
+        $productColors   = $request->input('product_color', []);
+        $productGrads    = $request->input('product_gradient', []);
+        $productIcons    = $request->input('product_icon', []);
+        $planBadges      = $request->input('plan_badge', []);
+        $planNames       = $request->input('plan_name', []);
+        $pricesMonthly   = $request->input('price_monthly', []);
+        $pricesYearly    = $request->input('price_yearly', []);
+        $trustCounts     = $request->input('trust_count', []);
+        $ctaTexts        = $request->input('cta_text', []);
+        $ctaUrls         = $request->input('cta_url', []);
+        $isPopulars      = $request->input('is_popular', []);
+        $featuresRaw     = $request->input('features', []);
+
+        $plans = [];
+        for ($i = 0; $i < count($productNames); $i++) {
+            if (!empty($productNames[$i])) {
+                $featureLines = array_filter(
+                    array_map('trim', explode("\n", $featuresRaw[$i] ?? ''))
+                );
+                $plans[] = [
+                    'product_name'     => $productNames[$i],
+                    'product_tagline'  => $productTaglines[$i]  ?? '',
+                    'product_subtitle' => $productSubtitles[$i] ?? '',
+                    'color'            => $productColors[$i]    ?? '#6366f1',
+                    'gradient'         => $productGrads[$i]     ?? 'linear-gradient(135deg,#6366f1,#4f46e5)',
+                    'icon'             => $productIcons[$i]     ?? 'layers',
+                    'plan_badge'       => $planBadges[$i]       ?? 'PRO PLAN',
+                    'plan_name'        => $planNames[$i]        ?? '',
+                    'price_monthly'    => $pricesMonthly[$i]    ?? '0',
+                    'price_yearly'     => $pricesYearly[$i]     ?? '0',
+                    'trust_count'      => $trustCounts[$i]      ?? '',
+                    'cta_text'         => $ctaTexts[$i]         ?? 'Get Started',
+                    'cta_url'          => $ctaUrls[$i]          ?? ($agency->cta_url ?? '/login'),
+                    'is_popular'       => !empty($isPopulars[$i]),
+                    'features'         => array_values($featureLines),
+                ];
+            }
+        }
+
+        $agency->update([
+            'pricing_plans_data'     => json_encode($plans),
+            'pricing_section_title'  => $sectionTitle,
+            'pricing_section_subtitle' => $sectionSubtitle,
+            'pricing_trust_bar'      => $trustBar,
+        ]);
+
+        AuditLog::create([
+            'user_id'   => auth()->id(),
+            'user_name' => auth()->user()->name ?? 'Agency Owner',
+            'action'    => "Updated pricing plans for {$agency->name}",
+            'ip_address'=> $request->ip(),
+        ]);
+
+        return back()->with('success', 'Pricing plans updated successfully!');
+    }
+
     public function preview()
     {
         $agency = $this->getAgency();

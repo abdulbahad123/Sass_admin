@@ -122,6 +122,21 @@
             'Loyalty Program'   => ['icon' => 'gift',         'bg' => '#fef3c7', 'clr' => '#d97706'],
             'Business Analytics'=> ['icon' => 'bar-chart-3',  'bg' => '#ccfbf1', 'clr' => '#0d9488'],
         ];
+
+        /* Pricing plans — from agency dashboard or auto-generated */
+        $pricingPlans = ($agency && method_exists($agency, 'getParsedPricingPlansAttribute'))
+            ? $agency->parsed_pricing_plans
+            : [];
+        if (empty($pricingPlans)) {
+            $pricingPlans = [
+                ['product_name' => 'ECOM BUILDER', 'product_tagline' => 'Online Store Builder', 'product_subtitle' => 'Launch your digital store in minutes.', 'color' => '#f97316', 'gradient' => 'linear-gradient(135deg,#f97316,#ea580c)', 'icon' => 'shopping-bag', 'plan_badge' => 'STARTER TIER', 'plan_name' => 'Starter Growth', 'price_monthly' => '499', 'price_yearly' => '4999', 'trust_count' => '10,000+ Sellers Trust Us', 'is_popular' => false, 'features' => ['1 Online Store', 'Up to 1,000 Products', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Subdomain Setup'], 'cta_text' => 'Get Started Free', 'cta_url' => $agency->cta_url ?? '/login'],
+                ['product_name' => 'Website Builder', 'product_tagline' => 'Professional Website Builder', 'product_subtitle' => 'Create stunning websites with AI in minutes.', 'color' => '#2563eb', 'gradient' => 'linear-gradient(135deg,#2563eb,#1d4ed8)', 'icon' => 'monitor', 'plan_badge' => 'MOST POPULAR', 'plan_name' => 'Professional Pro', 'price_monthly' => '1499', 'price_yearly' => '14999', 'trust_count' => '5,000+ Websites Live', 'is_popular' => true, 'features' => ['Drag & Drop Builder', 'Custom Domain', 'SEO Optimization', 'AI Content Generation', '24/7 Priority Support'], 'cta_text' => 'Start 14-Day Free Trial', 'cta_url' => $agency->cta_url ?? '/login'],
+            ];
+        }
+        $pricingSectionTitle    = $agency->pricing_section_title    ?? 'Choose Your Perfect Plan';
+        $pricingSectionSubtitle = $agency->pricing_section_subtitle ?? 'Scale seamlessly with zero hidden fees.';
+        $pricingTrustBarRaw     = $agency->pricing_trust_bar        ?? '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses';
+        $pricingTrustItems      = array_map('trim', explode(',', $pricingTrustBarRaw));
     @endphp
 
     <style>
@@ -284,6 +299,38 @@
             .cat-icon { font-size: 18px; }
             .header-inner { padding: 0 16px; }
         }
+
+        /* ── RESPONSIVE GRIDS ── */
+        @media(max-width: 1024px) {
+            .feat-grid { grid-template-columns: repeat(2,1fr) !important; }
+            .products-grid { grid-template-columns: 1fr !important; }
+            .products-grid > div:first-child { position: static !important; }
+        }
+        @media(max-width: 900px) {
+            .pricing-cards-outer { grid-template-columns: 1fr !important; }
+        }
+        @media(max-width: 860px) {
+            .hero-grid, .about-grid { grid-template-columns: 1fr !important; }
+            .rev-cards-3 { grid-template-columns: 1fr !important; }
+            .reviews-grid { grid-template-columns: 1fr !important; }
+            .steps-row { flex-direction: column !important; gap: 32px !important; }
+            .hiw-connector, .hiw-arrow-end { display: none !important; }
+        }
+        @media(max-width: 640px) {
+            .pricing-cards-outer > div { grid-template-columns: 1fr !important; }
+            .feat-grid { grid-template-columns: 1fr !important; }
+            .desktop-ctas > a:first-of-type { display: none; }
+        }
+        @media(min-width: 860px) {
+            .lg-nav { display: flex !important; align-items: center; gap: 24px; }
+            .mobile-ham { display: none !important; }
+            .desktop-ctas { display: flex !important; }
+        }
+        @media(max-width: 859px) {
+            .lg-nav { display: none !important; }
+            .mobile-ham { display: block !important; }
+        }
+
         html { scroll-behavior: smooth; }
     </style>
 </head>
@@ -627,158 +674,163 @@
     </div>
 </section>
 
-{{-- ══ PRODUCT-WISE PRICING PLANS SECTION ════════════════════════════════ --}}
-<section id="pricing" style="padding:64px 0 72px; background:#fff; border-top:1px solid #f1f5f9;" x-data="{ billing: 'monthly', selectedProduct: 'all' }">
+{{-- ══ PRICING PLANS — Split Product+Plan Card Layout ════════════════════════════ --}}
+<section id="pricing" style="padding:72px 0 80px; background:#f8fafc; border-top:1px solid #f1f5f9;" x-data="{ billing: 'monthly' }">
     <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
-        
+
         {{-- Section Header --}}
-        <div style="text-align:center; margin-bottom:44px; display:flex; flex-direction:column; align-items:center; gap:12px;">
-            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 16px; border-radius:999px; width:fit-content; letter-spacing:.02em;">
+        <div style="text-align:center; margin-bottom:52px; display:flex; flex-direction:column; align-items:center; gap:14px;">
+            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 18px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:6px;">
                 💎 Flexible Pricing Plans
             </span>
-            <h2 style="font-size:clamp(1.75rem,3.2vw,2.5rem); font-weight:900; color:#0f172a; letter-spacing:-.5px; margin:0;">
-                Product-Wise <span class="text-brand">Pricing & Plans</span>
+            <h2 style="font-size:clamp(1.8rem,3.5vw,2.7rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.1;">
+                {{ $pricingSectionTitle }}
             </h2>
-            <p style="font-size:14px; color:#64748b; max-width:560px; line-height:1.7; margin:0;">
-                Choose the right plan tailored specifically for your product needs. Scale seamlessly with zero hidden fees.
-            </p>
+            <p style="font-size:14px; color:#64748b; max-width:520px; line-height:1.75; margin:0;">{{ $pricingSectionSubtitle }}</p>
 
-            {{-- Product Filter Pills --}}
-            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:14px;" class="pricing-prod-pills">
-                <button @click="selectedProduct = 'all'" :class="selectedProduct === 'all' ? 'bg-indigo-600 text-white shadow-md font-extrabold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold'" style="padding:8px 18px; border-radius:999px; font-size:12px; border:none; cursor:pointer; transition:all .2s;">
-                    All Products
+            {{-- Monthly / Annual Billing Toggle --}}
+            <div style="display:inline-flex; align-items:center; gap:14px; background:#fff; border:1.5px solid #e2e8f0; padding:7px 18px; border-radius:999px; box-shadow:0 2px 8px rgba(0,0,0,.05);">
+                <span style="font-size:13px; font-weight:700; transition:color .2s;" :class="billing === 'monthly' ? 'color:#0f172a; font-weight:800' : ''" :style="billing === 'monthly' ? 'color:#0f172a; font-weight:800' : 'color:#94a3b8'">Monthly</span>
+                <button @click="billing = (billing === 'monthly' ? 'yearly' : 'monthly')" type="button"
+                        style="width:50px; height:27px; border-radius:999px; border:none; cursor:pointer; position:relative; padding:3px; transition:background .25s;"
+                        :style="billing === 'yearly' ? 'background:#4f46e5' : 'background:#cbd5e1'">
+                    <div style="width:21px; height:21px; border-radius:50%; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,.15); transition:transform .25s;"
+                         :style="billing === 'yearly' ? 'transform: translateX(23px)' : 'transform: translateX(0px)'"></div>
                 </button>
-                @foreach($services as $svc)
-                    <button @click="selectedProduct = '{{ Str::slug($svc['title']) }}'" :class="selectedProduct === '{{ Str::slug($svc['title']) }}' ? 'bg-indigo-600 text-white shadow-md font-extrabold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold'" style="padding:8px 18px; border-radius:999px; font-size:12px; border:none; cursor:pointer; transition:all .2s;">
-                        {{ $svc['title'] }}
-                    </button>
-                @endforeach
-            </div>
-
-            {{-- Monthly / Yearly Billing Toggle --}}
-            <div style="display:flex; align-items:center; gap:12px; background:#f8fafc; border:1px solid #e2e8f0; padding:6px 12px; border-radius:999px; margin-top:8px;">
-                <span style="font-size:13px; font-weight:700;" :class="billing === 'monthly' ? 'text-slate-900 font-extrabold' : 'text-slate-500'">Monthly Billing</span>
-                
-                <button @click="billing = (billing === 'monthly' ? 'yearly' : 'monthly')" type="button" style="width:48px; height:26px; border-radius:999px; background:#4f46e5; border:none; cursor:pointer; position:relative; padding:3px; transition:background .2s;">
-                    <div style="width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .2s;" :style="billing === 'yearly' ? 'transform: translateX(22px);' : 'transform: translateX(0px);'"></div>
-                </button>
-
-                <span style="font-size:13px; font-weight:700;" :class="billing === 'yearly' ? 'text-slate-900 font-extrabold' : 'text-slate-500'">
-                    Annual Billing
-                    <span style="background:#d1fae5; color:#059669; font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; margin-left:4px;">Save 20%</span>
+                <span style="font-size:13px; font-weight:700; display:flex; align-items:center; gap:7px;" :style="billing === 'yearly' ? 'color:#0f172a; font-weight:800' : 'color:#94a3b8'">
+                    Annual
+                    <span style="background:#d1fae5; color:#059669; font-size:10px; font-weight:800; padding:2px 9px; border-radius:999px;">Save 20%</span>
                 </span>
             </div>
         </div>
 
-        {{-- Pricing Cards Grid (3 Columns) --}}
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch;" class="pricing-cards-grid">
-            
-            {{-- Plan 1: Starter / Basic --}}
-            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:24px; padding:36px 28px; display:flex; flex-direction:column; justify-between:space-between; gap:24px; box-shadow:0 6px 24px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,.08)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 24px rgba(0,0,0,.03)'">
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                        <span style="background:#f1f5f9; color:#475569; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase;">Starter Tier</span>
-                        <span style="font-size:11px; font-weight:700; color:#64748b;">For Solopreneurs</span>
+        {{-- Product Plan Cards Grid --}}
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(520px, 1fr)); gap:28px;" class="pricing-cards-outer">
+
+            @foreach($pricingPlans as $plan)
+            @php
+                $planGradient = $plan['gradient'] ?? 'linear-gradient(135deg,#6366f1,#4f46e5)';
+                $planColor    = $plan['color']    ?? '#6366f1';
+                $isPopular    = !empty($plan['is_popular']);
+                $planFeatures = $plan['features'] ?? [];
+            @endphp
+
+            {{-- Each card = left brand panel + right plan panel --}}
+            <div style="border-radius:24px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,.08){{ $isPopular ? ',0 0 0 2.5px '.$planColor : '' }}; display:grid; grid-template-columns:1fr 1fr; transition:transform .3s, box-shadow .3s;"
+                 onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,.13){{ $isPopular ? ',0 0 0 2.5px '.$planColor : '' }}'"
+                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(0,0,0,.08){{ $isPopular ? ',0 0 0 2.5px '.$planColor : '' }}'">
+
+                {{-- LEFT: Product Brand Panel --}}
+                <div style="background:{{ $planGradient }}; padding:36px 28px; display:flex; flex-direction:column; gap:20px; position:relative; overflow:hidden;">
+
+                    {{-- Decorative pattern --}}
+                    <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,.08);"></div>
+                    <div style="position:absolute; bottom:-20px; left:-20px; width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,.06);"></div>
+
+                    {{-- Icon --}}
+                    <div style="width:52px; height:52px; border-radius:16px; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i data-lucide="{{ $plan['icon'] ?? 'layers' }}" style="width:26px; height:26px; color:#fff;"></i>
                     </div>
 
-                    <h3 style="font-size:20px; font-weight:900; color:#0f172a; margin:0;">Starter Growth</h3>
-                    <p style="font-size:12.5px; color:#64748b; margin:0; line-height:1.6;">Essential digital tools to launch your business presence online.</p>
-
-                    <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
-                        <span style="font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; color:#0f172a;" x-text="billing === 'monthly' ? '₹499' : '₹4,999'">₹499</span>
-                        <span style="font-size:13px; color:#64748b; font-weight:600;" x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
+                    {{-- Product Name --}}
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <h3 style="font-family:'Outfit',sans-serif; font-size:clamp(1.2rem,2vw,1.6rem); font-weight:900; color:#fff; margin:0; line-height:1.1; letter-spacing:-.3px;">
+                            {{ $plan['product_name'] ?? 'Product' }}
+                        </h3>
+                        @if(!empty($plan['product_tagline']))
+                        <span style="background:rgba(255,255,255,.22); color:#fff; font-size:10px; font-weight:800; padding:3px 12px; border-radius:999px; width:fit-content; letter-spacing:.03em;">
+                            {{ $plan['product_tagline'] }}
+                        </span>
+                        @endif
+                        @if(!empty($plan['product_subtitle']))
+                        <p style="font-size:12.5px; color:rgba(255,255,255,.82); margin:0; line-height:1.65;">{{ $plan['product_subtitle'] }}</p>
+                        @endif
                     </div>
 
-                    <div style="border-t:1px solid #f1f5f9; padding-top:18px; display:flex; flex-direction:column; gap:12px;">
-                        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94a3b8; letter-spacing:.05em;">Included Features:</span>
-                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13px; color:#334155; font-weight:600;">
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> 1 Selected Product Module</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Up to 1,000 Orders / Customers</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Basic Analytics & Reports</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Standard Email Support</li>
-                            <li style="display:flex; align-items:center; gap:8px; color:#94a3b8;"><i data-lucide="x" style="width:16px; height:16px; color:#cbd5e1;"></i> Custom Subdomain Setup</li>
-                        </ul>
+                    {{-- Decorative bars --}}
+                    <div style="display:flex; flex-direction:column; gap:6px; margin-top:auto;">
+                        <div style="height:4px; border-radius:99px; background:rgba(255,255,255,.25);"></div>
+                        <div style="height:4px; border-radius:99px; background:rgba(255,255,255,.15); width:70%;"></div>
+                        <div style="height:4px; border-radius:99px; background:rgba(255,255,255,.1); width:50%;"></div>
                     </div>
+
+                    {{-- Trust count --}}
+                    @if(!empty($plan['trust_count']))
+                    <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+                        <div style="display:flex;">
+                            @for($av = 0; $av < 4; $av++)
+                            <div style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.25); border:2px solid rgba(255,255,255,.6); margin-left:{{ $av > 0 ? '-8px' : '0' }}; display:flex; align-items:center; justify-content:center; font-size:9px; color:#fff; font-weight:800;">{{ ['R','P','A','K'][$av] }}</div>
+                            @endfor
+                        </div>
+                        <span style="font-size:11px; font-weight:700; color:rgba(255,255,255,.9);">{{ $plan['trust_count'] }}</span>
+                    </div>
+                    @endif
                 </div>
 
-                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-outline" style="width:100%; justify-content:center; border-radius:14px; padding:13px; font-size:13px;">
-                    Get Started Free
-                </a>
+                {{-- RIGHT: Plan Details Panel --}}
+                <div style="background:#fff; padding:32px 28px; display:flex; flex-direction:column; gap:0; position:relative;">
+
+                    {{-- Popular Badge --}}
+                    @if($isPopular)
+                    <div style="position:absolute; top:20px; right:20px; background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; font-size:9.5px; font-weight:900; padding:3px 12px; border-radius:999px; text-transform:uppercase; letter-spacing:.06em; box-shadow:0 4px 12px rgba(217,119,6,.4);">
+                        🔥 Most Popular
+                    </div>
+                    @endif
+
+                    {{-- Plan Badge --}}
+                    <span style="background:#f1f5f9; color:#475569; font-size:10px; font-weight:800; padding:4px 12px; border-radius:999px; width:fit-content; text-transform:uppercase; letter-spacing:.04em; margin-bottom:12px;">
+                        {{ $plan['plan_badge'] ?? 'PRO PLAN' }}
+                    </span>
+
+                    {{-- Plan Name --}}
+                    <h3 style="font-family:'Outfit',sans-serif; font-size:20px; font-weight:900; color:#0f172a; margin:0 0 16px;">{{ $plan['plan_name'] ?? 'Plan' }}</h3>
+
+                    {{-- Price --}}
+                    <div style="display:flex; align-items:baseline; gap:4px; margin-bottom:20px;">
+                        <span style="font-family:'Outfit',sans-serif; font-size:38px; font-weight:900; color:{{ $planColor }}; line-height:1;"
+                              x-text="billing === 'monthly' ? '₹{{ $plan['price_monthly'] ?? '0' }}' : '₹{{ $plan['price_yearly'] ?? '0' }}'">₹{{ $plan['price_monthly'] ?? '0' }}</span>
+                        <div style="display:flex; flex-direction:column; gap:0;">
+                            <span style="font-size:13px; color:#64748b; font-weight:600; line-height:1.2;"
+                                  x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
+                            <span style="font-size:10px; color:#94a3b8; font-weight:600;" x-show="billing === 'yearly'">billed annually</span>
+                        </div>
+                    </div>
+
+                    {{-- Features List --}}
+                    <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; margin:0 0 24px; padding:0; border-top:1px solid #f1f5f9; padding-top:18px;">
+                        @foreach($planFeatures as $feature)
+                        <li style="display:flex; align-items:flex-start; gap:9px; font-size:13px; color:#334155; font-weight:600; line-height:1.4;">
+                            <span style="width:18px; height:18px; border-radius:50%; background:{{ $planColor }}1a; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
+                                <i data-lucide="check" style="width:10px; height:10px; color:{{ $planColor }}; stroke-width:3;"></i>
+                            </span>
+                            {{ $feature }}
+                        </li>
+                        @endforeach
+                    </ul>
+
+                    {{-- CTA Button --}}
+                    <a href="{{ $plan['cta_url'] ?? '/login' }}"
+                       style="margin-top:auto; display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $planGradient }}; color:#fff; font-weight:800; font-size:13px; padding:14px 24px; border-radius:14px; text-decoration:none; box-shadow:0 6px 20px -4px {{ $planColor }}55; transition:transform .2s, box-shadow .2s;"
+                       onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 10px 28px -4px {{ $planColor }}77'"
+                       onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 20px -4px {{ $planColor }}55'">
+                        {{ $plan['cta_text'] ?? 'Get Started' }}
+                        <i data-lucide="arrow-right" style="width:14px; height:14px;"></i>
+                    </a>
+                </div>
             </div>
+            @endforeach
+        </div>
 
-            {{-- Plan 2: Professional Growth (MOST POPULAR HIGHLIGHT CARD) --}}
-            <div style="background:#fff; border:2px solid #6366f1; border-radius:24px; padding:36px 28px; display:flex; flex-direction:column; justify-between:space-between; gap:24px; box-shadow:0 16px 40px rgba(99,102,241,0.15); position:relative; transform:scale(1.03); z-index:2;">
-                
-                {{-- Top Badge --}}
-                <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; font-size:10px; font-weight:900; padding:4px 16px; border-radius:999px; text-transform:uppercase; letter-spacing:.08em; box-shadow:0 4px 12px rgba(99,102,241,0.4);">
-                    🔥 Most Popular
+        {{-- Trust Bar --}}
+        <div style="margin-top:44px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:0; border:1.5px solid #e2e8f0; border-radius:16px; background:#fff; overflow:hidden;">
+            @foreach($pricingTrustItems as $tidx => $trustItem)
+                @if($tidx > 0)
+                <div style="width:1px; height:40px; background:#e2e8f0; flex-shrink:0;"></div>
+                @endif
+                <div style="padding:14px 28px; font-size:13px; font-weight:700; color:#475569; text-align:center; display:flex; align-items:center; gap:8px;">
+                    {{ trim($trustItem) }}
                 </div>
-
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
-                        <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase;">Pro Business Suite</span>
-                        <span style="font-size:11px; font-weight:700; color:#6366f1;">Best Value</span>
-                    </div>
-
-                    <h3 style="font-size:20px; font-weight:900; color:#0f172a; margin:0;">Professional Pro</h3>
-                    <p style="font-size:12.5px; color:#64748b; margin:0; line-height:1.6;">Full product access to automate marketing, sales, and customer reviews.</p>
-
-                    <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
-                        <span style="font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; color:#4f46e5;" x-text="billing === 'monthly' ? '₹1,499' : '₹14,999'">₹1,499</span>
-                        <span style="font-size:13px; color:#64748b; font-weight:600;" x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
-                    </div>
-
-                    <div style="border-t:1px solid #f1f5f9; padding-top:18px; display:flex; flex-direction:column; gap:12px;">
-                        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94a3b8; letter-spacing:.05em;">Included Features:</span>
-                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13px; color:#1e293b; font-weight:700;">
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> Full Access to All 6 Product Suites</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> Unlimited Orders & Customer CRM</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> AI Reviews & Automated Reminders</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> Custom Branding & Subdomain</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check-circle-2" style="width:16px; height:16px; color:#6366f1;"></i> 24/7 Priority Live Support</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-brand" style="width:100%; justify-content:center; border-radius:14px; padding:14px; font-size:14px;">
-                    Start 14-Day Free Trial
-                    <i data-lucide="arrow-right" style="width:15px; height:15px;"></i>
-                </a>
-            </div>
-
-            {{-- Plan 3: Enterprise Suite --}}
-            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:24px; padding:36px 28px; display:flex; flex-direction:column; justify-between:space-between; gap:24px; box-shadow:0 6px 24px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,.08)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 24px rgba(0,0,0,.03)'">
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                        <span style="background:#fef3c7; color:#b45309; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase;">Enterprise</span>
-                        <span style="font-size:11px; font-weight:700; color:#64748b;">Multi-Location</span>
-                    </div>
-
-                    <h3 style="font-size:20px; font-weight:900; color:#0f172a; margin:0;">Enterprise Growth</h3>
-                    <p style="font-size:12.5px; color:#64748b; margin:0; line-height:1.6;">For growing brands needing multi-branch management and custom APIs.</p>
-
-                    <div style="display:flex; align-items:baseline; gap:4px; margin-top:8px;">
-                        <span style="font-family:'Outfit',sans-serif; font-size:36px; font-weight:900; color:#0f172a;" x-text="billing === 'monthly' ? '₹3,499' : '₹34,999'">₹3,499</span>
-                        <span style="font-size:13px; color:#64748b; font-weight:600;" x-text="billing === 'monthly' ? '/month' : '/year'">/month</span>
-                    </div>
-
-                    <div style="border-t:1px solid #f1f5f9; padding-top:18px; display:flex; flex-direction:column; gap:12px;">
-                        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94a3b8; letter-spacing:.05em;">Included Features:</span>
-                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13px; color:#334155; font-weight:600;">
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Everything in Pro Suite</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Multi-Branch & Chain Management</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Custom API Access & Webhooks</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> Dedicated Account Manager</li>
-                            <li style="display:flex; align-items:center; gap:8px;"><i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> 99.98% Uptime SLA Commitment</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-outline" style="width:100%; justify-content:center; border-radius:14px; padding:13px; font-size:13px;">
-                    Contact Sales & Choose
-                </a>
-            </div>
-
+            @endforeach
         </div>
 
     </div>

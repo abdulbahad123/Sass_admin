@@ -329,6 +329,9 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
         Route::get('/cookies', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'cookies'])->name('cookies');
         Route::post('/cookies', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateCookies'])->name('cookies.update');
 
+        Route::get('/pricing', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'pricing'])->name('pricing');
+        Route::post('/pricing', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updatePricing'])->name('pricing.update');
+
         Route::get('/preview', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'preview'])->name('preview');
     });
 });
