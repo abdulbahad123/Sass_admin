@@ -130,7 +130,7 @@
 
     <!-- STICKY NAVBAR -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3">
@@ -190,7 +190,7 @@
 
     <!-- SECTION 1: HERO SECTION -->
     <section id="hero" class="relative pt-10 pb-24 lg:pt-16 lg:pb-36 overflow-hidden bg-gradient-to-b from-blue-50/80 via-indigo-50/30 to-transparent">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
                 <!-- Left Text Column (6 cols) -->
@@ -238,8 +238,8 @@
 
                 <!-- Right Hero Image Graphic (6 cols) -->
                 <div class="lg:col-span-6 relative mt-6 lg:mt-0">
-                    <div class="relative z-10 flex justify-center">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full max-w-xl h-auto object-contain">
+                    <div class="relative z-10 flex justify-center lg:justify-end">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto object-contain transform lg:scale-110 lg:translate-x-4">
                     </div>
                 </div>
 
@@ -248,7 +248,7 @@
     </section>
 
     <!-- SECTION 2: FLOATING STATS BAR CARD -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-20 mb-16">
+    <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-20 mb-16">
         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100">
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center">
                 @if(is_array($data['lp_stats_bar']))
