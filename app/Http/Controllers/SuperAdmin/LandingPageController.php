@@ -254,38 +254,25 @@ class LandingPageController extends Controller
                 ['title' => 'Unlimited Growth', 'icon' => 'fas fa-bolt']
             ])), true),
 
-            // Model Cards
+            // Live Products from Super Admin Catalog (Task 3)
+            'db_products' => \App\Models\Product::where('is_active', true)->get(),
+
+            // Model Cards (Task 2: Removed Master Panel Container)
             'lp_model_cards' => json_decode(Setting::get('lp_model_cards', json_encode([
                 [
-                    'badge' => 'Model 01',
+                    'badge' => 'White Label SaaS',
                     'title' => 'White Label SaaS Partner',
                     'desc' => 'Launch your own branded SaaS platform and sell subscriptions directly to business owners.',
                     'image' => '/assets/images/user_dashboard.png',
                     'features' => [
                         'Launch Your Own SaaS Brand',
                         'Sell Unlimited Subscriptions',
-                        '5 SaaS Products Included',
+                        'SaaS Products Included',
                         'Manage Your Customers & Business',
                         'Custom Domain & Branding',
                         'Build Recurring Revenue'
                     ],
                     'cta_text' => 'Start with White Label SaaS',
-                    'cta_url' => '/login'
-                ],
-                [
-                    'badge' => 'Model 02',
-                    'title' => 'White Label SaaS Master Panel',
-                    'desc' => 'Become the master admin and empower partners to launch their own SaaS businesses.',
-                    'image' => '/assets/images/user_dashboard2.png',
-                    'features' => [
-                        'Create Unlimited White Label Panels',
-                        'Partner Branding & Custom Domains',
-                        '5 SaaS Products Included',
-                        'Centralized Master Dashboard',
-                        'Manage Unlimited SaaS Partners',
-                        'Complete Master-Level Control'
-                    ],
-                    'cta_text' => 'Start with Master Panel',
                     'cta_url' => '/login'
                 ]
             ])), true),
