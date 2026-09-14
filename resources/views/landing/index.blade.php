@@ -327,30 +327,30 @@
         </div>
     </section>
 
-    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD (Task 2: Removed Master Panel Container) -->
+    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD (Reduced width, aligned left) -->
     <section class="py-14 bg-slate-50/80 border-t border-slate-200/80 reveal">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl ml-4 sm:ml-8 lg:ml-16 mr-auto px-4 sm:px-6">
             @php $model = $data['lp_model_cards'][0] ?? null; @endphp
             @if($model)
-            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
                 
-                <div>
+                <div class="text-left">
                     <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 text-[#ff3d00] border border-orange-200/80">
                         {{ $model['badge'] ?? 'White Label SaaS' }}
                     </span>
-                    <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2">
+                    <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2 text-left">
                         {{ $model['title'] ?? 'White Label SaaS Partner' }}
                     </h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mb-8 leading-relaxed">
+                    <p class="text-xs sm:text-sm text-slate-600 mb-8 leading-relaxed text-left">
                         {{ $model['desc'] ?? '' }}
                     </p>
 
                     <!-- Feature List (Left) & Screen Preview (Right) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center mb-8">
-                        <div class="sm:col-span-6 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center mb-8 text-left">
+                        <div class="sm:col-span-6 space-y-3 text-left">
                             @if(isset($model['features']) && is_array($model['features']))
                                 @foreach($model['features'] as $f)
-                                <div class="flex items-start space-x-2.5 text-xs sm:text-sm font-medium text-slate-700">
+                                <div class="flex items-start space-x-2.5 text-xs sm:text-sm font-medium text-slate-700 text-left">
                                     <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
@@ -366,7 +366,7 @@
                 </div>
 
                 <!-- CTA Button -->
-                <div class="pt-5 border-t border-slate-100">
+                <div class="pt-5 border-t border-slate-100 text-left">
                     <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-4 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
                         <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
                         <i class="fas fa-arrow-right"></i>
@@ -378,7 +378,7 @@
         </div>
     </section>
 
-    <!-- SECTION 5: OUR PRODUCTS (Task 3: Dynamic products from Super Admin Catalog) -->
+    <!-- SECTION 5: OUR PRODUCTS (Dynamic products from Super Admin Catalog) -->
     <section id="products" class="py-16 lg:py-24 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -399,10 +399,16 @@
             @if($dbProds->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 {{ $dbProds->count() > 2 ? 'lg:grid-cols-3' : 'max-w-4xl mx-auto' }} gap-6">
                     @foreach($dbProds as $prod)
+                    @php
+                        $pIcon = trim($prod->icon ?? '');
+                        if (!$pIcon || $pIcon === 'fas fa-store') {
+                            $pIcon = str_contains(strtolower($prod->slug), 'shop') ? 'fas fa-shopping-bag' : 'fas fa-cubes';
+                        }
+                    @endphp
                     <div class="p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-12 h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-lg shadow-md shadow-orange-500/20 mb-5">
-                                <i class="{{ $prod->icon ?: 'fas fa-cubes' }}"></i>
+                            <div class="w-12 h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-xl shadow-md shadow-orange-500/20 mb-5">
+                                <i class="{{ $pIcon }}"></i>
                             </div>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-100/80 px-2.5 py-0.5 rounded-full inline-block mb-2">Active Product</span>
                             <h4 class="font-space font-extrabold text-lg text-slate-900 mb-2 group-hover:text-[#ff3d00] transition-colors">{{ $prod->name }}</h4>
@@ -584,9 +590,9 @@
                     @endif
                 </div>
 
-                <!-- Right Revenue Calculator Card (5 Cols) (Task 1: Background image) -->
+                <!-- Right Revenue Calculator Card (5 Cols) (Task 2: Background image using revenue_calculator.png) -->
                 <div class="lg:col-span-5">
-                    <div class="relative bg-gradient-to-br from-slate-900/90 via-slate-900/95 to-slate-950 text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.95)), url('{{ asset('/assets/images/revenue_calculator.jpg') }}'); background-size: cover; background-position: center;">
+                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.90)), url('{{ asset('/assets/images/revenue_calculator.png') }}'); background-size: cover; background-position: center;">
                         
                         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
                             <div>
@@ -737,10 +743,10 @@
         </div>
     </section>
 
-    <!-- SECTION 11: CTA BANNER -->
+    <!-- SECTION 11: CTA BANNER (Task 2: Background image using cta_background.png) -->
     <section class="py-14 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-slate-900 via-orange-950 to-slate-900 rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl" style="background-image: url('{{ asset($data['lp_cta_banner_bg'] ?? '/assets/images/cta_background.png') }}'); background-size: cover; background-position: center;">
+            <div class="rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl border border-slate-800/50" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.78), rgba(30, 41, 59, 0.88)), url('{{ asset('/assets/images/cta_background.png') }}'); background-size: cover; background-position: center;">
                 <div class="relative z-10 max-w-3xl mx-auto space-y-5">
                     <h2 class="font-space font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
                         {{ $data['lp_cta_banner_title'] }}
