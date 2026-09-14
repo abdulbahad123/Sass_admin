@@ -189,19 +189,19 @@
     </header>
 
     <!-- SECTION 1: HERO SECTION -->
-    <section id="hero" class="relative pt-10 pb-16 lg:pt-16 lg:pb-28 overflow-hidden bg-gradient-to-b from-blue-50/60 via-indigo-50/20 to-transparent">
+    <section id="hero" class="relative pt-10 pb-20 lg:pt-16 lg:pb-32 overflow-hidden bg-gradient-to-b from-blue-50/70 via-indigo-50/30 to-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                 
                 <!-- Left Text Column -->
                 <div class="lg:col-span-7 space-y-6 text-left">
-                    <div class="inline-flex items-center space-x-2 bg-blue-100/80 border border-blue-200 px-3.5 py-1.5 rounded-full text-blue-700 text-[11px] font-bold tracking-wide uppercase">
+                    <div class="inline-flex items-center space-x-2 bg-blue-100/90 border border-blue-200/80 px-4 py-1.5 rounded-full text-blue-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
                         <i class="fas fa-sparkles text-blue-600"></i>
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
                     </div>
 
                     <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.15] tracking-tight">
-                        Launch Your Own SaaS Business <span class="gradient-text">Under Your Brand</span>
+                        Launch Your Own SaaS Business <span class="text-blue-600">Under Your Brand</span>
                     </h1>
 
                     <p class="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-normal max-w-2xl">
@@ -216,7 +216,7 @@
                         </a>
 
                         <a href="{{ $data['lp_hero_cta2_url'] }}" class="px-7 py-4 rounded-full bg-white border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 shadow-sm">
-                            <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                            <div class="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs">
                                 <i class="fas fa-play text-[9px] ml-0.5"></i>
                             </div>
                             <span>{{ $data['lp_hero_cta2_text'] }}</span>
@@ -249,15 +249,15 @@
         </div>
     </section>
 
-    <!-- SECTION 2: STATS BAR -->
-    <section class="py-6 bg-white border-y border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- SECTION 2: FLOATING STATS BAR CARD -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-20 mb-12">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80">
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center">
                 @if(is_array($data['lp_stats_bar']))
                     @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-3 sm:p-4 rounded-2xl hover:bg-slate-50 transition-colors">
+                    <div class="p-3 rounded-2xl hover:bg-slate-50 transition-colors">
                         <div class="flex items-center justify-center space-x-2.5 mb-1">
-                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs sm:text-sm">
+                            <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xs sm:text-sm">
                                 <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
                             </div>
                             <span class="font-space font-extrabold text-xl sm:text-2xl text-slate-900">{{ $stat['count'] ?? '' }}</span>
@@ -268,7 +268,7 @@
                 @endif
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- SECTION 3: ABOUT NOORYAK -->
     <section id="about" class="py-16 lg:py-24 bg-white">
