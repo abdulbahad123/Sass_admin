@@ -24,20 +24,20 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            400: '#64748b',
-                            500: '#334155',
-                            600: '#0f172a',
-                            700: '#020617',
-                            800: '#000000',
-                            900: '#000000',
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            400: '#fb923c',
+                            500: '#ff7a18',
+                            600: '#ff3d00',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
                         },
                         accent: {
-                            dark: '#000000',
-                            black: '#18181b',
+                            orange: '#ff3d00',
+                            warm: '#ff7a18',
                         },
-                        dark: '#000000'
+                        dark: '#0f172a'
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -63,31 +63,31 @@
         .font-onest { font-family: 'Onest', sans-serif; }
         
         .gradient-text {
-            background: linear-gradient(135deg, #0f172a 0%, #000000 100%);
+            background: linear-gradient(135deg, rgb(255, 122, 24), rgb(255, 61, 0));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
         .btn-gradient {
-            background: linear-gradient(135deg, #18181b 0%, #000000 100%);
+            background: linear-gradient(135deg, rgb(255, 122, 24), rgb(255, 61, 0));
             transition: all 0.3s ease;
         }
         .btn-gradient:hover {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(255, 61, 0, 0.4);
             transform: translateY(-2px);
         }
 
         .badge-pill {
-            background: #0f172a;
-            color: #ffffff;
+            background: #fff3eb;
+            color: #ff3d00;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 5px 16px;
+            padding: 4px 14px;
             border-radius: 9999px;
             display: inline-block;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ffe3d1;
         }
 
         /* Custom Range Slider */
@@ -108,11 +108,11 @@
             height: 22px;
             width: 22px;
             border-radius: 50%;
-            background: #000000;
+            background: #ff3d00;
             cursor: pointer;
             -webkit-appearance: none;
             margin-top: -7px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(255, 61, 0, 0.5);
         }
 
         .handwritten { font-family: 'Poppins', cursive; font-style: italic; }
@@ -134,8 +134,8 @@
 
     <!-- TOP ANNOUNCEMENT BAR -->
     @if(!empty($data['lp_announcement_text']))
-    <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white text-[11px] sm:text-xs py-2 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
-        <span class="bg-slate-800 text-slate-200 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-slate-700">{{ $data['lp_announcement_badge'] }}</span>
+    <div class="bg-gradient-to-r from-slate-900 via-orange-950 to-slate-900 text-white text-[11px] sm:text-xs py-2 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
+        <span class="bg-orange-500/30 text-orange-200 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">{{ $data['lp_announcement_badge'] }}</span>
         <span>{{ $data['lp_announcement_text'] }}</span>
     </div>
     @endif
@@ -150,7 +150,7 @@
                         <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak Logo" class="h-9 sm:h-10 w-auto">
                     @else
                         <div class="flex items-center space-x-2">
-                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-md shadow-slate-900/20">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-md shadow-orange-500/20">
                                 <i class="fas fa-layer-group text-base sm:text-lg"></i>
                             </div>
                             <span class="font-space font-bold text-xl sm:text-2xl tracking-tight text-slate-900">Nooryak</span>
@@ -160,10 +160,10 @@
 
                 <!-- Desktop Menu Navigation -->
                 <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-                    <a href="#hero" class="hover:text-slate-900 transition-colors">Home</a>
-                    <a href="#about" class="hover:text-slate-900 transition-colors">Solutions <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
-                    <a href="#pricing" class="hover:text-slate-900 transition-colors">Pricing</a>
-                    <a href="#products" class="hover:text-slate-900 transition-colors">Resources <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <a href="#hero" class="hover:text-[#ff3d00] transition-colors">Home</a>
+                    <a href="#about" class="hover:text-[#ff3d00] transition-colors">Solutions <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <a href="#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a>
+                    <a href="#products" class="hover:text-[#ff3d00] transition-colors">Resources <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
                 </nav>
 
                 <!-- Action Buttons -->
@@ -171,7 +171,7 @@
                     <a href="{{ $data['lp_book_demo_url'] }}" class="px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm">
                         Book a Demo
                     </a>
-                    <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient px-6 py-2.5 rounded-full text-white text-xs font-bold shadow-lg shadow-slate-900/20 flex items-center space-x-2">
+                    <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient px-6 py-2.5 rounded-full text-white text-xs font-bold shadow-lg shadow-orange-500/30 flex items-center space-x-2">
                         <span>{{ $data['lp_cta_button_text'] }}</span>
                         <i class="fas fa-arrow-right text-[10px]"></i>
                     </a>
@@ -201,13 +201,13 @@
     </header>
 
     <!-- SECTION 1: HERO SECTION -->
-    <section id="hero" class="relative pt-10 pb-12 lg:pt-14 lg:pb-16 overflow-hidden bg-gradient-to-b from-slate-100/70 via-slate-50/30 to-transparent reveal">
+    <section id="hero" class="relative pt-10 pb-12 lg:pt-14 lg:pb-16 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
                 <!-- Left Text Column (6 cols) -->
                 <div class="lg:col-span-6 space-y-6 text-left">
-                    <div class="inline-flex items-center space-x-2 bg-slate-900 border border-slate-800 px-4 py-1.5 rounded-full text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">
+                    <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
                     </div>
 
@@ -221,7 +221,7 @@
 
                     <!-- CTAs -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                        <a href="{{ $data['lp_hero_cta1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-slate-900/30 text-center">
+                        <a href="{{ $data['lp_hero_cta1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/30 text-center">
                             {{ $data['lp_hero_cta1_text'] }}
                         </a>
 
@@ -238,7 +238,7 @@
                         @if(is_array($data['lp_hero_badges']))
                             @foreach($data['lp_hero_badges'] as $badge)
                             <div class="flex items-center space-x-2">
-                                <div class="w-4 h-4 rounded-full bg-slate-900 text-white flex items-center justify-center text-[9px]">
+                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px]">
                                     <i class="fas fa-check"></i>
                                 </div>
                                 <span>{{ $badge }}</span>
@@ -248,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic -->
+                <!-- Right Hero Image Graphic (Task 2: Increased height and width) -->
                 <div class="lg:col-span-6 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
                     <div class="relative z-10 w-full flex justify-center lg:justify-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[580px] lg:max-h-[640px] xl:max-h-[700px] object-contain ml-0 lg:ml-[20px] mt-[20px] transition-transform duration-500 hover:scale-105">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full lg:w-[115%] h-auto max-h-[750px] lg:max-h-[850px] xl:max-h-[920px] object-contain ml-0 lg:ml-[20px] mt-[20px] transition-transform duration-500 hover:scale-105">
                     </div>
                 </div>
 
@@ -265,9 +265,9 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center">
                 @if(is_array($data['lp_stats_bar']))
                     @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-orange-50/50 transition-colors">
                         <div class="flex items-center justify-center space-x-2.5 mb-0.5">
-                            <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
+                            <div class="w-9 h-9 rounded-xl bg-orange-100/90 text-[#ff3d00] flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
                                 <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
                             </div>
                             <!-- Task 3: Animated Running Counter Number -->
@@ -297,7 +297,7 @@
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
                         {{ $data['lp_about_desc'] }}
                     </p>
-                    <p class="text-xs sm:text-sm font-bold text-slate-900">
+                    <p class="text-xs sm:text-sm font-bold text-[#ff3d00]">
                         Your Brand. Our Technology. Unlimited Growth.
                     </p>
 
@@ -305,8 +305,8 @@
                     <div class="grid grid-cols-3 gap-3 pt-3">
                         @if(is_array($data['lp_about_features']))
                             @foreach(array_slice($data['lp_about_features'], 0, 3) as $feat)
-                            <div class="flex items-center space-x-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                                <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs flex-shrink-0">
+                            <div class="flex items-center space-x-2.5 p-3 rounded-2xl bg-orange-50/60 border border-orange-100">
+                                <div class="w-8 h-8 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-xs flex-shrink-0">
                                     <i class="{{ $feat['icon'] ?? 'fas fa-star' }}"></i>
                                 </div>
                                 <h4 class="font-bold text-[11px] text-slate-900 leading-tight">{{ $feat['title'] ?? '' }}</h4>
@@ -327,7 +327,7 @@
         </div>
     </section>
 
-    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD -->
+    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD (Task 2: Removed Master Panel Container) -->
     <section class="py-14 bg-slate-50/80 border-t border-slate-200/80 reveal">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             @php $model = $data['lp_model_cards'][0] ?? null; @endphp
@@ -335,7 +335,7 @@
             <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
                 
                 <div>
-                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-slate-900 text-white border border-slate-800">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 text-[#ff3d00] border border-orange-200/80">
                         {{ $model['badge'] ?? 'White Label SaaS' }}
                     </span>
                     <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2">
@@ -351,7 +351,7 @@
                             @if(isset($model['features']) && is_array($model['features']))
                                 @foreach($model['features'] as $f)
                                 <div class="flex items-start space-x-2.5 text-xs sm:text-sm font-medium text-slate-700">
-                                    <div class="w-4 h-4 rounded-full bg-slate-900 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
                                     <span>{{ $f }}</span>
@@ -367,7 +367,7 @@
 
                 <!-- CTA Button -->
                 <div class="pt-5 border-t border-slate-100">
-                    <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-4 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-slate-900/20">
+                    <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-4 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
                         <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
                         <i class="fas fa-arrow-right"></i>
                     </a>
@@ -378,7 +378,7 @@
         </div>
     </section>
 
-    <!-- SECTION 5: OUR PRODUCTS -->
+    <!-- SECTION 5: OUR PRODUCTS (Task 3: Dynamic products from Super Admin Catalog) -->
     <section id="products" class="py-16 lg:py-24 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -399,16 +399,16 @@
             @if($dbProds->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 {{ $dbProds->count() > 2 ? 'lg:grid-cols-3' : 'max-w-4xl mx-auto' }} gap-6">
                     @foreach($dbProds as $prod)
-                    <div class="p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-slate-300 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-12 h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-lg shadow-md shadow-slate-900/20 mb-5">
+                            <div class="w-12 h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-lg shadow-md shadow-orange-500/20 mb-5">
                                 <i class="{{ $prod->icon ?: 'fas fa-cubes' }}"></i>
                             </div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-slate-900 px-2.5 py-0.5 rounded-full inline-block mb-2">Active Product</span>
-                            <h4 class="font-space font-extrabold text-lg text-slate-900 mb-2 group-hover:text-black transition-colors">{{ $prod->name }}</h4>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-100/80 px-2.5 py-0.5 rounded-full inline-block mb-2">Active Product</span>
+                            <h4 class="font-space font-extrabold text-lg text-slate-900 mb-2 group-hover:text-[#ff3d00] transition-colors">{{ $prod->name }}</h4>
                             <p class="text-xs text-slate-600 leading-relaxed mb-6 font-medium">{{ $prod->tagline ?: $prod->description }}</p>
                         </div>
-                        <a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="inline-flex items-center text-xs font-bold text-slate-900 hover:text-black group/link mt-auto pt-3 border-t border-slate-200/60">
+                        <a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 group/link mt-auto pt-3 border-t border-slate-200/60">
                             <span>Explore {{ $prod->name }}</span>
                             <i class="fas fa-arrow-right text-[10px] ml-1.5 transition-transform group-hover/link:translate-x-1"></i>
                         </a>
@@ -427,7 +427,7 @@
                                 <h4 class="font-space font-bold text-sm text-slate-900 mb-2">{{ $prod['title'] ?? '' }}</h4>
                                 <p class="text-xs text-slate-600 leading-relaxed mb-4">{{ $prod['desc'] ?? '' }}</p>
                             </div>
-                            <a href="{{ $prod['link'] ?? '/login' }}" class="inline-flex items-center text-xs font-bold text-slate-900 hover:text-black group mt-auto">
+                            <a href="{{ $prod['link'] ?? '/login' }}" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 group mt-auto">
                                 <span>Learn More</span>
                                 <i class="fas fa-arrow-right text-[10px] ml-1.5 transition-transform group-hover:translate-x-1"></i>
                             </a>
@@ -452,10 +452,10 @@
                 @if(is_array($data['lp_how_works_steps']))
                     @foreach($data['lp_how_works_steps'] as $step)
                     <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200/80 flex flex-col items-center text-center hover:shadow-xl transition-all">
-                        <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shadow-md shadow-slate-900/20 mb-3">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-md shadow-blue-500/30 mb-3">
                             Step {{ $step['step'] ?? '1' }}
                         </div>
-                        <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center text-base mb-3">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base mb-3">
                             <i class="{{ $step['icon'] ?? 'fas fa-arrow-right' }}"></i>
                         </div>
                         <h4 class="font-space font-bold text-sm text-slate-900 mb-2">{{ $step['title'] ?? '' }}</h4>
@@ -481,7 +481,7 @@
                 @if(is_array($data['lp_why_choose_items']))
                     @foreach($data['lp_why_choose_items'] as $item)
                     <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-xl transition-all">
-                        <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center text-lg mb-3">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg mb-3">
                             <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
                         </div>
                         <h4 class="font-space font-bold text-sm text-slate-900 mb-2">{{ $item['title'] ?? '' }}</h4>
@@ -513,7 +513,7 @@
                         @foreach($data['lp_pricing_plans'] as $plan)
                         <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 flex flex-col justify-between relative">
                             @if(!empty($plan['badge']))
-                                <div class="absolute -top-3 right-6 btn-gradient text-white text-[10px] font-bold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                                <div class="absolute -top-3 right-6 btn-gradient text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                                     {{ $plan['badge'] }}
                                 </div>
                             @endif
@@ -530,7 +530,7 @@
                                     @if(isset($plan['features']) && is_array($plan['features']))
                                         @foreach($plan['features'] as $pf)
                                         <div class="flex items-center space-x-2">
-                                            <i class="fas fa-check text-slate-900 text-xs"></i>
+                                            <i class="fas fa-check text-orange-500 text-xs"></i>
                                             <span>{{ $pf }}</span>
                                         </div>
                                         @endforeach
@@ -538,7 +538,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ $plan['cta_url'] ?? '/login' }}" class="btn-gradient w-full block text-center py-3.5 rounded-xl text-white font-bold text-xs shadow-md">
+                            <a href="{{ $plan['cta_url'] ?? '/login' }}" class="btn-gradient w-full block text-center py-3 rounded-xl text-white font-bold text-xs shadow-md">
                                 {{ $plan['cta_text'] ?? 'Get Started' }}
                             </a>
                         </div>
@@ -546,16 +546,16 @@
                     @endif
                 </div>
 
-                <!-- Right Revenue Calculator Card (5 Cols) -->
+                <!-- Right Revenue Calculator Card (5 Cols) (Task 1: Background image) -->
                 <div class="lg:col-span-5">
-                    <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800">
+                    <div class="relative bg-gradient-to-br from-slate-900/90 via-slate-900/95 to-slate-950 text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.95)), url('{{ asset('/assets/images/revenue_calculator.jpg') }}'); background-size: cover; background-position: center;">
                         
                         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
                             <div>
                                 <h3 class="font-space font-extrabold text-lg text-white">{{ $data['lp_rev_calc_title'] }}</h3>
                                 <p class="text-xs text-slate-400 mt-0.5">{{ $data['lp_rev_calc_subtitle'] }}</p>
                             </div>
-                            <div class="w-9 h-9 rounded-xl bg-slate-800 text-white flex items-center justify-center text-base">
+                            <div class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-base">
                                 <i class="fas fa-calculator"></i>
                             </div>
                         </div>
@@ -564,7 +564,7 @@
                         <div class="space-y-3 mb-5">
                             <div class="flex justify-between items-center text-xs">
                                 <span class="text-slate-300 font-medium">Active Customers:</span>
-                                <span id="customerCountDisplay" class="font-extrabold text-white text-base bg-slate-800 px-3 py-0.5 rounded-lg">100</span>
+                                <span id="customerCountDisplay" class="font-extrabold text-orange-400 text-base bg-orange-500/20 px-3 py-0.5 rounded-lg">100</span>
                             </div>
                             <input type="range" id="customerSlider" min="10" max="1000" step="10" value="{{ $data['lp_rev_calc_default_customers'] }}">
                         </div>
@@ -572,7 +572,7 @@
                         <!-- Revenue Output -->
                         <div class="bg-white/10 rounded-2xl p-5 border border-white/10 text-center mb-5 backdrop-blur-sm">
                             <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Estimated Monthly Revenue</p>
-                            <p id="monthlyRevDisplay" class="font-space font-extrabold text-2xl sm:text-3xl text-white">
+                            <p id="monthlyRevDisplay" class="font-space font-extrabold text-2xl sm:text-3xl text-orange-400">
                                 ₹99,900 <span class="text-xs font-normal text-slate-400">/month</span>
                             </p>
                             <p class="text-[10px] text-slate-400 mt-1.5">
@@ -585,7 +585,7 @@
                             @if(is_array($data['lp_rev_calc_bullets']))
                                 @foreach($data['lp_rev_calc_bullets'] as $bullet)
                                 <div class="flex items-center space-x-2 text-slate-200">
-                                    <i class="fas fa-check-circle text-slate-300 text-xs"></i>
+                                    <i class="fas fa-check-circle text-orange-400 text-xs"></i>
                                     <span>{{ $bullet }}</span>
                                 </div>
                                 @endforeach
@@ -622,11 +622,11 @@
                     @if(is_array($data['lp_growth_steps']))
                         @foreach($data['lp_growth_steps'] as $gstep)
                         <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start space-x-3">
-                            <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <div class="w-8 h-8 rounded-full bg-orange-100 text-[#ff3d00] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
                                 <i class="{{ $gstep['icon'] ?? 'fas fa-arrow-right' }}"></i>
                             </div>
                             <div>
-                                <span class="text-[10px] font-bold text-slate-900 uppercase tracking-wider">{{ $gstep['step'] ?? '' }}</span>
+                                <span class="text-[10px] font-bold text-[#ff3d00] uppercase tracking-wider">{{ $gstep['step'] ?? '' }}</span>
                                 <h5 class="font-bold text-xs text-slate-900 mt-0.5">{{ $gstep['title'] ?? '' }}</h5>
                             </div>
                         </div>
@@ -702,7 +702,7 @@
     <!-- SECTION 11: CTA BANNER -->
     <section class="py-14 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl" style="background-image: url('{{ asset($data['lp_cta_banner_bg'] ?? '/assets/images/cta_background.png') }}'); background-size: cover; background-position: center;">
+            <div class="bg-gradient-to-r from-slate-900 via-orange-950 to-slate-900 rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl" style="background-image: url('{{ asset($data['lp_cta_banner_bg'] ?? '/assets/images/cta_background.png') }}'); background-size: cover; background-position: center;">
                 <div class="relative z-10 max-w-3xl mx-auto space-y-5">
                     <h2 class="font-space font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
                         {{ $data['lp_cta_banner_title'] }}
@@ -712,7 +712,7 @@
                     </p>
 
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                        <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="btn-gradient w-full sm:w-auto px-8 py-3.5 rounded-full text-white font-bold text-xs shadow-xl shadow-slate-900/30">
+                        <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="btn-gradient w-full sm:w-auto px-8 py-3.5 rounded-full text-white font-bold text-xs shadow-xl shadow-orange-500/30">
                             {{ $data['lp_cta_banner_button1_text'] }} <i class="fas fa-arrow-right ml-2"></i>
                         </a>
                         <a href="{{ $data['lp_cta_banner_button2_url'] }}" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs backdrop-blur-sm transition-all">
@@ -748,11 +748,11 @@
                         {{ $data['lp_footer_desc'] }}
                     </p>
                     <div class="flex items-center space-x-4 text-xs text-slate-400 pt-2">
-                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>@endif
-                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="hover:text-white"><i class="fab fa-instagram"></i></a>@endif
-                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="hover:text-white"><i class="fab fa-youtube"></i></a>@endif
-                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="hover:text-white"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="hover:text-white"><i class="fab fa-twitter"></i></a>@endif
+                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="hover:text-orange-500"><i class="fab fa-[#ff3d00] fa-facebook-f"></i></a>@endif
+                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="hover:text-pink-500"><i class="fab fa-instagram"></i></a>@endif
+                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="hover:text-red-500"><i class="fab fa-youtube"></i></a>@endif
+                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="hover:text-orange-400"><i class="fab fa-linkedin-in"></i></a>@endif
+                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="hover:text-orange-400"><i class="fab fa-twitter"></i></a>@endif
                     </div>
                 </div>
 
@@ -778,9 +778,10 @@
 
                 <div class="space-y-2">
                     <h5 class="text-xs font-bold text-white uppercase tracking-wider">Contact</h5>
-                    <p class="text-xs"><i class="fas fa-envelope mr-1.5 text-slate-400"></i> {{ $data['lp_contact_email'] }}</p>
-                    <p class="text-xs"><i class="fas fa-phone mr-1.5 text-slate-400"></i> {{ $data['lp_contact_phone'] }}</p>
+                    <p class="text-xs"><i class="fas fa-envelope mr-1.5 text-orange-500"></i> {{ $data['lp_contact_email'] }}</p>
+                    <p class="text-xs"><i class="fas fa-phone mr-1.5 text-orange-500"></i> {{ $data['lp_contact_phone'] }}</p>
                 </div>
+
             </div>
 
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
