@@ -116,6 +116,18 @@
         }
 
         .handwritten { font-family: 'Poppins', cursive; font-style: italic; }
+
+        /* Scroll Reveal Animation (Task 3) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -189,7 +201,7 @@
     </header>
 
     <!-- SECTION 1: HERO SECTION -->
-    <section id="hero" class="relative pt-10 pb-24 lg:pt-16 lg:pb-36 overflow-hidden bg-gradient-to-b from-blue-50/80 via-indigo-50/30 to-transparent">
+    <section id="hero" class="relative pt-10 pb-12 lg:pt-14 lg:pb-16 overflow-hidden bg-gradient-to-b from-blue-50/80 via-indigo-50/30 to-transparent reveal">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
@@ -236,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (6 cols) -->
+                <!-- Right Hero Image Graphic (Task 1: Margin top 20px & Margin left 20px gap) -->
                 <div class="lg:col-span-6 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
                     <div class="relative z-10 w-full flex justify-center lg:justify-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[540px] lg:max-h-[580px] object-contain transform lg:scale-125 lg:translate-x-6 origin-right">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[480px] lg:max-h-[520px] object-contain ml-0 lg:ml-[20px] mt-[20px] transition-transform duration-500 hover:scale-105">
                     </div>
                 </div>
 
@@ -247,20 +259,23 @@
         </div>
     </section>
 
-    <!-- SECTION 2: FLOATING STATS BAR CARD -->
-    <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-20 mb-16">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100">
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center">
+    <!-- SECTION 2: COUNTER STATS BAR CARD (Task 2: Removed top gap & reduced padding) -->
+    <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 mb-10 relative z-20 reveal">
+        <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-xl border border-slate-100">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center">
                 @if(is_array($data['lp_stats_bar']))
                     @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-2 sm:p-3 rounded-2xl hover:bg-slate-50 transition-colors">
-                        <div class="flex items-center justify-center space-x-3 mb-1">
-                            <div class="w-10 h-10 rounded-2xl bg-blue-100/90 text-blue-600 flex items-center justify-center text-sm font-bold shadow-sm">
+                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center justify-center space-x-2.5 mb-0.5">
+                            <div class="w-9 h-9 rounded-xl bg-blue-100/90 text-blue-600 flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
                                 <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
                             </div>
-                            <span class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900">{{ $stat['count'] ?? '' }}</span>
+                            <!-- Task 3: Animated Running Counter Number -->
+                            <span class="stat-counter font-space font-extrabold text-xl sm:text-2xl text-slate-900" data-target="{{ $stat['count'] ?? '0' }}">
+                                {{ $stat['count'] ?? '0' }}
+                            </span>
                         </div>
-                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">{{ $stat['label'] ?? '' }}</p>
+                        <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wide mt-0.5">{{ $stat['label'] ?? '' }}</p>
                     </div>
                     @endforeach
                 @endif
@@ -806,6 +821,68 @@
                     icon.classList.add('rotate-180');
                 }
             });
+        });
+
+        // Task 3: Full Scrolling Reveal Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('section, .reveal');
+            reveals.forEach(el => el.classList.add('reveal'));
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            reveals.forEach(el => revealObserver.observe(el));
+
+            // Task 3: Animated Running Counter Numbers
+            const counters = document.querySelectorAll('.stat-counter');
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const targetVal = counter.getAttribute('data-target') || counter.innerText.trim();
+                        
+                        // Parse numbers and non-numeric prefix/suffix (e.g., "500+" -> num 500, suffix "+")
+                        const match = targetVal.match(/^([^\d]*)([\d,.]+)(.*)$/);
+                        if (match) {
+                            const prefix = match[1] || '';
+                            const rawNum = parseFloat(match[2].replace(/,/g, ''));
+                            const suffix = match[3] || '';
+                            const isFloat = match[2].includes('.');
+                            const duration = 2000;
+                            const startTime = performance.now();
+
+                            function animateCount(currentTime) {
+                                const elapsed = currentTime - startTime;
+                                const progress = Math.min(elapsed / duration, 1);
+                                // Ease-out quad curve
+                                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                                const currentNum = easeProgress * rawNum;
+
+                                if (isFloat) {
+                                    counter.innerText = prefix + currentNum.toFixed(1) + suffix;
+                                } else {
+                                    counter.innerText = prefix + Math.floor(currentNum).toLocaleString('en-US') + suffix;
+                                }
+
+                                if (progress < 1) {
+                                    requestAnimationFrame(animateCount);
+                                } else {
+                                    counter.innerText = targetVal;
+                                }
+                            }
+                            requestAnimationFrame(animateCount);
+                        }
+                        observer.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            counters.forEach(c => counterObserver.observe(c));
         });
     </script>
 </body>
