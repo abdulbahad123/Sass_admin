@@ -189,42 +189,40 @@
     </header>
 
     <!-- SECTION 1: HERO SECTION -->
-    <section id="hero" class="relative pt-10 pb-20 lg:pt-16 lg:pb-32 overflow-hidden bg-gradient-to-b from-blue-50/70 via-indigo-50/30 to-transparent">
+    <section id="hero" class="relative pt-10 pb-24 lg:pt-16 lg:pb-36 overflow-hidden bg-gradient-to-b from-blue-50/80 via-indigo-50/30 to-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
-                <!-- Left Text Column -->
-                <div class="lg:col-span-7 space-y-6 text-left">
+                <!-- Left Text Column (6 cols) -->
+                <div class="lg:col-span-6 space-y-6 text-left">
                     <div class="inline-flex items-center space-x-2 bg-blue-100/90 border border-blue-200/80 px-4 py-1.5 rounded-full text-blue-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
-                        <i class="fas fa-sparkles text-blue-600"></i>
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
                     </div>
 
-                    <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.15] tracking-tight">
+                    <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.12] tracking-tight">
                         Launch Your Own SaaS Business <span class="text-blue-600">Under Your Brand</span>
                     </h1>
 
-                    <p class="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed font-normal max-w-2xl">
+                    <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl">
                         {{ $data['lp_hero_subtitle'] }}
                     </p>
 
                     <!-- CTAs -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                        <a href="{{ $data['lp_hero_cta1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3 group">
-                            <span>{{ $data['lp_hero_cta1_text'] }}</span>
-                            <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                        <a href="{{ $data['lp_hero_cta1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-blue-600/30 text-center">
+                            {{ $data['lp_hero_cta1_text'] }}
                         </a>
 
-                        <a href="{{ $data['lp_hero_cta2_url'] }}" class="px-7 py-4 rounded-full bg-white border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 shadow-sm">
-                            <div class="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs">
-                                <i class="fas fa-play text-[9px] ml-0.5"></i>
+                        <a href="{{ $data['lp_hero_cta2_url'] }}" class="px-7 py-4 rounded-full bg-white border border-slate-300 text-slate-900 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 shadow-sm">
+                            <div class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">
+                                <i class="fas fa-play ml-0.5"></i>
                             </div>
                             <span>{{ $data['lp_hero_cta2_text'] }}</span>
                         </a>
                     </div>
 
                     <!-- Hero Feature Checkmarks -->
-                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 text-xs font-bold text-slate-700">
+                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-slate-700">
                         @if(is_array($data['lp_hero_badges']))
                             @foreach($data['lp_hero_badges'] as $badge)
                             <div class="flex items-center space-x-2">
@@ -238,10 +236,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image / Dashboard Graphic -->
-                <div class="lg:col-span-5 relative mt-6 lg:mt-0">
-                    <div class="relative z-10">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto rounded-3xl shadow-2xl border border-slate-200">
+                <!-- Right Hero Image Graphic (6 cols) -->
+                <div class="lg:col-span-6 relative mt-6 lg:mt-0">
+                    <div class="relative z-10 flex justify-center">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full max-w-xl h-auto object-contain">
                     </div>
                 </div>
 
@@ -250,19 +248,19 @@
     </section>
 
     <!-- SECTION 2: FLOATING STATS BAR CARD -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-20 mb-12">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-20 mb-16">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100">
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center">
                 @if(is_array($data['lp_stats_bar']))
                     @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-3 rounded-2xl hover:bg-slate-50 transition-colors">
-                        <div class="flex items-center justify-center space-x-2.5 mb-1">
-                            <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xs sm:text-sm">
+                    <div class="p-2 sm:p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center justify-center space-x-3 mb-1">
+                            <div class="w-10 h-10 rounded-2xl bg-blue-100/90 text-blue-600 flex items-center justify-center text-sm font-bold shadow-sm">
                                 <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
                             </div>
-                            <span class="font-space font-extrabold text-xl sm:text-2xl text-slate-900">{{ $stat['count'] ?? '' }}</span>
+                            <span class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900">{{ $stat['count'] ?? '' }}</span>
                         </div>
-                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ $stat['label'] ?? '' }}</p>
+                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">{{ $stat['label'] ?? '' }}</p>
                     </div>
                     @endforeach
                 @endif
