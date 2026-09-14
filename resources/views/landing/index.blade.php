@@ -241,63 +241,7 @@
                 <!-- Right Hero Image / Dashboard Graphic -->
                 <div class="lg:col-span-5 relative mt-6 lg:mt-0">
                     <div class="relative z-10">
-                        @if($data['lp_hero_image'])
-                            <img src="{{ asset($data['lp_hero_image']) }}" alt="Nooryak SaaS Platform" class="w-full h-auto rounded-3xl shadow-2xl border border-slate-200">
-                        @else
-                            <!-- High Quality Mockup Graphic matching Reference Image -->
-                            <div class="relative bg-white rounded-3xl p-5 shadow-2xl border border-slate-200 overflow-hidden">
-                                <div class="bg-slate-950 rounded-2xl p-4 shadow-inner text-white">
-                                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center text-white text-xs font-bold">N</div>
-                                            <span class="font-bold text-xs text-white">Nooryak Platform</span>
-                                        </div>
-                                        <div class="flex space-x-1.5">
-                                            <div class="w-2 h-2 rounded-full bg-rose-500"></div>
-                                            <div class="w-2 h-2 rounded-full bg-amber-500"></div>
-                                            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-3 gap-2 pt-3">
-                                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                                            <p class="text-[9px] text-slate-400 font-medium">Total Customers</p>
-                                            <p class="text-sm font-extrabold text-white">1,248</p>
-                                        </div>
-                                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                                            <p class="text-[9px] text-slate-400 font-medium">Monthly Revenue</p>
-                                            <p class="text-sm font-extrabold text-emerald-400">₹4,98,320</p>
-                                        </div>
-                                        <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                                            <p class="text-[9px] text-slate-400 font-medium">Growth</p>
-                                            <p class="text-sm font-extrabold text-blue-400">+12.5%</p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 p-3 bg-slate-900/80 rounded-xl border border-slate-800">
-                                        <div class="flex justify-between items-center text-[9px] text-slate-400 mb-2">
-                                            <span>Revenue Overview</span>
-                                            <span class="text-blue-400 font-semibold">Last 6 Months</span>
-                                        </div>
-                                        <div class="h-16 flex items-end justify-between gap-2 px-1">
-                                            <div class="w-full bg-blue-600/30 rounded-t h-6"></div>
-                                            <div class="w-full bg-blue-600/50 rounded-t h-9"></div>
-                                            <div class="w-full bg-blue-600/70 rounded-t h-12"></div>
-                                            <div class="w-full bg-blue-600 rounded-t h-16"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
-                        <!-- Floating Badges -->
-                        <div class="absolute -bottom-4 -right-4 bg-white p-3 rounded-2xl shadow-xl border border-slate-200 flex items-center space-x-3 z-20">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-900">Scale. Sell. Earn. Repeat</p>
-                                <p class="text-[10px] text-slate-500 font-medium">Your Brand, Our Technology</p>
-                            </div>
-                        </div>
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto rounded-3xl shadow-2xl border border-slate-200">
                     </div>
                 </div>
 
@@ -334,29 +278,7 @@
                 <!-- Left Graphic -->
                 <div class="lg:col-span-5 order-2 lg:order-1">
                     <div class="relative">
-                        @if($data['lp_about_image'])
-                            <img src="{{ asset($data['lp_about_image']) }}" alt="About Nooryak" class="w-full h-auto rounded-3xl shadow-xl border border-slate-200">
-                        @else
-                            <div class="bg-gradient-to-tr from-slate-900 to-indigo-950 p-7 sm:p-8 rounded-3xl shadow-2xl text-white relative overflow-hidden">
-                                <div class="space-y-4">
-                                    <span class="inline-block bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-bold">
-                                        Same Platform More Possibilities
-                                    </span>
-                                    <h3 class="font-space font-bold text-xl sm:text-2xl">Ideas Scale Revenue</h3>
-                                    <p class="text-xs text-slate-300 leading-relaxed">
-                                        Nooryak provides all the White Label tools, automated billing, product suites, and single sign-on tech needed to scale your business.
-                                    </p>
-                                    <div class="pt-2 grid grid-cols-2 gap-3 text-xs font-semibold">
-                                        <div class="bg-white/10 p-2.5 rounded-xl border border-white/10">
-                                            <i class="fas fa-check-circle text-blue-400 mr-1.5"></i>Unified Dashboard
-                                        </div>
-                                        <div class="bg-white/10 p-2.5 rounded-xl border border-white/10">
-                                            <i class="fas fa-check-circle text-blue-400 mr-1.5"></i>Automated Billing
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                        <img src="{{ asset($data['lp_about_image'] ?? '/assets/images/about_right.png') }}" alt="About Nooryak" class="w-full h-auto rounded-3xl shadow-xl border border-slate-200">
                     </div>
                 </div>
 
@@ -409,16 +331,21 @@
                                 {{ $model['desc'] ?? '' }}
                             </p>
 
-                            <!-- Feature Grid (2 cols) -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
-                                @if(isset($model['features']) && is_array($model['features']))
-                                    @foreach($model['features'] as $f)
-                                    <div class="flex items-start space-x-2 text-xs font-medium text-slate-700">
-                                        <i class="fas fa-check-circle text-blue-600 mt-0.5 flex-shrink-0"></i>
-                                        <span>{{ $f }}</span>
-                                    </div>
-                                    @endforeach
-                                @endif
+                            <!-- Feature Grid (2 cols) & Preview Image -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center mb-6">
+                                <div class="space-y-2.5">
+                                    @if(isset($model['features']) && is_array($model['features']))
+                                        @foreach($model['features'] as $f)
+                                        <div class="flex items-start space-x-2 text-xs font-medium text-slate-700">
+                                            <i class="fas fa-check-circle text-blue-600 mt-0.5 flex-shrink-0"></i>
+                                            <span>{{ $f }}</span>
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                                <div class="mt-4 sm:mt-0">
+                                    <img src="{{ asset($model['image'] ?? ($index == 0 ? '/assets/images/user_dashboard.png' : '/assets/images/user_dashboard2.png')) }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-md border border-slate-200">
+                                </div>
                             </div>
                         </div>
 
@@ -738,7 +665,7 @@
     <!-- SECTION 11: CTA BANNER -->
     <section class="py-14 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl" style="background-image: url('{{ asset($data['lp_cta_banner_bg'] ?? '/assets/images/cta_background.png') }}'); background-size: cover; background-position: center;">
                 <div class="relative z-10 max-w-3xl mx-auto space-y-5">
                     <h2 class="font-space font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
                         {{ $data['lp_cta_banner_title'] }}

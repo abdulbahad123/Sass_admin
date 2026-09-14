@@ -214,7 +214,7 @@ class LandingPageController extends Controller
             // Announcement & Top Bar
             'lp_announcement_text' => Setting::get('lp_announcement_text', 'YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.'),
             'lp_announcement_badge' => Setting::get('lp_announcement_badge', 'NEW'),
-            'lp_header_logo' => Setting::get('lp_header_logo', null),
+            'lp_header_logo' => Setting::get('lp_header_logo', '/assets/images/Logo2.png'),
             'lp_book_demo_url' => Setting::get('lp_book_demo_url', '#book-demo'),
             'lp_cta_button_text' => Setting::get('lp_cta_button_text', 'Start Your SaaS Business'),
             'lp_cta_button_url' => Setting::get('lp_cta_button_url', '/login'),
@@ -231,7 +231,7 @@ class LandingPageController extends Controller
                 'Custom Branding',
                 'Unlimited Customers'
             ])), true),
-            'lp_hero_image' => Setting::get('lp_hero_image', null),
+            'lp_hero_image' => Setting::get('lp_hero_image', '/assets/images/herobanner_right.png'),
 
             // Stats Bar
             'lp_stats_bar' => json_decode(Setting::get('lp_stats_bar', json_encode([
@@ -246,7 +246,7 @@ class LandingPageController extends Controller
             'lp_about_tag' => Setting::get('lp_about_tag', 'ABOUT NOORYAK'),
             'lp_about_title' => Setting::get('lp_about_title', 'Your Partner in SaaS Success'),
             'lp_about_desc' => Setting::get('lp_about_desc', 'Nooryak is an All-In-One White Label SaaS Platform built for agencies, freelancers, IT companies and entrepreneurs who want to launch their own SaaS business under their own brand. With 5 powerful White Label SaaS products, a unified dashboard, custom branding and complete white-label control, we provide everything you need to build a scalable business and generate recurring revenue.'),
-            'lp_about_image' => Setting::get('lp_about_image', null),
+            'lp_about_image' => Setting::get('lp_about_image', '/assets/images/about_right.png'),
             'lp_about_features' => json_decode(Setting::get('lp_about_features', json_encode([
                 ['title' => 'Trusted Technology', 'icon' => 'fas fa-shield-halved'],
                 ['title' => 'Scalable Platform', 'icon' => 'fas fa-chart-line'],
@@ -260,6 +260,7 @@ class LandingPageController extends Controller
                     'badge' => 'Model 01',
                     'title' => 'White Label SaaS Partner',
                     'desc' => 'Launch your own branded SaaS platform and sell subscriptions directly to business owners.',
+                    'image' => '/assets/images/user_dashboard.png',
                     'features' => [
                         'Launch Your Own SaaS Brand',
                         'Sell Unlimited Subscriptions',
@@ -275,6 +276,7 @@ class LandingPageController extends Controller
                     'badge' => 'Model 02',
                     'title' => 'White Label SaaS Master Panel',
                     'desc' => 'Become the master admin and empower partners to launch their own SaaS businesses.',
+                    'image' => '/assets/images/user_dashboard2.png',
                     'features' => [
                         'Create Unlimited White Label Panels',
                         'Partner Branding & Custom Domains',
@@ -461,7 +463,7 @@ class LandingPageController extends Controller
             'lp_cta_banner_button1_url' => Setting::get('lp_cta_banner_button1_url', '/login'),
             'lp_cta_banner_button2_text' => Setting::get('lp_cta_banner_button2_text', 'Book a Demo'),
             'lp_cta_banner_button2_url' => Setting::get('lp_cta_banner_button2_url', '#book-demo'),
-            'lp_cta_banner_bg' => Setting::get('lp_cta_banner_bg', null),
+            'lp_cta_banner_bg' => Setting::get('lp_cta_banner_bg', '/assets/images/cta_background.png'),
             'lp_footer_desc' => Setting::get('lp_footer_desc', 'Your technology partner in building profitable SaaS businesses.'),
             'lp_contact_email' => Setting::get('lp_contact_email', 'support@nooryak.in'),
             'lp_contact_phone' => Setting::get('lp_contact_phone', '+91 98765 43210'),
