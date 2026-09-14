@@ -34,6 +34,8 @@ class Agency extends Model
         'hero_description',
         'cta_text',
         'cta_url',
+        'cta2_text',
+        'cta2_url',
         'hero_image',
         'cta_image',
         'about_title',
@@ -72,6 +74,21 @@ class Agency extends Model
         'openai_api_key',
         'is_gemini_active',
         'is_openai_active',
+        // Nooryak layout new fields
+        'stats_bar_data',
+        'model_cards_data',
+        'revenue_calculator_data',
+        'how_it_works_data',
+        'growth_path_data',
+        'cta_banner_heading',
+        'cta_banner_subtext',
+        'announcement_bar_text',
+        'kb_stats',
+        'kb_floating_data',
+        'nav_links_data',
+        'categories_data',
+        'why_choose_title',
+        'products_section_title',
     ];
 
     public function getParsedServicesAttribute()
@@ -445,6 +462,148 @@ class Agency extends Model
         }
 
         return $plans;
+    }
+
+    /* ──────────────────────────────────────────────────────────
+     *  NEW: Nooryak layout accessors
+     * ────────────────────────────────────────────────────────── */
+
+    public function getParsedStatsBarAttribute()
+    {
+        if (!empty($this->stats_bar_data)) {
+            $decoded = is_array($this->stats_bar_data)
+                ? $this->stats_bar_data
+                : (json_decode($this->stats_bar_data, true) ?: []);
+            if (!empty($decoded)) return $decoded;
+        }
+        return [
+            ['value' => '500+',  'label' => 'Active Partners',    'icon' => 'users'],
+            ['value' => '50K+',  'label' => 'Businesses Served',  'icon' => 'briefcase'],
+            ['value' => '5',     'label' => 'Powerful SaaS Products', 'icon' => 'layers'],
+            ['value' => '99.9%', 'label' => 'Uptime Guarantee',   'icon' => 'shield-check'],
+            ['value' => '24/7',  'label' => 'Expert Support',     'icon' => 'headphones'],
+        ];
+    }
+
+    public function getParsedModelCardsAttribute()
+    {
+        if (!empty($this->model_cards_data)) {
+            $decoded = is_array($this->model_cards_data)
+                ? $this->model_cards_data
+                : (json_decode($this->model_cards_data, true) ?: []);
+            if (!empty($decoded)) return $decoded;
+        }
+        return [
+            [
+                'badge'       => 'Model 01',
+                'title'       => 'White Label SaaS Partner',
+                'description' => 'Launch your own branded SaaS platform and sell subscriptions directly to business owners.',
+                'color'       => '#2563eb',
+                'features'    => [
+                    'Launch Your Own SaaS Brand',
+                    '5 SaaS Products Included',
+                    'Sell Unlimited Subscriptions',
+                    'Manage Your Customers & Business',
+                    'Custom Domain & Branding',
+                    'Build Recurring Revenue',
+                ],
+                'cta_text'    => 'Start with White Label SaaS',
+                'cta_url'     => $this->cta_url ?? '/login',
+            ],
+            [
+                'badge'       => 'Model 02',
+                'title'       => 'White Label SaaS Master Panel',
+                'description' => 'Become the master admin and empower other partners to launch their own SaaS businesses.',
+                'color'       => '#7c3aed',
+                'features'    => [
+                    'Create Unlimited White Label Panels',
+                    '5 SaaS Products Included',
+                    'Manage Unlimited SaaS Partners',
+                    'Partner Branding & Custom Domains',
+                    'Centralized Master Dashboard',
+                    'Complete Master-Level Control',
+                ],
+                'cta_text'    => 'Start with Master Panel',
+                'cta_url'     => $this->cta_url ?? '/login',
+            ],
+        ];
+    }
+
+    public function getParsedHowItWorksAttribute()
+    {
+        if (!empty($this->how_it_works_data)) {
+            $decoded = is_array($this->how_it_works_data)
+                ? $this->how_it_works_data
+                : (json_decode($this->how_it_works_data, true) ?: []);
+            if (!empty($decoded)) return $decoded;
+        }
+        return [
+            [
+                'step'  => 1,
+                'icon'  => 'user-check',
+                'title' => 'Choose Your Model',
+                'desc'  => 'Pick the White Label SaaS or Master Panel and get started.',
+            ],
+            [
+                'step'  => 2,
+                'icon'  => 'rocket',
+                'title' => 'Launch Under Your Brand',
+                'desc'  => 'Go live with your brand, domain & logo.',
+            ],
+            [
+                'step'  => 3,
+                'icon'  => 'users',
+                'title' => 'Sell & Onboard Customers',
+                'desc'  => 'Sell subscriptions within your brand to multiple partners.',
+            ],
+            [
+                'step'  => 4,
+                'icon'  => 'trending-up',
+                'title' => 'Earn Recurring Revenue',
+                'desc'  => 'Get paid monthly and scale your SaaS business.',
+            ],
+        ];
+    }
+
+    public function getParsedGrowthPathAttribute()
+    {
+        if (!empty($this->growth_path_data)) {
+            $decoded = is_array($this->growth_path_data)
+                ? $this->growth_path_data
+                : (json_decode($this->growth_path_data, true) ?: []);
+            if (!empty($decoded)) return $decoded;
+        }
+        return [
+            ['label' => 'Start',  'icon' => 'flag',     'desc' => 'Launch your own SaaS brand'],
+            ['label' => 'Grow',   'icon' => 'bar-chart-2', 'desc' => 'Add partners and grow at ₹999'],
+            ['label' => 'Expand', 'icon' => 'layers',   'desc' => 'Become a Master Partner'],
+            ['label' => 'Global', 'icon' => 'globe',    'desc' => 'Reach new markets worldwide'],
+        ];
+    }
+
+    public function getParsedRevenueCalculatorAttribute()
+    {
+        if (!empty($this->revenue_calculator_data)) {
+            $decoded = is_array($this->revenue_calculator_data)
+                ? $this->revenue_calculator_data
+                : (json_decode($this->revenue_calculator_data, true) ?: []);
+            if (!empty($decoded)) return $decoded;
+        }
+        return [
+            'title'              => 'Revenue Opportunity Calculator',
+            'subtitle'           => 'See how much you can earn every month',
+            'active_label'       => 'Active Customers',
+            'default_count'      => 100,
+            'max_count'          => 500,
+            'price_per_customer' => 999,
+            'currency_symbol'    => '₹',
+            'note'               => '*Average price per customer/month',
+            'low_badge'          => 'Low Investment',
+            'margin_badge'       => 'High Margin',
+            'potential_badge'    => 'Unlimited Potential',
+            'cta_text'           => 'Start Building Your Revenue',
+            'cta_url'            => $this->cta_url ?? '/login',
+        ];
     }
 
     public function tickets()

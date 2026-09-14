@@ -51,6 +51,14 @@ class WhiteLabelWebsiteController extends Controller
             'youtube_url'      => 'nullable|string|max:500',
             'linkedin_url'     => 'nullable|string|max:500',
             'twitter_url'      => 'nullable|string|max:500',
+            // New Nooryak layout fields
+            'cta2_text'               => 'nullable|string|max:255',
+            'cta2_url'               => 'nullable|string|max:255',
+            'announcement_bar_text'  => 'nullable|string|max:500',
+            'why_choose_title'       => 'nullable|string|max:255',
+            'products_section_title' => 'nullable|string|max:255',
+            'cta_banner_heading'     => 'nullable|string|max:500',
+            'cta_banner_subtext'     => 'nullable|string|max:500',
         ]);
 
         $uploadDir = public_path('uploads/agency');
@@ -98,13 +106,123 @@ class WhiteLabelWebsiteController extends Controller
             $validated['sections_enabled'] = json_encode($request->input('sections'));
         }
 
+        // ── New JSON fields ─────────────────────────────────────
+
+        // Stats Bar (array of {value, label, icon})
+        if ($request->has('stats_bar_value')) {
+            $sbValues = $request->input('stats_bar_value', []);
+            $sbLabels = $request->input('stats_bar_label', []);
+            $sbIcons  = $request->input('stats_bar_icon', []);
+            $statsBar = [];
+            foreach ($sbValues as $si => $sv) {
+                if (!empty($sv)) {
+                    $statsBar[] = [
+                        'value' => $sv,
+                        'label' => $sbLabels[$si] ?? '',
+                        'icon'  => $sbIcons[$si]  ?? 'check',
+                    ];
+                }
+            }
+            if (!empty($statsBar)) {
+                $validated['stats_bar_data'] = json_encode($statsBar);
+            }
+        }
+
+        // Model Cards (array of 2 model card objects)
+        if ($request->has('model_badge')) {
+            $mBadges  = $request->input('model_badge', []);
+            $mTitles  = $request->input('model_title', []);
+            $mDescs   = $request->input('model_description', []);
+            $mColors  = $request->input('model_color', []);
+            $mCtaText = $request->input('model_cta_text', []);
+            $mCtaUrl  = $request->input('model_cta_url', []);
+            $mFeatRaw = $request->input('model_features_raw', []);
+            $modelCards = [];
+            foreach ($mBadges as $mi => $mb) {
+                if (!empty($mTitles[$mi])) {
+                    $feats = array_filter(array_map('trim', explode("\n", $mFeatRaw[$mi] ?? '')));
+                    $modelCards[] = [
+                        'badge'       => $mb,
+                        'title'       => $mTitles[$mi],
+                        'description' => $mDescs[$mi] ?? '',
+                        'color'       => $mColors[$mi] ?? '#2563eb',
+                        'features'    => array_values($feats),
+                        'cta_text'    => $mCtaText[$mi] ?? 'Get Started',
+                        'cta_url'     => $mCtaUrl[$mi] ?? ($agency->cta_url ?? '/login'),
+                    ];
+                }
+            }
+            if (!empty($modelCards)) {
+                $validated['model_cards_data'] = json_encode($modelCards);
+            }
+        }
+
+        // How It Works (array of {step, icon, title, desc})
+        if ($request->has('hiw_title')) {
+            $hTitles = $request->input('hiw_title', []);
+            $hDescs  = $request->input('hiw_desc', []);
+            $hIcons  = $request->input('hiw_icon', []);
+            $howItWorks = [];
+            foreach ($hTitles as $hi => $ht) {
+                if (!empty($ht)) {
+                    $howItWorks[] = [
+                        'step'  => $hi + 1,
+                        'icon'  => $hIcons[$hi]  ?? 'check',
+                        'title' => $ht,
+                        'desc'  => $hDescs[$hi]  ?? '',
+                    ];
+                }
+            }
+            if (!empty($howItWorks)) {
+                $validated['how_it_works_data'] = json_encode($howItWorks);
+            }
+        }
+
+        // Growth Path (array of {label, icon, desc})
+        if ($request->has('growth_label')) {
+            $gLabels = $request->input('growth_label', []);
+            $gIcons  = $request->input('growth_icon', []);
+            $gDescs  = $request->input('growth_desc', []);
+            $growthPath = [];
+            foreach ($gLabels as $gi => $gl) {
+                if (!empty($gl)) {
+                    $growthPath[] = [
+                        'label' => $gl,
+                        'icon'  => $gIcons[$gi] ?? 'flag',
+                        'desc'  => $gDescs[$gi] ?? '',
+                    ];
+                }
+            }
+            if (!empty($growthPath)) {
+                $validated['growth_path_data'] = json_encode($growthPath);
+            }
+        }
+
+        // Revenue Calculator config
+        if ($request->has('rev_calc_price_per_customer')) {
+            $validated['revenue_calculator_data'] = json_encode([
+                'title'              => $request->input('rev_calc_title', 'Revenue Opportunity Calculator'),
+                'subtitle'           => $request->input('rev_calc_subtitle', 'See how much you can earn every month'),
+                'active_label'       => $request->input('rev_calc_active_label', 'Active Customers'),
+                'default_count'      => (int) $request->input('rev_calc_default_count', 100),
+                'max_count'          => (int) $request->input('rev_calc_max_count', 500),
+                'price_per_customer' => (int) $request->input('rev_calc_price_per_customer', 999),
+                'currency_symbol'    => $request->input('rev_calc_currency_symbol', '₹'),
+                'cta_text'           => $request->input('rev_calc_cta_text', 'Start Building Your Revenue'),
+                'cta_url'            => $request->input('rev_calc_cta_url', $agency->cta_url ?? '/login'),
+                'low_badge'          => $request->input('rev_calc_low_badge', 'Low Investment'),
+                'margin_badge'       => $request->input('rev_calc_margin_badge', 'High Margin'),
+                'potential_badge'    => $request->input('rev_calc_potential_badge', 'Unlimited Potential'),
+            ]);
+        }
+
         $agency->update($validated);
 
         AuditLog::create([
-            'user_id' => auth()->id(),
+            'user_id'   => auth()->id(),
             'user_name' => auth()->user()->name ?? 'Agency Owner',
-            'action' => "Updated landing page settings & hero for {$agency->name}",
-            'ip_address' => $request->ip(),
+            'action'    => "Updated landing page settings & hero for {$agency->name}",
+            'ip_address'=> $request->ip(),
         ]);
 
         return back()->with('success', 'Landing page configuration saved successfully!');

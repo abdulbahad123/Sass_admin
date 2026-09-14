@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $agency->meta_title ?? ($agency->name . ' — All-in-One Business Growth Platform') }}</title>
-    <meta name="description" content="{{ $agency->meta_description ?? ($agency->hero_subtitle ?? 'Empowering Indian businesses with smart digital tools.') }}">
+    <title>{{ $agency->meta_title ?? ($agency->name . ' — Launch Your Own SaaS Business Under Your Brand') }}</title>
+    <meta name="description" content="{{ $agency->meta_description ?? ($agency->hero_subtitle ?? 'White Label SaaS Platform — Launch your own SaaS business with 5 powerful products, custom branding and complete white-label control.') }}">
 
     @if(!empty($agency->favicon))
         <link rel="icon" type="image/png" href="{{ asset($agency->favicon) }}">
@@ -15,502 +15,1473 @@
         <meta property="og:image" content="{{ asset($agency->og_image ?? $agency->hero_image) }}">
     @endif
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {{-- Nooryak Font Stack --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=Onest:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     @php
-        $agencyGet = fn($key) => $agency->$key ?? null;
-        $primaryColor   = $agency->primary_color   ?? '#4f46e5';
-        $secondaryColor = $agency->secondary_color ?? '#9333ea';
+        $primaryColor   = $agency->primary_color   ?? '#2563eb';
+        $secondaryColor = $agency->secondary_color ?? '#1d4ed8';
 
         $heroImg  = !empty($agency->hero_image)  ? asset(ltrim($agency->hero_image, '/'))  : asset('assets/landing_page/herobanner_dashboard.png');
         $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/features_leftside.png');
         $ctaImg   = !empty($agency->cta_image)   ? asset(ltrim($agency->cta_image, '/'))   : asset('assets/landing_page/footer_card.png');
 
-        /* KB stats — dynamically editable */
-        $kbStatsRaw = $agencyGet('kb_stats');
-        $kbStats = is_array($kbStatsRaw)
-            ? $kbStatsRaw
-            : (json_decode($kbStatsRaw ?? '[]', true) ?: [
-                ['value' => '10,000+', 'label' => 'Happy Businesses',  'icon' => 'users'],
-                ['value' => '1M+',     'label' => 'Orders Processed',  'icon' => 'package'],
-                ['value' => '500K+',   'label' => 'Active Customers',  'icon' => 'shield'],
-                ['value' => '99.8%',   'label' => 'Uptime & Secure',   'icon' => 'sparkles'],
+        // Stats Bar
+        $statsBar = $agency->parsed_stats_bar;
+
+        // Model Cards
+        $modelCards = $agency->parsed_model_cards;
+
+        // How It Works
+        $howItWorks = $agency->parsed_how_it_works;
+
+        // Growth Path
+        $growthPath = $agency->parsed_growth_path;
+
+        // Revenue Calculator
+        $revCalc = $agency->parsed_revenue_calculator;
+
+        // Services/Products
+        $services = is_array($agency->services_data ?? null)
+            ? $agency->services_data
+            : (json_decode($agency->services_data ?? '[]', true) ?: [
+                ['title' => 'AI Reviews & GMS Automation', 'desc' => 'Generate reviews, automate replies and manage your online reputation.', 'icon' => 'star', 'color' => '#7c3aed', 'bg' => '#ede9fe'],
+                ['title' => 'AI Single Page Website Builder', 'desc' => 'Create stunning websites in minutes with AI-powered content generation.', 'icon' => 'monitor', 'color' => '#2563eb', 'bg' => '#dbeafe'],
+                ['title' => 'Restaurant QR Menu & Order Management', 'desc' => 'Digital menu, take orders and manage your restaurant operations effortlessly.', 'icon' => 'qr-code', 'color' => '#d97706', 'bg' => '#fef3c7'],
+                ['title' => 'Digital V-Card & NFC', 'desc' => 'Increase repeat customers instantly with smart digital business cards.', 'icon' => 'credit-card', 'color' => '#059669', 'bg' => '#d1fae5'],
+                ['title' => 'Loyalty & Rewards Platform', 'desc' => 'Increase repeat customers with digital loyalty programs and rewards.', 'icon' => 'gift', 'color' => '#db2777', 'bg' => '#fce7f3'],
             ]);
 
-        $kbFloatingRaw = $agencyGet('kb_floating_data');
-        $kbFloating = is_array($kbFloatingRaw)
-            ? $kbFloatingRaw
-            : (json_decode($kbFloatingRaw ?? '[]', true) ?: [
-                'order_num'       => '#ORD-125',
-                'revenue'         => '₹24,50,000',
-                'revenue_growth'  => '12.5%',
-                'customers'       => '1,245',
-                'customer_growth' => '18.2%',
-                'customer_month'  => '+192 this month',
-            ]);
-
-        $dynamicProducts = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? $agency->enabled_products : collect();
-        if ($dynamicProducts->isNotEmpty() && empty($agency->services_data)) {
-            $services = [];
-            foreach ($dynamicProducts as $dp) {
-                $services[] = [
-                    'title' => $dp->name,
-                    'desc'  => $dp->tagline ?? $dp->description ?? 'White-label SaaS product suite enabled for your end-clients.',
-                    'icon'  => $dp->icon ?? 'box',
-                    'link'  => method_exists($agency, 'getProductSubdomainUrl') ? $agency->getProductSubdomainUrl($dp->slug ?? $dp->name) : '#',
-                ];
-            }
-        } else {
-            $services = is_array($agency->services_data ?? null)
-                ? $agency->services_data
-                : (json_decode($agency->services_data ?? '[]', true) ?: [
-                    ['title' => 'AI Reviews + CRM',    'desc' => 'Get more 5-star reviews & manage customers easily',     'icon' => 'star'],
-                    ['title' => 'Website Builder',      'desc' => 'Create stunning websites in minutes with AI',           'icon' => 'monitor'],
-                    ['title' => 'Digital V-Card',       'desc' => 'Share your business digitally, smartly',               'icon' => 'user'],
-                    ['title' => 'QR Menu & Ordering',   'desc' => 'Contactless menu for restaurants & cafes',             'icon' => 'qr-code'],
-                    ['title' => 'Loyalty Program',      'desc' => 'Reward your customers and increase repeat sales',      'icon' => 'gift'],
-                    ['title' => 'Business Analytics',   'desc' => 'Track growth with real-time insights',                 'icon' => 'bar-chart-3'],
-                ]);
-        }
-
+        // Testimonials
         $testimonials = is_array($agency->testimonials_data ?? null)
             ? $agency->testimonials_data
             : (json_decode($agency->testimonials_data ?? '[]', true) ?: [
-                ['name' => 'Rahul Sharma', 'role' => 'Restaurant Owner, Delhi',  'rating' => 5, 'comment' => "{$agency->name} helped us get 3x more online orders in just 2 months. The QR menu and reviews feature is amazing!"],
-                ['name' => 'Priya Mehta',  'role' => 'Salon Owner, Mumbai',      'rating' => 5, 'comment' => 'Super easy to use and really effective. Our customer engagement has never been better!'],
-                ['name' => 'Amit Verma',   'role' => 'Clinic Owner, Bengaluru',  'rating' => 5, 'comment' => 'The digital tools, CRM and reminders have saved us hours of work every week.'],
+                ['name' => 'Rahul Sharma', 'role' => 'Digital Agency Owner', 'rating' => 5, 'comment' => '"Nooryak helped me launch my own SaaS business in just a few days. The platform is powerful and super easy to use."'],
+                ['name' => 'Priya Mehta',  'role' => 'Company Founder',     'rating' => 5, 'comment' => '"The Master Panel gives me complete control to manage multiple partners. Highly recommended for anyone looking to create recurring revenue."'],
+                ['name' => 'Amit Verma',   'role' => 'Entrepreneur',        'rating' => 5, 'comment' => '"Amazing product and a feature-rich platform. Highly recommended for anyone looking to create recurring revenue."'],
             ]);
 
+        // Features
         $features = is_array($agency->features_data ?? null)
             ? $agency->features_data
             : (json_decode($agency->features_data ?? '[]', true) ?: [
-                ['title' => 'Get More Customers', 'desc' => 'Build trust with reviews, smart websites and digital presence.', 'icon' => 'rocket',       'bg' => '#ede9fe', 'color' => '#7c3aed'],
-                ['title' => 'Save Time & Effort',  'desc' => 'Automate repetitive tasks and focus on what matters most.',      'icon' => 'clock',        'bg' => '#d1fae5', 'color' => '#059669'],
-                ['title' => 'Increase Revenue',    'desc' => 'Drive repeat business with loyalty programs & digital tools.',   'icon' => 'trending-up',  'bg' => '#ffedd5', 'color' => '#ea580c'],
-                ['title' => 'Reliable & Secure',   'desc' => 'Your business data is safe with enterprise-grade security.',     'icon' => 'shield-check', 'bg' => '#dbeafe', 'color' => '#1d4ed8'],
+                ['title' => '100% White Label',       'desc' => 'Your brand, your identity. We stay behind the scenes.',     'icon' => 'tag',          'color' => '#2563eb'],
+                ['title' => 'White Label Ready',       'desc' => 'Custom logo, domain, and branding.',                       'icon' => 'shield-check',  'color' => '#7c3aed'],
+                ['title' => 'Scalable Ecosystem',     'desc' => 'Grow from smaller to network builder.',                     'icon' => 'trending-up',   'color' => '#059669'],
+                ['title' => 'Go Live in Days',        'desc' => 'Go live in days, not months.',                             'icon' => 'rocket',        'color' => '#d97706'],
+                ['title' => 'Recurring Income',       'desc' => 'Build predictable monthly income.',                        'icon' => 'refresh-cw',    'color' => '#db2777'],
+                ['title' => 'Dedicated Support',      'desc' => 'With your technology partner, always.',                   'icon' => 'headphones',    'color' => '#0891b2'],
             ]);
 
+        // FAQs
         $faqs = is_array($agency->faq_data ?? null)
             ? $agency->faq_data
             : (json_decode($agency->faq_data ?? '[]', true) ?: [
-                ['q' => 'How does the platform work?',                   'a' => 'Our platform provides an all-in-one suite of growth tools to help local businesses manage orders, reviews, websites, and customer retention from one place.'],
-                ['q' => 'Can I customize the features for my business?', 'a' => 'Yes, you can enable and configure the exact tools you need in just a few clicks from your dashboard.'],
-                ['q' => 'Is technical knowledge required?',              'a' => 'Not at all! Our software is built for non-technical business owners with clean, easy-to-use interfaces.'],
+                ['q' => 'What is ' . $agency->name . '?',                          'a' => $agency->name . ' is an All-in-One White Label SaaS Platform that helps agencies, freelancers, IT companies and entrepreneurs who want to launch their own SaaS business under their own brand.'],
+                ['q' => 'How does the pricing work?',                              'a' => 'We offer flexible monthly and yearly pricing plans. You can choose the plan that fits your business needs.'],
+                ['q' => 'Can I use my own domain and branding?',                   'a' => 'Yes! You can fully white-label the platform with your own domain, logo, and brand colors.'],
+                ['q' => 'Is there a knowledge base / support?',                    'a' => 'Yes, we offer 24/7 customer support along with a comprehensive knowledge base and video tutorials.'],
+                ['q' => 'Do you provide support?',                                 'a' => 'Absolutely. Our dedicated support team is available round the clock to help you with any queries.'],
             ]);
 
-        $categories = is_array($agency->categories_data ?? null)
-            ? $agency->categories_data
-            : (json_decode($agency->categories_data ?? '[]', true) ?: [
-                ['label' => 'Restaurants',    'icon' => '🍽️'],
-                ['label' => 'Clinics',        'icon' => '🏥'],
-                ['label' => 'Salons & Spas',  'icon' => '💇'],
-                ['label' => 'Retail Shops',   'icon' => '🛍️'],
-                ['label' => 'Hotels',         'icon' => '🏨'],
-                ['label' => 'Gyms & Fitness', 'icon' => '🏋️'],
-                ['label' => 'Real Estate',    'icon' => '🏠'],
-                ['label' => '& Many More',    'icon' => '✨'],
-            ]);
+        // Pricing
+        $pricingPlans = $agency->parsed_pricing_plans;
+        $pricingSectionTitle    = $agency->pricing_section_title    ?? 'Transparent Pricing for Every Stage';
+        $pricingSectionSubtitle = $agency->pricing_section_subtitle ?? 'Choose the path that fits your SaaS business.';
 
-        /* product icon map */
-        $pIconMap = [
-            'AI Reviews + CRM'  => ['icon' => 'star',         'bg' => '#ede9fe', 'clr' => '#7c3aed'],
-            'Website Builder'   => ['icon' => 'monitor',      'bg' => '#dbeafe', 'clr' => '#1d4ed8'],
-            'Digital V-Card'    => ['icon' => 'user',         'bg' => '#d1fae5', 'clr' => '#059669'],
-            'QR Menu & Ordering'=> ['icon' => 'qr-code',     'bg' => '#fce7f3', 'clr' => '#be185d'],
-            'Loyalty Program'   => ['icon' => 'gift',         'bg' => '#fef3c7', 'clr' => '#d97706'],
-            'Business Analytics'=> ['icon' => 'bar-chart-3',  'bg' => '#ccfbf1', 'clr' => '#0d9488'],
-        ];
+        // Social links
+        $socialLinks = is_array($agency->social_links ?? null)
+            ? $agency->social_links
+            : (json_decode($agency->social_links ?? '{}', true) ?: []);
+        $fbUrl  = $agency->facebook_url  ?? ($socialLinks['facebook']  ?? '#');
+        $igUrl  = $agency->instagram_url ?? ($socialLinks['instagram'] ?? '#');
+        $ytUrl  = $agency->youtube_url   ?? ($socialLinks['youtube']   ?? '#');
+        $liUrl  = $agency->linkedin_url  ?? ($socialLinks['linkedin']  ?? '#');
+        $twUrl  = $agency->twitter_url   ?? ($socialLinks['twitter']   ?? '#');
 
-        /* Pricing plans — from agency dashboard or auto-generated */
-        $pricingPlans = ($agency && method_exists($agency, 'getParsedPricingPlansAttribute'))
-            ? $agency->parsed_pricing_plans
-            : [];
-        if (empty($pricingPlans)) {
-            $pricingPlans = [
-                ['product_name' => 'ECOM BUILDER', 'product_tagline' => 'Online Store Builder', 'product_subtitle' => 'Launch your digital store in minutes.', 'color' => '#f97316', 'gradient' => 'linear-gradient(135deg,#f97316,#ea580c)', 'icon' => 'shopping-bag', 'plan_badge' => 'STARTER TIER', 'plan_name' => 'Starter Growth', 'price_monthly' => '499', 'price_yearly' => '4999', 'trust_count' => '10,000+ Sellers Trust Us', 'is_popular' => false, 'features' => ['1 Online Store', 'Up to 1,000 Products', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Subdomain Setup'], 'cta_text' => 'Get Started Free', 'cta_url' => $agency->cta_url ?? '/login'],
-                ['product_name' => 'Website Builder', 'product_tagline' => 'Professional Website Builder', 'product_subtitle' => 'Create stunning websites with AI in minutes.', 'color' => '#2563eb', 'gradient' => 'linear-gradient(135deg,#2563eb,#1d4ed8)', 'icon' => 'monitor', 'plan_badge' => 'MOST POPULAR', 'plan_name' => 'Professional Pro', 'price_monthly' => '1499', 'price_yearly' => '14999', 'trust_count' => '5,000+ Websites Live', 'is_popular' => true, 'features' => ['Drag & Drop Builder', 'Custom Domain', 'SEO Optimization', 'AI Content Generation', '24/7 Priority Support'], 'cta_text' => 'Start 14-Day Free Trial', 'cta_url' => $agency->cta_url ?? '/login'],
-            ];
-        }
-        $pricingSectionTitle    = $agency->pricing_section_title    ?? 'Choose Your Perfect Plan';
-        $pricingSectionSubtitle = $agency->pricing_section_subtitle ?? 'Scale seamlessly with zero hidden fees.';
-        $pricingTrustBarRaw     = $agency->pricing_trust_bar        ?? '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses';
-        $pricingTrustItems      = array_map('trim', explode(',', $pricingTrustBarRaw));
+        $ctaUrl  = $agency->cta_url  ?? '/login';
+        $ctaText = $agency->cta_text ?? 'Start Your SaaS Business';
+        $cta2Text = $agency->cta2_text ?? 'Book a Demo';
+        $cta2Url  = $agency->cta2_url  ?? '/login';
+
+        $announcementText = $agency->announcement_bar_text ?? 'YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.';
+        $ctaBannerHeading = $agency->cta_banner_heading ?? ('Ready to Launch Your ' . $agency->name . ' Business?');
+        $ctaBannerSubtext = $agency->cta_banner_subtext ?? 'Your Success Starts Here!';
     @endphp
 
     <style>
         :root {
             --brand-primary:   {{ $primaryColor }};
             --brand-secondary: {{ $secondaryColor }};
+            --brand-gradient: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+            --nooryak-blue: #2563eb;
+            --nooryak-dark: #0f172a;
+            --nooryak-text: #2e2d2d;
+            --nooryak-gray: #64748b;
+            --nooryak-light: #f8f8f8;
+            --nooryak-border: #EAEBED;
+            --nooryak-orange: #FF5722;
+            --nooryak-orange-dark: #FF3D00;
+            --radius-card: 16px;
         }
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body  { font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; background: #fff; overflow-x: hidden; }
-        h1, h2, h3, h4, h5 { font-family: 'Outfit', sans-serif; }
 
-        /* ── BRAND UTILITIES ── */
-        .bg-brand  { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); }
-        .text-brand {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .btn-brand {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-            color: #fff; font-weight: 800; border-radius: 999px;
-            padding: 12px 28px; font-size: 13px; line-height: 1;
-            box-shadow: 0 8px 24px -6px rgba(79,70,229,.38);
-            transition: transform .2s, box-shadow .2s;
-            text-decoration: none; white-space: nowrap;
-        }
-        .btn-brand:hover { transform: scale(1.03); box-shadow: 0 12px 32px -6px rgba(79,70,229,.5); }
-        .btn-outline {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #fff; color: #1e293b; font-weight: 700;
-            border: 1.5px solid #e2e8f0; border-radius: 999px;
-            padding: 12px 26px; font-size: 13px; line-height: 1;
-            text-decoration: none; transition: background .2s;
-        }
-        .btn-outline:hover { background: #f8fafc; }
+        html { scroll-behavior: smooth; font-size: 16px; }
 
-        /* ── HEADER ── */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--nooryak-text);
+            background: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.2;
+            color: var(--nooryak-dark);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+        ul { list-style: none; }
+
+        /* ── ANNOUNCEMENT BAR ── */
+        .announcement-bar {
+            background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #94a3b8;
+            text-align: center;
+            padding: 9px 16px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ── NAVBAR ── */
         .site-header {
-            position: sticky; top: 0; z-index: 50;
-            background: rgba(255,255,255,.96);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #f1f5f9;
-            box-shadow: 0 1px 3px 0 rgba(0,0,0,.04);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--nooryak-border);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
-        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-
-        /* ── CATEGORY PILL ── */
-        .cat-pill {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-            min-width: 76px; padding: 10px 14px; border-radius: 14px;
-            border: 1px solid #e2e8f0; background: #fff;
-            font-size: 11px; font-weight: 700; color: #64748b;
-            transition: all .2s; cursor: default;
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
         }
-        .cat-pill:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; transform: translateY(-2px); }
-        .cat-icon { font-size: 22px; line-height: 1; }
-
-        /* ── FEATURE CARDS ── */
-        .feat-card {
-            background: #fff; border: 1px solid #e9eef4; border-radius: 18px;
-            padding: 28px 24px;
-            transition: transform .25s, box-shadow .25s;
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
         }
-        .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px -12px rgba(79,70,229,.12); }
-        .feat-icon-box { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-
-        /* ── PRODUCT CARD ── */
-        .prod-card {
-            background: #fff; border: 1px solid #e9eef4; border-radius: 16px;
-            padding: 20px; transition: transform .25s, box-shadow .25s;
-            display: flex; flex-direction: column; gap: 12px;
+        .nav-logo img { height: 38px; width: auto; object-fit: contain; }
+        .nav-logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            letter-spacing: -0.5px;
         }
-        .prod-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -8px rgba(79,70,229,.11); }
-        .prod-card-top { display: flex; align-items: center; justify-content: space-between; }
-        .prod-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .prod-arrow {
-            width: 30px; height: 30px; border-radius: 50%; background: #f1f5f9;
-            display: flex; align-items: center; justify-content: center; color: #94a3b8;
-            transition: background .2s, color .2s;
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .prod-card:hover .prod-arrow { background: var(--brand-primary); color: #fff; }
-
-        /* ── STEP CARD (How It Works) ── */
-        .step-card {
-            background: #fff; border: 1.5px solid #e9eef4; border-radius: 20px;
-            padding: 32px 20px 28px; text-align: center;
-            display: flex; flex-direction: column; align-items: center; gap: 14px;
-            position: relative; z-index: 1;
+        .nav-links a {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        .step-num {
-            width: 38px; height: 38px; border-radius: 50%; color: #fff;
-            font-weight: 900; font-size: 13px;
+        .nav-links a:hover { color: var(--brand-primary); background: #f1f5f9; }
+        .nav-links .has-dropdown { position: relative; }
+        .nav-links .dropdown-icon { font-size: 11px; opacity: 0.6; }
+        .nav-ctas {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .btn-demo {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border-radius: 10px;
+            border: 1.5px solid var(--nooryak-border);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--nooryak-dark);
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-demo:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+        .btn-primary-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .btn-primary-nav:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+        .btn-primary-nav i { font-size: 12px; }
+        .nav-icon-btn {
+            width: 36px; height: 36px; border-radius: 8px;
+            border: 1.5px solid var(--nooryak-border);
+            background: #fff;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 14px -4px rgba(79,70,229,.4);
+            color: #64748b; cursor: pointer; transition: all 0.2s;
         }
-        .step-icon-wrap { width: 64px; height: 64px; border-radius: 18px; background: #f4f3ff; display: flex; align-items: center; justify-content: center; }
+        .nav-icon-btn:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
 
-        /* ── REVIEW CARD ── */
-        .review-card {
-            background: #fff; border: 1px solid #e9eef4; border-radius: 18px;
-            padding: 22px;
-            transition: transform .25s, box-shadow .25s;
+        /* Mobile Nav */
+        .mobile-ham {
+            display: none;
+            background: none;
+            border: 1.5px solid var(--nooryak-border);
+            border-radius: 8px;
+            width: 38px; height: 38px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
         }
-        .review-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px -8px rgba(0,0,0,.08); }
-        .rev-avatar {
-            width: 42px; height: 42px; border-radius: 50%;
-            object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;
-        }
-        .rev-initials {
-            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-            color: #fff; font-weight: 900; font-size: 12px;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* ── CTA BANNER ── */
-        .cta-band {
-            border-radius: 22px;
-            background: linear-gradient(120deg, #1a237e 0%, #283593 35%, #4527a0 100%);
-            position: relative; overflow: hidden;
-        }
-        .cta-band::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at 25% 60%, rgba(99,102,241,.28) 0%, transparent 65%);
-        }
-
-        /* ── FEATURES/ABOUT SECTION ── */
-        .about-section { background: linear-gradient(135deg, #f5f4ff 0%, #eef2ff 100%); }
-        .stat-divider { width: 1px; background: #d4d4d8; height: 48px; flex-shrink: 0; }
-
-        /* ── FOOTER ── */
-        .site-footer { background: #0f172a; color: #94a3b8; }
-        .footer-social-btn {
-            width: 32px; height: 32px; border-radius: 50%; background: #1e293b;
-            display: inline-flex; align-items: center; justify-content: center;
-            color: #64748b; transition: background .2s, color .2s;
-        }
-        .footer-social-btn:hover { background: var(--brand-primary); color: #fff; }
-        .newsletter-wrap { display: flex; gap: 8px; }
-        .newsletter-input {
-            flex: 1; background: #1e293b; border: 1px solid #334155;
-            color: #e2e8f0; padding: 10px 14px; border-radius: 10px;
-            font-size: 12px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .newsletter-input::placeholder { color: #64748b; }
-        .newsletter-send {
-            width: 40px; height: 40px; border-radius: 10px; border: none; cursor: pointer;
-            flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        }
-
-        /* ── MOBILE MENU ── */
         #mobile-menu { display: none; }
         #mobile-menu.open { display: block; }
 
-        @media(max-width: 640px) {
-            .cat-pill { min-width: 62px; padding: 8px 10px; font-size: 10px; }
-            .cat-icon { font-size: 18px; }
-            .header-inner { padding: 0 16px; }
+        /* ── HERO SECTION ── */
+        .hero-section {
+            background: linear-gradient(160deg, #f0f7ff 0%, #f8f4ff 50%, #fff 100%);
+            padding: 80px 0 90px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -100px; right: -100px;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -60px;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: center;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37,99,235,0.08);
+            border: 1px solid rgba(37,99,235,0.18);
+            color: #1d4ed8;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.02em;
+            width: fit-content;
+            margin-bottom: 20px;
+        }
+        .hero-headline {
+            font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+        }
+        .hero-headline .text-blue {
+            color: var(--brand-primary);
+        }
+        .hero-subtitle {
+            font-size: 15.5px;
+            color: #475569;
+            line-height: 1.75;
+            max-width: 480px;
+            margin-bottom: 32px;
+        }
+        .hero-ctas {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+        .btn-hero-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(37,99,235,0.45); }
+        .btn-hero-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            color: var(--nooryak-dark);
+            font-weight: 700;
+            font-size: 14px;
+            padding: 13px 24px;
+            border-radius: 12px;
+            border: 1.5px solid var(--nooryak-border);
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-hero-secondary:hover { border-color: var(--brand-primary); background: #f8fafc; }
+        .hero-trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #64748b;
+        }
+        .hero-trust-badges span {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .hero-trust-badges i { color: var(--brand-primary); font-size: 13px; }
+        .hero-img-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .hero-img-wrapper img {
+            width: 100%;
+            max-width: 580px;
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(37,99,235,0.15), 0 0 0 1px rgba(226,232,240,0.6);
+            position: relative;
+            z-index: 2;
+        }
+        .hero-float-card {
+            position: absolute;
+            top: 24px;
+            right: -16px;
+            z-index: 10;
+            background: #fff;
+            border-radius: 14px;
+            padding: 14px 18px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+            border: 1px solid var(--nooryak-border);
+            min-width: 160px;
+            animation: floatY 3.5s ease-in-out infinite;
+        }
+        .hero-float-card .card-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+        .hero-float-card .card-value { font-family: 'Onest', sans-serif; font-size: 20px; font-weight: 900; color: var(--nooryak-dark); margin-top: 2px; }
+        .hero-float-card .card-growth { font-size: 11px; font-weight: 700; color: #10b981; margin-top: 4px; }
+        .hero-float-brand {
+            position: absolute;
+            bottom: -14px;
+            left: 24px;
+            z-index: 10;
+            background: var(--brand-gradient);
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+            border: 3px solid #fff;
+            animation: floatY 4s ease-in-out 1s infinite;
+        }
+        .hero-float-brand img { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; }
+        .hero-float-brand i { color: #fff; font-size: 20px; }
+
+        @keyframes floatY {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-8px); }
         }
 
-        /* ── PRICING CARDS & RESPONSIVENESS ── */
-        .pricing-cards-outer {
+        /* ── CONTAINER ── */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── SECTION COMMON ── */
+        .section-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--brand-primary);
+            margin-bottom: 10px;
+        }
+        .section-heading {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            line-height: 1.15;
+        }
+        .section-subheading {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.7;
+            margin-top: 12px;
+            max-width: 600px;
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            background: #fff;
+            border-top: 1px solid var(--nooryak-border);
+            border-bottom: 1px solid var(--nooryak-border);
+            padding: 0;
+        }
+        .stats-bar-inner {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+        }
+        .stat-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 24px 28px;
+            border-right: 1px solid var(--nooryak-border);
+            transition: background 0.2s;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-item:hover { background: #f8fafc; }
+        .stat-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(37,99,235,0.08);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            color: var(--brand-primary);
+            font-size: 18px;
+        }
+        .stat-value {
+            font-family: 'Onest', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: var(--nooryak-dark);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--nooryak-gray);
+            margin-top: 3px;
+        }
+
+        /* ── ABOUT/PARTNER SECTION ── */
+        .about-section {
+            background: #f8f9fb;
+            padding: 80px 0;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .about-img-wrapper {
+            position: relative;
+        }
+        .about-img-wrapper img {
+            width: 100%;
+            border-radius: var(--radius-card);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+        .about-float-card {
+            position: absolute;
+            bottom: 24px;
+            right: -20px;
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px 20px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+            border: 1px solid var(--nooryak-border);
+            animation: floatY 4s ease-in-out 1s infinite;
+        }
+        .about-float-card .af-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+        .about-float-card .af-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 800; color: var(--nooryak-dark); margin-top: 4px; }
+        .about-float-card .af-sub { font-size: 12px; color: var(--brand-primary); font-weight: 600; margin-top: 2px; }
+
+        /* ── MODEL CARDS ── */
+        .models-section {
+            background: #fff;
+            padding: 80px 0;
+        }
+        .models-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-top: 48px;
+        }
+        .model-card {
+            border-radius: 20px;
+            border: 1.5px solid var(--nooryak-border);
+            overflow: hidden;
+            transition: transform 0.25s, box-shadow 0.25s;
+            background: #fff;
+        }
+        .model-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.09); }
+        .model-card-header {
+            padding: 24px 28px 20px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%);
+            border-bottom: 1px solid var(--nooryak-border);
+        }
+        .model-card-header.purple-header { background: linear-gradient(135deg, #f5f0ff 0%, #ede8fe 100%); }
+        .model-badge {
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--brand-primary);
+            background: rgba(37,99,235,0.1);
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+        }
+        .model-badge.purple { color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .model-card-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            margin-bottom: 8px;
+        }
+        .model-card-desc {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.65;
+        }
+        .model-card-body {
+            padding: 24px 28px;
+        }
+        .model-feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .model-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+        }
+        .model-feature-item i {
+            color: var(--brand-primary);
+            font-size: 13px;
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+        }
+        .model-feature-item.purple-check i { color: #7c3aed; }
+        .btn-model {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 10px;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-model:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.3); }
+        .btn-model.purple-btn { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
+        .btn-model.purple-btn:hover { box-shadow: 0 6px 18px rgba(124,58,237,0.3); }
+
+        /* ── PRODUCTS SECTION ── */
+        .products-section {
+            background: var(--nooryak-light);
+            padding: 80px 0;
+        }
+        .products-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 32px;
+            margin-top: 48px;
+            align-items: start;
+        }
+        .products-grid-inner {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: var(--radius-card);
+            border: 1px solid var(--nooryak-border);
+            padding: 22px 20px;
+            transition: transform 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+        }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,0.08); }
+        .product-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+        .product-card-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            margin-bottom: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .product-card-desc {
+            font-size: 12.5px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+        .product-learn-more {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .product-learn-more:hover { gap: 8px; }
+
+        /* Revenue Calculator */
+        .rev-calc-card {
+            background: #fff;
+            border-radius: 20px;
+            border: 1.5px solid var(--nooryak-border);
+            padding: 28px 24px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        }
+        .rev-calc-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            margin-bottom: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .rev-calc-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        .rev-slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .rev-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--brand-primary) 0%, #e2e8f0 0%);
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .rev-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            box-shadow: 0 2px 8px rgba(37,99,235,0.4);
+            border: 3px solid #fff;
+            cursor: pointer;
+        }
+        .rev-result-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #eff6ff 100%);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .rev-result-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+        .rev-result-value {
+            font-family: 'Onest', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--brand-primary);
+            margin: 6px 0 2px;
+            line-height: 1;
+        }
+        .rev-note { font-size: 10px; color: #94a3b8; }
+        .rev-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .rev-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #059669;
+            background: #d1fae5;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .rev-badge i { font-size: 10px; }
+        .btn-rev-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-weight: 800;
+            font-size: 13px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-rev-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.35); }
+
+        /* ── HOW IT WORKS ── */
+        .hiw-section {
+            background: #fff;
+            padding: 80px 0;
+        }
+        .hiw-steps {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            margin-top: 52px;
+            position: relative;
+        }
+        .hiw-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .hiw-connector {
+            flex: 0 0 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+            margin-top: 32px;
+            border-radius: 999px;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        .hiw-step-num {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-family: 'Onest', sans-serif;
+            font-weight: 900;
+            font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+        }
+        .hiw-icon-wrap {
+            width: 64px; height: 64px;
+            border-radius: 18px;
+            background: #f0f7ff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            color: var(--brand-primary);
+            margin-bottom: 16px;
+            transition: background 0.2s;
+        }
+        .hiw-step:hover .hiw-icon-wrap { background: var(--brand-gradient); color: #fff; }
+        .hiw-step-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            margin-bottom: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .hiw-step-desc { font-size: 13px; color: #64748b; line-height: 1.65; }
+
+        /* ── WHY CHOOSE ── */
+        .why-section {
+            background: var(--nooryak-light);
+            padding: 80px 0;
+        }
+        .why-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: center;
+            margin-top: 0;
+        }
+        .why-features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .why-feat-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid var(--nooryak-border);
+            padding: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .why-feat-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .why-feat-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        .why-feat-title { font-size: 13px; font-weight: 800; color: var(--nooryak-dark); margin-bottom: 4px; }
+        .why-feat-desc { font-size: 12px; color: #64748b; line-height: 1.55; }
+        .why-img-wrapper { position: relative; }
+        .why-img-wrapper img { border-radius: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+
+        /* ── PRICING ── */
+        .pricing-section {
+            background: #fff;
+            padding: 80px 0;
+        }
+        .pricing-toggle-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 32px 0 44px;
+        }
+        .pricing-toggle-label { font-size: 14px; font-weight: 700; color: #334155; }
+        .pricing-toggle-switch {
+            position: relative;
+            width: 52px; height: 28px;
+        }
+        .pricing-toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: #e2e8f0;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-track::before {
+            content: '';
+            position: absolute;
+            width: 22px; height: 22px;
+            left: 3px; top: 3px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+        .pricing-toggle-switch input:checked + .toggle-track { background: var(--brand-primary); }
+        .pricing-toggle-switch input:checked + .toggle-track::before { transform: translateX(24px); }
+        .pricing-save-badge {
+            background: #d1fae5;
+            color: #059669;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+        .pricing-cards-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 28px;
-            width: 100%;
         }
-        .pricing-card-item {
-            border-radius: 24px;
+        .pricing-card {
+            border-radius: 20px;
+            border: 1.5px solid var(--nooryak-border);
             overflow: hidden;
-            border: 1.5px solid #e2e8f0;
-            box-shadow: 0 12px 40px rgba(0,0,0,.06);
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: #fff;
-            transition: transform .3s, box-shadow .3s;
-            width: 100%;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .pricing-left-panel {
-            padding: 36px 28px;
+        .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .pricing-left {
+            padding: 32px 28px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border-right: 1px solid rgba(226,232,240,0.8);
-            position: relative;
+            border-right: 1px solid var(--nooryak-border);
         }
-        .pricing-right-panel {
-            background: #fff;
-            padding: 32px 24px;
+        .pricing-plan-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .pricing-plan-name {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            margin-bottom: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .pricing-plan-sub { font-size: 12.5px; color: #64748b; line-height: 1.6; margin-bottom: 24px; }
+        .pricing-price-wrap { margin-bottom: 24px; }
+        .pricing-price-main {
+            font-family: 'Onest', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--nooryak-dark);
+            line-height: 1;
+        }
+        .pricing-price-main span { font-size: 1rem; font-weight: 500; color: #94a3b8; }
+        .pricing-price-yearly { display: none; }
+        .btn-pricing {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border-radius: 10px;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-weight: 800;
+            font-size: 13px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            justify-content: center;
+        }
+        .btn-pricing:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.3); }
+        .pricing-right {
+            padding: 28px 24px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+        }
+        .pricing-features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .pricing-feat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #334155;
+        }
+        .pricing-feat-item i { color: var(--brand-primary); font-size: 12px; flex-shrink: 0; }
+
+        /* ── GROWTH PATH ── */
+        .growth-section {
+            background: var(--nooryak-light);
+            padding: 80px 0;
+        }
+        .growth-path {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-top: 52px;
             position: relative;
         }
-        .trust-bar-grid {
-            margin-top: 44px;
+        .growth-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 28px 20px;
+            background: #fff;
+            border-radius: 16px;
+            border: 1.5px solid var(--nooryak-border);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            z-index: 2;
+        }
+        .growth-step:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,0.08); }
+        .growth-step-icon {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: var(--brand-gradient);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 18px rgba(37,99,235,0.3);
+        }
+        .growth-step-label {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--nooryak-dark);
+            margin-bottom: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .growth-step-desc { font-size: 12.5px; color: #64748b; line-height: 1.6; }
+        .growth-arrow {
+            flex: 0 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+            font-size: 18px;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        /* ── TESTIMONIALS ── */
+        .testimonials-section {
+            background: #fff;
+            padding: 80px 0;
+        }
+        .testimonials-label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .testimonials-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 24px;
+            margin-top: 44px;
+        }
+        .testimonial-card {
+            background: #fff;
+            border: 1px solid var(--nooryak-border);
+            border-radius: 18px;
+            padding: 24px 22px;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.08); }
+        .test-stars { color: #f59e0b; font-size: 14px; margin-bottom: 14px; }
+        .test-quote { font-size: 13.5px; color: #334155; line-height: 1.7; margin-bottom: 18px; font-style: italic; }
+        .test-author { display: flex; align-items: center; gap: 12px; }
+        .test-avatar-initials {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: var(--brand-gradient);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 13px;
+            font-family: 'Onest', sans-serif;
+            flex-shrink: 0;
+        }
+        .test-name { font-size: 14px; font-weight: 800; color: var(--nooryak-dark); }
+        .test-role { font-size: 12px; color: #94a3b8; }
+
+        /* ── FAQ ── */
+        .faq-section {
+            background: var(--nooryak-light);
+            padding: 80px 0;
+        }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+            align-items: start;
+        }
+        .faq-heading-col {}
+        .faq-list-col {}
+        .faq-item {
+            background: #fff;
+            border: 1px solid var(--nooryak-border);
+            border-radius: 14px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .faq-question {
             width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            gap: 12px;
+        }
+        .faq-q-text { font-size: 14px; font-weight: 700; color: var(--nooryak-dark); line-height: 1.4; }
+        .faq-icon { color: var(--brand-primary); font-size: 14px; flex-shrink: 0; transition: transform 0.3s; }
+        .faq-item.open .faq-icon { transform: rotate(45deg); }
+        .faq-answer {
+            display: none;
+            padding: 0 20px 18px;
+            font-size: 13.5px;
+            color: #475569;
+            line-height: 1.75;
+        }
+        .faq-item.open .faq-answer { display: block; }
+
+        /* ── CTA BANNER ── */
+        .cta-banner-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1e1b4b 100%);
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-banner-section::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-banner-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+        .cta-banner-text { flex: 1; }
+        .cta-banner-heading {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .cta-banner-sub { font-size: 15px; color: #94a3b8; }
+        .cta-banner-actions {
+            display: flex;
+            gap: 14px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .btn-cta-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            background: var(--brand-gradient);
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+        }
+        .btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,99,235,0.5); }
+        .btn-cta-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            border-radius: 12px;
+            background: transparent;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-cta-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+        .cta-success-text {
+            font-family: 'Satisfy', cursive, sans-serif;
+            color: #ffd700;
+            font-size: 22px;
         }
 
-        /* ── RESPONSIVE GRIDS ── */
-        @media(max-width: 1024px) {
-            .feat-grid { grid-template-columns: repeat(2,1fr) !important; }
-            .products-grid { grid-template-columns: 1fr !important; }
-            .products-grid > div:first-child { position: static !important; }
-            .pricing-cards-outer { grid-template-columns: 1fr !important; gap: 24px !important; }
+        /* ── FOOTER ── */
+        .site-footer {
+            background: var(--nooryak-dark);
+            color: #94a3b8;
+            padding: 64px 0 0;
         }
-        @media(max-width: 860px) {
-            .hero-grid, .about-grid { grid-template-columns: 1fr !important; }
-            .rev-cards-3 { grid-template-columns: 1fr !important; }
-            .reviews-grid { grid-template-columns: 1fr !important; }
-            .steps-row { flex-direction: column !important; gap: 32px !important; }
-            .hiw-connector, .hiw-arrow-end { display: none !important; }
-            .pricing-card-item { grid-template-columns: 1fr !important; }
-            .pricing-left-panel {
-                border-right: none !important;
-                border-bottom: 1px solid rgba(226,232,240,0.8) !important;
-                padding: 24px 20px !important;
-            }
-            .pricing-right-panel { padding: 24px 20px !important; }
-            .trust-bar-grid { grid-template-columns: 1fr !important; margin-top: 24px !important; }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid #1e293b;
         }
-        @media(max-width: 640px) {
-            .feat-grid { grid-template-columns: 1fr !important; }
-            .desktop-ctas > a:first-of-type { display: none; }
+        .footer-logo-col {}
+        .footer-logo {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px;
         }
-        @media(min-width: 860px) {
-            .lg-nav { display: flex !important; align-items: center; gap: 24px; }
-            .mobile-ham { display: none !important; }
-            .desktop-ctas { display: flex !important; }
+        .footer-logo img { height: 34px; width: auto; object-fit: contain; }
+        .footer-logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
         }
-        @media(max-width: 859px) {
-            .lg-nav { display: none !important; }
-            .mobile-ham { display: block !important; }
+        .footer-tagline { font-size: 13.5px; color: #64748b; line-height: 1.7; margin-bottom: 20px; max-width: 280px; }
+        .footer-socials { display: flex; gap: 10px; }
+        .footer-social-btn {
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            background: #1e293b;
+            display: flex; align-items: center; justify-content: center;
+            color: #64748b;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .footer-social-btn:hover { background: var(--brand-primary); color: #fff; }
+        .footer-col-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .footer-links { display: flex; flex-direction: column; gap: 10px; }
+        .footer-links a { font-size: 13px; color: #64748b; transition: color 0.2s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 0;
+            font-size: 12.5px;
+        }
+        .footer-bottom-links { display: flex; gap: 20px; }
+        .footer-bottom-links a { color: #64748b; transition: color 0.2s; }
+        .footer-bottom-links a:hover { color: #fff; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1200px) {
+            .products-layout { grid-template-columns: 1fr; }
+            .products-grid-inner { grid-template-columns: repeat(3, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
         }
 
-        html { scroll-behavior: smooth; }
+        @media (max-width: 1024px) {
+            .hero-grid, .about-grid, .why-grid, .faq-grid, .cta-banner-inner { grid-template-columns: 1fr; }
+            .models-grid, .pricing-cards-grid, .testimonials-grid { grid-template-columns: 1fr; }
+            .hero-img-wrapper { justify-content: center; }
+            .hero-float-card { right: 8px; }
+            .about-float-card { right: 8px; }
+            .products-grid-inner { grid-template-columns: repeat(2, 1fr); }
+            .cta-banner-actions { justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar-inner { flex-direction: column; }
+            .stat-item { border-right: none; border-bottom: 1px solid var(--nooryak-border); }
+            .stat-item:last-child { border-bottom: none; }
+            .hiw-steps { flex-direction: column; gap: 24px; }
+            .hiw-connector { display: none; }
+            .growth-path { flex-direction: column; gap: 12px; }
+            .growth-arrow { transform: rotate(90deg); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-logo-col { grid-column: 1/-1; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            .nav-links { display: none; }
+            .nav-ctas { display: none; }
+            .mobile-ham { display: flex; }
+            .stats-bar-inner { display: grid; grid-template-columns: 1fr 1fr; }
+            .stat-item:nth-child(even) { border-right: none; }
+            .stat-item:nth-child(odd) { border-right: 1px solid var(--nooryak-border); }
+            .hero-section { padding: 52px 0 60px; }
+            .why-features-grid { grid-template-columns: 1fr; }
+            .faq-grid { grid-template-columns: 1fr; }
+            .cta-banner-inner { flex-direction: column; text-align: center; }
+            .pricing-card { grid-template-columns: 1fr; }
+            .pricing-left { border-right: none; border-bottom: 1px solid var(--nooryak-border); }
+            .testimonials-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid-inner { grid-template-columns: 1fr; }
+            .hero-ctas { flex-direction: column; }
+            .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+            .stats-bar-inner { grid-template-columns: 1fr; }
+            .stat-item { border-right: none !important; }
+        }
     </style>
 </head>
 <body>
 
-{{-- ══ ANNOUNCEMENT BAR ══════════════════════════════════ --}}
-<div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
-    🎉 Special Offer: Get Started with <strong>{{ $agency->name }}</strong> Today &amp; Automate Your Business!
+{{-- ══ ANNOUNCEMENT BAR ══ --}}
+<div class="announcement-bar">
+    {{ $announcementText }}
 </div>
 
-{{-- ══ HEADER ════════════════════════════════════════════ --}}
+{{-- ══ NAVBAR ══ --}}
 <header class="site-header">
     <div class="header-inner">
-
         {{-- Logo --}}
-        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+        <a href="/" class="nav-logo">
             @if(!empty($agency->logo))
-                <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:36px;width:auto;object-fit:contain">
+                <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}">
             @else
-                <div class="bg-brand" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center">
-                    <i data-lucide="layers" style="width:18px;height:18px;color:#fff"></i>
+                <div style="width:36px;height:36px;border-radius:10px;background:var(--brand-gradient);display:flex;align-items:center;justify-content:center">
+                    <i class="fas fa-layer-group" style="color:#fff;font-size:16px"></i>
                 </div>
-                <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name }}</span>
+                <span class="nav-logo-text">{{ $agency->name }}</span>
             @endif
         </a>
 
         {{-- Desktop Nav --}}
-        <nav style="display:none" class="lg-nav">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#how-it-works','How It Works'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
-                <a href="{{ $href }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">{{ $label }}</a>
-            @endforeach
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="#products">Solutions <i class="fas fa-chevron-down dropdown-icon"></i></a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">Resources <i class="fas fa-chevron-down dropdown-icon"></i></a>
         </nav>
 
         {{-- Desktop CTAs --}}
-        <div class="desktop-ctas" style="display:flex;align-items:center;gap:10px">
-            <button style="width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode" onmouseover="this.style.borderColor='#4f46e5'" onmouseout="this.style.borderColor='#e2e8f0'">
-                <i data-lucide="moon" style="width:16px;height:16px"></i>
-            </button>
-            <a href="{{ $agency->cta_url ?? '/login' }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
-            <a href="{{ $agency->cta_url ?? '/login' }}" class="btn-brand" style="border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800">
-                {{ $agency->cta_text ?? 'Get Started Free' }}
-            </a>
+        <div class="nav-ctas">
+            <button class="nav-icon-btn" title="Toggle Theme"><i class="fas fa-moon" style="font-size:14px"></i></button>
+            <a href="{{ $cta2Url }}" class="btn-demo">{{ $cta2Text }}</a>
+            <a href="{{ $ctaUrl }}" class="btn-primary-nav">{{ $ctaText }} <i class="fas fa-arrow-right"></i></a>
         </div>
 
         {{-- Mobile hamburger --}}
-        <button onclick="toggleMobileMenu()" class="mobile-ham" style="display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:10px" aria-label="Menu">
-            <i data-lucide="menu" style="width:24px;height:24px;color:#475569" id="ham-icon"></i>
+        <button class="mobile-ham" onclick="toggleMobileMenu()" aria-label="Menu">
+            <i class="fas fa-bars" id="ham-icon"></i>
         </button>
     </div>
 
     {{-- Mobile Menu --}}
-    <div id="mobile-menu" style="background:#fff;border-top:1px solid #f1f5f9;padding:20px 20px 24px">
+    <div id="mobile-menu" style="background:#fff;border-top:1px solid var(--nooryak-border);padding:20px 24px">
         <nav style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#how-it-works','How It Works'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
-                <a href="{{ $href }}" onclick="toggleMobileMenu()" style="font-size:14px;font-weight:700;color:#334155;text-decoration:none">{{ $label }}</a>
-            @endforeach
+            <a href="/" onclick="toggleMobileMenu()" style="font-size:14px;font-weight:700;color:#334155">Home</a>
+            <a href="#products" onclick="toggleMobileMenu()" style="font-size:14px;font-weight:700;color:#334155">Solutions</a>
+            <a href="#pricing" onclick="toggleMobileMenu()" style="font-size:14px;font-weight:700;color:#334155">Pricing</a>
+            <a href="#faq" onclick="toggleMobileMenu()" style="font-size:14px;font-weight:700;color:#334155">Resources</a>
         </nav>
-        <div style="display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid #f1f5f9">
-            <a href="{{ $agency->cta_url ?? '/login' }}" style="text-align:center;font-size:14px;font-weight:700;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px;text-decoration:none">Login</a>
-            <a href="{{ $agency->cta_url ?? '/login' }}" class="btn-brand" style="justify-content:center;border-radius:12px">{{ $agency->cta_text ?? 'Get Started Free' }}</a>
+        <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="{{ $cta2Url }}" style="text-align:center;font-size:14px;font-weight:700;color:#334155;background:#f8fafc;border:1px solid var(--nooryak-border);border-radius:12px;padding:12px">{{ $cta2Text }}</a>
+            <a href="{{ $ctaUrl }}" class="btn-hero-primary" style="justify-content:center">{{ $ctaText }} <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </header>
 
 
-<section style="background:#f0efff; padding:72px 0 90px; overflow:hidden; position:relative;">
-    {{-- Soft decorative glow blobs --}}
-    <div style="position:absolute;top:-120px;right:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.18) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
-    <div style="position:absolute;bottom:-80px;left:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.10) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
-
-    <div style="max-width:1200px; margin:0 auto; padding:0 24px; position:relative; z-index:1;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;" class="hero-grid">
-
+{{-- ══ HERO SECTION ══ --}}
+<section class="hero-section" id="hero">
+    <div class="container">
+        <div class="hero-grid">
             {{-- Left --}}
-            <div style="display:flex; flex-direction:column; gap:28px;">
-
-                {{-- Badge --}}
-                <span style="display:inline-flex; align-items:center; gap:8px; background:rgba(109,40,217,.1); border:1px solid rgba(109,40,217,.2); color:#5b21b6; padding:7px 16px; border-radius:999px; font-size:12px; font-weight:700; width:fit-content; letter-spacing:.01em">
-                    ⚡ All-in-One Growth Platform for Indian Businesses
-                </span>
-
-                {{-- Headline --}}
-                <h1 style="font-size:clamp(2.2rem,4.5vw,3.6rem); font-weight:900; color:#0f172a; line-height:1.08; letter-spacing:-.8px; margin:0">
-                    {{ $agency->hero_title ?? 'Build. Automate.' }}
-                    <span class="text-brand" style="display:block; margin-top:2px">Scale. All in One</span>
+            <div>
+                <div class="hero-badge">
+                    <i class="fas fa-bolt" style="font-size:10px"></i>
+                    YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.
+                </div>
+                <h1 class="hero-headline">
+                    {{ $agency->hero_title ?? 'Launch Your Own SaaS' }}
+                    <br><span class="text-blue">Business Under Your Brand</span>
                 </h1>
-
-                {{-- Subtitle --}}
-                <p style="font-size:15px; color:#475569; line-height:1.8; max-width:460px; margin:0">
-                    {{ $agency->hero_subtitle ?? ($agency->name . ' helps Indian businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation – all in one place.') }}
+                <p class="hero-subtitle">
+                    {{ $agency->hero_subtitle ?? ($agency->name . ' is an All-in-One White Label SaaS Platform that helps agencies, freelancers, IT companies and entrepreneurs who want to launch their own SaaS business with 5 powerful products, custom branding and complete white-label control.') }}
                 </p>
-
-                {{-- CTA Buttons --}}
-                <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-                    <a href="{{ $agency->cta_url ?? '/login' }}"
-                       style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14px; padding:15px 30px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
-                       onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
-                       onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
-                        Start Your Free Trial
-                        <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
+                <div class="hero-ctas">
+                    <a href="{{ $ctaUrl }}" class="btn-hero-primary">
+                        {{ $ctaText }} <i class="fas fa-arrow-right"></i>
                     </a>
-                    <a href="#how-it-works"
-                       style="display:inline-flex; align-items:center; gap:10px; background:#fff; color:#1e293b; font-weight:700; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; border:1.5px solid #e2e8f0; transition:all .2s; white-space:nowrap;"
-                       onmouseover="this.style.borderColor='#a5b4fc';this.style.background='#fafafa'"
-                       onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#fff'">
-                        <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--brand-primary);"><i data-lucide="play" style="width:10px;height:10px;color:#fff;margin-left:2px"></i></span>
-                        Book a Live Demo
+                    <a href="{{ $cta2Url }}" class="btn-hero-secondary">
+                        <span style="width:28px;height:28px;border-radius:50%;background:var(--brand-gradient);display:inline-flex;align-items:center;justify-content:center">
+                            <i class="fas fa-play" style="color:#fff;font-size:9px;margin-left:1px"></i>
+                        </span>
+                        {{ $cta2Text }}
                     </a>
                 </div>
-
-                {{-- Trust badges --}}
-                <div style="display:flex; flex-wrap:wrap; gap:22px; font-size:12.5px; font-weight:700; color:#64748b; margin-top:-4px;">
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="check-circle" style="width:15px;height:15px;color:var(--brand-primary)"></i> No Credit Card</span>
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="zap" style="width:15px;height:15px;color:var(--brand-primary)"></i> Easy Setup</span>
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="refresh-cw" style="width:15px;height:15px;color:var(--brand-primary)"></i> Cancel Anytime</span>
+                <div class="hero-trust-badges">
+                    <span><i class="fas fa-check-circle"></i> White Label Ready</span>
+                    <span><i class="fas fa-check-circle"></i> Custom Branding</span>
+                    <span><i class="fas fa-check-circle"></i> Unlimited Customers</span>
                 </div>
             </div>
 
-            {{-- Right: Dashboard image with slight perspective tilt --}}
-            <div style="display:flex; justify-content:flex-end; position:relative;">
-                {{-- Glow behind the image --}}
-                <div style="position:absolute;inset:-24px;background:radial-gradient(ellipse at 60% 50%,rgba(139,92,246,.12) 0%,transparent 70%);border-radius:32px;z-index:0;"></div>
+            {{-- Right --}}
+            <div class="hero-img-wrapper">
+                <div class="hero-float-card">
+                    <div class="card-label">Revenue Overview</div>
+                    <div class="card-value">₹4,98,320</div>
+                    <div class="card-growth"><i class="fas fa-arrow-up"></i> +12.5% this month</div>
+                </div>
                 <img src="{{ $heroImg }}" alt="{{ $agency->name }} Dashboard"
-                     style="position:relative;z-index:1;width:100%;max-width:600px;height:auto;border-radius:20px;box-shadow:0 32px 80px -16px rgba(79,70,229,.22),0 0 0 1px rgba(226,232,240,.5);object-fit:contain;transform:perspective(1200px) rotateY(-4deg) rotateX(2deg);transition:transform .4s;"
-                     onmouseover="this.style.transform='perspective(1200px) rotateY(-1deg) rotateX(0deg) scale(1.01)'"
-                     onmouseout="this.style.transform='perspective(1200px) rotateY(-4deg) rotateX(2deg)'">
-
-                {{-- Floating brand badge (the S icon in reference) --}}
-                <div style="position:absolute; bottom:-18px; right:-10px; z-index:2; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(79,70,229,.35); border:3px solid #fff; animation:floatAnim 3.5s ease-in-out infinite;">
+                     style="width:100%;max-width:580px;border-radius:18px;box-shadow:0 24px 64px rgba(37,99,235,0.15)">
+                <div class="hero-float-brand">
                     @if(!empty($agency->logo))
-                        <img src="{{ asset($agency->logo) }}" alt="" style="width:32px;height:32px;object-fit:contain;border-radius:50%;">
+                        <img src="{{ asset($agency->logo) }}" alt="">
                     @else
-                        <i data-lucide="layers" style="width:22px;height:22px;color:#fff"></i>
+                        <i class="fas fa-layer-group"></i>
                     @endif
                 </div>
             </div>
@@ -519,861 +1490,605 @@
 </section>
 
 
-
-{{-- ══ TRUST BAR — Category Pills ════════════════════════ --}}
-<section style="background:#fff;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;padding:36px 0">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px;text-align:center">
-        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:20px">
-            Trusted by 10,000+ Local Businesses Across India
-        </p>
-        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
-            @foreach($categories as $cat)
-                <div class="cat-pill">
-                    <span class="cat-icon">{{ $cat['icon'] }}</span>
-                    <span>{{ $cat['label'] }}</span>
+{{-- ══ STATS BAR ══ --}}
+<section class="stats-bar">
+    <div class="container">
+        <div class="stats-bar-inner">
+            @foreach($statsBar as $stat)
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-{{ $stat['icon'] ?? 'check' }}"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ $stat['value'] }}</div>
+                        <div class="stat-label">{{ $stat['label'] }}</div>
+                    </div>
                 </div>
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- ══ WHY CHOOSE — 4 Feature Cards (Pixel-Perfect 4th Reference) ═════════ --}}
-<section id="features" style="background:#f5f4ff; padding:72px 0">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-        <div style="text-align:center;margin-bottom:52px">
-            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#0f172a;margin-bottom:12px">Why Choose {{ $agency->name }}?</h2>
-            <p style="font-size:14px;color:#64748b;max-width:600px;margin:0 auto;line-height:1.7">
-                Everything you need to run, grow and scale your business — without juggling
-                <span style="color:#4f46e5;font-weight:600">multiple tools</span>.
-            </p>
-        </div>
 
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px" class="feat-grid">
-            @php
-                $featIconGradients = [
-                    0 => 'linear-gradient(135deg,#7c3aed,#6d28d9)',  /* purple */
-                    1 => 'linear-gradient(135deg,#10b981,#059669)',  /* green */
-                    2 => 'linear-gradient(135deg,#f97316,#ea580c)',  /* orange */
-                    3 => 'linear-gradient(135deg,#3b82f6,#1d4ed8)',  /* blue */
-                ];
-            @endphp
-            @foreach($features as $fi => $f)
-                <div style="background:#fff; border:1px solid #e9eef4; border-radius:20px; padding:28px 22px; transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px -12px rgba(79,70,229,.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                    <div style="width:54px; height:54px; border-radius:16px; background:{{ $featIconGradients[$fi] ?? $featIconGradients[0] }}; display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
-                        <i data-lucide="{{ $f['icon'] ?? 'zap' }}" style="width:26px;height:26px;color:#fff"></i>
-                    </div>
-                    <h3 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:10px">{{ $f['title'] }}</h3>
-                    <p style="font-size:13px;color:#4f46e5;line-height:1.75">{{ $f['desc'] }}</p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- ══ BUILT FOR ENTREPRENEURS — features_leftside + KB Floating Elements ══ --}}
-<section id="about-section" class="about-section" style="padding:72px 0; background: linear-gradient(135deg, #f5f4ff 0%, #eef2ff 100%); overflow: hidden;">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center" class="about-grid">
-
-            {{-- LEFT SIDE: Man image with soft circular background & floating KB UI badges --}}
-            <div style="position:relative; display:flex; justify-content:center; align-items:center; width:100%; min-height:460px;">
-
-                {{-- Soft purple background circle --}}
-                <div style="position:absolute; width:360px; height:360px; border-radius:50%; background:linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); z-index:0; top:50%; left:50%; transform:translate(-50%, -50%); opacity:0.85;"></div>
-
-                {{-- Man holding tablet image --}}
-                <img src="{{ $aboutImg }}" alt="Built for Entrepreneurs"
-                     style="position:relative; z-index:2; width:100%; max-width:350px; height:auto; object-fit:contain; filter:drop-shadow(0 20px 40px rgba(79,70,229,.18)); transition:transform .3s"
-                     onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-
-                {{-- Floating Badge 1 (Top-Left): New Order #ORD-125 --}}
-                <div class="badge-top-left" style="position:absolute; top:28px; left:-10px; z-index:10; background:#fff; border-radius:16px; padding:12px 18px; box-shadow:0 12px 32px rgba(79,70,229,0.12); border:1px solid rgba(226,232,240,0.8); display:flex; align-items:center; gap:14px; animation: floatAnim 4s ease-in-out infinite;">
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.02em;">New Order</span>
-                        <span style="font-size:13px; font-weight:900; color:#0f172a; margin-top:2px;">{{ $kbFloating['order_num'] ?? '#ORD-125' }}</span>
-                    </div>
-                    <div style="width:28px; height:28px; border-radius:50%; background:#10b981; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0;">
-                        <i data-lucide="check" style="width:16px; height:16px; stroke-width:3;"></i>
-                    </div>
-                </div>
-
-                {{-- Floating Badge 2 (Top-Right): Total Revenue ₹24,50,000 +12.5% --}}
-                <div class="badge-top-right" style="position:absolute; top:84px; right:-15px; z-index:10; background:#fff; border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(79,70,229,0.12); border:1px solid rgba(226,232,240,0.8); display:flex; flex-direction:column; gap:4px; animation: floatAnim 4s ease-in-out 1s infinite;">
-                    <span style="font-size:11px; font-weight:700; color:#64748b;">Total Revenue</span>
-                    <span style="font-family:'Outfit',sans-serif; font-size:18px; font-weight:900; color:#0f172a; line-height:1;">{{ $kbFloating['revenue'] ?? '₹24,50,000' }}</span>
-                    <div style="display:flex; align-items:center; gap:4px; margin-top:2px;">
-                        <span style="font-size:11px; font-weight:800; color:#10b981;">↑ {{ $kbFloating['revenue_growth'] ?? '12.5%' }}</span>
-                        <span style="font-size:10px; color:#94a3b8;">from last month</span>
-                    </div>
-                </div>
-
-                {{-- Floating Badge 3 (Middle-Left): Colorful Bar Chart Widget --}}
-                <div class="badge-mid-left" style="position:absolute; top:210px; left:-25px; z-index:10; background:#fff; border-radius:50%; width:54px; height:54px; box-shadow:0 12px 32px rgba(79,70,229,0.14); border:1px solid rgba(226,232,240,0.8); display:flex; align-items:center; justify-content:center; animation: floatAnim 4s ease-in-out 2s infinite;">
-                    <div style="display:flex; align-items:flex-end; gap:3px; height:24px;">
-                        <div style="width:5px; height:14px; background:#8b5cf6; border-radius:3px;"></div>
-                        <div style="width:5px; height:22px; background:#6366f1; border-radius:3px;"></div>
-                        <div style="width:5px; height:10px; background:#f97316; border-radius:3px;"></div>
-                        <div style="width:5px; height:18px; background:#06b6d4; border-radius:3px;"></div>
-                    </div>
-                </div>
-
-                {{-- Floating Badge 4 (Bottom-Left): Customers 1,245 +18.2% --}}
-                <div class="badge-bot-left" style="position:absolute; bottom:20px; left:-15px; z-index:10; background:#fff; border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(79,70,229,0.12); border:1px solid rgba(226,232,240,0.8); display:flex; flex-direction:column; gap:4px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
-                    <span style="font-size:11px; font-weight:700; color:#64748b;">Customers</span>
-                    <span style="font-family:'Outfit',sans-serif; font-size:19px; font-weight:900; color:#0f172a; line-height:1;">{{ $kbFloating['customers'] ?? '1,245' }}</span>
-                    <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
-                        <span style="background:#d1fae5; color:#059669; font-size:10px; font-weight:800; padding:2px 6px; border-radius:6px;">↑ {{ $kbFloating['customer_growth'] ?? '18.2%' }}</span>
-                        <span style="font-size:10px; color:#94a3b8;">{{ $kbFloating['customer_month'] ?? '+192 this month' }}</span>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- RIGHT SIDE: Stats Row + Heading + Subtitle + CTA --}}
-            <div style="display:flex; flex-direction:column; gap:28px;">
-
-                {{-- KB Stats row with icon boxes — dynamically from $kbStats --}}
-                <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap; gap-y:20px;" class="kb-stats-container">
-                    @foreach($kbStats as $idx => $stat)
-                        @if($idx > 0)
-                            <div class="stat-divider" style="margin:0 18px; width:1px; height:44px; background:#cbd5e1; flex-shrink:0;"></div>
-                        @endif
-                        <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-start;">
-                            {{-- Icon container --}}
-                            <div style="width:42px; height:42px; border-radius:12px; background:#eeddff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <i data-lucide="{{ $stat['icon'] ?? 'star' }}" style="width:20px; height:20px; color:#7c3aed;"></i>
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:2px;">
-                                <span style="font-family:'Outfit',sans-serif; font-size:clamp(1.2rem,2vw,1.75rem); font-weight:900; color:#0f172a; line-height:1;">{{ $stat['value'] }}</span>
-                                <span style="font-size:11px; font-weight:700; color:#64748b; white-space:nowrap;">{{ $stat['label'] }}</span>
-                            </div>
+{{-- ══ ABOUT / PARTNER SECTION ══ --}}
+<section class="about-section" id="about">
+    <div class="container">
+        <div class="about-grid">
+            {{-- Left Text --}}
+            <div>
+                <div class="section-label">ABOUT {{ strtoupper($agency->name) }}</div>
+                <h2 class="section-heading">{{ $agency->about_title ?? 'Your Partner in SaaS Success' }}</h2>
+                <p class="section-subheading">
+                    {{ $agency->about_mission ?? ($agency->name . ' is an All-in-One White Label SaaS Platform built for agencies, freelancers, IT companies and entrepreneurs who want to launch their own SaaS business under their own brand. With 5 powerful White Label SaaS products, a unified dashboard, custom branding and complete white-label control, we provide everything you need to build a scalable business and generate recurring revenue.') }}
+                </p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px">
+                    @php
+                        $aboutPillars = [
+                            ['icon' => 'fa-shield-alt',   'label' => 'Trusted Technology'],
+                            ['icon' => 'fa-chart-line',   'label' => 'Scalable Platform'],
+                            ['icon' => 'fa-rocket',       'label' => 'Built for Entrepreneurs'],
+                            ['icon' => 'fa-infinity',     'label' => 'Unlimited Growth'],
+                        ];
+                    @endphp
+                    @foreach($aboutPillars as $p)
+                        <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--nooryak-border);border-radius:12px;padding:12px 16px">
+                            <span style="width:36px;height:36px;border-radius:10px;background:rgba(37,99,235,0.08);display:flex;align-items:center;justify-content:center;color:var(--brand-primary);font-size:14px;flex-shrink:0">
+                                <i class="fas {{ $p['icon'] }}"></i>
+                            </span>
+                            <span style="font-size:13px;font-weight:700;color:var(--nooryak-dark)">{{ $p['label'] }}</span>
                         </div>
                     @endforeach
                 </div>
+            </div>
 
-                {{-- Heading & Body --}}
-                <div style="display:flex; flex-direction:column; gap:14px;">
-                    <h2 style="font-size:clamp(1.5rem,2.8vw,2.1rem); font-weight:900; color:#0f172a; line-height:1.2; letter-spacing:-0.3px;">
-                        Built for entrepreneurs, by entrepreneurs.
-                    </h2>
-                    <p style="font-size:14px; color:#64748b; line-height:1.8; max-width:480px;">
-                        {{ $agencyGet('about_content') ?? ("We understand the challenges of growing a business in India. That's why we built " . $agency->name . " — to make technology simple, affordable, and accessible for everyone.") }}
-                    </p>
+            {{-- Right Image --}}
+            <div class="about-img-wrapper">
+                <div style="position:absolute;top:-10px;right:10px;background:#fff;border-radius:14px;padding:12px 18px;box-shadow:0 12px 36px rgba(0,0,0,0.1);border:1px solid var(--nooryak-border);font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--nooryak-dark);z-index:10;animation:floatY 3.5s ease-in-out infinite">
+                    Same Platform<br><span style="color:var(--brand-primary)">More Possibilities</span>
+                </div>
+                <img src="{{ $aboutImg }}" alt="{{ $agency->name }} Features" style="border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.1)">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{{-- ══ MODEL CARDS ══ --}}
+<section class="models-section" id="models">
+    <div class="container">
+        <div style="text-align:center;margin-bottom:0">
+            <div class="section-label">OUR MODELS</div>
+            <h2 class="section-heading">Choose Your Business Model</h2>
+            <p class="section-subheading" style="margin:12px auto 0">Pick the model that aligns with your vision and start your white-label SaaS journey today.</p>
+        </div>
+        <div class="models-grid">
+            @foreach($modelCards as $mi => $card)
+                @php
+                    $isBlue   = $mi === 0;
+                    $color    = $card['color'] ?? ($isBlue ? '#2563eb' : '#7c3aed');
+                    $isPurple = !$isBlue;
+                @endphp
+                <div class="model-card">
+                    <div class="model-card-header {{ $isPurple ? 'purple-header' : '' }}">
+                        <div class="model-badge {{ $isPurple ? 'purple' : '' }}">{{ $card['badge'] ?? 'Model 0' . ($mi+1) }}</div>
+                        <h3 class="model-card-title">{{ $card['title'] }}</h3>
+                        <p class="model-card-desc">{{ $card['description'] }}</p>
+                    </div>
+                    <div class="model-card-body">
+                        <ul class="model-feature-list">
+                            @foreach(($card['features'] ?? []) as $feat)
+                                <li class="model-feature-item {{ $isPurple ? 'purple-check' : '' }}">
+                                    <i class="fas fa-check-circle"></i>
+                                    {{ $feat }}
+                                </li>
+                            @endforeach
+                        </ul>
+                        <a href="{{ $card['cta_url'] ?? $ctaUrl }}" class="btn-model {{ $isPurple ? 'purple-btn' : '' }}">
+                            {{ $card['cta_text'] ?? 'Get Started' }} <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+
+{{-- ══ PRODUCTS + REVENUE CALCULATOR ══ --}}
+<section class="products-section" id="products">
+    <div class="container">
+        <div style="text-align:center">
+            <div class="section-label">OUR PRODUCTS</div>
+            <h2 class="section-heading">{{ $agency->products_section_title ?? 'Everything You Need to Build & Scale Your SaaS Business' }}</h2>
+            <p class="section-subheading" style="margin:12px auto 0">{{ $agency->name }} combines 5 powerful White Label SaaS products, a unified dashboard, Single Sign-On (SSO), custom branding, and enterprise-grade management tools into one complete platform.</p>
+        </div>
+        <div class="products-layout">
+            {{-- Products Grid --}}
+            <div class="products-grid-inner">
+                @php
+                    $prodIconMap = [
+                        'star'        => '#7c3aed', 'bg_star'   => '#ede9fe',
+                        'monitor'     => '#2563eb', 'bg_monitor'=> '#dbeafe',
+                        'qr-code'     => '#d97706', 'bg_qr'     => '#fef3c7',
+                        'credit-card' => '#059669', 'bg_cc'     => '#d1fae5',
+                        'gift'        => '#db2777', 'bg_gift'   => '#fce7f3',
+                    ];
+                    $defaultColors = [
+                        ['#7c3aed','#ede9fe'],['#2563eb','#dbeafe'],
+                        ['#d97706','#fef3c7'],['#059669','#d1fae5'],
+                        ['#db2777','#fce7f3'],
+                    ];
+                @endphp
+                @foreach($services as $si => $svc)
+                    @php
+                        [$sColor, $sBg] = $defaultColors[$si % count($defaultColors)];
+                        $sColor = $svc['color'] ?? $sColor;
+                        $sBg    = $svc['bg']    ?? $sBg;
+                    @endphp
+                    <div class="product-card">
+                        <div class="product-icon" style="background:{{ $sBg }};color:{{ $sColor }}">
+                            <i class="fas fa-{{ $svc['icon'] ?? 'box' }}"></i>
+                        </div>
+                        <div class="product-card-title">{{ $svc['title'] }}</div>
+                        <div class="product-card-desc">{{ $svc['desc'] }}</div>
+                        <a href="{{ $svc['link'] ?? '#' }}" class="product-learn-more" style="color:{{ $sColor }}">
+                            Learn More <i class="fas fa-arrow-right" style="font-size:10px"></i>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Revenue Calculator --}}
+            <div class="rev-calc-card" id="revenue-calc">
+                <div class="rev-calc-title">{{ $revCalc['title'] ?? 'Revenue Opportunity Calculator' }}</div>
+                <div class="rev-calc-subtitle">{{ $revCalc['subtitle'] ?? 'See how much you can earn every month' }}</div>
+
+                <div class="rev-slider-label">
+                    <span>{{ $revCalc['active_label'] ?? 'Active Customers' }}</span>
+                    <span id="calc-count">{{ $revCalc['default_count'] ?? 100 }}</span>
+                </div>
+                <input type="range" class="rev-slider" id="rev-slider"
+                    min="1"
+                    max="{{ $revCalc['max_count'] ?? 500 }}"
+                    value="{{ $revCalc['default_count'] ?? 100 }}"
+                    step="1">
+
+                <div class="rev-result-box">
+                    <div class="rev-result-label">Estimated Monthly Revenue</div>
+                    <div class="rev-result-value" id="rev-result">
+                        {{ $revCalc['currency_symbol'] ?? '₹' }}{{ number_format(($revCalc['default_count'] ?? 100) * ($revCalc['price_per_customer'] ?? 999)) }}<span style="font-size:1rem;font-weight:500;color:#94a3b8">/month</span>
+                    </div>
+                    <div class="rev-note">{{ $revCalc['note'] ?? '*Average price per customer/month' }}</div>
                 </div>
 
-                {{-- CTA Button --}}
-                <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-brand" style="width:fit-content; border-radius:14px; padding:14px 30px; font-size:14px; font-weight:800;">
-                    Explore All Features
-                    <i data-lucide="arrow-right" style="width:16px; height:16px;"></i>
+                <div class="rev-badges">
+                    <div class="rev-badge"><i class="fas fa-check"></i> {{ $revCalc['low_badge'] ?? 'Low Investment' }}</div>
+                    <div class="rev-badge"><i class="fas fa-check"></i> {{ $revCalc['margin_badge'] ?? 'High Margin' }}</div>
+                    <div class="rev-badge" style="color:#2563eb;background:#dbeafe"><i class="fas fa-check"></i> {{ $revCalc['potential_badge'] ?? 'Unlimited Potential' }}</div>
+                </div>
+
+                <a href="{{ $revCalc['cta_url'] ?? $ctaUrl }}" class="btn-rev-cta">
+                    {{ $revCalc['cta_text'] ?? 'Start Building Your Revenue' }} <i class="fas fa-arrow-right" style="font-size:11px"></i>
                 </a>
             </div>
-
         </div>
     </div>
 </section>
 
-{{-- ══ SMART TOOLS — Products 3×2 Grid Container Card (MATCHING 2ND REFERENCE IMAGE) ══════════════════ --}}
-<section id="products" style="padding:48px 0; background:#f8fafc;">
-    <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
-        <div class="products-container-card" style="background: linear-gradient(135deg, #f5f4ff 0%, #eef2ff 100%); border-radius:28px; padding:48px 40px; box-shadow:0 10px 40px rgba(79,70,229,0.06); border:1px solid rgba(226,232,240,0.8);">
-            <div style="display:grid; grid-template-columns:300px 1fr; gap:48px; align-items:start" class="products-grid">
 
-                {{-- Left column --}}
-                <div style="display:flex; flex-direction:column; gap:18px; position:sticky; top:80px">
-                    <span style="background:#e0e7ff; color:#4338ca; font-size:11px; font-weight:800; padding:5px 14px; border-radius:999px; width:fit-content">Our Products</span>
-                    <h2 style="font-size:clamp(1.6rem,3vw,2.3rem); font-weight:900; color:#0f172a; line-height:1.18; letter-spacing:-.3px">
-                        Smart Tools for <span class="text-brand">Smarter Businesses</span>
-                    </h2>
-                    <p style="font-size:13px; color:#64748b; line-height:1.75">
-                        A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.
-                    </p>
-                    <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-brand" style="width:fit-content; border-radius:14px; padding:12px 24px">
-                        Explore All Products
-                        <i data-lucide="arrow-right" style="width:15px; height:15px"></i>
-                    </a>
+{{-- ══ HOW IT WORKS ══ --}}
+<section class="hiw-section" id="how-it-works">
+    <div class="container">
+        <div style="text-align:center">
+            <div class="section-label">HOW {{ strtoupper($agency->name) }} WORKS</div>
+            <h2 class="section-heading">Launch, Brand, Sell, Earn. Repeat.</h2>
+            <p class="section-subheading" style="margin:12px auto 0">A simple 4-step process to launch your own branded SaaS business.</p>
+        </div>
+        <div class="hiw-steps">
+            @foreach($howItWorks as $hi => $step)
+                @if($hi > 0)
+                    <div class="hiw-connector"></div>
+                @endif
+                <div class="hiw-step">
+                    <div class="hiw-step-num">{{ $step['step'] ?? ($hi+1) }}</div>
+                    <div class="hiw-icon-wrap">
+                        <i class="fas fa-{{ $step['icon'] ?? 'check' }}"></i>
+                    </div>
+                    <div class="hiw-step-title">{{ $step['title'] }}</div>
+                    <div class="hiw-step-desc">{{ $step['desc'] }}</div>
                 </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 
-                {{-- Right 3×2 product grid --}}
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px" class="prod-cards-3x2">
-                    @foreach($services as $s)
-                        @php
-                            $ps = $pIconMap[$s['title']] ?? ['icon' => $s['icon'] ?? 'box', 'bg' => '#ede9fe', 'clr' => '#7c3aed'];
-                            $prodLink = !empty($s['link']) && $s['link'] !== '#' ? $s['link'] : (isset($agency) ? $agency->getProductSubdomainUrl($s['title']) : '#');
-                        @endphp
-                        <a href="{{ $prodLink }}" target="_blank" class="prod-card" style="display:block; text-decoration:none; background:#fff; border:1px solid #f1f5f9; border-radius:20px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;">
-                            <div class="prod-card-top" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                                <div class="prod-icon" style="width:42px; height:42px; border-radius:12px; background:{{ $ps['bg'] }}; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="{{ $ps['icon'] }}" style="width:20px; height:20px; color:{{ $ps['clr'] }}"></i>
-                                </div>
-                                <div class="prod-arrow" style="width:30px; height:30px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#94a3b8;">
-                                    <i data-lucide="arrow-right" style="width:14px; height:14px"></i>
-                                </div>
+
+{{-- ══ WHY CHOOSE ══ --}}
+<section class="why-section" id="why-choose">
+    <div class="container">
+        <div class="why-grid">
+            {{-- Left --}}
+            <div>
+                <div class="section-label">WHY CHOOSE {{ strtoupper($agency->name) }}?</div>
+                <h2 class="section-heading">{{ $agency->why_choose_title ?? 'Built for Ambitious Entrepreneurs' }}</h2>
+                <p class="section-subheading">Start small, dream big. {{ $agency->name }} grows with you — from launching your first SaaS brand to building a global network.</p>
+                <div class="why-features-grid">
+                    @php
+                        $featColorMap = ['#2563eb','#7c3aed','#059669','#d97706','#db2777','#0891b2'];
+                        $featBgMap    = ['#dbeafe','#ede9fe','#d1fae5','#fef3c7','#fce7f3','#cffafe'];
+                    @endphp
+                    @foreach($features as $fi => $feat)
+                        <div class="why-feat-item">
+                            <div class="why-feat-icon" style="background:{{ $featBgMap[$fi % count($featBgMap)] }};color:{{ $featColorMap[$fi % count($featColorMap)] }}">
+                                <i class="fas fa-{{ $feat['icon'] ?? 'check' }}"></i>
                             </div>
                             <div>
-                                <h3 style="font-size:14px; font-weight:800; color:#0f172a; margin-bottom:6px">{{ $s['title'] }}</h3>
-                                <p style="font-size:12px; color:#64748b; line-height:1.6">{{ $s['desc'] }}</p>
+                                <div class="why-feat-title">{{ $feat['title'] }}</div>
+                                <div class="why-feat-desc">{{ $feat['desc'] }}</div>
                             </div>
-                        </a>
+                        </div>
                     @endforeach
+                </div>
+            </div>
+
+            {{-- Right image placeholder / about image --}}
+            <div class="why-img-wrapper">
+                <img src="{{ $aboutImg }}" alt="Built for Entrepreneurs" style="border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.1)">
+                <div style="position:absolute;top:-14px;right:-14px;background:var(--brand-gradient);color:#fff;border-radius:14px;padding:14px 18px;box-shadow:0 8px 24px rgba(37,99,235,0.3);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;animation:floatY 3.5s ease-in-out infinite">
+                    Trusted By<br><span style="font-size:20px">10,000+</span><br>Agencies
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-{{-- ══ PRICING PLANS — 3rd Reference Split Layout ════════════════════════════ --}}
-<section id="pricing" style="padding:72px 0 80px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
-    <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
 
-        {{-- Section Header --}}
-        <div style="text-align:center; margin-bottom:52px; display:flex; flex-direction:column; align-items:center; gap:12px; position:relative;">
-            
-            {{-- Badge --}}
-            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 18px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:6px;">
-                👑 Flexible Pricing Plans
-            </span>
-
-            {{-- Main Title --}}
-            <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,3.8vw,2.8rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.15;">
-                Choose Your <span style="background:linear-gradient(135deg,#3b82f6,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Perfect Plan</span>
-            </h2>
-
-            {{-- Subtitle --}}
-            <p style="font-size:14px; color:#64748b; max-width:540px; line-height:1.7; margin:0; font-weight:500;">
-                Powerful tools to grow your business. Simple, transparent pricing.<br>No hidden fees. Upgrade or downgrade anytime.
-            </p>
+{{-- ══ PRICING ══ --}}
+<section class="pricing-section" id="pricing">
+    <div class="container">
+        <div style="text-align:center">
+            <div class="section-label">PRICING</div>
+            <h2 class="section-heading">{{ $pricingSectionTitle }}</h2>
+            <p class="section-subheading" style="margin:12px auto 0">{{ $pricingSectionSubtitle }}</p>
         </div>
 
-        {{-- Product Plan Cards Grid --}}
-        <div class="pricing-cards-outer">
+        {{-- Monthly / Yearly Toggle --}}
+        <div class="pricing-toggle-wrap">
+            <span class="pricing-toggle-label">Monthly</span>
+            <label class="pricing-toggle-switch">
+                <input type="checkbox" id="pricing-toggle" onchange="togglePricing(this)">
+                <span class="toggle-track"></span>
+            </label>
+            <span class="pricing-toggle-label">Yearly <span class="pricing-save-badge">Save 10%</span></span>
+        </div>
 
+        <div class="pricing-cards-grid">
             @foreach($pricingPlans as $plan)
-            @php
-                $planColor    = $plan['color'] ?? '#ea580c';
-                $leftBg       = $plan['left_bg'] ?? ($loop->first ? '#fff5ee' : '#f0f6ff');
-                $isPopular    = !empty($plan['is_popular']);
-                $planFeatures = $plan['features'] ?? [];
-                
-                $pSlugLower   = strtolower($plan['product_slug'] ?? \Illuminate\Support\Str::slug($plan['product_name'] ?? ''));
-                $isEcom       = $loop->first || str_contains($pSlugLower, 'launch') || str_contains($pSlugLower, 'ecom') || str_contains(strtolower($plan['product_name'] ?? ''), 'ecom');
-
-                // Image path fallbacks (ensuring images load on all subdomains like checkout.youverse.in)
-                $rawLogo   = !empty($plan['product_logo'])  ? $plan['product_logo']  : ($isEcom ? 'assets/landing_page/ecom_logo.png' : 'assets/landing_page/websitebuilder_logo.png');
-                $rawMockup = !empty($plan['product_image']) ? $plan['product_image'] : ($isEcom ? 'assets/landing_page/ecombuilder_image.png' : 'assets/landing_page/websitebuilder_image.png');
-
-                $logoImgPath   = str_starts_with($rawLogo, 'http')   ? $rawLogo   : asset(ltrim($rawLogo, '/'));
-                $mockupImgPath = str_starts_with($rawMockup, 'http') ? $rawMockup : asset(ltrim($rawMockup, '/'));
-
-                // Dynamic Product Landing Page Link Resolution
-                if ($isEcom) {
-                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecom.youverse.in';
-                } elseif (str_contains($pSlugLower, 'website')) {
-                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.youverse.in';
-                } else {
-                    $prodLink = !empty($plan['cta_url']) && $plan['cta_url'] !== '/login' ? $plan['cta_url'] : (isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : '/login');
-                }
-
-                // Vibrant CTA Button Gradient & Text Contrast Fix
-                $btnGradient = $isEcom 
-                    ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' 
-                    : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)';
-                if (!empty($plan['gradient']) && !str_contains($plan['gradient'], '#fff') && !str_contains($plan['gradient'], '#ffedd5') && !str_contains($plan['gradient'], '#f0f6ff') && !str_contains($plan['gradient'], '#e0e7ff')) {
-                    $btnGradient = $plan['gradient'];
-                }
-            @endphp
-
-            <div class="pricing-card-item" style="border-color: {{ $isPopular ? '#3b82f6' : '#e2e8f0' }};"
-                 onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,.12)'"
-                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.06)'">
-
-                {{-- LEFT PANEL: Product Visual & Branding --}}
-                <div class="pricing-left-panel" style="background:{{ $leftBg }};">
-                    
-                    <div>
-                        {{-- Product Logo --}}
-                        <div style="margin-bottom:14px; min-height:48px; display:flex; align-items:center;">
-                            @if(!empty($logoImgPath))
-                            <img src="{{ $logoImgPath }}" alt="{{ $plan['product_name'] ?? 'Product' }}" style="height:48px; max-width:200px; object-fit:contain;">
-                            @else
-                            <h3 style="font-family:'Outfit',sans-serif; font-size:24px; font-weight:900; color:#0f172a; margin:0;">
-                                {{ $plan['product_name'] ?? 'Product' }}
-                            </h3>
-                            @endif
+                <div class="pricing-card">
+                    <div class="pricing-left">
+                        <div>
+                            <div class="pricing-plan-badge" style="background:{{ $plan['plan_badge_bg'] ?? '#dbeafe' }};color:{{ $plan['plan_badge_color'] ?? '#1d4ed8' }}">
+                                {{ $plan['plan_badge'] ?? 'PRO PLAN' }}
+                            </div>
+                            <div class="pricing-plan-name">{{ $plan['plan_name'] ?? $plan['product_name'] }}</div>
+                            <div class="pricing-plan-sub">{{ $plan['plan_subtitle'] ?? $plan['product_subtitle'] ?? '' }}</div>
+                            <div class="pricing-price-wrap">
+                                <div class="pricing-price-main pricing-monthly-price">
+                                    ₹{{ number_format($plan['price_monthly'] ?? 999) }}<span>/month</span>
+                                </div>
+                                <div class="pricing-price-main pricing-yearly-price pricing-price-yearly">
+                                    ₹{{ number_format(($plan['price_yearly'] ?? 9999)) }}<span>/year</span>
+                                </div>
+                            </div>
                         </div>
-
-                        {{-- Tagline Bullets --}}
-                        @if(!empty($plan['product_tagline']))
-                        <div style="font-size:12px; font-weight:800; color:{{ $planColor }}; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">
-                            {{ $plan['product_tagline'] }}
-                        </div>
-                        @endif
-
-                        {{-- Product Title --}}
-                        <h4 style="font-family:'Outfit',sans-serif; font-size:18px; font-weight:900; color:#0f172a; margin:0 0 6px; line-height:1.25;">
-                            {{ $plan['product_title'] ?? ($plan['product_name'] . ' Solution') }}
-                        </h4>
-
-                        {{-- Subtitle Paragraph --}}
-                        @if(!empty($plan['product_subtitle']))
-                        <p style="font-size:12.5px; color:#64748b; line-height:1.6; margin:0;">
-                            {{ $plan['product_subtitle'] }}
-                        </p>
-                        @endif
-
-                        {{-- Center Product Image Mockup (Prominent & Clear) --}}
-                        @if(!empty($mockupImgPath))
-                        <div style="margin-top:20px; text-align:center;">
-                            <img src="{{ $mockupImgPath }}" alt="{{ $plan['product_name'] ?? '' }}"
-                                 style="width:100%; max-height:200px; object-fit:contain; border-radius:14px; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.12));">
-                        </div>
-                        @endif
+                        <a href="{{ $plan['cta_url'] ?? $ctaUrl }}" class="btn-pricing" style="background:linear-gradient(135deg,{{ $plan['color'] ?? $primaryColor }},{{ $plan['color'] ?? $secondaryColor }})">
+                            {{ $plan['cta_text'] ?? 'Get Started' }} <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                        </a>
                     </div>
-                </div>
-
-                {{-- RIGHT PANEL: Plan & Pricing Details --}}
-                <div class="pricing-right-panel">
-                    
-                    <div>
-                        {{-- Badges Row --}}
-                        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
-                            <span style="background:{{ $plan['plan_badge_bg'] ?? ($planColor . '1a') }}; color:{{ $plan['plan_badge_color'] ?? $planColor }}; font-size:10px; font-weight:900; padding:4px 10px; border-radius:6px; text-transform:uppercase; letter-spacing:.05em;">
-                                {{ $plan['plan_badge'] ?? 'STARTER' }}
-                            </span>
-                            @if(!empty($plan['plan_subbadge']))
-                            <span style="font-size:11px; font-weight:700; color:{{ $isPopular ? '#4f46e5' : '#64748b' }};">
-                                {{ $plan['plan_subbadge'] }}
-                            </span>
-                            @endif
-                        </div>
-
-                        {{-- Plan Name --}}
-                        <h3 style="font-family:'Outfit',sans-serif; font-size:21px; font-weight:900; color:#0f172a; margin:0 0 4px;">
-                            {{ $plan['plan_name'] ?? 'Plan Name' }}
-                        </h3>
-
-                        {{-- Plan Subtitle --}}
-                        @if(!empty($plan['plan_subtitle']))
-                        <p style="font-size:12px; color:#64748b; margin:0 0 14px; line-height:1.4;">
-                            {{ $plan['plan_subtitle'] }}
-                        </p>
-                        @endif
-
-                        {{-- Price Display --}}
-                        <div style="display:flex; align-items:baseline; gap:4px; margin-bottom:16px;">
-                            <span style="font-family:'Outfit',sans-serif; font-size:38px; font-weight:900; color:{{ $planColor }}; line-height:1;">
-                                ₹{{ $plan['price_monthly'] ?? '499' }}
-                            </span>
-                            <span style="font-size:13px; color:#64748b; font-weight:700;">/month</span>
-                        </div>
-
-                        {{-- Included Features Header --}}
-                        <div style="font-size:10px; font-weight:900; color:#94a3b8; letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px; border-top:1px solid #f1f5f9; padding-top:14px;">
-                            INCLUDED FEATURES:
-                        </div>
-
-                        {{-- Features List --}}
-                        <ul style="list-style:none; display:flex; flex-direction:column; gap:9px; margin:0 0 20px; padding:0;">
-                            @foreach($planFeatures as $feature)
-                            <li style="display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color:#334155; font-weight:600; line-height:1.4;">
-                                <span style="width:17px; height:17px; border-radius:50%; background:{{ $planColor }}; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; font-size:10px; font-weight:900;">
-                                    ✓
-                                </span>
-                                <span>{{ $feature }}</span>
-                            </li>
+                    <div class="pricing-right">
+                        <ul class="pricing-features-list">
+                            @foreach(($plan['features'] ?? []) as $feat)
+                                <li class="pricing-feat-item" style="--pfeat-color:{{ $plan['color'] ?? $primaryColor }}">
+                                    <i class="fas fa-check-circle" style="color:{{ $plan['color'] ?? $primaryColor }}"></i>
+                                    {{ $feat }}
+                                </li>
                             @endforeach
                         </ul>
                     </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 
-                    {{-- CTA Button (View Details -> Product Landing Page) --}}
-                    <div>
-                        <a href="{{ $prodLink }}" target="_blank"
-                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:13.5px; padding:14px 22px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
-                           onmouseover="this.style.transform='scale(1.02)'"
-                           onmouseout="this.style.transform='scale(1)'">
-                            <span style="color:#ffffff !important; font-weight:800; font-size:13.5px;">View Details →</span>
-                        </a>
-                        @if(!empty($plan['cta_subnote']))
-                        <div style="text-align:center; font-size:10.5px; color:#94a3b8; font-weight:600; margin-top:7px;">
-                            {{ $plan['cta_subnote'] }}
-                        </div>
+
+{{-- ══ GROWTH PATH ══ --}}
+<section class="growth-section" id="growth">
+    <div class="container">
+        <div style="text-align:center">
+            <div class="section-label">YOUR GROWTH PATH</div>
+            <h2 class="section-heading">From One Business to a Global Brand</h2>
+            <p class="section-subheading" style="margin:12px auto 0">Start small, dream big. {{ $agency->name }} grows with you.</p>
+        </div>
+        <div class="growth-path">
+            @foreach($growthPath as $gi => $gStep)
+                @if($gi > 0)
+                    <div class="growth-arrow"><i class="fas fa-chevron-right"></i></div>
+                @endif
+                <div class="growth-step">
+                    <div class="growth-step-icon">
+                        <i class="fas fa-{{ $gStep['icon'] ?? 'flag' }}"></i>
+                    </div>
+                    <div class="growth-step-label">{{ $gStep['label'] }}</div>
+                    <div class="growth-step-desc">{{ $gStep['desc'] }}</div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+
+{{-- ══ TESTIMONIALS ══ --}}
+<section class="testimonials-section" id="testimonials">
+    <div class="container">
+        <div style="text-align:center">
+            <div class="testimonials-label">TRUSTED BY GROWING AGENCIES</div>
+            <h2 class="section-heading">What Our Partners Say</h2>
+            <p class="section-subheading" style="margin:12px auto 0">Real success stories from real entrepreneurs.</p>
+        </div>
+        <div class="testimonials-grid">
+            @foreach($testimonials as $t)
+                <div class="testimonial-card">
+                    <div class="test-stars">
+                        @for($s=0; $s < ($t['rating'] ?? 5); $s++) ⭐ @endfor
+                    </div>
+                    <div class="test-quote">{{ $t['comment'] }}</div>
+                    <div class="test-author">
+                        @if(!empty($t['avatar']))
+                            <img src="{{ asset($t['avatar']) }}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0" alt="{{ $t['name'] }}">
+                        @else
+                            <div class="test-avatar-initials">{{ substr($t['name'] ?? 'U', 0, 1) }}</div>
                         @endif
-                    </div>
-
-                </div>
-            </div>
-            @endforeach
-        </div>
-
-        {{-- 3-Column Trust Bar --}}
-        <div class="trust-bar-grid">
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="width:42px; height:42px; border-radius:50%; background:#d1fae5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i data-lucide="shield-check" style="width:22px; height:22px; color:#059669;"></i>
-                </div>
-                <div>
-                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">Secure &amp; Reliable</h5>
-                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">Your data is always safe with us</p>
-                </div>
-            </div>
-
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="width:42px; height:42px; border-radius:50%; background:#ede9fe; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i data-lucide="headphones" style="width:22px; height:22px; color:#7c3aed;"></i>
-                </div>
-                <div>
-                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">24/7 Support</h5>
-                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">We're here whenever you need help</p>
-                </div>
-            </div>
-
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="width:42px; height:42px; border-radius:50%; background:#fee2e2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i data-lucide="heart" style="width:22px; height:22px; color:#dc2626;"></i>
-                </div>
-                <div>
-                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">Trusted by 10,000+ Businesses</h5>
-                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">Growing together, every day</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-{{-- ══ HOW IT WORKS — 3 Steps (Pixel-Perfect 3rd Reference) ══════════════════════ --}}
-<section id="how-it-works" style="background:#f0efff; padding:80px 0; overflow:visible;">
-    <div style="max-width:1100px; margin:0 auto; padding:0 24px">
-        <div style="text-align:center; margin-bottom:60px">
-            <h2 style="font-size:clamp(1.75rem,3.2vw,2.4rem); font-weight:900; color:#0f172a; margin-bottom:12px; letter-spacing:-0.5px;">How It Works?</h2>
-            <p style="font-size:14px; color:#64748b; font-weight:500;">Get started in 3 simple steps and transform your <span style="color:#4f46e5;font-weight:600;">business</span> today.</p>
-        </div>
-
-        {{-- Steps row with connector & end arrow --}}
-        <div style="display:flex; align-items:stretch; gap:0; position:relative;" class="steps-row">
-
-            {{-- Step 1 --}}
-            <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                {{-- 01 Badge top-left --}}
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#7c3aed,#6d28d9); color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(124,58,237,.4); border:2px solid #fff; letter-spacing:.5px;">01</div>
-                {{-- Icon --}}
-                <div style="width:64px; height:64px; border-radius:50%; background:#ede9fe; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="user-plus" style="width:28px; height:28px; color:#7c3aed"></i>
-                </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Sign Up</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">Create your account in<br>less than 2 minutes.</p>
-            </div>
-
-            {{-- Connector 1→2: dashed wave --}}
-            <div class="hiw-connector" style="width:80px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative; z-index:0;">
-                <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
-                    <path d="M 4 10 Q 20 3 40 10 T 76 10" stroke="#a5b4fc" stroke-width="2" stroke-dasharray="5 4" fill="none" stroke-linecap="round"/>
-                    <path d="M 72 7 L 76 10 L 72 13" stroke="#a5b4fc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-
-            {{-- Step 2 --}}
-            <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                {{-- 02 Badge top-left --}}
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(37,99,235,.4); border:2px solid #fff; letter-spacing:.5px;">02</div>
-                {{-- Icon --}}
-                <div style="width:64px; height:64px; border-radius:50%; background:#dbeafe; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="monitor" style="width:28px; height:28px; color:#2563eb"></i>
-                </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Set Up Your Business</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">Choose the tools you need<br>and customize in minutes.</p>
-            </div>
-
-            {{-- Connector 2→3: dashed wave --}}
-            <div class="hiw-connector" style="width:80px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative; z-index:0;">
-                <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
-                    <path d="M 4 10 Q 20 3 40 10 T 76 10" stroke="#a5b4fc" stroke-width="2" stroke-dasharray="5 4" fill="none" stroke-linecap="round"/>
-                    <path d="M 72 7 L 76 10 L 72 13" stroke="#a5b4fc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-
-            {{-- Step 3 --}}
-            <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                {{-- 03 Badge top-left --}}
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(16,185,129,.4); border:2px solid #fff; letter-spacing:.5px;">03</div>
-                {{-- Icon --}}
-                <div style="width:64px; height:64px; border-radius:50%; background:#d1fae5; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="bar-chart-2" style="width:28px; height:28px; color:#059669"></i>
-                </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Grow Faster</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">Get more customers, more<br>reviews and more revenue.</p>
-            </div>
-
-            {{-- End dark arrow circle --}}
-            <div class="hiw-arrow-end" style="width:64px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                <div style="width:44px; height:44px; border-radius:50%; background:#1e1b4b; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(30,27,75,.3);">
-                    <i data-lucide="arrow-up-right" style="width:20px;height:20px;color:#fff"></i>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-
-{{-- ══ TESTIMONIALS — Pixel-Perfect 2nd Reference Match ════════════ --}}
-<section id="testimonials" style="padding:56px 0; background:#f0efff;">
-    <div style="max-width:1160px; margin:0 auto; padding:0 24px;">
-        <div class="reviews-container-card" style="background:#fff; border-radius:24px; padding:44px 40px; box-shadow:0 6px 32px rgba(79,70,229,0.07); border:1px solid rgba(220,220,255,0.4);">
-            <div style="display:grid; grid-template-columns:240px 1fr; gap:40px; align-items:start" class="reviews-grid">
-
-                {{-- Left heading + arrows --}}
-                <div style="display:flex; flex-direction:column; gap:18px;">
-                    <h2 style="font-size:clamp(1.6rem,2.6vw,2.1rem); font-weight:900; color:#0f172a; line-height:1.18; margin:0">
-                        Loved by<br>Business Owners
-                    </h2>
-                    <p style="font-size:13px; color:#64748b; line-height:1.75; margin:0">See what our customers say about their growth with {{ $agency->name }}.</p>
-                    <div style="display:flex; gap:10px; margin-top:4px">
-                        <button onclick="prevRev()" style="width:38px; height:38px; border-radius:50%; border:2px solid #e2e8f0; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b; transition:all .2s; flex-shrink:0;" onmouseover="this.style.borderColor='#6d28d9';this.style.color='#6d28d9'" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#64748b'">
-                            <i data-lucide="chevron-left" style="width:18px; height:18px"></i>
-                        </button>
-                        <button onclick="nextRev()" style="width:38px; height:38px; border-radius:50%; border:none; background:linear-gradient(135deg,#7c3aed,#6d28d9); cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 4px 14px rgba(109,40,217,.35); flex-shrink:0; transition:transform .2s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'">
-                            <i data-lucide="chevron-right" style="width:18px; height:18px"></i>
-                        </button>
-                    </div>
-                </div>
-
-                {{-- Right: 3 review cards --}}
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; overflow-x:auto; scroll-behavior:smooth; scrollbar-width:none;" id="rev-grid" class="rev-cards-3">
-                    @foreach($testimonials as $t)
-                        @php
-                            $initials = strtoupper(substr(trim($t['name'] ?? 'U'), 0, 1));
-                            $parts = explode(' ', trim($t['name'] ?? 'U'));
-                            $initials = strtoupper(substr($parts[0],0,1) . (isset($parts[1]) ? substr($parts[1],0,1) : ''));
-                        @endphp
-                        <div class="review-card" style="background:#fff; border:1px solid #f1f5f9; border-radius:18px; padding:22px 20px; box-shadow:0 4px 20px rgba(0,0,0,0.04); transition:transform .25s, box-shadow .25s; display:flex; flex-direction:column; gap:0;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 30px rgba(79,70,229,.09)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.04)'">
-                            {{-- Reviewer top: avatar + name/role --}}
-                            <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
-                                @if(!empty($t['avatar']))
-                                    <img src="{{ asset($t['avatar']) }}" alt="{{ $t['name'] }}"
-                                         style="width:46px; height:46px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid #f1f5f9;">
-                                @else
-                                    <div style="width:46px; height:46px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%); color:#fff; font-weight:900; font-size:14px; display:flex; align-items:center; justify-content:center; letter-spacing:.5px;">{{ $initials }}</div>
-                                @endif
-                                <div style="min-width:0;">
-                                    <div style="font-size:13.5px; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $t['name'] }}</div>
-                                    <div style="font-size:11px; color:#64748b; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $t['role'] ?? $t['designation'] ?? '' }}</div>
-                                </div>
-                            </div>
-                            {{-- Stars --}}
-                            <div style="display:flex; gap:2px; margin-bottom:10px">
-                                @for($i = 0; $i < ($t['rating'] ?? 5); $i++)
-                                    <span style="color:#f59e0b; font-size:14px; line-height:1">★</span>
-                                @endfor
-                            </div>
-                            {{-- Quote --}}
-                            <p style="font-size:12.5px; color:#475569; line-height:1.75; margin:0;">"{{ $t['comment'] }}"</p>
+                        <div>
+                            <div class="test-name">{{ $t['name'] }}</div>
+                            <div class="test-role">{{ $t['role'] }}</div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- ══ FAQ ════════════════════════════════════════════════ --}}
-<section id="faq" style="background:#fff;padding:64px 0;border-top:1px solid #f1f5f9">
-    <div style="max-width:760px;margin:0 auto;padding:0 24px">
-        <div style="text-align:center;margin-bottom:40px">
-            <h2 style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:800;color:#0f172a;margin-bottom:8px">Frequently Asked Questions</h2>
-            <p style="font-size:14px;color:#64748b">Have questions? We are here to help.</p>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-            @foreach($faqs as $item)
-                <div style="background:#f8fafc;border:1px solid #e9eef4;border-radius:16px;padding:20px 22px">
-                    <h4 style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:8px">{{ $item['q'] }}</h4>
-                    <p style="font-size:13px;color:#64748b;line-height:1.75">{{ $item['a'] }}</p>
+                    </div>
                 </div>
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- ══ CTA BANNER — Pixel-Perfect 2nd Reference Match ══════════════════════════════════════════ --}}
-<section id="cta" style="background:#f8fafc; padding:48px 0 56px">
-    <div style="max-width:1160px; margin:0 auto; padding:0 24px">
-        <div class="cta-band" style="position:relative; border-radius:22px; overflow:hidden; background:linear-gradient(120deg,#3730a3 0%,#4f46e5 45%,#6d28d9 100%); min-height:160px; display:flex; align-items:center; justify-content:space-between; gap:20px; padding:40px 48px; box-shadow:0 16px 48px rgba(79,70,229,.22);">
 
-            {{-- Decorative circles --}}
-            <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
-                <div style="position:absolute;top:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04);"></div>
-                <div style="position:absolute;bottom:-40px;right:280px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
-            </div>
-
-            {{-- Left: heading + sub + checkmarks --}}
-            <div style="display:flex; flex-direction:column; gap:12px; max-width:380px; position:relative; z-index:2; flex-shrink:0;">
-                <h2 style="font-size:clamp(1.2rem,2.2vw,1.65rem); font-weight:900; color:#fff; line-height:1.25; letter-spacing:-.2px; margin:0">
-                    Ready to Take Your Business to the Next Level?
-                </h2>
-                <p style="font-size:13px; color:rgba(199,210,254,.9); line-height:1.6; margin:0">
-                    Join thousands of growing businesses with {{ $agency->name }} today.
-                </p>
-                <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:12px; font-weight:600; color:rgba(199,210,254,.85); margin-top:2px;">
-                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> Quick Setup</span>
-                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> No Credit Card Required</span>
-                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> 24/7 Support</span>
-                </div>
-            </div>
-
-            {{-- Center: woman image (cuts into section, overflows bottom) --}}
-            <div style="position:relative; z-index:2; flex-shrink:0; align-self:flex-end; margin-bottom:-40px;">
-                <img src="{{ $ctaImg }}" alt="Grow with {{ $agency->name }}"
-                     style="height:220px; width:auto; object-fit:contain; filter:drop-shadow(0 8px 24px rgba(0,0,0,.28)); display:block;"
-                     onerror="this.style.display='none'">
-            </div>
-
-            {{-- Right: CTA button --}}
-            <div style="position:relative; z-index:2; flex-shrink:0;">
-                <a href="{{ $agency->cta_url ?? '/login' }}"
-                   style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:14px 26px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
-                   onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
-                   onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
-                    Get Started Free
-                    <i data-lucide="arrow-right" style="width:15px; height:15px"></i>
+{{-- ══ FAQ ══ --}}
+<section class="faq-section" id="faq">
+    <div class="container">
+        <div class="faq-grid">
+            <div class="faq-heading-col">
+                <div class="section-label">FAQ</div>
+                <h2 class="section-heading">Frequently Asked Questions</h2>
+                <p class="section-subheading">Still have questions? We're here to help.</p>
+                <a href="{{ $ctaUrl }}" class="btn-hero-primary" style="margin-top:28px;display:inline-flex">
+                    View All FAQs <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
-
+            <div class="faq-list-col">
+                @foreach($faqs as $fi => $faq)
+                    <div class="faq-item" id="faq-{{ $fi }}">
+                        <button class="faq-question" onclick="toggleFaq({{ $fi }})">
+                            <span class="faq-q-text">{{ $faq['q'] }}</span>
+                            <i class="fas fa-plus faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">{{ $faq['a'] }}</div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </section>
 
-{{-- ══ FOOTER ══════════════════════════════════════════════ --}}
-<footer class="site-footer" style="padding:56px 0 32px">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
 
-        {{-- 4-column grid: Brand | Products | Legal | Newsletter --}}
-        <div style="display:grid;grid-template-columns:200px 1fr 1fr 200px;gap:32px;padding-bottom:40px;border-bottom:1px solid #1e293b" class="footer-grid">
+{{-- ══ CTA BANNER ══ --}}
+<section class="cta-banner-section">
+    <div class="container">
+        <div class="cta-banner-inner">
+            <div class="cta-banner-text">
+                <h2 class="cta-banner-heading">{{ $ctaBannerHeading }}</h2>
+                <p class="cta-banner-sub">{{ $ctaBannerSubtext }}</p>
+            </div>
+            <div class="cta-banner-actions">
+                <a href="{{ $ctaUrl }}" class="btn-cta-white">
+                    {{ $ctaText }} <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="{{ $cta2Url }}" class="btn-cta-outline">
+                    <i class="fas fa-calendar"></i> {{ $cta2Text }}
+                </a>
+            </div>
+        </div>
+        @if(!empty($ctaBannerSubtext))
+            <div style="text-align:center;margin-top:32px">
+                <span class="cta-success-text">Your Success Starts Here!</span>
+            </div>
+        @endif
+    </div>
+</section>
 
-            {{-- Col 1: Brand + Social --}}
-            <div style="display:flex;flex-direction:column;gap:14px">
-                <div style="display:flex;align-items:center;gap:10px">
+
+{{-- ══ FOOTER ══ --}}
+<footer class="site-footer" id="footer">
+    <div class="container">
+        <div class="footer-grid">
+            {{-- Brand Col --}}
+            <div class="footer-logo-col">
+                <div class="footer-logo">
                     @if(!empty($agency->logo))
-                        <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:32px;width:auto">
+                        <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="filter:brightness(10)">
                     @else
-                        <div class="bg-brand" style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                            <i data-lucide="layers" style="width:16px;height:16px;color:#fff"></i>
+                        <div style="width:32px;height:32px;border-radius:8px;background:var(--brand-gradient);display:flex;align-items:center;justify-content:center">
+                            <i class="fas fa-layer-group" style="color:#fff;font-size:14px"></i>
                         </div>
-                        <span style="font-family:'Outfit',sans-serif;font-size:17px;font-weight:900;color:#e2e8f0">{{ $agency->name }}</span>
+                    @endif
+                    <span class="footer-logo-text">{{ $agency->name }}</span>
+                </div>
+                <p class="footer-tagline">{{ $agency->footer_content ?? 'Your technology partner in building profitable SaaS businesses worldwide.' }}</p>
+                <div class="footer-socials">
+                    @if($fbUrl && $fbUrl !== '#')
+                        <a href="{{ $fbUrl }}" class="footer-social-btn" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    @endif
+                    @if($igUrl && $igUrl !== '#')
+                        <a href="{{ $igUrl }}" class="footer-social-btn" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    @endif
+                    @if($twUrl && $twUrl !== '#')
+                        <a href="{{ $twUrl }}" class="footer-social-btn" target="_blank" title="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    @endif
+                    @if($ytUrl && $ytUrl !== '#')
+                        <a href="{{ $ytUrl }}" class="footer-social-btn" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    @endif
+                    @if($liUrl && $liUrl !== '#')
+                        <a href="{{ $liUrl }}" class="footer-social-btn" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     @endif
                 </div>
-                <p style="font-size:12px;color:#64748b;line-height:1.7;max-width:190px">
-                    {{ $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.' }}
-                </p>
-                <div style="display:flex;gap:8px;margin-top:4px">
-                    <a href="{{ $agency->facebook_url ?? '#' }}" class="footer-social-btn"><i data-lucide="facebook" style="width:14px;height:14px"></i></a>
-                    <a href="{{ $agency->instagram_url ?? '#' }}" class="footer-social-btn"><i data-lucide="instagram" style="width:14px;height:14px"></i></a>
-                    <a href="{{ $agency->youtube_url ?? '#' }}" class="footer-social-btn"><i data-lucide="youtube" style="width:14px;height:14px"></i></a>
-                    <a href="{{ $agency->linkedin_url ?? '#' }}" class="footer-social-btn"><i data-lucide="linkedin" style="width:14px;height:14px"></i></a>
-                    <a href="{{ $agency->twitter_url ?? '#' }}" class="footer-social-btn"><i data-lucide="twitter" style="width:14px;height:14px"></i></a>
+            </div>
+
+            {{-- Products --}}
+            <div>
+                <div class="footer-col-title">Our Products</div>
+                <div class="footer-links">
+                    @foreach(array_slice($services, 0, 5) as $svc)
+                        <a href="{{ $svc['link'] ?? '#' }}">{{ $svc['title'] }}</a>
+                    @endforeach
                 </div>
             </div>
 
-            {{-- Col 2: Products --}}
-            <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Products</h4>
-                <ul style="list-style:none;display:flex;flex-direction:column;gap:9px">
-                    @foreach($services as $s)
-                        <li>
-                            <a href="#products" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">
-                                <i data-lucide="chevron-right" style="width:12px;height:12px;flex-shrink:0"></i>
-                                {{ $s['title'] }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+            {{-- Company --}}
+            <div>
+                <div class="footer-col-title">Company</div>
+                <div class="footer-links">
+                    <a href="/about">About Us</a>
+                    <a href="/contact">Contact</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="#testimonials">Success Stories</a>
+                </div>
             </div>
 
-            {{-- Col 3: Legal Policies --}}
-            <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Legal</h4>
-                <ul style="list-style:none;display:flex;flex-direction:column;gap:9px">
-                    @foreach([
-                        ['/about',           'About Us'],
-                        ['/contact',         'Contact Us'],
-                        ['/privacy-policy',  'Privacy Policy'],
-                        ['/terms',           'Terms & Conditions'],
-                        ['/shipping-policy', 'Shipping Policy'],
-                        ['/refund-policy',   'Refund Policy'],
-                    ] as [$href, $label])
-                        <li>
-                            <a href="{{ $href }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">
-                                <i data-lucide="chevron-right" style="width:12px;height:12px;flex-shrink:0"></i>
-                                {{ $label }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+            {{-- Support --}}
+            <div>
+                <div class="footer-col-title">Support</div>
+                <div class="footer-links">
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-conditions">Terms & Conditions</a>
+                    <a href="/refund-policy">Refund Policy</a>
+                    <a href="/shipping-policy">Shipping Policy</a>
+                    <a href="/contact">Help Center</a>
+                </div>
             </div>
 
-            {{-- Col 4: Newsletter --}}
-            <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Subscribe to our newsletter</h4>
-                <p style="font-size:12px;color:#64748b">Get updates, tips and offers.</p>
-                <div class="newsletter-wrap">
-                    <input type="email" class="newsletter-input" placeholder="Enter your email">
-                    <button class="newsletter-send" onclick="alert('Thank you for subscribing!')" type="button">
-                        <i data-lucide="send" style="width:16px;height:16px;color:#fff"></i>
+            {{-- Subscribe / Contact --}}
+            <div>
+                <div class="footer-col-title">Subscribe</div>
+                <p style="font-size:12.5px;color:#64748b;margin-bottom:14px;line-height:1.6">Get the latest updates and growth tips.</p>
+                <form onsubmit="return false;" style="display:flex;gap:8px;margin-bottom:20px">
+                    <input type="email" placeholder="Your email" style="flex:1;background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:10px 14px;border-radius:10px;font-size:12px;outline:none;font-family:'Inter',sans-serif">
+                    <button type="submit" style="width:40px;height:40px;border-radius:10px;border:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--brand-gradient)">
+                        <i class="fas fa-paper-plane" style="color:#fff;font-size:13px"></i>
                     </button>
-                </div>
+                </form>
+                @if(!empty($agency->contact_email))
+                    <div style="font-size:12.5px;color:#64748b;display:flex;align-items:center;gap:8px">
+                        <i class="fas fa-envelope" style="color:var(--brand-primary)"></i>
+                        {{ $agency->contact_email }}
+                    </div>
+                @endif
+                @if(!empty($agency->contact_phone))
+                    <div style="font-size:12.5px;color:#64748b;display:flex;align-items:center;gap:8px;margin-top:8px">
+                        <i class="fas fa-phone" style="color:var(--brand-primary)"></i>
+                        {{ $agency->contact_phone }}
+                    </div>
+                @endif
             </div>
         </div>
 
-        {{-- Bottom bar --}}
-        <div style="padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-            <p style="font-size:11px;color:#475569">© {{ date('Y') }} {{ $agency->name }}. All rights reserved.</p>
-            <p style="font-size:11px;color:#475569;display:flex;align-items:center;gap:4px">Made with <span style="color:#f43f5e">❤️</span> in India 🇮🇳</p>
+        {{-- Footer Bottom --}}
+        <div class="footer-bottom">
+            <span>© {{ date('Y') }} {{ $agency->name }}. All rights reserved.</span>
+            <div class="footer-bottom-links">
+                <a href="/terms-conditions">Terms</a>
+                <a href="/privacy-policy">Privacy</a>
+            </div>
         </div>
     </div>
 </footer>
 
-<style>
-    /* ── Responsive overrides ── */
-    @media (max-width: 1280px) {
-        .footer-grid  { grid-template-columns: 1fr 1fr 1fr !important; }
-    }
-    @media (max-width: 1024px) {
-        .about-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
-        .about-grid > div:first-child { min-height: 400px !important; }
-        .products-container-card { padding: 36px 24px !important; }
-        .products-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-        .products-grid > div:first-child { position: static !important; }
-        .reviews-container-card { padding: 36px 24px !important; }
-        .reviews-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
-        .reviews-grid > div:first-child { position: static !important; }
-        .footer-grid { grid-template-columns: 1fr 1fr 1fr !important; }
-        .step-connector-svg { display: none !important; }
-        .hiw-connector { display: none !important; }
-        .hiw-arrow-end { display: none !important; }
-        .steps-row { flex-direction: column !important; gap: 28px !important; }
-        .step-card-2 { flex: none !important; }
-    }
-    @media (max-width: 768px) {
-        .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
-        .hero-grid > div:first-child { align-items: center !important; }
-        .hero-grid > div:last-child { justify-content: center !important; margin-top: 24px; }
-        .feat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-        .feat-grid > div { padding: 18px 14px !important; }
-        .steps-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-        .prod-cards-3x2 { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-        .prod-cards-3x2 .prod-card { padding: 16px 14px !important; }
-
-        /* Single row slider for review section on mobile */
-        .rev-cards-3 {
-            display: flex !important;
-            grid-template-columns: none !important;
-            overflow-x: auto !important;
-            scroll-snap-type: x mandatory !important;
-            scroll-behavior: smooth !important;
-            -webkit-overflow-scrolling: touch !important;
-            gap: 16px !important;
-            padding-bottom: 12px !important;
-        }
-        .rev-cards-3::-webkit-scrollbar { display: none; }
-        .rev-cards-3 .review-card {
-            flex: 0 0 88% !important;
-            min-width: 88% !important;
-            scroll-snap-align: center !important;
-        }
-
-        /* Ready to take your business CTA container image centered & larger on mobile only */
-        .cta-band {
-            flex-direction: column !important;
-            padding: 36px 20px !important;
-            align-items: center !important;
-            text-align: center !important;
-        }
-        .cta-band > div:nth-child(2) {
-            max-width: 100% !important;
-            align-items: center !important;
-            text-align: center !important;
-        }
-        .cta-band > div:nth-child(2) > div {
-            justify-content: center !important;
-        }
-        .cta-band > div:nth-child(3) {
-            align-self: center !important;
-            margin: 20px auto 12px auto !important;
-            width: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-        }
-        .cta-band img {
-            height: 290px !important;
-            max-height: 320px !important;
-            width: auto !important;
-            margin: 0 auto !important;
-            align-self: center !important;
-            display: block !important;
-        }
-
-        .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
-        .lg-nav, .desktop-ctas { display: none !important; }
-        .mobile-ham { display: flex !important; }
-        .kb-stats-container { justify-content: center !important; }
-        .stat-divider { display: none !important; }
-    }
-    @media (max-width: 520px) {
-        .feat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-        .feat-grid > div { padding: 16px 10px !important; }
-        .prod-cards-3x2 { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-        .prod-cards-3x2 .prod-card { padding: 14px 10px !important; }
-        .footer-grid { grid-template-columns: 1fr !important; }
-        .badge-top-left { top: 10px !important; left: -5px !important; transform: scale(0.85); transform-origin: top left; }
-        .badge-top-right { top: 70px !important; right: -5px !important; transform: scale(0.85); transform-origin: top right; }
-        .badge-mid-left { top: 180px !important; left: -10px !important; transform: scale(0.85); transform-origin: middle left; }
-        .badge-bot-left { bottom: 10px !important; left: -5px !important; transform: scale(0.85); transform-origin: bottom left; }
-    }
-    @media (min-width: 1025px) {
-        .lg-nav { display: flex !important; align-items: center; gap: 28px; }
-        .desktop-ctas { display: flex !important; }
-        .mobile-ham { display: none !important; }
-    }
-</style>
 
 <script>
-    lucide.createIcons();
-
+    // Mobile menu toggle
     function toggleMobileMenu() {
-        const m = document.getElementById('mobile-menu');
-        m.classList.toggle('open');
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('ham-icon');
+        menu.classList.toggle('open');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
     }
 
-    function nextRev() {
-        const revGrid = document.getElementById('rev-grid');
-        if (!revGrid) return;
-        const cardWidth = revGrid.children[0] ? (revGrid.children[0].offsetWidth + 16) : 320;
-        if (revGrid.scrollLeft + revGrid.clientWidth >= revGrid.scrollWidth - 15) {
-            revGrid.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-            revGrid.scrollBy({ left: cardWidth, behavior: 'smooth' });
-        }
+    // FAQ accordion
+    function toggleFaq(index) {
+        const item = document.getElementById('faq-' + index);
+        item.classList.toggle('open');
     }
-    function prevRev() {
-        const revGrid = document.getElementById('rev-grid');
-        if (!revGrid) return;
-        const cardWidth = revGrid.children[0] ? (revGrid.children[0].offsetWidth + 16) : 320;
-        if (revGrid.scrollLeft <= 15) {
-            revGrid.scrollTo({ left: revGrid.scrollWidth, behavior: 'smooth' });
+
+    // Revenue calculator
+    const slider    = document.getElementById('rev-slider');
+    const countEl   = document.getElementById('calc-count');
+    const resultEl  = document.getElementById('rev-result');
+    const pricePerCustomer = {{ $revCalc['price_per_customer'] ?? 999 }};
+    const currencySymbol   = '{{ $revCalc['currency_symbol'] ?? '₹' }}';
+
+    function formatRevenue(n) {
+        if (n >= 100000) return currencySymbol + (n/100000).toFixed(1) + 'L';
+        if (n >= 1000)   return currencySymbol + (n/1000).toFixed(0)   + ',000';
+        return currencySymbol + n.toLocaleString('en-IN');
+    }
+
+    function updateRevCalc() {
+        const count   = parseInt(slider.value);
+        const revenue = count * pricePerCustomer;
+        countEl.textContent = count;
+        resultEl.innerHTML  = formatRevenue(revenue) + '<span style="font-size:1rem;font-weight:500;color:#94a3b8">/month</span>';
+        const pct = ((count - slider.min) / (slider.max - slider.min)) * 100;
+        slider.style.background = `linear-gradient(90deg, var(--brand-primary) ${pct}%, #e2e8f0 ${pct}%)`;
+    }
+
+    if (slider) {
+        slider.addEventListener('input', updateRevCalc);
+        updateRevCalc();
+    }
+
+    // Pricing toggle
+    function togglePricing(el) {
+        const monthly = document.querySelectorAll('.pricing-monthly-price');
+        const yearly  = document.querySelectorAll('.pricing-yearly-price');
+        if (el.checked) {
+            monthly.forEach(m => m.style.display = 'none');
+            yearly.forEach(y => { y.style.display = 'block'; });
         } else {
-            revGrid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+            monthly.forEach(m => m.style.display = 'block');
+            yearly.forEach(y => { y.style.display = 'none'; });
         }
     }
 
-    // Auto-slide reviews every 3.5 seconds
-    let autoRevTimer = setInterval(nextRev, 3500);
-    const revGridEl = document.getElementById('rev-grid');
-    if (revGridEl) {
-        revGridEl.addEventListener('touchstart', () => clearInterval(autoRevTimer), {passive: true});
-        revGridEl.addEventListener('mouseenter', () => clearInterval(autoRevTimer));
-        revGridEl.addEventListener('mouseleave', () => {
-            clearInterval(autoRevTimer);
-            autoRevTimer = setInterval(nextRev, 3500);
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
-    }
+    });
 </script>
+
 </body>
 </html>
