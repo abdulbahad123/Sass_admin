@@ -19,7 +19,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
     if ($isMainDomain) {
-        return redirect()->route('login');
+        return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->show();
     }
 
     $agency = \App\Models\Agency::where(function ($q) use ($cleanHost, $host) {
@@ -181,6 +181,12 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::get('/profile', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/settings', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'updateSettings'])->name('settings.update');
+
+    // Nooryak.in Platform Landing Page Editor
+    Route::get('/landing-page', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'edit'])->name('landing-page.edit');
+    Route::post('/landing-page', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'update'])->name('landing-page.update');
+    Route::post('/landing-page/upload', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'uploadImage'])->name('landing-page.upload');
+    Route::post('/landing-page/delete-image', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'deleteImage'])->name('landing-page.delete-image');
 
     // Audit Logs
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');

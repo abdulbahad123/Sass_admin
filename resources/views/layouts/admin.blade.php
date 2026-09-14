@@ -123,6 +123,12 @@
                 <i data-lucide="settings" class="w-4 h-4 mr-3"></i>
                 Profile & Settings
             </a>
+
+            <a href="{{ route('admin.landing-page.edit') }}" 
+               class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.landing-page.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                <i data-lucide="globe" class="w-4 h-4 mr-3"></i>
+                Landing Page
+            </a>
             @endif
 
             @if(auth()->user()->canAccessMenu('view-audit-logs'))
