@@ -237,9 +237,9 @@
                 </div>
 
                 <!-- Right Hero Image Graphic (6 cols) -->
-                <div class="lg:col-span-6 relative mt-6 lg:mt-0">
-                    <div class="relative z-10 flex justify-center lg:justify-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto object-contain transform lg:scale-110 lg:translate-x-4">
+                <div class="lg:col-span-6 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
+                    <div class="relative z-10 w-full flex justify-center lg:justify-end">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[540px] lg:max-h-[580px] object-contain transform lg:scale-125 lg:translate-x-6 origin-right">
                     </div>
                 </div>
 
