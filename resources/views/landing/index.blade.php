@@ -440,56 +440,94 @@
         </div>
     </section>
 
-    <!-- SECTION 6: HOW NOORYAK WORKS -->
-    <section class="py-16 bg-slate-50/80 border-t border-slate-200/80">
+    <!-- SECTION 6: HOW NOORYAK WORKS (Pixel-Perfect Match with Reference Image) -->
+    <section class="py-16 lg:py-24 bg-slate-50/60 border-t border-slate-200/70 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="badge-pill mx-auto">{{ $data['lp_how_works_tag'] }}</span>
-            <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3 mb-12">
+            
+            <span class="badge-pill mx-auto mb-3">{{ $data['lp_how_works_tag'] }}</span>
+            <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mb-14">
                 {{ $data['lp_how_works_title'] }}
             </h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @if(is_array($data['lp_how_works_steps']))
-                    @foreach($data['lp_how_works_steps'] as $step)
-                    <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200/80 flex flex-col items-center text-center hover:shadow-xl transition-all">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-md shadow-blue-500/30 mb-3">
-                            Step {{ $step['step'] ?? '1' }}
+            @if(is_array($data['lp_how_works_steps']))
+            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-4 max-w-6xl mx-auto">
+                @foreach($data['lp_how_works_steps'] as $index => $step)
+                    
+                    <!-- Step Item -->
+                    <div class="flex-1 flex flex-col items-center text-center group z-10 px-2">
+                        <!-- Icon Circle -->
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full btn-gradient flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-orange-500/25 mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <i class="{{ $step['icon'] ?? 'fas fa-check' }}"></i>
                         </div>
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base mb-3">
-                            <i class="{{ $step['icon'] ?? 'fas fa-arrow-right' }}"></i>
-                        </div>
-                        <h4 class="font-space font-bold text-sm text-slate-900 mb-2">{{ $step['title'] ?? '' }}</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">{{ $step['desc'] ?? '' }}</p>
+                        
+                        <!-- Step Label -->
+                        <span class="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Step {{ $step['step'] ?? ($index + 1) }}</span>
+                        
+                        <!-- Title -->
+                        <h4 class="font-space font-extrabold text-base sm:text-lg text-slate-900 mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
+                        
+                        <!-- Description -->
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-[220px]">{{ $step['desc'] ?? '' }}</p>
                     </div>
-                    @endforeach
-                @endif
+
+                    <!-- Right Arrow Connector between steps (Hidden on Mobile) -->
+                    @if(!$loop->last)
+                    <div class="hidden lg:flex items-center justify-center text-slate-400 font-bold -mt-16 text-lg">
+                        <i class="fas fa-arrow-right text-slate-400 opacity-60"></i>
+                    </div>
+                    @endif
+
+                @endforeach
             </div>
+            @endif
+
         </div>
     </section>
 
-    <!-- SECTION 7: WHY CHOOSE NOORYAK? -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="badge-pill mx-auto">{{ $data['lp_why_choose_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
+    <!-- SECTION 7: WHY CHOOSE NOORYAK? (Pixel-Perfect Match with Reference Image) -->
+    <section class="py-16 lg:py-24 bg-white reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            <div class="mb-14">
+                <span class="badge-pill mx-auto mb-3">{{ $data['lp_why_choose_tag'] }}</span>
+                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
                     {{ $data['lp_why_choose_title'] }}
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if(is_array($data['lp_why_choose_items']))
-                    @foreach($data['lp_why_choose_items'] as $item)
-                    <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-xl transition-all">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg mb-3">
-                            <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
-                        </div>
-                        <h4 class="font-space font-bold text-sm text-slate-900 mb-2">{{ $item['title'] ?? '' }}</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">{{ $item['desc'] ?? '' }}</p>
+            @if(is_array($data['lp_why_choose_items']))
+            @php
+                // Curated pastel background color mappings to match reference screenshot
+                $colorStyles = [
+                    0 => ['bg' => 'bg-emerald-100/90 text-emerald-600'],
+                    1 => ['bg' => 'bg-sky-100/90 text-sky-600'],
+                    2 => ['bg' => 'bg-orange-100/90 text-orange-600'],
+                    3 => ['bg' => 'bg-teal-100/90 text-teal-600'],
+                    4 => ['bg' => 'bg-purple-100/90 text-purple-600'],
+                    5 => ['bg' => 'bg-blue-100/90 text-blue-600'],
+                ];
+            @endphp
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 items-start text-center">
+                @foreach($data['lp_why_choose_items'] as $index => $item)
+                @php
+                    $style = $colorStyles[$index % count($colorStyles)];
+                @endphp
+                <div class="flex flex-col items-center group px-1">
+                    <!-- Soft Pastel Colored Circle Icon Container -->
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full {{ $style['bg'] }} flex items-center justify-center text-xl sm:text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                        <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
                     </div>
-                    @endforeach
-                @endif
+                    
+                    <!-- Title -->
+                    <h4 class="font-space font-extrabold text-xs sm:text-sm text-slate-900 mb-1.5 leading-snug">{{ $item['title'] ?? '' }}</h4>
+                    
+                    <!-- Description -->
+                    <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed max-w-[170px]">{{ $item['desc'] ?? '' }}</p>
+                </div>
+                @endforeach
             </div>
+            @endif
+
         </div>
     </section>
 
