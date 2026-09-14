@@ -273,37 +273,40 @@
     <!-- SECTION 3: ABOUT NOORYAK -->
     <section id="about" class="py-16 lg:py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
-                <!-- Left Graphic -->
-                <div class="lg:col-span-5 order-2 lg:order-1">
-                    <div class="relative">
-                        <img src="{{ asset($data['lp_about_image'] ?? '/assets/images/about_right.png') }}" alt="About Nooryak" class="w-full h-auto rounded-3xl shadow-xl border border-slate-200">
-                    </div>
-                </div>
-
-                <!-- Right Content -->
-                <div class="lg:col-span-7 order-1 lg:order-2 space-y-5">
+                <!-- Left Content -->
+                <div class="lg:col-span-6 space-y-5 text-left">
                     <span class="badge-pill">{{ $data['lp_about_tag'] }}</span>
-                    <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
+                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
                         {{ $data['lp_about_title'] }}
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
                         {{ $data['lp_about_desc'] }}
                     </p>
+                    <p class="text-xs sm:text-sm font-bold text-blue-600">
+                        Your Brand. Our Technology. Unlimited Growth.
+                    </p>
 
-                    <!-- Feature Badges -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
+                    <!-- 3 Feature Icons in 1 Row -->
+                    <div class="grid grid-cols-3 gap-3 pt-3">
                         @if(is_array($data['lp_about_features']))
-                            @foreach($data['lp_about_features'] as $feat)
-                            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 text-center hover:shadow-sm transition-all">
-                                <div class="w-9 h-9 mx-auto rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-sm mb-1.5">
+                            @foreach(array_slice($data['lp_about_features'], 0, 3) as $feat)
+                            <div class="flex items-center space-x-2.5 p-3 rounded-2xl bg-blue-50/60 border border-blue-100">
+                                <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs flex-shrink-0">
                                     <i class="{{ $feat['icon'] ?? 'fas fa-star' }}"></i>
                                 </div>
-                                <h4 class="font-bold text-[11px] text-slate-800">{{ $feat['title'] ?? '' }}</h4>
+                                <h4 class="font-bold text-[11px] text-slate-900 leading-tight">{{ $feat['title'] ?? '' }}</h4>
                             </div>
                             @endforeach
                         @endif
+                    </div>
+                </div>
+
+                <!-- Right Graphic -->
+                <div class="lg:col-span-6">
+                    <div class="relative">
+                        <img src="{{ asset($data['lp_about_image'] ?? '/assets/images/about_right.png') }}" alt="About Nooryak" class="w-full h-auto rounded-3xl">
                     </div>
                 </div>
 
@@ -318,40 +321,42 @@
                 
                 @if(is_array($data['lp_model_cards']))
                     @foreach($data['lp_model_cards'] as $index => $model)
-                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
                         
                         <div>
-                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-white mb-3 {{ $index == 0 ? 'bg-emerald-500' : 'bg-indigo-600' }}">
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 {{ $index == 0 ? 'bg-pink-100 text-pink-700' : 'bg-teal-100 text-teal-700' }}">
                                 {{ $model['badge'] ?? 'Model' }}
                             </span>
                             <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 mb-2">
                                 {{ $model['title'] ?? '' }}
                             </h3>
-                            <p class="text-xs text-slate-600 mb-5 leading-relaxed">
+                            <p class="text-xs text-slate-600 mb-6 leading-relaxed">
                                 {{ $model['desc'] ?? '' }}
                             </p>
 
-                            <!-- Feature Grid (2 cols) & Preview Image -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center mb-6">
-                                <div class="space-y-2.5">
+                            <!-- Feature List (Left) & Screen Preview (Right) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center mb-6">
+                                <div class="sm:col-span-7 space-y-2.5">
                                     @if(isset($model['features']) && is_array($model['features']))
                                         @foreach($model['features'] as $f)
                                         <div class="flex items-start space-x-2 text-xs font-medium text-slate-700">
-                                            <i class="fas fa-check-circle text-blue-600 mt-0.5 flex-shrink-0"></i>
+                                            <div class="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                                <i class="fas fa-check"></i>
+                                            </div>
                                             <span>{{ $f }}</span>
                                         </div>
                                         @endforeach
                                     @endif
                                 </div>
-                                <div class="mt-4 sm:mt-0">
-                                    <img src="{{ asset($model['image'] ?? ($index == 0 ? '/assets/images/user_dashboard.png' : '/assets/images/user_dashboard2.png')) }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-md border border-slate-200">
+                                <div class="sm:col-span-5 mt-4 sm:mt-0">
+                                    <img src="{{ asset($model['image'] ?? ($index == 0 ? '/assets/images/user_dashboard.png' : '/assets/images/user_dashboard2.png')) }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
                                 </div>
                             </div>
                         </div>
 
                         <!-- CTA Button -->
                         <div class="pt-4 border-t border-slate-100">
-                            <a href="{{ $model['cta_url'] ?? '/login' }}" class="inline-flex items-center justify-between w-full px-6 py-3.5 rounded-2xl font-bold text-xs text-white {{ $index == 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95' }} transition-all shadow-md">
+                            <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-3.5 rounded-2xl font-bold text-xs text-white transition-all shadow-md">
                                 <span>{{ $model['cta_text'] ?? 'Get Started' }}</span>
                                 <i class="fas fa-arrow-right"></i>
                             </a>
