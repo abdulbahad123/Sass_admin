@@ -205,8 +205,8 @@
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
-                <!-- Left Text Column (6 cols) -->
-                <div class="lg:col-span-6 space-y-6 text-left">
+                <!-- Left Text Column (5 cols on lg for larger hero banner image ratio) -->
+                <div class="lg:col-span-5 space-y-6 text-left relative z-20">
                     <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
                     </div>
@@ -248,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (Task 2: Increased height and width) -->
-                <div class="lg:col-span-6 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
-                    <div class="relative z-10 w-full flex justify-center lg:justify-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full lg:w-[115%] h-auto max-h-[750px] lg:max-h-[850px] xl:max-h-[920px] object-contain ml-0 lg:ml-[20px] mt-[20px] transition-transform duration-500 hover:scale-105">
+                <!-- Right Hero Image Graphic (Task 1: 3x Increased Hero Image Size) -->
+                <div class="lg:col-span-7 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end overflow-visible">
+                    <div class="relative z-10 w-full flex justify-center lg:justify-end overflow-visible">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full lg:w-[155%] xl:w-[175%] max-w-none h-auto max-h-[1200px] object-contain ml-0 lg:ml-[30px] mt-[10px] transform lg:scale-130 xl:scale-145 origin-right transition-transform duration-500 hover:scale-150">
                     </div>
                 </div>
 
@@ -345,19 +345,29 @@
                         {{ $model['desc'] ?? '' }}
                     </p>
 
-                    <!-- Feature List (Left) & Screen Preview (Right) -->
+                    <!-- Feature List (Left) & Screen Preview (Right) (Task 2: Guaranteed feature list display) -->
                     <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center mb-8 text-left">
                         <div class="sm:col-span-6 space-y-3 text-left">
-                            @if(isset($model['features']) && is_array($model['features']))
-                                @foreach($model['features'] as $f)
-                                <div class="flex items-start space-x-2.5 text-xs sm:text-sm font-medium text-slate-700 text-left">
-                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <span>{{ $f }}</span>
+                            @php
+                                $cardFeatures = (isset($model['features']) && is_array($model['features']) && count($model['features']) > 0) 
+                                    ? $model['features'] 
+                                    : [
+                                        'Launch Your Own SaaS Brand',
+                                        'Sell Unlimited Subscriptions',
+                                        'SaaS Products Included',
+                                        'Manage Your Customers & Business',
+                                        'Custom Domain & Branding',
+                                        'Build Recurring Revenue'
+                                    ];
+                            @endphp
+                            @foreach($cardFeatures as $f)
+                            <div class="flex items-start space-x-2.5 text-xs sm:text-sm font-medium text-slate-700 text-left">
+                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                    <i class="fas fa-check"></i>
                                 </div>
-                                @endforeach
-                            @endif
+                                <span>{{ $f }}</span>
+                            </div>
+                            @endforeach
                         </div>
                         <div class="sm:col-span-6 mt-4 sm:mt-0">
                             <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
@@ -402,7 +412,22 @@
                     @php
                         $pIcon = trim($prod->icon ?? '');
                         if (!$pIcon || $pIcon === 'fas fa-store') {
-                            $pIcon = str_contains(strtolower($prod->slug), 'shop') ? 'fas fa-shopping-bag' : 'fas fa-cubes';
+                            $slugLower = strtolower(($prod->slug ?? '') . ' ' . ($prod->name ?? ''));
+                            if (str_contains($slugLower, 'launch') || str_contains($slugLower, 'shop') || str_contains($slugLower, 'store')) {
+                                $pIcon = 'fas fa-shopping-bag';
+                            } elseif (str_contains($slugLower, 'website') || str_contains($slugLower, 'builder')) {
+                                $pIcon = 'fas fa-cubes';
+                            } elseif (str_contains($slugLower, 'review') || str_contains($slugLower, 'gmb')) {
+                                $pIcon = 'fas fa-star';
+                            } elseif (str_contains($slugLower, 'menu') || str_contains($slugLower, 'qr')) {
+                                $pIcon = 'fas fa-utensils';
+                            } elseif (str_contains($slugLower, 'vcard') || str_contains($slugLower, 'nfc') || str_contains($slugLower, 'card')) {
+                                $pIcon = 'fas fa-id-card';
+                            } elseif (str_contains($slugLower, 'loyalty') || str_contains($slugLower, 'reward')) {
+                                $pIcon = 'fas fa-gift';
+                            } else {
+                                $pIcon = 'fas fa-box';
+                            }
                         }
                     @endphp
                     <div class="p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col justify-between group">
@@ -551,10 +576,11 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- Left 2 Pricing Cards (7 Cols) -->
-                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Left Pricing Cards (7 Cols) -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-1 gap-6">
                     @if(is_array($data['lp_pricing_plans']))
                         @foreach($data['lp_pricing_plans'] as $plan)
+                        @if(!str_contains(strtolower($plan['name'] ?? ''), 'master') && !str_contains(strtolower($plan['desc'] ?? ''), 'create saas partners'))
                         <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 flex flex-col justify-between relative">
                             @if(!empty($plan['badge']))
                                 <div class="absolute -top-3 right-6 btn-gradient text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
@@ -586,13 +612,14 @@
                                 {{ $plan['cta_text'] ?? 'Get Started' }}
                             </a>
                         </div>
+                        @endif
                         @endforeach
                     @endif
                 </div>
 
-                <!-- Right Revenue Calculator Card (5 Cols) (Task 2: Background image using revenue_calculator.png) -->
+                <!-- Right Revenue Calculator Card (5 Cols) (Task 4: Background image using revenue_calculator.png only) -->
                 <div class="lg:col-span-5">
-                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.90)), url('{{ asset('/assets/images/revenue_calculator.png') }}'); background-size: cover; background-position: center;">
+                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: url('{{ asset('/assets/images/revenue_calculator.png') }}'); background-size: cover;">
                         
                         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
                             <div>
@@ -743,10 +770,10 @@
         </div>
     </section>
 
-    <!-- SECTION 11: CTA BANNER (Task 2: Background image using cta_background.png) -->
+    <!-- SECTION 11: CTA BANNER (Task 5: Using cta_background.png image) -->
     <section class="py-14 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl border border-slate-800/50" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.78), rgba(30, 41, 59, 0.88)), url('{{ asset('/assets/images/cta_background.png') }}'); background-size: cover; background-position: center;">
+            <div class="rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl border border-slate-800/50" style="background-image: url('{{ asset('/assets/images/cta_background.png') }}'); background-size: cover;">
                 <div class="relative z-10 max-w-3xl mx-auto space-y-5">
                     <h2 class="font-space font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
                         {{ $data['lp_cta_banner_title'] }}

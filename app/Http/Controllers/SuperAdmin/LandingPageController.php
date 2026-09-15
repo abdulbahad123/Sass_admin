@@ -115,6 +115,14 @@ class LandingPageController extends Controller
         foreach ($jsonKeys as $key) {
             if ($request->has($key)) {
                 $val = $request->input($key);
+                if ($key === 'lp_model_cards' && is_array($val)) {
+                    foreach ($val as &$mc) {
+                        if (isset($mc['features_raw'])) {
+                            $mc['features'] = array_filter(array_map('trim', explode("\n", str_replace("\r", "", $mc['features_raw']))));
+                            unset($mc['features_raw']);
+                        }
+                    }
+                }
                 if (is_array($val)) {
                     Setting::set($key, json_encode(array_values($val)));
                 } elseif (is_string($val)) {
