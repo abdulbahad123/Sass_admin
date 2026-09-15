@@ -47,6 +47,8 @@ $getAgencyForRoute = function (\Illuminate\Http\Request $request) {
         ->first()
         ?? \App\Models\Agency::where('type', 'white_label')->first()
         ?? \App\Models\Agency::first();
+};
+
 $getLandingData = function() {
     return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->getLandingData();
 };
