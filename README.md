@@ -1,58 +1,42 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Update the hero section layout based on the attached screenshot.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### 1. Increase the right-side image size
 
-## About Laravel
+* Enlarge the person and SaaS dashboard visual on the right side.
+* Make it as large as possible while keeping the complete visual inside the red-bordered hero container.
+* The image must not extend beyond the top or bottom edges of the red border.
+* Preserve the original aspect ratio. Do not stretch, distort, or crop important parts of the image.
+* Use the available right-side space efficiently, allowing the image to extend close to the bottom border without overflowing.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 2. Prevent overlap with left-side content
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* The left-side heading, paragraph, CTA buttons, and feature labels must remain fully visible.
+* The enlarged right-side image must never overlap, cover, or hide any left-side text or buttons.
+* Allocate a dedicated left column for the text and a dedicated right column for the visual.
+* The left column must have enough width for the heading and paragraph to wrap naturally.
+* The right image must remain within its own column, even when enlarged.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 3. Correct container and image positioning
 
-## Learning Laravel
+* Keep the red border as the exact boundary of the hero section.
+* Set the hero container to `position: relative` and `overflow: hidden`.
+* Use a responsive two-column grid or flexbox layout.
+* Set the image to `width: 100%; height: 100%; object-fit: contain;` within its allocated visual area.
+* Adjust the image's maximum width and height to maximize its size without exceeding the container.
+* Do not use excessive absolute positioning or negative margins that cause overflow.
+* Ensure the image's top and bottom edges stay within the red border.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 4. Responsive behavior
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* On desktop, maintain a two-column layout with the enlarged image on the right.
+* On tablet and mobile, stack the image below the left-side content.
+* Ensure no text, buttons, or visual elements overlap at any screen width.
+* Maintain appropriate spacing and readability.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 5. Preserve the original design
 
-## Agentic Development
+* Keep the existing typography, colors, buttons, feature labels, and overall visual style.
+* Do not remove or hide any existing content.
+* Do not change the red border's intended position or dimensions.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Final objective:** Create a balanced hero section where the right-side person and SaaS dashboard image is significantly larger, fully contained within the red border, and never overlaps the left-side content. The complete image should remain visible and the layout should look polished and professional.

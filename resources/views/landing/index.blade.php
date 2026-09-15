@@ -200,13 +200,13 @@
         </div>
     </header>
 
-    <!-- SECTION 1: HERO SECTION (3D Pop-out Hero Graphic Hanging Below Bottom Border) -->
-    <section id="hero" class="relative pt-8 pb-0 lg:pt-12 lg:pb-0 overflow-visible bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal z-10">
+    <!-- SECTION 1: HERO SECTION -->
+    <section id="hero" class="relative py-10 sm:py-12 lg:py-16 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
                 
-                <!-- Left Text Column (5 cols on lg for crisp text alignment) -->
-                <div class="lg:col-span-5 space-y-6 text-left relative z-20 pb-10 lg:pb-14">
+                <!-- Left Text Column (6 cols on lg for dedicated text space) -->
+                <div class="lg:col-span-6 space-y-6 text-left relative z-20">
                     <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
                     </div>
@@ -248,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (Extending Below Bottom Border Line) -->
-                <div class="lg:col-span-7 relative mt-4 lg:mt-0 flex items-end justify-end self-end z-30">
-                    <div class="relative z-30 w-full flex justify-center lg:justify-end items-end overflow-visible">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full lg:w-[125%] xl:w-[138%] max-w-none h-auto max-h-[850px] lg:max-h-[1000px] xl:max-h-[1100px] object-contain object-bottom-right transform translate-y-8 sm:translate-y-12 lg:translate-y-16 xl:translate-y-24 origin-bottom-right transition-transform duration-500 hover:scale-105 mb-0">
+                <!-- Right Hero Image Graphic (Enlarged, Contained Within Hero Section, Dedicated Right Column) -->
+                <div class="lg:col-span-6 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
+                    <div class="relative z-10 w-full flex justify-center lg:justify-end items-center">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[520px] sm:max-h-[600px] lg:max-h-[680px] xl:max-h-[740px] object-contain object-center lg:object-right transition-transform duration-500 hover:scale-105">
                     </div>
                 </div>
 
