@@ -459,11 +459,11 @@
         </div>
     </section>
 
-    <!-- SECTION 5: OUR PRODUCTS (Dynamic products from Super Admin Catalog) -->
+    <!-- SECTION 5: OUR PRODUCTS (Task 3: Mobile view 2 columns per row) -->
     <section id="products" class="py-10 lg:py-14 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center max-w-3xl mx-auto mb-12">
+            <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
                 <span class="badge-pill mx-auto">{{ $data['lp_products_tag'] }}</span>
                 <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
                     {{ $data['lp_products_title'] }}
@@ -473,12 +473,12 @@
                 </p>
             </div>
 
-            <!-- Dynamic Super Admin Active Products Grid (Task 2: Guaranteed Launchshop icon display) -->
+            <!-- Dynamic Super Admin Active Products Grid (Task 3: 2 columns per row on mobile) -->
             @php
                 $dbProds = $data['db_products'] ?? collect();
             @endphp
             @if($dbProds->count() > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 {{ $dbProds->count() > 2 ? 'lg:grid-cols-3' : 'max-w-4xl mx-auto' }} gap-6">
+                <div class="grid grid-cols-2 sm:grid-cols-2 {{ $dbProds->count() > 2 ? 'lg:grid-cols-3' : 'max-w-4xl mx-auto' }} gap-3 sm:gap-6">
                     @foreach($dbProds as $prod)
                     @php
                         $pIcon = trim($prod->icon ?? '');
@@ -501,37 +501,37 @@
                             }
                         }
                     @endphp
-                    <div class="p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="p-3.5 sm:p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-12 h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-xl shadow-md shadow-orange-500/20 mb-5">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-base sm:text-xl shadow-md shadow-orange-500/20 mb-3 sm:mb-5">
                                 <i class="{{ $pIcon }}"></i>
                             </div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-100/80 px-2.5 py-0.5 rounded-full inline-block mb-2">Active Product</span>
-                            <h4 class="font-space font-extrabold text-lg text-slate-900 mb-2 group-hover:text-[#ff3d00] transition-colors">{{ $prod->name }}</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed mb-6 font-medium">{{ $prod->tagline ?: $prod->description }}</p>
+                            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-100/80 px-2 sm:px-2.5 py-0.5 rounded-full inline-block mb-1.5 sm:mb-2">Active Product</span>
+                            <h4 class="font-space font-extrabold text-sm sm:text-lg text-slate-900 mb-1 sm:mb-2 group-hover:text-[#ff3d00] transition-colors leading-snug">{{ $prod->name }}</h4>
+                            <p class="text-[11px] sm:text-xs text-slate-600 leading-snug sm:leading-relaxed mb-4 sm:mb-6 font-medium line-clamp-3 sm:line-clamp-none">{{ $prod->tagline ?: $prod->description }}</p>
                         </div>
-                        <a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 group/link mt-auto pt-3 border-t border-slate-200/60">
+                        <a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="inline-flex items-center text-[11px] sm:text-xs font-bold text-[#ff3d00] hover:text-orange-700 group/link mt-auto pt-2.5 sm:pt-3 border-t border-slate-200/60">
                             <span>Explore {{ $prod->name }}</span>
-                            <i class="fas fa-arrow-right text-[10px] ml-1.5 transition-transform group-hover/link:translate-x-1"></i>
+                            <i class="fas fa-arrow-right text-[9px] sm:text-[10px] ml-1 sm:ml-1.5 transition-transform group-hover/link:translate-x-1"></i>
                         </a>
                     </div>
                     @endforeach
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6">
                     @if(is_array($data['lp_products_grid']))
                         @foreach($data['lp_products_grid'] as $prod)
-                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
+                        <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
                             <div>
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-base shadow-md mb-4 btn-gradient">
+                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white text-sm sm:text-base shadow-md mb-3 sm:mb-4 btn-gradient">
                                     <i class="{{ $prod['icon'] ?? 'fas fa-box' }}"></i>
                                 </div>
-                                <h4 class="font-space font-bold text-sm text-slate-900 mb-2">{{ $prod['title'] ?? '' }}</h4>
-                                <p class="text-xs text-slate-600 leading-relaxed mb-4">{{ $prod['desc'] ?? '' }}</p>
+                                <h4 class="font-space font-bold text-xs sm:text-sm text-slate-900 mb-1 sm:mb-2 leading-snug">{{ $prod['title'] ?? '' }}</h4>
+                                <p class="text-[11px] sm:text-xs text-slate-600 leading-snug sm:leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">{{ $prod['desc'] ?? '' }}</p>
                             </div>
-                            <a href="{{ $prod['link'] ?? '/login' }}" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 group mt-auto">
+                            <a href="{{ $prod['link'] ?? '/login' }}" class="inline-flex items-center text-[11px] sm:text-xs font-bold text-[#ff3d00] hover:text-orange-700 group mt-auto">
                                 <span>Learn More</span>
-                                <i class="fas fa-arrow-right text-[10px] ml-1.5 transition-transform group-hover:translate-x-1"></i>
+                                <i class="fas fa-arrow-right text-[9px] sm:text-[10px] ml-1 sm:ml-1.5 transition-transform group-hover:translate-x-1"></i>
                             </a>
                         </div>
                         @endforeach
@@ -647,7 +647,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- Left Pricing Cards (7 Cols): Task 2 - 2 Containers (Monthly & Yearly) for White-Label Panel -->
+                <!-- Left Pricing Cards (7 Cols): 2 Containers (Monthly & Yearly) for White-Label Panel -->
                 <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
                     
                     <!-- Container 1: White-Label Panel (Monthly) -->
@@ -739,9 +739,9 @@
 
                 </div>
 
-                <!-- Right Revenue Calculator Card (5 Cols) (Task 4: Background image using revenue_calculator.png only) -->
+                <!-- Right Revenue Calculator Card (5 Cols) -->
                 <div class="lg:col-span-5">
-                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: url('{{ asset('/assets/images/revenue_calculator.png') }}'); background-size: cover;">
+                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}'); background-size: cover;">
                         
                         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
                             <div>
@@ -828,7 +828,7 @@
                 </div>
             </div>
 
-            <!-- Testimonials -->
+            <!-- Testimonials (Task 4: Auto sliding single row layout on mobile) -->
             <div>
                 <div class="text-center mb-10">
                     <span class="badge-pill mx-auto">{{ $data['lp_testimonials_tag'] }}</span>
@@ -838,17 +838,18 @@
                     <p class="text-xs sm:text-sm text-slate-600 mt-1">{{ $data['lp_testimonials_subtitle'] }}</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Testimonials Mobile Horizontal Auto-Slider & Desktop Grid -->
+                <div id="testimonialSlider" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth md:grid md:grid-cols-3 gap-4 md:gap-6 pb-4 md:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
                     @if(is_array($data['lp_testimonials_items']))
-                        @foreach($data['lp_testimonials_items'] as $testi)
-                        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-4">
+                        @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
+                        <div class="testimonial-card min-w-[85%] sm:min-w-[75%] md:min-w-0 snap-center flex-shrink-0 p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-4">
                             <div class="space-y-3">
                                 <div class="flex items-center space-x-1 text-amber-400 text-xs">
                                     @for($r = 0; $r < ($testi['rating'] ?? 5); $r++)
                                         <i class="fas fa-star"></i>
                                     @endfor
                                 </div>
-                                <p class="text-xs text-slate-600 leading-relaxed font-normal">"{{ $testi['quote'] ?? '' }}"</p>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">"{{ $testi['quote'] ?? '' }}"</p>
                             </div>
                             <div class="pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs">
                                 <span class="font-bold text-slate-900">{{ $testi['name'] ?? '' }}</span>
@@ -858,19 +859,28 @@
                         @endforeach
                     @endif
                 </div>
+
+                <!-- Mobile Slider Navigation Dots -->
+                <div id="testimonialDots" class="flex md:hidden justify-center items-center space-x-2 mt-4">
+                    @if(is_array($data['lp_testimonials_items']))
+                        @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
+                        <button class="t-dot h-2 rounded-full transition-all duration-300 {{ $tIdx === 0 ? 'bg-orange-500 w-6' : 'bg-slate-300 w-2' }}" data-index="{{ $tIdx }}"></button>
+                        @endforeach
+                    @endif
+                </div>
             </div>
 
         </div>
     </section>
 
-    <!-- SECTION 10: FAQ ACCORDION (Matching Reference Image 3 Layout) -->
+    <!-- SECTION 10: FAQ ACCORDION -->
     <section id="faq" class="py-14 lg:py-20 bg-slate-50/60 border-t border-slate-200/60 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 
                 <!-- Left FAQ Header (4 Cols) -->
                 <div class="lg:col-span-4 text-left space-y-4">
-                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-100">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-[#ff3d00] border border-orange-200">
                         {{ $data['lp_faqs_tag'] }}
                     </span>
                     <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight leading-tight">
@@ -880,7 +890,7 @@
                         {{ $data['lp_faqs_subtitle'] }}
                     </p>
                     <div class="pt-2">
-                        <a href="#contact" class="inline-flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-800 space-x-1">
+                        <a href="#contact" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 space-x-1">
                             <span>View All FAQs</span>
                             <i class="fas fa-arrow-right text-[10px]"></i>
                         </a>
@@ -892,7 +902,7 @@
                     @if(is_array($data['lp_faqs_items']))
                         @foreach($data['lp_faqs_items'] as $fIndex => $faq)
                         <div class="border-b border-slate-100 last:border-0 pb-3 last:pb-0">
-                            <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 bg-white hover:text-indigo-600 flex items-center justify-between focus:outline-none transition-colors">
+                            <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 bg-white hover:text-[#ff3d00] flex items-center justify-between focus:outline-none transition-colors">
                                 <span class="pr-4">{{ $faq['question'] ?? '' }}</span>
                                 <i class="fas fa-plus text-xs text-slate-400 font-normal transition-transform duration-200 ml-2 flex-shrink-0"></i>
                             </button>
@@ -908,34 +918,37 @@
         </div>
     </section>
 
-    <!-- SECTION 11: CTA BANNER (Matching Reference Image 3 Deep Blue Bar) -->
-    <section class="py-12 bg-gradient-to-r from-[#03091e] via-[#091438] to-[#03091e] text-white relative overflow-hidden reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- SECTION 11: CTA BANNER (Task 1: Background image revenue_calculator.png & Task 2: Orange CTA Button) -->
+    <section class="py-14 sm:py-16 text-white relative overflow-hidden reveal bg-cover bg-center" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}');">
+        <!-- Dark tint backdrop overlay for readability -->
+        <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px]"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
                 
                 <!-- Left Title & Subtitle -->
-                <div class="text-center lg:text-left space-y-2 max-w-2xl">
-                    <h2 class="font-space font-extrabold text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-tight">
+                <div class="text-center lg:text-left space-y-3 max-w-2xl">
+                    <h2 class="font-space font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
                         {{ $data['lp_cta_banner_title'] }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-300">
+                    <p class="text-xs sm:text-base text-slate-300 leading-relaxed">
                         {{ $data['lp_cta_banner_subtitle'] }}
                     </p>
                 </div>
 
-                <!-- Right Buttons & Handwritten Arrow -->
-                <div class="flex flex-col sm:flex-row items-center gap-3 relative">
-                    <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="px-6 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-blue-600 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 flex items-center space-x-2 transition-all hover:scale-105">
+                <!-- Right Buttons & Handwritten Arrow (Task 2: Changed blue button to orange) -->
+                <div class="flex flex-col sm:flex-row items-center gap-4 relative">
+                    <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-orange-500/40 flex items-center space-x-2.5 transition-all hover:scale-105">
                         <span>{{ $data['lp_cta_banner_button1_text'] }}</span>
-                        <i class="fas fa-arrow-right text-[10px]"></i>
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </a>
-                    <a href="{{ $data['lp_cta_banner_button2_url'] }}" class="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs backdrop-blur-sm transition-all flex items-center space-x-2">
-                        <i class="fas fa-play text-[9px]"></i>
+                    <a href="{{ $data['lp_cta_banner_button2_url'] }}" class="px-7 py-4 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white font-bold text-xs sm:text-sm backdrop-blur-md transition-all flex items-center space-x-2.5 shadow-md">
+                        <i class="fas fa-play text-[10px]"></i>
                         <span>{{ $data['lp_cta_banner_button2_text'] }}</span>
                     </a>
 
                     <!-- Rotated Handwritten Annotation -->
-                    <div class="hidden xl:block absolute -bottom-8 right-0 text-indigo-300 handwritten text-[11px] transform rotate-3 flex items-center space-x-1 pointer-events-none">
+                    <div class="hidden xl:block absolute -bottom-9 right-2 text-orange-300 handwritten text-xs transform rotate-2 flex items-center space-x-1 pointer-events-none">
                         <span>Your Success Starts Here!</span>
                         <span>➔</span>
                     </div>
@@ -945,18 +958,18 @@
         </div>
     </section>
 
-    <!-- SECTION 12: FOOTER (Matching Reference Image 3 Light White Footer Layout) -->
+    <!-- SECTION 12: FOOTER (Task 5: Mobile 2 columns per row & Dynamic active products only) -->
     <footer class="bg-white text-slate-600 py-12 border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 pb-10 border-b border-slate-200/80">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200/80">
                 
-                <!-- Col 1: Logo & Socials (3 Cols) -->
-                <div class="lg:col-span-3 space-y-4">
+                <!-- Col 1: Logo & Socials (Span 2 on mobile, 3 Cols on lg) -->
+                <div class="col-span-2 lg:col-span-3 space-y-4">
                     <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 font-space font-bold text-xl">
                         @if($data['lp_header_logo'])
                             <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-9 w-auto object-contain">
                         @else
-                            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                            <div class="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
                                 <i class="fas fa-layer-group"></i>
                             </div>
                             <span class="text-xl font-bold tracking-tight text-slate-900">Nooryak</span>
@@ -966,57 +979,65 @@
                         {{ $data['lp_footer_desc'] }}
                     </p>
                     <div class="flex items-center space-x-2.5 pt-1">
-                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
-                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
-                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
-                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
+                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
+                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
+                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
+                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
+                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
                     </div>
                 </div>
 
-                <!-- Col 2: Quick Links (2 Cols) -->
-                <div class="lg:col-span-2 space-y-3">
+                <!-- Col 2: Quick Links (Col 1 on mobile, 2 Cols on lg) -->
+                <div class="col-span-1 lg:col-span-2 space-y-3">
                     <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Quick Links</h5>
                     <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="#hero" class="hover:text-indigo-600 transition-colors">Home</a></li>
-                        <li><a href="#about" class="hover:text-indigo-600 transition-colors">Solutions</a></li>
-                        <li><a href="#pricing" class="hover:text-indigo-600 transition-colors">Pricing</a></li>
-                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Resources</a></li>
-                        <li><a href="#faq" class="hover:text-indigo-600 transition-colors">Blog</a></li>
+                        <li><a href="#hero" class="hover:text-[#ff3d00] transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-[#ff3d00] transition-colors">Solutions</a></li>
+                        <li><a href="#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a></li>
+                        <li><a href="#products" class="hover:text-[#ff3d00] transition-colors">Resources</a></li>
+                        <li><a href="#faq" class="hover:text-[#ff3d00] transition-colors">Blog</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 3: Our Products (2 Cols) -->
-                <div class="lg:col-span-2 space-y-3">
+                <!-- Col 3: Our Products (Task 5: Dynamic Active Products Only - Remove Unwanted Products) -->
+                <div class="col-span-1 lg:col-span-2 space-y-3">
                     <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Our Products</h5>
                     <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">AI Reviews & GMB</a></li>
-                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Website Builder</a></li>
-                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Restaurant QR Menu</a></li>
-                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Digital V-Card</a></li>
-                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Loyalty Program</a></li>
+                        @if($dbProds->count() > 0)
+                            @foreach($dbProds as $prod)
+                                <li><a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="hover:text-[#ff3d00] transition-colors">{{ $prod->name }}</a></li>
+                            @endforeach
+                        @else
+                            @if(is_array($data['lp_products_grid']))
+                                @foreach($data['lp_products_grid'] as $prod)
+                                    <li><a href="{{ $prod['link'] ?? '#products' }}" class="hover:text-[#ff3d00] transition-colors">{{ $prod['title'] ?? '' }}</a></li>
+                                @endforeach
+                            @endif
+                        @endif
                     </ul>
                 </div>
 
-                <!-- Col 4: Support (2 Cols) -->
-                <div class="lg:col-span-2 space-y-3">
+                <!-- Col 4: Support & Legal Policies (Col 1 on mobile, 2 Cols on lg) -->
+                <div class="col-span-1 lg:col-span-2 space-y-3">
                     <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support</h5>
                     <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="#faq" class="hover:text-indigo-600 transition-colors">Help Center</a></li>
-                        <li><a href="mailto:{{ $data['lp_contact_email'] }}" class="hover:text-indigo-600 transition-colors">Contact Us</a></li>
-                        <li><a href="{{ $data['lp_book_demo_url'] }}" class="hover:text-indigo-600 transition-colors">Book a Demo</a></li>
-                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Status</a></li>
-                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-indigo-600 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#faq" class="hover:text-[#ff3d00] transition-colors">Help Center</a></li>
+                        <li><a href="mailto:{{ $data['lp_contact_email'] }}" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
+                        <li><a href="{{ $data['lp_book_demo_url'] }}" class="hover:text-[#ff3d00] transition-colors">Book a Demo</a></li>
+                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
+                        <li><a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a></li>
+                        <li><a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
+                        <li><a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 5: Newsletter Subscription (3 Cols) -->
-                <div class="lg:col-span-3 space-y-3">
+                <!-- Col 5: Newsletter Subscription (Span 2 on mobile, 3 Cols on lg) -->
+                <div class="col-span-2 lg:col-span-3 space-y-3">
                     <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Subscribe to Our Newsletter</h5>
                     <p class="text-xs text-slate-500">Get the latest updates and offers.</p>
                     <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex items-center space-x-0 pt-1">
-                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-xs text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <button type="submit" class="px-4 py-2.5 rounded-r-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex-shrink-0 transition-all">
+                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-xs text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        <button type="submit" class="px-4 py-2.5 rounded-r-xl btn-gradient text-white font-bold text-xs flex-shrink-0 transition-all">
                             Subscribe
                         </button>
                     </form>
@@ -1024,13 +1045,17 @@
 
             </div>
 
-            <!-- Bottom Copyright & Legal Links -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium">
+            <!-- Bottom Copyright & Legal Links (Task 6: Legal Policy Links) -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-3">
                 <p>{{ $data['lp_copyright_text'] }}</p>
-                <div class="mt-3 sm:mt-0 space-x-4">
-                    <a href="{{ route('agency.terms') }}" class="hover:text-indigo-600 transition-colors">Terms & Conditions</a>
+                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+                    <a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
                     <span>|</span>
-                    <a href="{{ route('agency.privacy') }}" class="hover:text-indigo-600 transition-colors">Privacy Policy</a>
+                    <a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a>
                 </div>
             </div>
 
@@ -1085,7 +1110,7 @@
             });
         });
 
-        // Task 3: Full Scrolling Reveal Animation
+        // Full Scrolling Reveal Animation
         document.addEventListener('DOMContentLoaded', () => {
             const reveals = document.querySelectorAll('section, .reveal');
             reveals.forEach(el => el.classList.add('reveal'));
@@ -1100,7 +1125,7 @@
 
             reveals.forEach(el => revealObserver.observe(el));
 
-            // Task 3: Animated Running Counter Numbers
+            // Animated Running Counter Numbers
             const counters = document.querySelectorAll('.stat-counter');
             const counterObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -1108,7 +1133,6 @@
                         const counter = entry.target;
                         const targetVal = counter.getAttribute('data-target') || counter.innerText.trim();
                         
-                        // Parse numbers and non-numeric prefix/suffix (e.g., "500+" -> num 500, suffix "+")
                         const match = targetVal.match(/^([^\d]*)([\d,.]+)(.*)$/);
                         if (match) {
                             const prefix = match[1] || '';
@@ -1121,7 +1145,6 @@
                             function animateCount(currentTime) {
                                 const elapsed = currentTime - startTime;
                                 const progress = Math.min(elapsed / duration, 1);
-                                // Ease-out quad curve
                                 const easeProgress = 1 - Math.pow(1 - progress, 3);
                                 const currentNum = easeProgress * rawNum;
 
@@ -1145,6 +1168,59 @@
             }, { threshold: 0.3 });
 
             counters.forEach(c => counterObserver.observe(c));
+
+            // Task 4: Testimonials Mobile Auto-Slider
+            const tSlider = document.getElementById('testimonialSlider');
+            const tDots = document.querySelectorAll('.t-dot');
+            if (tSlider && tDots.length > 0) {
+                let tCurrentIndex = 0;
+                const tCards = tSlider.querySelectorAll('.testimonial-card');
+                
+                function updateActiveDot(index) {
+                    tDots.forEach((dot, idx) => {
+                        if (idx === index) {
+                            dot.className = 't-dot h-2 rounded-full transition-all duration-300 bg-orange-500 w-6';
+                        } else {
+                            dot.className = 't-dot h-2 rounded-full transition-all duration-300 bg-slate-300 w-2';
+                        }
+                    });
+                }
+
+                function slideTo(index) {
+                    if (window.innerWidth < 768 && tCards[index]) {
+                        const cardLeft = tCards[index].offsetLeft - tSlider.offsetLeft;
+                        tSlider.scrollTo({ left: cardLeft, behavior: 'smooth' });
+                        tCurrentIndex = index;
+                        updateActiveDot(tCurrentIndex);
+                    }
+                }
+
+                tDots.forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        const idx = parseInt(dot.getAttribute('data-index'));
+                        slideTo(idx);
+                    });
+                });
+
+                setInterval(() => {
+                    if (window.innerWidth < 768 && tCards.length > 0) {
+                        tCurrentIndex = (tCurrentIndex + 1) % tCards.length;
+                        slideTo(tCurrentIndex);
+                    }
+                }, 3500);
+
+                tSlider.addEventListener('scroll', () => {
+                    if (window.innerWidth < 768 && tCards.length > 0) {
+                        const scrollLeft = tSlider.scrollLeft;
+                        const cardWidth = tCards[0].offsetWidth;
+                        const nearestIndex = Math.round(scrollLeft / cardWidth);
+                        if (nearestIndex !== tCurrentIndex && nearestIndex >= 0 && nearestIndex < tCards.length) {
+                            tCurrentIndex = nearestIndex;
+                            updateActiveDot(tCurrentIndex);
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>

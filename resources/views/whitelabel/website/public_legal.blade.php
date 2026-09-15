@@ -13,140 +13,201 @@
             'about' => 'About Us',
             'contact' => 'Contact Us',
         ];
-        $pageTitle = $titles[$type] ?? 'Policy Document';
-        $primaryColor = $agency->primary_color ?? '#4f46e5';
-        $secondaryColor = $agency->secondary_color ?? '#9333ea';
-        $accentColor = $agency->accent_color ?? '#3b82f6';
-        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/features_leftside.png');
+        $agencyName = $agency->name ?? 'Nooryak';
+        $pageTitle = $titles[$type] ?? 'Legal Policy';
+        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('/assets/images/about_right.png');
     @endphp
-    <title>{{ $pageTitle }} — {{ $agency->name }}</title>
-    <meta name="description" content="{{ $pageTitle }} for {{ $agency->name }}. Powering the growth of local businesses.">
+    <title>{{ $pageTitle }} — {{ $agencyName }}</title>
+    <meta name="description" content="{{ $pageTitle }} for {{ $agencyName }}. Powering the growth of SaaS businesses.">
 
     @if(!empty($agency->favicon))
         <link rel="icon" type="image/png" href="{{ asset($agency->favicon) }}">
+    @else
+        <link rel="icon" href="/assets/images/common/Logo-blue.png" type="image/png">
     @endif
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            400: '#fb923c',
+                            500: '#ff7a18',
+                            600: '#ff3d00',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        },
+                        accent: {
+                            orange: '#ff3d00',
+                            warm: '#ff7a18',
+                        },
+                        dark: '#0f172a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif'],
+                        onest: ['Onest', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        :root {
-            --brand-primary: {{ $primaryColor }};
-            --brand-secondary: {{ $secondaryColor }};
-            --brand-accent: {{ $accentColor }};
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
         }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; }
-        .bg-brand-gradient {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-        }
-        .text-brand-gradient {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+        .font-space { font-family: 'Space Grotesk', sans-serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-onest { font-family: 'Onest', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, rgb(255, 122, 24), rgb(255, 61, 0));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, rgb(255, 122, 24), rgb(255, 61, 0));
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            box-shadow: 0 10px 25px -5px rgba(255, 61, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .badge-pill {
+            background: #fff3eb;
+            color: #ff3d00;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 14px;
+            border-radius: 9999px;
+            display: inline-block;
+            border: 1px solid #ffe3d1;
+        }
     </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col justify-between overflow-x-hidden">
+<body class="antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white text-[11px] font-semibold py-1.5 px-4 text-center">
-        <span>🎉 Special Offer: Get Started with <strong>{{ $agency->name }}</strong> Today & Automate Your Business!</span>
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-gradient-to-r from-slate-900 via-orange-950 to-slate-900 text-white text-[11px] sm:text-xs py-2 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
+        <span class="bg-orange-500/30 text-orange-200 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Legal & Compliance</span>
+        <span>Official documentation and policies for {{ $agencyName }}</span>
     </div>
 
-    <!-- Header Navigation (Matching Landing Page Header) -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- Logo -->
-            <a href="/" class="flex items-center space-x-3 group shrink-0">
-                @if(!empty($agency->logo))
-                    <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" class="h-9 w-auto object-contain">
-                @else
-                    <div class="w-10 h-10 rounded-2xl bg-brand-gradient text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                        <i data-lucide="layers" class="w-5 h-5"></i>
-                    </div>
-                    <span class="font-extrabold text-xl text-slate-900 font-heading tracking-tight">
-                        {{ $agency->name }}
-                    </span>
-                @endif
-            </a>
-
-            <!-- Desktop Nav Links -->
-            <nav class="hidden lg:flex items-center space-x-8 text-xs font-bold text-slate-600">
-                <a href="/#products" class="hover:text-indigo-600 transition">Products</a>
-                <a href="/#features" class="hover:text-indigo-600 transition">Solutions</a>
-                <a href="/about" class="hover:text-indigo-600 transition {{ $type === 'about' ? 'text-indigo-600 font-black' : '' }}">About Us</a>
-                <a href="/#how-it-works" class="hover:text-indigo-600 transition">How It Works</a>
-                <a href="/#testimonials" class="hover:text-indigo-600 transition">Reviews</a>
-                <a href="/#faq" class="hover:text-indigo-600 transition">FAQ</a>
-            </nav>
-
-            <!-- Action Buttons (Desktop) -->
-            <div class="hidden sm:flex items-center space-x-3 sm:space-x-4">
-                <a href="{{ $agency->cta_url ?? '/login' }}" class="text-xs font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
-                    Login
+    <!-- STICKY NAVBAR (Using Landing Page Header Layout) -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300">
+        <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="{{ url('/') }}" class="flex items-center space-x-3">
+                    @if(!empty($agency->logo))
+                        <img src="{{ asset($agency->logo) }}" alt="{{ $agencyName }} Logo" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
+                    @elseif(!empty($agency->header_logo))
+                        <img src="{{ asset($agency->header_logo) }}" alt="{{ $agencyName }} Logo" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
+                    @else
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
+                                <i class="fas fa-layer-group text-lg sm:text-xl"></i>
+                            </div>
+                            <span class="font-space font-bold text-2xl sm:text-3xl tracking-tight text-slate-900">{{ $agencyName }}</span>
+                        </div>
+                    @endif
                 </a>
-                <a href="{{ $agency->cta_url ?? '/login' }}" class="bg-brand-gradient text-white text-xs font-extrabold px-5 py-2.5 rounded-full shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center space-x-2">
-                    <span>{{ $agency->cta_text ?? 'Get Started Free' }}</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+                    <a href="{{ url('/') }}#hero" class="hover:text-[#ff3d00] transition-colors">Home</a>
+                    <a href="{{ url('/') }}#about" class="hover:text-[#ff3d00] transition-colors">Solutions</a>
+                    <a href="{{ url('/') }}#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a>
+                    <a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Resources</a>
+                    <a href="{{ url('/') }}#faq" class="hover:text-[#ff3d00] transition-colors">FAQ</a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <a href="{{ url('/') }}#faq" class="px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm">
+                        Book a Demo
+                    </a>
+                    <a href="{{ url('/login') }}" class="btn-gradient px-6 py-2.5 rounded-full text-white text-xs font-bold shadow-lg shadow-orange-500/30 flex items-center space-x-2">
+                        <span>Get Started</span>
+                        <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
             </div>
-
-            <!-- Mobile Hamburger Toggle Button -->
-            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 focus:outline-none">
-                <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
-            </button>
-
         </div>
 
-        <!-- Mobile Slide-out Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-6 py-6 space-y-4 shadow-xl">
-            <nav class="flex flex-col space-y-3 text-sm font-bold text-slate-700">
-                <a href="/#products" onclick="toggleMobileMenu()" class="hover:text-indigo-600 py-1.5">Products</a>
-                <a href="/#features" onclick="toggleMobileMenu()" class="hover:text-indigo-600 py-1.5">Solutions</a>
-                <a href="/about" onclick="toggleMobileMenu()" class="hover:text-indigo-600 py-1.5">About Us</a>
-                <a href="/#how-it-works" onclick="toggleMobileMenu()" class="hover:text-indigo-600 py-1.5">How It Works</a>
-                <a href="/#testimonials" onclick="toggleMobileMenu()" class="hover:text-indigo-600 py-1.5">Reviews</a>
-                <a href="/#faq" onclick="toggleMobileMenu()" class="hover:text-indigo-600 py-1.5">FAQ</a>
-            </nav>
-            <div class="pt-4 border-t border-slate-100 flex flex-col space-y-3">
-                <a href="{{ $agency->cta_url ?? '/login' }}" class="w-full text-center text-sm font-bold text-slate-800 bg-slate-100 py-3 rounded-xl">
-                    Login
-                </a>
-                <a href="{{ $agency->cta_url ?? '/login' }}" class="w-full text-center text-sm font-extrabold text-white bg-brand-gradient py-3 rounded-xl shadow-md">
-                    {{ $agency->cta_text ?? 'Get Started Free' }} →
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-4 pb-6 space-y-3 shadow-lg">
+            <a href="{{ url('/') }}#hero" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
+            <a href="{{ url('/') }}#about" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Solutions</a>
+            <a href="{{ url('/') }}#pricing" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Pricing</a>
+            <a href="{{ url('/') }}#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Products</a>
+            <a href="{{ url('/') }}#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
+            <div class="pt-4 border-t border-slate-100 space-y-2">
+                <a href="{{ url('/') }}#faq" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 text-xs font-bold text-slate-700">Book a Demo</a>
+                <a href="{{ url('/login') }}" class="block w-full text-center btn-gradient text-white px-4 py-3 rounded-full text-xs font-bold shadow-md">
+                    Get Started Free
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
+    <!-- DYNAMIC CENTER CONTENT CONTAINER (Task 6) -->
     <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-1 w-full">
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-12 shadow-sm space-y-8">
+        <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-12 shadow-xl space-y-8">
             
-            <!-- Page Title Header -->
-            <div class="border-b border-slate-100 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <!-- Page Header Bar -->
+            <div class="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <span class="px-3.5 py-1 bg-indigo-50 text-indigo-700 font-bold text-xs rounded-full inline-block mb-2">
-                        {{ $agency->name }} Information
+                    <span class="badge-pill mb-2">
+                        {{ $agencyName }} Official Policy
                     </span>
-                    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading">{{ $pageTitle }}</h1>
-                    <p class="text-xs text-slate-500 mt-1">Last updated: {{ date('F d, Y') }} — {{ $agency->name }}</p>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-space tracking-tight">{{ $pageTitle }}</h1>
+                    <p class="text-xs text-slate-500 mt-1.5 font-medium">Effective Date: {{ date('F d, Y') }} — {{ $agencyName }}</p>
                 </div>
-                <a href="/" class="self-start sm:self-auto inline-flex items-center space-x-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <a href="{{ url('/') }}" class="self-start sm:self-auto inline-flex items-center space-x-2 text-xs font-bold text-[#ff3d00] bg-orange-50 border border-orange-200 hover:bg-orange-100 px-4 py-2.5 rounded-2xl transition-all">
+                    <i class="fas fa-arrow-left text-xs"></i>
                     <span>Back to Home</span>
                 </a>
             </div>
 
-            <!-- Page Specific Body Content -->
+            <!-- Policy Navigation Tabs -->
+            <div class="flex flex-wrap items-center gap-2 pb-2 border-b border-slate-100 text-xs font-bold">
+                <a href="{{ route('agency.privacy') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'privacy' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Privacy Policy</a>
+                <a href="{{ route('agency.terms') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'terms' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Terms & Conditions</a>
+                <a href="{{ route('agency.refund') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'refund' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Refund Policy</a>
+                <a href="{{ route('agency.shipping') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'shipping' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Shipping Policy</a>
+            </div>
+
+            <!-- Page Specific Dynamic Body Content -->
             <div class="prose prose-slate max-w-none text-xs sm:text-sm leading-relaxed text-slate-700 space-y-6">
                 
                 @if($type === 'about')
@@ -154,40 +215,40 @@
                     <div class="space-y-8">
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                             <div class="lg:col-span-7 space-y-4">
-                                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
-                                    {{ $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.' }}
+                                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-space">
+                                    {{ $agency->about_title ?? 'Empower Your Business With White-Label SaaS Solutions.' }}
                                 </h2>
                                 @if(!empty($agency->about_content))
-                                    <p class="text-slate-600 leading-relaxed">
+                                    <p class="text-slate-600 leading-relaxed font-medium">
                                         {{ $agency->about_content }}
                                     </p>
                                 @endif
-                                <p class="text-slate-600 leading-relaxed">
-                                    {{ $agency->about_mission ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.' }}
+                                <p class="text-slate-600 leading-relaxed font-medium">
+                                    {{ $agency->about_mission ?? 'Our mission is to help agencies and business owners launch, operate, and scale profitable SaaS software platforms under their custom brand identity.' }}
                                 </p>
                             </div>
                             <div class="lg:col-span-5">
-                                <img src="{{ $aboutImg }}" alt="About {{ $agency->name }}" class="w-full h-auto rounded-2xl border border-slate-200 shadow-md object-cover">
+                                <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}" class="w-full h-auto rounded-2xl border border-slate-200 shadow-md object-cover">
                             </div>
                         </div>
 
                         <!-- 4 Stats Grid -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-heading text-brand-gradient">10,000+</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Happy Businesses</p>
+                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">10,000+</h4>
+                                <p class="text-[11px] font-bold text-slate-500">Active Partners</p>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-heading text-brand-gradient">1M+</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Orders Processed</p>
+                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">1M+</h4>
+                                <p class="text-[11px] font-bold text-slate-500">End Users Served</p>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-heading text-brand-gradient">500K+</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Active Customers</p>
+                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">500K+</h4>
+                                <p class="text-[11px] font-bold text-slate-500">Subscriptions Managed</p>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-heading text-brand-gradient">99.8%</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Uptime & Security</p>
+                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">99.9%</h4>
+                                <p class="text-[11px] font-bold text-slate-500">Uptime Guarantee</p>
                             </div>
                         </div>
                     </div>
@@ -199,56 +260,56 @@
                             
                             <!-- Card 1: Email -->
                             <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
-                                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
-                                    <i data-lucide="mail" class="w-5 h-5"></i>
+                                <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
+                                    <i class="fas fa-envelope text-lg"></i>
                                 </div>
-                                <h4 class="font-extrabold text-slate-900 text-sm font-heading">Email Support</h4>
-                                <p class="text-xs text-slate-600 leading-relaxed">{{ $agency->contact_email ?? $agency->email }}</p>
+                                <h4 class="font-extrabold text-slate-900 text-sm font-space">Email Support</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ $agency->contact_email ?? $agency->email ?? 'support@nooryak.in' }}</p>
                             </div>
 
                             <!-- Card 2: Phone -->
                             <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
-                                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
-                                    <i data-lucide="phone" class="w-5 h-5"></i>
+                                <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
+                                    <i class="fas fa-phone text-lg"></i>
                                 </div>
-                                <h4 class="font-extrabold text-slate-900 text-sm font-heading">Phone Number</h4>
-                                <p class="text-xs text-slate-600 leading-relaxed">{{ $agency->contact_phone ?? $agency->phone ?? '+91 98765 43210' }}</p>
+                                <h4 class="font-extrabold text-slate-900 text-sm font-space">Phone Number</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ $agency->contact_phone ?? $agency->phone ?? '+91 98765 43210' }}</p>
                             </div>
 
                             <!-- Card 3: Address -->
                             <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
-                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
+                                    <i class="fas fa-location-dot text-lg"></i>
                                 </div>
-                                <h4 class="font-extrabold text-slate-900 text-sm font-heading">Office Address</h4>
-                                <p class="text-xs text-slate-600 leading-relaxed">{{ $agency->contact_address ?? 'India' }}</p>
+                                <h4 class="font-extrabold text-slate-900 text-sm font-space">Office Address</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ $agency->contact_address ?? 'India' }}</p>
                             </div>
 
                         </div>
 
                         <!-- Interactive Contact Form -->
                         <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6">
-                            <h3 class="text-lg font-extrabold text-slate-900 font-heading">Send Us a Message</h3>
-                            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to {{ $agency->name }} support team.');" class="space-y-4">
+                            <h3 class="text-lg font-extrabold text-slate-900 font-space">Send Us a Message</h3>
+                            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to {{ $agencyName }} support team.');" class="space-y-4">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs font-bold text-slate-700 mb-1">Your Full Name</label>
-                                        <input type="text" required placeholder="e.g. Rahul Sharma" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500">
+                                        <input type="text" required placeholder="e.g. Rahul Sharma" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
                                     </div>
                                     <div>
                                         <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
-                                        <input type="email" required placeholder="name@company.com" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500">
+                                        <input type="email" required placeholder="name@company.com" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Subject</label>
-                                    <input type="text" required placeholder="How can we help your business?" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500">
+                                    <input type="text" required placeholder="How can we help your business?" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Message</label>
-                                    <textarea rows="4" required placeholder="Write your query details here..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-500"></textarea>
+                                    <textarea rows="4" required placeholder="Write your query details here..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500"></textarea>
                                 </div>
-                                <button type="submit" class="bg-brand-gradient text-white text-xs font-extrabold px-8 py-3.5 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition">
+                                <button type="submit" class="btn-gradient text-white text-xs font-extrabold px-8 py-3.5 rounded-2xl shadow-lg shadow-orange-500/25 transition">
                                     Submit Message →
                                 </button>
                             </form>
@@ -256,15 +317,15 @@
                     </div>
 
                 @elseif($type === 'privacy')
-                    {!! !empty($agency->privacy_policy) ? $agency->privacy_policy : ("<h2>Privacy Policy for " . e($agency->name) . "</h2><p>At " . e($agency->name) . ", accessible from " . e($agency->custom_domain ?? request()->getHost()) . ", we prioritize your privacy and protect data collected during service usage.</p><h3>1. Information We Collect</h3><p>We collect essential business information, account registration details, and contact details to process orders and improve customer service experience.</p><h3>2. Data Security</h3><p>Your business data is safe with enterprise-grade security encryption standards.</p><h3>3. Contact Information</h3><p>Email: " . e($agency->contact_email ?? $agency->email) . "</p>") !!}
+                    {!! !empty($agency->privacy_policy) ? $agency->privacy_policy : ("<h2>Privacy Policy for " . e($agencyName) . "</h2><p>At " . e($agencyName) . ", accessible from " . e($agency->custom_domain ?? request()->getHost()) . ", we prioritize your privacy and protect data collected during service usage.</p><h3>1. Information We Collect</h3><p>We collect essential business information, account registration details, and contact details to process orders, manage subscriptions, and provide customer support.</p><h3>2. Data Protection & Security</h3><p>Your business data is protected with enterprise-grade encryption standards, automated backups, and strict access protocols.</p><h3>3. Contact Information</h3><p>For any privacy inquiries, email us at: <strong>" . e($agency->contact_email ?? $agency->email ?? 'privacy@nooryak.in') . "</strong></p>") !!}
                 @elseif($type === 'terms')
-                    {!! !empty($agency->terms_conditions) ? $agency->terms_conditions : ("<h2>Terms & Conditions for " . e($agency->name) . "</h2><p>Welcome to " . e($agency->name) . "! These terms regulate the usage of our platform and SaaS products.</p><h3>1. User Account Responsibility</h3><p>By registering or making a purchase on " . e($agency->name) . ", you agree to maintain valid account details and comply with usage policies.</p><h3>2. Contact Support</h3><p>Email: " . e($agency->contact_email ?? $agency->email) . "</p>") !!}
+                    {!! !empty($agency->terms_conditions) ? $agency->terms_conditions : ("<h2>Terms & Conditions for " . e($agencyName) . "</h2><p>Welcome to " . e($agencyName) . "! These terms govern your use of our platform, SaaS reseller products, and subscriptions.</p><h3>1. User Account Responsibility</h3><p>By registering or purchasing a White-Label reseller package on " . e($agencyName) . ", you agree to maintain accurate account details and adhere to acceptable usage rules.</p><h3>2. Intellectual Property & Reseller Rights</h3><p>You receive white-label rebranding rights for customer management according to your chosen plan tier.</p><h3>3. Support & Inquiries</h3><p>Email: <strong>" . e($agency->contact_email ?? $agency->email ?? 'support@nooryak.in') . "</strong></p>") !!}
                 @elseif($type === 'shipping')
-                    {!! !empty($agency->shipping_policy) ? $agency->shipping_policy : ("<h2>Shipping & Delivery Policy for " . e($agency->name) . "</h2><p>All SaaS products, digital tools, and subscriptions purchased from " . e($agency->name) . " are fulfilled electronically via instant email confirmation and portal access credentials within 15 minutes of successful payment.</p><h3>Digital Delivery Guarantee</h3><p>No physical shipping is required. You can log into your account dashboard immediately after purchase.</p><h3>Contact Support</h3><p>Email: " . e($agency->contact_email ?? $agency->email) . "</p>") !!}
+                    {!! !empty($agency->shipping_policy) ? $agency->shipping_policy : ("<h2>Shipping & Delivery Policy for " . e($agencyName) . "</h2><p>All SaaS products, white-label portals, and software subscriptions purchased from " . e($agencyName) . " are delivered 100% electronically via instant email confirmation and dashboard portal access.</p><h3>Instant Digital Fulfillment</h3><p>No physical shipping or postal dispatch is involved. Account credentials and setup tools become active immediately upon payment confirmation.</p><h3>Delivery Timeline</h3><p>Software provisioning completes automatically within 5 to 15 minutes of purchase.</p><h3>Contact Support</h3><p>Email: <strong>" . e($agency->contact_email ?? $agency->email ?? 'support@nooryak.in') . "</strong></p>") !!}
                 @elseif($type === 'refund')
-                    {!! !empty($agency->refund_policy) ? $agency->refund_policy : ("<h2>Cancellation & Refund Policy for " . e($agency->name) . "</h2><p>We offer a 7-day money-back guarantee for subscription packages. Once approved, refunds are processed back to your original payment method within 5 to 7 business days.</p><h3>How to Request Refund</h3><p>Please contact our support team at " . e($agency->contact_email ?? $agency->email) . " with your account details.</p>") !!}
+                    {!! !empty($agency->refund_policy) ? $agency->refund_policy : ("<h2>Cancellation & Refund Policy for " . e($agencyName) . "</h2><p>We offer a hassle-free cancellation and 7-day money-back guarantee for subscription packages.</p><h3>Refund Processing</h3><p>Upon approval of your refund request, funds are automatically remitted to your original payment method within 5 to 7 business days.</p><h3>How to Submit a Request</h3><p>Please contact our support desk at <strong>" . e($agency->contact_email ?? $agency->email ?? 'support@nooryak.in') . "</strong> with your order invoice number and account details.</p>") !!}
                 @elseif($type === 'cookie')
-                    {!! !empty($agency->cookie_policy) ? $agency->cookie_policy : ("<h2>Cookie Policy for " . e($agency->name) . "</h2><p>This site uses cookies to personalize user sessions and optimize website navigation experience.</p><h3>Contact Support</h3><p>Email: " . e($agency->contact_email ?? $agency->email) . "</p>") !!}
+                    {!! !empty($agency->cookie_policy) ? $agency->cookie_policy : ("<h2>Cookie Policy for " . e($agencyName) . "</h2><p>This site uses cookies to personalize user sessions, maintain security, and optimize web navigation experiences.</p><h3>Managing Cookies</h3><p>You can control or disable cookies via your browser settings at any time.</p><h3>Contact Support</h3><p>Email: <strong>" . e($agency->contact_email ?? $agency->email ?? 'support@nooryak.in') . "</strong></p>") !!}
                 @endif
 
             </div>
@@ -272,77 +333,100 @@
         </div>
     </main>
 
-    <!-- Footer (Matching Landing Page Dark Footer) -->
-    <footer class="bg-slate-950 text-slate-400 pt-12 sm:pt-16 pb-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <!-- FOOTER (Matching Landing Page Footer Layout - Task 5 & Task 6) -->
+    <footer class="bg-white text-slate-600 py-12 border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200/80">
                 
-                <!-- Col 1: Brand Info -->
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
+                <!-- Col 1: Logo & Socials -->
+                <div class="col-span-2 lg:col-span-3 space-y-4">
+                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 font-space font-bold text-xl">
                         @if(!empty($agency->logo))
-                            <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" class="h-8 w-auto">
+                            <img src="{{ asset($agency->logo) }}" alt="{{ $agencyName }}" class="h-9 w-auto object-contain">
                         @else
-                            <div class="w-8 h-8 rounded-xl bg-brand-gradient text-white flex items-center justify-center font-bold text-sm">
-                                <i data-lucide="layers" class="w-4 h-4"></i>
+                            <div class="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                                <i class="fas fa-layer-group"></i>
                             </div>
-                            <span class="font-bold text-lg text-white font-heading">{{ $agency->name }}</span>
+                            <span class="text-xl font-bold tracking-tight text-slate-900">{{ $agencyName }}</span>
                         @endif
-                    </div>
-                    <p class="text-xs leading-relaxed text-slate-400">
-                        {{ $agency->footer_content ?? 'Powering the growth of local businesses with smart digital solutions.' }}
+                    </a>
+                    <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
+                        Your technology partner in building profitable White-Label SaaS businesses.
                     </p>
+                    <div class="flex items-center space-x-2.5 pt-1">
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
 
-                <!-- Col 2: Navigation -->
-                <div class="space-y-3">
-                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-white">Products</h4>
-                    <ul class="space-y-2 text-xs">
-                        <li><a href="/#products" class="hover:text-white transition">AI Reviews + CRM</a></li>
-                        <li><a href="/#products" class="hover:text-white transition">Website Builder</a></li>
-                        <li><a href="/#products" class="hover:text-white transition">Digital V-Card</a></li>
+                <!-- Col 2: Quick Links -->
+                <div class="col-span-1 lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Quick Links</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                        <li><a href="{{ url('/') }}#hero" class="hover:text-[#ff3d00] transition-colors">Home</a></li>
+                        <li><a href="{{ url('/') }}#about" class="hover:text-[#ff3d00] transition-colors">Solutions</a></li>
+                        <li><a href="{{ url('/') }}#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a></li>
+                        <li><a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Resources</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 3: Legal & Policies -->
-                <div class="space-y-3">
-                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-white">Legal & Policies</h4>
-                    <ul class="space-y-2 text-xs">
-                        <li><a href="/about" class="hover:text-white transition">About Us</a></li>
-                        <li><a href="/contact" class="hover:text-white transition">Contact Us</a></li>
-                        <li><a href="/privacy-policy" class="hover:text-white transition">Privacy Policy</a></li>
-                        <li><a href="/terms-conditions" class="hover:text-white transition">Terms & Conditions</a></li>
-                        <li><a href="/shipping-policy" class="hover:text-white transition">Shipping Policy</a></li>
-                        <li><a href="/refund-policy" class="hover:text-white transition">Cancellation & Refund Policy</a></li>
+                <!-- Col 3: Our Products -->
+                <div class="col-span-1 lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Our Products</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                        <li><a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Launchshop</a></li>
+                        <li><a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">AI Reviews & GMB</a></li>
+                        <li><a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Website Builder</a></li>
+                        <li><a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Digital V-Card</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 4: Contact Info -->
-                <div class="space-y-3">
-                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-white">Contact</h4>
-                    <p class="text-xs text-slate-400">Email: {{ $agency->contact_email ?? $agency->email }}</p>
-                    @if(!empty($agency->contact_phone ?? $agency->phone))
-                        <p class="text-xs text-slate-400">Phone: {{ $agency->contact_phone ?? $agency->phone }}</p>
-                    @endif
+                <!-- Col 4: Support & Legal Policies -->
+                <div class="col-span-1 lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support & Policies</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
+                        <li><a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a></li>
+                        <li><a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
+                        <li><a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 5: Contact Info -->
+                <div class="col-span-2 lg:col-span-3 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Contact Us</h5>
+                    <p class="text-xs text-slate-500">Need assistance? Reach out to our legal support team.</p>
+                    <p class="text-xs text-slate-700 font-bold">Email: {{ $agency->contact_email ?? $agency->email ?? 'support@nooryak.in' }}</p>
                 </div>
 
             </div>
 
-            <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-                <div>© 2026 {{ $agency->name }}. All rights reserved.</div>
-                <div>Made with ❤️ in India 🇮🇳</div>
+            <!-- Bottom Copyright & Policy Links -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-3">
+                <p>© {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
+                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+                    <a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a>
+                </div>
             </div>
 
         </div>
     </footer>
 
     <script>
-        lucide.createIcons();
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
         }
     </script>
 </body>
