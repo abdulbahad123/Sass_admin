@@ -200,8 +200,8 @@
         </div>
     </header>
 
-    <!-- SECTION 1: HERO SECTION (Task 1: Hero Graphic Starts at Bottom with Increased Height) -->
-    <section id="hero" class="relative pt-8 pb-0 lg:pt-12 lg:pb-0 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal">
+    <!-- SECTION 1: HERO SECTION (3D Pop-out Hero Graphic Hanging Below Bottom Border) -->
+    <section id="hero" class="relative pt-8 pb-0 lg:pt-12 lg:pb-0 overflow-visible bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal z-10">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
                 
@@ -248,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (Starts at Bottom, Increased Height, Right Aligned) -->
-                <div class="lg:col-span-7 relative mt-4 lg:mt-0 flex items-end justify-end self-end">
-                    <div class="relative z-10 w-full flex justify-center lg:justify-end items-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[750px] lg:max-h-[880px] xl:max-h-[960px] object-contain object-bottom-right transition-transform duration-500 hover:scale-105 mb-0">
+                <!-- Right Hero Image Graphic (Extending Below Bottom Border Line) -->
+                <div class="lg:col-span-7 relative mt-4 lg:mt-0 flex items-end justify-end self-end z-30">
+                    <div class="relative z-30 w-full flex justify-center lg:justify-end items-end overflow-visible">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full lg:w-[125%] xl:w-[138%] max-w-none h-auto max-h-[850px] lg:max-h-[1000px] xl:max-h-[1100px] object-contain object-bottom-right transform translate-y-8 sm:translate-y-12 lg:translate-y-16 xl:translate-y-24 origin-bottom-right transition-transform duration-500 hover:scale-105 mb-0">
                     </div>
                 </div>
 
