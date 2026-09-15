@@ -863,127 +863,177 @@
         </div>
     </section>
 
-    <!-- SECTION 10: FAQ ACCORDION -->
-    <section id="faq" class="py-10 lg:py-14 bg-slate-50/80 border-t border-slate-200/80 reveal">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10">
-                <span class="badge-pill mx-auto">{{ $data['lp_faqs_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
-                    {{ $data['lp_faqs_title'] }}
-                </h2>
-                <p class="text-xs sm:text-sm text-slate-600 mt-2">{{ $data['lp_faqs_subtitle'] }}</p>
-            </div>
-
-            <div class="space-y-3">
-                @if(is_array($data['lp_faqs_items']))
-                    @foreach($data['lp_faqs_items'] as $faq)
-                    <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm transition-all duration-200">
-                        <button class="faq-toggle w-full px-5 py-4 text-left font-space font-bold text-xs sm:text-sm text-slate-900 bg-white hover:bg-slate-50 flex items-center justify-between focus:outline-none">
-                            <span>{{ $faq['question'] ?? '' }}</span>
-                            <i class="fas fa-chevron-down text-xs text-slate-400 transition-transform duration-200 ml-2 flex-shrink-0"></i>
-                        </button>
-                        <div class="faq-content hidden px-5 py-3.5 text-xs text-slate-600 leading-relaxed bg-slate-50/60 border-t border-slate-100">
-                            {{ $faq['answer'] ?? '' }}
-                        </div>
+    <!-- SECTION 10: FAQ ACCORDION (Matching Reference Image 3 Layout) -->
+    <section id="faq" class="py-14 lg:py-20 bg-slate-50/60 border-t border-slate-200/60 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                
+                <!-- Left FAQ Header (4 Cols) -->
+                <div class="lg:col-span-4 text-left space-y-4">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-100">
+                        {{ $data['lp_faqs_tag'] }}
+                    </span>
+                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight leading-tight">
+                        {{ $data['lp_faqs_title'] }}
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        {{ $data['lp_faqs_subtitle'] }}
+                    </p>
+                    <div class="pt-2">
+                        <a href="#contact" class="inline-flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-800 space-x-1">
+                            <span>View All FAQs</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
                     </div>
-                    @endforeach
-                @endif
+                </div>
+
+                <!-- Right FAQ Accordion Card (8 Cols) -->
+                <div class="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 space-y-3">
+                    @if(is_array($data['lp_faqs_items']))
+                        @foreach($data['lp_faqs_items'] as $fIndex => $faq)
+                        <div class="border-b border-slate-100 last:border-0 pb-3 last:pb-0">
+                            <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 bg-white hover:text-indigo-600 flex items-center justify-between focus:outline-none transition-colors">
+                                <span class="pr-4">{{ $faq['question'] ?? '' }}</span>
+                                <i class="fas fa-plus text-xs text-slate-400 font-normal transition-transform duration-200 ml-2 flex-shrink-0"></i>
+                            </button>
+                            <div class="faq-content hidden pt-1 pb-3 text-xs text-slate-600 leading-relaxed">
+                                {{ $faq['answer'] ?? '' }}
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
+                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- SECTION 11: CTA BANNER -->
-    <section class="py-8 lg:py-10 bg-white reveal">
+    <!-- SECTION 11: CTA BANNER (Matching Reference Image 3 Deep Blue Bar) -->
+    <section class="py-12 bg-gradient-to-r from-[#03091e] via-[#091438] to-[#03091e] text-white relative overflow-hidden reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl border border-slate-800/50" style="background-image: url('{{ asset('/assets/images/cta_background.png') }}'); background-size: cover;">
-                <div class="relative z-10 max-w-3xl mx-auto space-y-5">
-                    <h2 class="font-space font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+                
+                <!-- Left Title & Subtitle -->
+                <div class="text-center lg:text-left space-y-2 max-w-2xl">
+                    <h2 class="font-space font-extrabold text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-tight">
                         {{ $data['lp_cta_banner_title'] }}
                     </h2>
-                    <p class="text-xs sm:text-base text-slate-300">
+                    <p class="text-xs sm:text-sm text-slate-300">
                         {{ $data['lp_cta_banner_subtitle'] }}
                     </p>
+                </div>
 
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                        <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="btn-gradient w-full sm:w-auto px-8 py-3.5 rounded-full text-white font-bold text-xs shadow-xl shadow-orange-500/30">
-                            {{ $data['lp_cta_banner_button1_text'] }} <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <a href="{{ $data['lp_cta_banner_button2_url'] }}" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs backdrop-blur-sm transition-all">
-                            {{ $data['lp_cta_banner_button2_text'] }}
-                        </a>
+                <!-- Right Buttons & Handwritten Arrow -->
+                <div class="flex flex-col sm:flex-row items-center gap-3 relative">
+                    <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="px-6 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-blue-600 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 flex items-center space-x-2 transition-all hover:scale-105">
+                        <span>{{ $data['lp_cta_banner_button1_text'] }}</span>
+                        <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                    <a href="{{ $data['lp_cta_banner_button2_url'] }}" class="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs backdrop-blur-sm transition-all flex items-center space-x-2">
+                        <i class="fas fa-play text-[9px]"></i>
+                        <span>{{ $data['lp_cta_banner_button2_text'] }}</span>
+                    </a>
+
+                    <!-- Rotated Handwritten Annotation -->
+                    <div class="hidden xl:block absolute -bottom-8 right-0 text-indigo-300 handwritten text-[11px] transform rotate-3 flex items-center space-x-1 pointer-events-none">
+                        <span>Your Success Starts Here!</span>
+                        <span>➔</span>
                     </div>
                 </div>
 
-                <div class="hidden lg:block absolute bottom-6 right-10 text-amber-300 handwritten text-xs transform rotate-6">
-                    Your Success Starts Here! ➔
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION 12: FOOTER -->
-    <footer class="bg-slate-950 text-slate-400 py-8 lg:py-10 border-t border-slate-900">
+    <!-- SECTION 12: FOOTER (Matching Reference Image 3 Light White Footer Layout) -->
+    <footer class="bg-white text-slate-600 py-12 border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-slate-900">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 pb-10 border-b border-slate-200/80">
                 
-                <div class="lg:col-span-2 space-y-3">
-                    <a href="{{ url('/') }}" class="flex items-center space-x-2 text-white font-space font-bold text-xl">
+                <!-- Col 1: Logo & Socials (3 Cols) -->
+                <div class="lg:col-span-3 space-y-4">
+                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 font-space font-bold text-xl">
                         @if($data['lp_header_logo'])
-                            <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
+                            <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-9 w-auto object-contain">
                         @else
-                            <div class="w-12 h-12 rounded-xl btn-gradient flex items-center justify-center text-white text-base">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
                                 <i class="fas fa-layer-group"></i>
                             </div>
-                            <span class="text-2xl font-bold">Nooryak</span>
+                            <span class="text-xl font-bold tracking-tight text-slate-900">Nooryak</span>
                         @endif
                     </a>
-                    <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+                    <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
                         {{ $data['lp_footer_desc'] }}
                     </p>
-                    <div class="flex items-center space-x-4 text-xs text-slate-400 pt-2">
-                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="hover:text-orange-500"><i class="fab fa-[#ff3d00] fa-facebook-f"></i></a>@endif
-                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="hover:text-pink-500"><i class="fab fa-instagram"></i></a>@endif
-                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="hover:text-red-500"><i class="fab fa-youtube"></i></a>@endif
-                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="hover:text-orange-400"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="hover:text-orange-400"><i class="fab fa-twitter"></i></a>@endif
+                    <div class="flex items-center space-x-2.5 pt-1">
+                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
+                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
+                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
+                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
+                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <h5 class="text-xs font-bold text-white uppercase tracking-wider">Platform</h5>
-                    <ul class="space-y-1.5 text-xs">
-                        <li><a href="#hero" class="hover:text-white">Home</a></li>
-                        <li><a href="#about" class="hover:text-white">Solutions</a></li>
-                        <li><a href="#pricing" class="hover:text-white">Pricing Plans</a></li>
-                        <li><a href="#products" class="hover:text-white">White Label SaaS</a></li>
+                <!-- Col 2: Quick Links (2 Cols) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Quick Links</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                        <li><a href="#hero" class="hover:text-indigo-600 transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-indigo-600 transition-colors">Solutions</a></li>
+                        <li><a href="#pricing" class="hover:text-indigo-600 transition-colors">Pricing</a></li>
+                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Resources</a></li>
+                        <li><a href="#faq" class="hover:text-indigo-600 transition-colors">Blog</a></li>
                     </ul>
                 </div>
 
-                <div class="space-y-2">
-                    <h5 class="text-xs font-bold text-white uppercase tracking-wider">Legal & Support</h5>
-                    <ul class="space-y-1.5 text-xs">
-                        <li><a href="{{ route('agency.terms') }}" class="hover:text-white">Terms & Conditions</a></li>
-                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-white">Privacy Policy</a></li>
-                        <li><a href="{{ route('agency.refund') }}" class="hover:text-white">Refund Policy</a></li>
-                        <li><a href="{{ route('login') }}" class="hover:text-white">Super Admin Login</a></li>
+                <!-- Col 3: Our Products (2 Cols) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Our Products</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">AI Reviews & GMB</a></li>
+                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Website Builder</a></li>
+                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Restaurant QR Menu</a></li>
+                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Digital V-Card</a></li>
+                        <li><a href="#products" class="hover:text-indigo-600 transition-colors">Loyalty Program</a></li>
                     </ul>
                 </div>
 
-                <div class="space-y-2">
-                    <h5 class="text-xs font-bold text-white uppercase tracking-wider">Contact</h5>
-                    <p class="text-xs"><i class="fas fa-envelope mr-1.5 text-orange-500"></i> {{ $data['lp_contact_email'] }}</p>
-                    <p class="text-xs"><i class="fas fa-phone mr-1.5 text-orange-500"></i> {{ $data['lp_contact_phone'] }}</p>
+                <!-- Col 4: Support (2 Cols) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                        <li><a href="#faq" class="hover:text-indigo-600 transition-colors">Help Center</a></li>
+                        <li><a href="mailto:{{ $data['lp_contact_email'] }}" class="hover:text-indigo-600 transition-colors">Contact Us</a></li>
+                        <li><a href="{{ $data['lp_book_demo_url'] }}" class="hover:text-indigo-600 transition-colors">Book a Demo</a></li>
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Status</a></li>
+                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-indigo-600 transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 5: Newsletter Subscription (3 Cols) -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Subscribe to Our Newsletter</h5>
+                    <p class="text-xs text-slate-500">Get the latest updates and offers.</p>
+                    <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex items-center space-x-0 pt-1">
+                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-xs text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <button type="submit" class="px-4 py-2.5 rounded-r-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex-shrink-0 transition-all">
+                            Subscribe
+                        </button>
+                    </form>
                 </div>
 
             </div>
 
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+            <!-- Bottom Copyright & Legal Links -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium">
                 <p>{{ $data['lp_copyright_text'] }}</p>
                 <div class="mt-3 sm:mt-0 space-x-4">
-                    <a href="{{ route('agency.privacy') }}" class="hover:text-slate-400">Privacy</a>
-                    <a href="{{ route('agency.terms') }}" class="hover:text-slate-400">Terms</a>
+                    <a href="{{ route('agency.terms') }}" class="hover:text-indigo-600 transition-colors">Terms & Conditions</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.privacy') }}" class="hover:text-indigo-600 transition-colors">Privacy Policy</a>
                 </div>
             </div>
+
         </div>
     </footer>
 

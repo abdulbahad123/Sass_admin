@@ -216,7 +216,12 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">Features (One per line)</label>
-                        <textarea name="lp_model_cards[{{ $mIndex }}][features_raw]" rows="4" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs">{{ isset($mCard['features']) && is_array($mCard['features']) ? implode("\n", $mCard['features']) : '' }}</textarea>
+                        @php
+                            $featuresText = (isset($mCard['features']) && is_array($mCard['features']) && count($mCard['features']) > 0)
+                                ? implode("\n", $mCard['features'])
+                                : "Launch Your Own SaaS Brand\nSell Unlimited Subscriptions\nSaaS Products Included\nManage Your Customers & Business\nCustom Domain & Branding\nBuild Recurring Revenue";
+                        @endphp
+                        <textarea name="lp_model_cards[{{ $mIndex }}][features_raw]" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs font-mono">{{ $featuresText }}</textarea>
                     </div>
                 </div>
                 @endforeach
