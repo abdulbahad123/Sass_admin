@@ -251,7 +251,7 @@
                 <!-- Right Hero Image Graphic (Enlarged by ~20%, Contained Within 6-Col Right Area) -->
                 <div class="lg:col-span-6 min-w-0 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
                     <div class="relative z-10 w-full min-w-0 flex items-center justify-center lg:justify-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[600px] sm:max-h-[720px] lg:max-h-[820px] xl:max-h-[900px] object-contain object-center lg:object-right transition-transform duration-500 hover:scale-105">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[600px] sm:max-h-[720px] lg:max-h-[820px] xl:max-h-[900px] object-contain object-center lg:object-right transition-transform duration-500 scale-125">
                     </div>
                 </div>
 
@@ -327,64 +327,135 @@
         </div>
     </section>
 
-    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD -->
-    <section class="py-8 lg:py-10 bg-slate-50/80 border-t border-slate-200/80 reveal">
-        <div class="max-w-3xl ml-4 sm:ml-8 lg:ml-16 mr-auto px-4 sm:px-6">
-            @php $model = $data['lp_model_cards'][0] ?? null; @endphp
-            @if($model)
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
+    <!-- SECTION 4: WHITE LABEL SAAS PARTNER & MASTER PANEL CARDS (Task 1: Master Label SaaS Glassmorphism Coming Soon Overlay) -->
+    <section class="py-10 lg:py-12 bg-slate-50/80 border-t border-slate-200/80 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
                 
-                <div class="text-left">
-                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 text-[#ff3d00] border border-orange-200/80">
-                        {{ $model['badge'] ?? 'White Label SaaS' }}
-                    </span>
-                    <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2 text-left">
-                        {{ $model['title'] ?? 'White Label SaaS Partner' }}
-                    </h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mb-8 leading-relaxed text-left">
-                        {{ $model['desc'] ?? '' }}
-                    </p>
+                <!-- Card 1: White Label SaaS Partner Card (Active) -->
+                @php $model = $data['lp_model_cards'][0] ?? null; @endphp
+                @if($model)
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
+                    <div class="text-left">
+                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 text-[#ff3d00] border border-orange-200/80">
+                            {{ $model['badge'] ?? 'White Label SaaS' }}
+                        </span>
+                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2 text-left">
+                            {{ $model['title'] ?? 'White Label SaaS Partner' }}
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed text-left">
+                            {{ $model['desc'] ?? '' }}
+                        </p>
 
-                    <!-- Feature List (Left) & Screen Preview (Right) (Task 2: Guaranteed feature list display) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center mb-8 text-left">
-                        <div class="sm:col-span-6 space-y-3 text-left">
-                            @php
-                                $cardFeatures = (isset($model['features']) && is_array($model['features']) && count($model['features']) > 0) 
-                                    ? $model['features'] 
-                                    : [
-                                        'Launch Your Own SaaS Brand',
-                                        'Sell Unlimited Subscriptions',
-                                        'SaaS Products Included',
-                                        'Manage Your Customers & Business',
-                                        'Custom Domain & Branding',
-                                        'Build Recurring Revenue'
-                                    ];
-                            @endphp
-                            @foreach($cardFeatures as $f)
-                            <div class="flex items-start space-x-2.5 text-xs sm:text-sm font-medium text-slate-700 text-left">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
-                                    <i class="fas fa-check"></i>
+                        <!-- Feature List (Left) & Screen Preview (Right) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center mb-6 text-left">
+                            <div class="sm:col-span-6 space-y-2.5 text-left">
+                                @php
+                                    $cardFeatures = (isset($model['features']) && is_array($model['features']) && count($model['features']) > 0) 
+                                        ? $model['features'] 
+                                        : [
+                                            'Launch Your Own SaaS Brand',
+                                            'Sell Unlimited Subscriptions',
+                                            'SaaS Products Included',
+                                            'Manage Your Customers & Business',
+                                            'Custom Domain & Branding',
+                                            'Build Recurring Revenue'
+                                        ];
+                                @endphp
+                                @foreach($cardFeatures as $f)
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 text-left">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span>{{ $f }}</span>
                                 </div>
-                                <span>{{ $f }}</span>
+                                @endforeach
                             </div>
-                            @endforeach
-                        </div>
-                        <div class="sm:col-span-6 mt-4 sm:mt-0">
-                            <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
+                            <div class="sm:col-span-6 mt-4 sm:mt-0">
+                                <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- CTA Button -->
-                <div class="pt-5 border-t border-slate-100 text-left">
-                    <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-4 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
-                        <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <!-- CTA Button -->
+                    <div class="pt-4 border-t border-slate-100 text-left mt-auto">
+                        <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-3.5 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
+                            <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Card 2: White Label Master Panel (With Glassmorphism COMING SOON Overlay) -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between relative overflow-hidden text-left group">
+                    
+                    <!-- Background Card Content (Visible behind glass blur) -->
+                    <div class="text-left filter blur-[2px] opacity-75 select-none pointer-events-none">
+                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-slate-100 text-slate-700 border border-slate-200">
+                            Master Label SaaS
+                        </span>
+                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2 text-left">
+                            White Label Master Panel
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed text-left">
+                            Ideal for business network builders who want to create & manage SaaS reseller partners.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center mb-6 text-left">
+                            <div class="sm:col-span-6 space-y-2.5 text-left">
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span>Create Unlimited Reseller Panels</span>
+                                </div>
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span>Partner Management System</span>
+                                </div>
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span>Set Your Own Reseller Pricing</span>
+                                </div>
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span>Central Master Admin Portal</span>
+                                </div>
+                            </div>
+                            <div class="sm:col-span-6 mt-4 sm:mt-0">
+                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" alt="Master Panel Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Glassmorphism "COMING SOON" Overlay -->
+                    <div class="absolute inset-0 z-20 bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-2xl shadow-xl shadow-orange-500/30 mb-4 animate-bounce">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-extrabold text-xs tracking-widest uppercase shadow-lg shadow-orange-500/40 mb-2.5">
+                            COMING SOON
+                        </span>
+                        <h4 class="font-space font-extrabold text-xl sm:text-2xl text-white tracking-tight">Master Label SaaS Panel</h4>
+                        <p class="text-xs text-slate-200 max-w-xs mt-2 leading-relaxed">
+                            Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
+                        </p>
+                        <div class="mt-5 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
+                            <i class="fas fa-lock text-amber-400 text-xs"></i>
+                            <span>Under Active Development</span>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
-            @endif
         </div>
     </section>
 
@@ -576,45 +647,96 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- Left Pricing Cards (7 Cols) -->
-                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-1 gap-6">
-                    @if(is_array($data['lp_pricing_plans']))
-                        @foreach($data['lp_pricing_plans'] as $plan)
-                        @if(!str_contains(strtolower($plan['name'] ?? ''), 'master') && !str_contains(strtolower($plan['desc'] ?? ''), 'create saas partners'))
-                        <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 flex flex-col justify-between relative">
-                            @if(!empty($plan['badge']))
-                                <div class="absolute -top-3 right-6 btn-gradient text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                                    {{ $plan['badge'] }}
-                                </div>
-                            @endif
-                            <div>
-                                <h4 class="font-space font-bold text-base text-slate-900">{{ $plan['name'] ?? '' }}</h4>
-                                <p class="text-[11px] text-slate-500 mt-1">{{ $plan['desc'] ?? '' }}</p>
-                                
-                                <div class="my-5">
-                                    <span class="font-space font-extrabold text-3xl text-slate-900">₹{{ $plan['price'] ?? '999' }}</span>
-                                    <span class="text-xs text-slate-500 font-medium">{{ $plan['period'] ?? '/month' }}</span>
-                                </div>
-
-                                <div class="space-y-2 mb-6 text-xs text-slate-700">
-                                    @if(isset($plan['features']) && is_array($plan['features']))
-                                        @foreach($plan['features'] as $pf)
-                                        <div class="flex items-center space-x-2">
-                                            <i class="fas fa-check text-orange-500 text-xs"></i>
-                                            <span>{{ $pf }}</span>
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                </div>
+                <!-- Left Pricing Cards (7 Cols): Task 2 - 2 Containers (Monthly & Yearly) for White-Label Panel -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    
+                    <!-- Container 1: White-Label Panel (Monthly) -->
+                    <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 flex flex-col justify-between relative hover:shadow-2xl transition-all">
+                        <div class="absolute -top-3 right-6 bg-slate-800 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                            Monthly Plan
+                        </div>
+                        <div>
+                            <h4 class="font-space font-bold text-base text-slate-900">White-Label Panel</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Billed monthly • Cancel anytime</p>
+                            
+                            <div class="my-5">
+                                <span class="font-space font-extrabold text-3xl text-slate-900">₹999</span>
+                                <span class="text-xs text-slate-500 font-medium">/month</span>
                             </div>
 
-                            <a href="{{ $plan['cta_url'] ?? '/login' }}" class="btn-gradient w-full block text-center py-3 rounded-xl text-white font-bold text-xs shadow-md">
-                                {{ $plan['cta_text'] ?? 'Get Started' }}
-                            </a>
+                            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>1 White-Label Platform</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>5 White-Label SaaS Products</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>Custom Domain & Logo</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>Unlimited End-Customers</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>Full Partner Dashboard</span>
+                                </div>
+                            </div>
                         </div>
-                        @endif
-                        @endforeach
-                    @endif
+
+                        <a href="{{ url('/login') }}" class="w-full block text-center py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all">
+                            Get Started Monthly
+                        </a>
+                    </div>
+
+                    <!-- Container 2: White-Label Panel (Yearly - Best Value) -->
+                    <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-orange-500/80 flex flex-col justify-between relative hover:shadow-2xl transition-all">
+                        <div class="absolute -top-3 right-6 btn-gradient text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                            Best Value • Save 20%
+                        </div>
+                        <div>
+                            <h4 class="font-space font-bold text-base text-slate-900">White-Label Panel</h4>
+                            <p class="text-[11px] text-orange-600 font-bold mt-1">Billed annually (Get 2 Months FREE)</p>
+                            
+                            <div class="my-5">
+                                <span class="font-space font-extrabold text-3xl text-slate-900">₹9,990</span>
+                                <span class="text-xs text-slate-500 font-medium">/year</span>
+                                <p class="text-[10px] text-slate-500 font-medium mt-0.5">(Equivalent to ₹832/month)</p>
+                            </div>
+
+                            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>All Monthly Features Included</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>2 Months FREE Included</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>Priority 1-on-1 Onboarding</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>Free Custom Domain Setup</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-orange-500 text-xs"></i>
+                                    <span>24/7 Priority Support</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ url('/login') }}" class="btn-gradient w-full block text-center py-3 rounded-xl text-white font-bold text-xs shadow-md">
+                            Get Started Yearly
+                        </a>
+                    </div>
+
                 </div>
 
                 <!-- Right Revenue Calculator Card (5 Cols) (Task 4: Background image using revenue_calculator.png only) -->
