@@ -301,15 +301,15 @@
                         Your Brand. Our Technology. Unlimited Growth.
                     </p>
 
-                    <!-- 3 Feature Icons in 1 Row -->
-                    <div class="grid grid-cols-3 gap-3 pt-3">
+                    <!-- 3 Feature Icons in 1 Row (Task 1: 2 columns on mobile to prevent overflow) -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-3">
                         @if(is_array($data['lp_about_features']))
                             @foreach(array_slice($data['lp_about_features'], 0, 3) as $feat)
                             <div class="flex items-center space-x-2.5 p-3 rounded-2xl bg-orange-50/60 border border-orange-100">
                                 <div class="w-8 h-8 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-xs flex-shrink-0">
                                     <i class="{{ $feat['icon'] ?? 'fas fa-star' }}"></i>
                                 </div>
-                                <h4 class="font-bold text-[11px] text-slate-900 leading-tight">{{ $feat['title'] ?? '' }}</h4>
+                                <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 leading-snug break-words">{{ $feat['title'] ?? '' }}</h4>
                             </div>
                             @endforeach
                         @endif
@@ -542,7 +542,7 @@
         </div>
     </section>
 
-    <!-- SECTION 6: HOW NOORYAK WORKS -->
+    <!-- SECTION 6: HOW NOORYAK WORKS (Task 2: Mobile scroll animation & downward arrows between steps) -->
     <section class="py-10 lg:py-14 bg-slate-50/60 border-t border-slate-200/70 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
@@ -552,28 +552,35 @@
             </h2>
 
             @if(is_array($data['lp_how_works_steps']))
-            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-4 max-w-6xl mx-auto">
+            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-4 max-w-6xl mx-auto">
                 @foreach($data['lp_how_works_steps'] as $index => $step)
                     
-                    <!-- Step Item -->
-                    <div class="flex-1 flex flex-col items-center text-center group z-10 px-2">
+                    <!-- Step Item with mobile scroll reveal animation -->
+                    <div class="step-card flex-1 flex flex-col items-center text-center group z-10 px-2 transition-all duration-700 ease-out transform opacity-0 translate-y-8">
                         <!-- Icon Circle -->
                         <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full btn-gradient flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-orange-500/25 mb-4 group-hover:scale-110 transition-transform duration-300">
                             <i class="{{ $step['icon'] ?? 'fas fa-check' }}"></i>
                         </div>
                         
                         <!-- Step Label -->
-                        <span class="text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Step {{ $step['step'] ?? ($index + 1) }}</span>
+                        <span class="text-xs font-bold text-[#ff3d00] uppercase tracking-wide mb-1">Step {{ $step['step'] ?? ($index + 1) }}</span>
                         
                         <!-- Title -->
                         <h4 class="font-space font-extrabold text-base sm:text-lg text-slate-900 mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
                         
                         <!-- Description -->
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-[220px]">{{ $step['desc'] ?? '' }}</p>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-[240px]">{{ $step['desc'] ?? '' }}</p>
                     </div>
 
-                    <!-- Right Arrow Connector between steps (Hidden on Mobile) -->
+                    <!-- Downward Arrow Connector between steps (MOBILE ONLY - Task 2) -->
                     @if(!$loop->last)
+                    <div class="step-arrow flex lg:hidden items-center justify-center my-3 text-[#ff3d00] animate-bounce transition-all duration-500 opacity-0 transform translate-y-4">
+                        <div class="w-9 h-9 rounded-full bg-orange-100/90 border border-orange-200 text-[#ff3d00] flex items-center justify-center text-xs shadow-sm">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                    </div>
+
+                    <!-- Right Arrow Connector between steps (DESKTOP ONLY) -->
                     <div class="hidden lg:flex items-center justify-center text-slate-400 font-bold -mt-16 text-lg">
                         <i class="fas fa-arrow-right text-slate-400 opacity-60"></i>
                     </div>
@@ -828,7 +835,7 @@
                 </div>
             </div>
 
-            <!-- Testimonials (Task 4: Auto sliding single row layout on mobile) -->
+            <!-- Testimonials (Task 3: Full Width Cards on Mobile - No text truncation) -->
             <div>
                 <div class="text-center mb-10">
                     <span class="badge-pill mx-auto">{{ $data['lp_testimonials_tag'] }}</span>
@@ -839,32 +846,34 @@
                 </div>
 
                 <!-- Testimonials Mobile Horizontal Auto-Slider & Desktop Grid -->
-                <div id="testimonialSlider" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth md:grid md:grid-cols-3 gap-4 md:gap-6 pb-4 md:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
-                    @if(is_array($data['lp_testimonials_items']))
-                        @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
-                        <div class="testimonial-card min-w-[85%] sm:min-w-[75%] md:min-w-0 snap-center flex-shrink-0 p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-4">
-                            <div class="space-y-3">
-                                <div class="flex items-center space-x-1 text-amber-400 text-xs">
-                                    @for($r = 0; $r < ($testi['rating'] ?? 5); $r++)
-                                        <i class="fas fa-star"></i>
-                                    @endfor
+                <div class="relative max-w-full overflow-hidden">
+                    <div id="testimonialSlider" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth md:grid md:grid-cols-3 gap-6 pb-4 md:pb-0 no-scrollbar">
+                        @if(is_array($data['lp_testimonials_items']))
+                            @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
+                            <div class="testimonial-card w-full min-w-full md:min-w-0 snap-center flex-shrink-0 p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-4">
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-1 text-amber-400 text-xs">
+                                        @for($r = 0; $r < ($testi['rating'] ?? 5); $r++)
+                                            <i class="fas fa-star"></i>
+                                        @endfor
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium break-words">"{{ $testi['quote'] ?? '' }}"</p>
                                 </div>
-                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">"{{ $testi['quote'] ?? '' }}"</p>
+                                <div class="pt-4 border-t border-slate-200/70 flex items-center justify-between text-xs sm:text-sm">
+                                    <span class="font-bold text-slate-900">{{ $testi['name'] ?? '' }}</span>
+                                    <span class="text-slate-500 font-medium text-xs">{{ $testi['role'] ?? '' }}</span>
+                                </div>
                             </div>
-                            <div class="pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs">
-                                <span class="font-bold text-slate-900">{{ $testi['name'] ?? '' }}</span>
-                                <span class="text-slate-500 text-[11px]">{{ $testi['role'] ?? '' }}</span>
-                            </div>
-                        </div>
-                        @endforeach
-                    @endif
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Mobile Slider Navigation Dots -->
-                <div id="testimonialDots" class="flex md:hidden justify-center items-center space-x-2 mt-4">
+                <div id="testimonialDots" class="flex md:hidden justify-center items-center space-x-2 mt-6">
                     @if(is_array($data['lp_testimonials_items']))
                         @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
-                        <button class="t-dot h-2 rounded-full transition-all duration-300 {{ $tIdx === 0 ? 'bg-orange-500 w-6' : 'bg-slate-300 w-2' }}" data-index="{{ $tIdx }}"></button>
+                        <button class="t-dot h-2.5 rounded-full transition-all duration-300 {{ $tIdx === 0 ? 'bg-[#ff3d00] w-6' : 'bg-slate-300 w-2.5' }}" data-index="{{ $tIdx }}"></button>
                         @endforeach
                     @endif
                 </div>
@@ -1168,6 +1177,18 @@
             }, { threshold: 0.3 });
 
             counters.forEach(c => counterObserver.observe(c));
+
+            // Task 2: Mobile Step Scroll Reveal & Down Arrow Observer
+            const stepObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('opacity-0', 'translate-y-8', 'translate-y-4');
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.step-card, .step-arrow').forEach(el => stepObserver.observe(el));
 
             // Task 4: Testimonials Mobile Auto-Slider
             const tSlider = document.getElementById('testimonialSlider');

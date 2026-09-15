@@ -47,35 +47,44 @@ $getAgencyForRoute = function (\Illuminate\Http\Request $request) {
         ->first()
         ?? \App\Models\Agency::where('type', 'white_label')->first()
         ?? \App\Models\Agency::first();
+$getLandingData = function() {
+    return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->getLandingData();
 };
 
-Route::get('/about', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'about', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/about', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'about', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.about');
 
-Route::get('/contact', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'contact', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/contact', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'contact', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.contact');
 
-Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'privacy', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'privacy', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.privacy');
 
-Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'terms', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'terms', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.terms');
 
-Route::get('/shipping-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'shipping', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/shipping-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'shipping', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.shipping');
 
-Route::get('/refund-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'refund', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/refund-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'refund', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.refund');
 
-Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute) {
-    return view('whitelabel.website.public_legal', ['type' => 'cookie', 'agency' => $getAgencyForRoute($request)]);
+Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    return view('whitelabel.website.public_legal', ['type' => 'cookie', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.cookies');
+
+// Route aliases for policy pages
+Route::get('/terms', function() { return redirect()->route('agency.terms'); });
+Route::get('/terms_conditions', function() { return redirect()->route('agency.terms'); });
+Route::get('/privacy', function() { return redirect()->route('agency.privacy'); });
+Route::get('/refund', function() { return redirect()->route('agency.refund'); });
+Route::get('/shipping', function() { return redirect()->route('agency.shipping'); });
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
