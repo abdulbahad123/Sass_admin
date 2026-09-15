@@ -205,7 +205,7 @@
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
-                <!-- Left Text Column (5 cols on lg for larger hero banner image ratio) -->
+                <!-- Left Text Column (5 cols on lg for crisp text alignment) -->
                 <div class="lg:col-span-5 space-y-6 text-left relative z-20">
                     <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
@@ -248,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (Task 1: 3x Increased Hero Image Size) -->
-                <div class="lg:col-span-7 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end overflow-visible">
-                    <div class="relative z-10 w-full flex justify-center lg:justify-end overflow-visible">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full lg:w-[155%] xl:w-[175%] max-w-none h-auto max-h-[1200px] object-contain ml-0 lg:ml-[30px] mt-[10px] transform lg:scale-130 xl:scale-145 origin-right transition-transform duration-500 hover:scale-150">
+                <!-- Right Hero Image Graphic (Right Aligned, Large, No Text Overlap) -->
+                <div class="lg:col-span-7 relative mt-6 lg:mt-0 flex items-center justify-end">
+                    <div class="relative z-10 w-full flex justify-center lg:justify-end items-center">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[650px] lg:max-h-[780px] xl:max-h-[850px] object-contain object-right transition-transform duration-500 hover:scale-105">
                     </div>
                 </div>
 
