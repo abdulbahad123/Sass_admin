@@ -147,13 +147,13 @@
                 <!-- Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3">
                     @if($data['lp_header_logo'])
-                        <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak Logo" class="h-9 sm:h-10 w-auto">
+                        <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak Logo" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
                     @else
-                        <div class="flex items-center space-x-2">
-                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-md shadow-orange-500/20">
-                                <i class="fas fa-layer-group text-base sm:text-lg"></i>
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
+                                <i class="fas fa-layer-group text-lg sm:text-xl"></i>
                             </div>
-                            <span class="font-space font-bold text-xl sm:text-2xl tracking-tight text-slate-900">Nooryak</span>
+                            <span class="font-space font-bold text-2xl sm:text-3xl tracking-tight text-slate-900">Nooryak</span>
                         </div>
                     @endif
                 </a>
@@ -200,13 +200,13 @@
         </div>
     </header>
 
-    <!-- SECTION 1: HERO SECTION -->
-    <section id="hero" class="relative pt-10 pb-12 lg:pt-14 lg:pb-16 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal">
+    <!-- SECTION 1: HERO SECTION (Task 1: Hero Graphic Starts at Bottom with Increased Height) -->
+    <section id="hero" class="relative pt-8 pb-0 lg:pt-12 lg:pb-0 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
                 
                 <!-- Left Text Column (5 cols on lg for crisp text alignment) -->
-                <div class="lg:col-span-5 space-y-6 text-left relative z-20">
+                <div class="lg:col-span-5 space-y-6 text-left relative z-20 pb-10 lg:pb-14">
                     <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
                         <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
                     </div>
@@ -248,10 +248,10 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (Right Aligned, Large, No Text Overlap) -->
-                <div class="lg:col-span-7 relative mt-6 lg:mt-0 flex items-center justify-end">
-                    <div class="relative z-10 w-full flex justify-center lg:justify-end items-center">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[650px] lg:max-h-[780px] xl:max-h-[850px] object-contain object-right transition-transform duration-500 hover:scale-105">
+                <!-- Right Hero Image Graphic (Starts at Bottom, Increased Height, Right Aligned) -->
+                <div class="lg:col-span-7 relative mt-4 lg:mt-0 flex items-end justify-end self-end">
+                    <div class="relative z-10 w-full flex justify-center lg:justify-end items-end">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[750px] lg:max-h-[880px] xl:max-h-[960px] object-contain object-bottom-right transition-transform duration-500 hover:scale-105 mb-0">
                     </div>
                 </div>
 
@@ -260,7 +260,7 @@
     </section>
 
     <!-- SECTION 2: COUNTER STATS BAR CARD -->
-    <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 mb-10 relative z-20 reveal">
+    <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-6 relative z-20 reveal">
         <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-xl border border-slate-100">
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center">
                 @if(is_array($data['lp_stats_bar']))
@@ -284,7 +284,7 @@
     </div>
 
     <!-- SECTION 3: ABOUT NOORYAK -->
-    <section id="about" class="py-16 lg:py-24 bg-white">
+    <section id="about" class="py-10 lg:py-14 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
@@ -327,8 +327,8 @@
         </div>
     </section>
 
-    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD (Reduced width, aligned left) -->
-    <section class="py-14 bg-slate-50/80 border-t border-slate-200/80 reveal">
+    <!-- SECTION 4: WHITE LABEL SAAS PARTNER MODEL CARD -->
+    <section class="py-8 lg:py-10 bg-slate-50/80 border-t border-slate-200/80 reveal">
         <div class="max-w-3xl ml-4 sm:ml-8 lg:ml-16 mr-auto px-4 sm:px-6">
             @php $model = $data['lp_model_cards'][0] ?? null; @endphp
             @if($model)
@@ -389,7 +389,7 @@
     </section>
 
     <!-- SECTION 5: OUR PRODUCTS (Dynamic products from Super Admin Catalog) -->
-    <section id="products" class="py-16 lg:py-24 bg-white reveal">
+    <section id="products" class="py-10 lg:py-14 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-12">
@@ -402,7 +402,7 @@
                 </p>
             </div>
 
-            <!-- Dynamic Super Admin Active Products Grid -->
+            <!-- Dynamic Super Admin Active Products Grid (Task 2: Guaranteed Launchshop icon display) -->
             @php
                 $dbProds = $data['db_products'] ?? collect();
             @endphp
@@ -411,10 +411,10 @@
                     @foreach($dbProds as $prod)
                     @php
                         $pIcon = trim($prod->icon ?? '');
-                        if (!$pIcon || $pIcon === 'fas fa-store') {
+                        if (!$pIcon || $pIcon === 'fas fa-store' || $pIcon === 'fas fa-shopping-bag' || $pIcon === 'fas fa-box') {
                             $slugLower = strtolower(($prod->slug ?? '') . ' ' . ($prod->name ?? ''));
                             if (str_contains($slugLower, 'launch') || str_contains($slugLower, 'shop') || str_contains($slugLower, 'store')) {
-                                $pIcon = 'fas fa-shopping-bag';
+                                $pIcon = 'fas fa-bag-shopping';
                             } elseif (str_contains($slugLower, 'website') || str_contains($slugLower, 'builder')) {
                                 $pIcon = 'fas fa-cubes';
                             } elseif (str_contains($slugLower, 'review') || str_contains($slugLower, 'gmb')) {
@@ -426,7 +426,7 @@
                             } elseif (str_contains($slugLower, 'loyalty') || str_contains($slugLower, 'reward')) {
                                 $pIcon = 'fas fa-gift';
                             } else {
-                                $pIcon = 'fas fa-box';
+                                $pIcon = 'fas fa-store';
                             }
                         }
                     @endphp
@@ -471,8 +471,8 @@
         </div>
     </section>
 
-    <!-- SECTION 6: HOW NOORYAK WORKS (Pixel-Perfect Match with Reference Image) -->
-    <section class="py-16 lg:py-24 bg-slate-50/60 border-t border-slate-200/70 reveal">
+    <!-- SECTION 6: HOW NOORYAK WORKS -->
+    <section class="py-10 lg:py-14 bg-slate-50/60 border-t border-slate-200/70 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
             <span class="badge-pill mx-auto mb-3">{{ $data['lp_how_works_tag'] }}</span>
@@ -515,8 +515,8 @@
         </div>
     </section>
 
-    <!-- SECTION 7: WHY CHOOSE NOORYAK? (Pixel-Perfect Match with Reference Image) -->
-    <section class="py-16 lg:py-24 bg-white reveal">
+    <!-- SECTION 7: WHY CHOOSE NOORYAK? -->
+    <section class="py-10 lg:py-14 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
             <div class="mb-14">
@@ -563,7 +563,7 @@
     </section>
 
     <!-- SECTION 8: PRICING & REVENUE CALCULATOR -->
-    <section id="pricing" class="py-16 lg:py-24 bg-slate-50/80 border-t border-slate-200/80">
+    <section id="pricing" class="py-10 lg:py-14 bg-slate-50/80 border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-2xl mx-auto mb-12">
@@ -676,7 +676,7 @@
     </section>
 
     <!-- SECTION 9: YOUR GROWTH PATH & TESTIMONIALS -->
-    <section class="py-16 bg-white border-t border-slate-200/80 reveal">
+    <section class="py-10 lg:py-14 bg-white border-t border-slate-200/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             
             <!-- Growth Path -->
@@ -742,7 +742,7 @@
     </section>
 
     <!-- SECTION 10: FAQ ACCORDION -->
-    <section id="faq" class="py-16 bg-slate-50/80 border-t border-slate-200/80 reveal">
+    <section id="faq" class="py-10 lg:py-14 bg-slate-50/80 border-t border-slate-200/80 reveal">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10">
                 <span class="badge-pill mx-auto">{{ $data['lp_faqs_tag'] }}</span>
@@ -770,8 +770,8 @@
         </div>
     </section>
 
-    <!-- SECTION 11: CTA BANNER (Task 5: Using cta_background.png image) -->
-    <section class="py-14 bg-white reveal">
+    <!-- SECTION 11: CTA BANNER -->
+    <section class="py-8 lg:py-10 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="rounded-3xl p-8 sm:p-12 lg:p-16 text-white text-center relative overflow-hidden shadow-2xl border border-slate-800/50" style="background-image: url('{{ asset('/assets/images/cta_background.png') }}'); background-size: cover;">
                 <div class="relative z-10 max-w-3xl mx-auto space-y-5">
@@ -800,19 +800,19 @@
     </section>
 
     <!-- SECTION 12: FOOTER -->
-    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+    <footer class="bg-slate-950 text-slate-400 py-8 lg:py-10 border-t border-slate-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-slate-900">
                 
                 <div class="lg:col-span-2 space-y-3">
                     <a href="{{ url('/') }}" class="flex items-center space-x-2 text-white font-space font-bold text-xl">
                         @if($data['lp_header_logo'])
-                            <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-8 w-auto">
+                            <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
                         @else
-                            <div class="w-8 h-8 rounded-xl btn-gradient flex items-center justify-center text-white text-xs">
+                            <div class="w-12 h-12 rounded-xl btn-gradient flex items-center justify-center text-white text-base">
                                 <i class="fas fa-layer-group"></i>
                             </div>
-                            <span>Nooryak</span>
+                            <span class="text-2xl font-bold">Nooryak</span>
                         @endif
                     </a>
                     <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
