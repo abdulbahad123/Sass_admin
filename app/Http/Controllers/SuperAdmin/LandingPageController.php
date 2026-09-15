@@ -216,7 +216,7 @@ class LandingPageController extends Controller
     /**
      * Helper to load all landing settings with default fallback values
      */
-    private function getLandingData(): array
+    public function getLandingData(): array
     {
         return [
             // Announcement & Top Bar
