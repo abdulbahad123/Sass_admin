@@ -60,9 +60,9 @@ class SyncTenantTemplateData extends Command
         }
 
         // 3. Fallback standard DB names
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
         $targetDbs[] = "{$cpanelUser}_ps_ysquare_launchshop";
-        $targetDbs[] = "bazaarwa_ps_ysquare_launchshop";
+        $targetDbs[] = "nooryak_ps_ysquare_launchshop";
 
         $targetDbs = array_unique(array_filter($targetDbs));
 

@@ -22,7 +22,7 @@ class WhiteLabelDashboardController extends Controller
             return ['clients' => [], 'productCounts' => [], 'productCards' => []];
         }
 
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
         $agencySlug = str_replace('-', '_', strtolower($agency->slug ?? 'ysquare'));
 
         // Fetch products entitlement from agency_products pivot
@@ -60,8 +60,8 @@ class WhiteLabelDashboardController extends Controller
                 $ap->db_name ?? null,
                 "{$cpanelUser}_ps_{$agencySlug}_{$prodSlug}",
                 "{$cpanelUser}_ps_{$agencySlug}_launchshop",
-                "bazaarwa_ps_{$agencySlug}_{$prodSlug}",
-                "bazaarwa_ps_{$agencySlug}_launchshop",
+                "nooryak_ps_{$agencySlug}_{$prodSlug}",
+                "nooryak_ps_{$agencySlug}_launchshop",
             ]));
 
             $foundDb = null;

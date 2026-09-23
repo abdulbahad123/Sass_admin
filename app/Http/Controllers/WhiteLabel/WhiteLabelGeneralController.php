@@ -115,7 +115,7 @@ class WhiteLabelGeneralController extends Controller
 
     private function getRealAgencyClients($agency)
     {
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
         $agencySlug = str_replace('-', '_', strtolower($agency->slug ?? 'ysquare'));
 
         $agencyProducts = DB::table('agency_products')
@@ -145,8 +145,8 @@ class WhiteLabelGeneralController extends Controller
                 $ap->db_name ?? null,
                 "{$cpanelUser}_ps_{$agencySlug}_{$prodSlug}",
                 "{$cpanelUser}_ps_{$agencySlug}_launchshop",
-                "bazaarwa_ps_{$agencySlug}_{$prodSlug}",
-                "bazaarwa_ps_{$agencySlug}_launchshop",
+                "nooryak_ps_{$agencySlug}_{$prodSlug}",
+                "nooryak_ps_{$agencySlug}_launchshop",
                 env('DB_DATABASE'),
             ]));
 

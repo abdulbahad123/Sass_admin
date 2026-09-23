@@ -25,10 +25,10 @@ class DatabaseProvisioningService
 
         // 1. Skip main company agency / nooryak.in
         if ($agency->clean_domain === 'nooryak.in' || $agency->type === 'super_admin') {
-            return 'bazaarwa_launchshop';
+            return env('LAUNCHSHOP_MAIN_DB', env('CPANEL_USER', 'nooryak') . '_launchshop');
         }
 
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
         $agencySlug = Str::slug($agency->name);
         $productSlug = Str::slug($product->slug ?? $product->name);
 
@@ -123,7 +123,8 @@ class DatabaseProvisioningService
      */
     protected function seedTemplateUsersFromMainDb(string $targetDbName): void
     {
-        $mainDb   = env('LAUNCHSHOP_MAIN_DB', 'bazaarwa_launchshop');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $mainDb   = env('LAUNCHSHOP_MAIN_DB', "{$cpanelUser}_launchshop");
         $mainUser = env('LAUNCHSHOP_MAIN_DB_USER', env('DB_USERNAME'));
         $mainPass = env('LAUNCHSHOP_MAIN_DB_PASS', env('DB_PASSWORD', ''));
         $host     = env('DB_HOST', '127.0.0.1');
@@ -427,16 +428,18 @@ class DatabaseProvisioningService
      */
     protected function mysqlUsersToGrant(): array
     {
-        $cpanelUser     = env('CPANEL_USER', 'bazaarwa');
+        $cpanelUser     = env('CPANEL_USER', 'nooryak');
         $appUser        = (string) config('database.connections.mysql.username');
-        $launchshopUser = env('LAUNCHSHOP_MAIN_DB_USER', 'bazaarwa_launchshop');
+        $launchshopUser = env('LAUNCHSHOP_MAIN_DB_USER', "{$cpanelUser}_launchshop");
 
         $users = array_filter([
             $appUser,
             $launchshopUser,
-            'bazaarwa_launchshop',
-            'bazaarwa_launchshopdevuser',
-            'bazaarwa_sass_admindb',
+            "{$cpanelUser}_launchshop",
+            "{$cpanelUser}_launchshopdevuser",
+            "{$cpanelUser}_sass_admindb",
+            'nooryak_launchshop',
+            'nooryak_sass_admindb',
             env('CPANEL_DB_USER'),
             $cpanelUser,
         ]);
@@ -453,7 +456,7 @@ class DatabaseProvisioningService
 
     protected function cpanelMysqlRequest(string $function, array $query): ?string
     {
-        $cpanelUser = env('CPANEL_USER', 'bazaarwa');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
         $cpanelHost = env('CPANEL_HOST', 's3508.bom1.stableserver.net');
         $cpanelToken = env('CPANEL_API_TOKEN');
         $cpanelPass = env('CPANEL_PASSWORD');
