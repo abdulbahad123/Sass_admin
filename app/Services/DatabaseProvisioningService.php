@@ -391,21 +391,30 @@ class DatabaseProvisioningService
 
     protected function createDatabase(string $dbName): void
     {
-        $this->runCpanelCli('Mysql', 'create_database', ['name' => $dbName]);
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $dbSuffix = str_starts_with($dbName, $cpanelUser . '_') ? substr($dbName, strlen($cpanelUser) + 1) : $dbName;
+
+        // Try cPanel CLI with both suffix and full name
+        foreach (array_unique([$dbSuffix, $dbName]) as $nameToCreate) {
+            $this->runCpanelCli('Mysql', 'create_database', ['name' => $nameToCreate]);
+        }
+
+        // Try cPanel HTTP UAPI with both suffix and full name
+        foreach (array_unique([$dbSuffix, $dbName]) as $nameToCreate) {
+            try {
+                $res1 = $this->cpanelMysqlRequest('create_database', ['name' => $nameToCreate]);
+                if ($res1) {
+                    Log::info("cPanel UAPI create_database ({$nameToCreate}) response: " . $res1);
+                }
+            } catch (Throwable $ex) {
+                Log::error("cPanel HTTP UAPI create_database error for {$nameToCreate}: " . $ex->getMessage());
+            }
+        }
 
         try {
             DB::statement("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
         } catch (Throwable $e) {
             Log::info('Direct CREATE DATABASE failed: '.$e->getMessage().'. Attempting cPanel UAPI HTTP API...');
-        }
-
-        try {
-            $res1 = $this->cpanelMysqlRequest('create_database', ['name' => $dbName]);
-            if ($res1) {
-                Log::info('cPanel UAPI create_database response: '.$res1);
-            }
-        } catch (Throwable $ex) {
-            Log::error('cPanel HTTP UAPI create_database error: '.$ex->getMessage());
         }
 
         $this->grantAppUserOnDatabase($dbName);
@@ -418,9 +427,13 @@ class DatabaseProvisioningService
      */
     protected function grantAppUserOnDatabase(string $dbName): void
     {
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $dbSuffix = str_starts_with($dbName, $cpanelUser . '_') ? substr($dbName, strlen($cpanelUser) + 1) : $dbName;
         $dbUsers = $this->mysqlUsersToGrant();
 
         foreach ($dbUsers as $dbUser) {
+            $userSuffix = str_starts_with($dbUser, $cpanelUser . '_') ? substr($dbUser, strlen($cpanelUser) + 1) : $dbUser;
+
             // 1. Try direct MySQL GRANT queries first (works if user has GRANT privileges)
             foreach (['localhost', '127.0.0.1', '%'] as $host) {
                 try {
@@ -431,33 +444,36 @@ class DatabaseProvisioningService
                 }
             }
 
-            // 2. Try cPanel CLI command: add user to database & set privileges
-            $this->runCpanelCli('Mysql', 'add_user_to_database', [
-                'user' => $dbUser,
-                'database' => $dbName,
-            ]);
-            $this->runCpanelCli('Mysql', 'set_privileges_on_database', [
-                'user' => $dbUser,
-                'database' => $dbName,
-                'privileges' => 'ALL PRIVILEGES',
-            ]);
+            // 2. Try cPanel CLI command: add user to database & set privileges (trying both full & suffix names)
+            foreach (array_unique([$dbName, $dbSuffix]) as $d) {
+                foreach (array_unique([$dbUser, $userSuffix]) as $u) {
+                    $this->runCpanelCli('Mysql', 'add_user_to_database', [
+                        'user' => $u,
+                        'database' => $d,
+                    ]);
+                    $this->runCpanelCli('Mysql', 'set_privileges_on_database', [
+                        'user' => $u,
+                        'database' => $d,
+                        'privileges' => 'ALL PRIVILEGES',
+                    ]);
 
-            // 3. Try cPanel UAPI HTTP Requests
-            try {
-                $this->cpanelMysqlRequest('add_user_to_database', [
-                    'user' => $dbUser,
-                    'database' => $dbName,
-                ]);
-                $res = $this->cpanelMysqlRequest('set_privileges_on_database', [
-                    'user' => $dbUser,
-                    'database' => $dbName,
-                    'privileges' => 'ALL PRIVILEGES',
-                ]);
-                if ($res) {
-                    Log::info("cPanel UAPI grant {$dbUser} on {$dbName}: {$res}");
+                    try {
+                        $this->cpanelMysqlRequest('add_user_to_database', [
+                            'user' => $u,
+                            'database' => $d,
+                        ]);
+                        $res = $this->cpanelMysqlRequest('set_privileges_on_database', [
+                            'user' => $u,
+                            'database' => $d,
+                            'privileges' => 'ALL PRIVILEGES',
+                        ]);
+                        if ($res) {
+                            Log::info("cPanel UAPI grant {$u} on {$d}: {$res}");
+                        }
+                    } catch (Throwable $ex) {
+                        Log::error("cPanel grant failed for {$u} on {$d}: ".$ex->getMessage());
+                    }
                 }
-            } catch (Throwable $ex) {
-                Log::error("cPanel grant failed for {$dbUser} on {$dbName}: ".$ex->getMessage());
             }
         }
     }
