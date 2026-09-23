@@ -357,19 +357,41 @@ class DatabaseProvisioningService
         }
     }
 
+    protected function runCpanelCli(string $module, string $function, array $params): bool
+    {
+        if (!function_exists('exec')) {
+            return false;
+        }
+
+        $paramStr = '';
+        foreach ($params as $key => $val) {
+            $paramStr .= ' ' . escapeshellarg($key) . '=' . escapeshellarg($val);
+        }
+
+        $uapiBins = ['/usr/bin/uapi', '/usr/local/cpanel/bin/uapi', 'uapi'];
+
+        foreach ($uapiBins as $bin) {
+            try {
+                $cmd = sprintf('%s %s %s%s 2>&1', $bin, escapeshellarg($module), escapeshellarg($function), $paramStr);
+                $output = [];
+                $returnCode = -1;
+                @\exec($cmd, $output, $returnCode);
+
+                if ($returnCode === 0) {
+                    Log::info("cPanel CLI ({$bin} {$module} {$function}) succeeded: " . implode(' ', array_slice($output ?? [], 0, 8)));
+                    return true;
+                }
+            } catch (Throwable $e) {
+                // Try next binary
+            }
+        }
+
+        return false;
+    }
+
     protected function createDatabase(string $dbName): void
     {
-        try {
-            if (function_exists('exec')) {
-                $cliCmd = 'uapi Mysql create_database name='.escapeshellarg($dbName).' 2>&1';
-                @\exec($cliCmd, $cliOutput, $cliReturn);
-                if ($cliReturn === 0) {
-                    Log::info("cPanel CLI database creation succeeded for {$dbName}");
-                }
-            }
-        } catch (Throwable $e) {
-            Log::info('cPanel CLI execution error: '.$e->getMessage());
-        }
+        $this->runCpanelCli('Mysql', 'create_database', ['name' => $dbName]);
 
         try {
             DB::statement("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
@@ -409,16 +431,12 @@ class DatabaseProvisioningService
                 }
             }
 
-            // 2. Try cPanel CLI command
-            if (function_exists('exec')) {
-                $cliCmd = 'uapi Mysql set_privileges_on_database user='.escapeshellarg($dbUser)
-                    .' database='.escapeshellarg($dbName)
-                    ." privileges='ALL PRIVILEGES' 2>&1";
-                @\exec($cliCmd, $cliOutput, $cliReturn);
-                if ($cliReturn === 0) {
-                    Log::info("cPanel CLI granted {$dbUser} on {$dbName}: ".implode(' ', array_slice($cliOutput ?? [], 0, 8)));
-                }
-            }
+            // 2. Try cPanel CLI command (with full binary path targeting)
+            $this->runCpanelCli('Mysql', 'set_privileges_on_database', [
+                'user' => $dbUser,
+                'database' => $dbName,
+                'privileges' => 'ALL PRIVILEGES',
+            ]);
 
             // 3. Try cPanel UAPI HTTP Request
             try {
@@ -477,15 +495,18 @@ class DatabaseProvisioningService
     protected function cpanelMysqlRequest(string $function, array $query): ?string
     {
         $cpanelUser = env('CPANEL_USER', 'nooryak');
-        $cpanelPass = env('CPANEL_PASSWORD', 'Admin@123#');
+        $cpanelPass = env('CPANEL_PASSWORD');
         $cpanelToken = env('CPANEL_API_TOKEN');
+
+        if (!$cpanelToken && !$cpanelPass) {
+            return null;
+        }
 
         $hostsToTry = array_values(array_filter(array_unique([
             env('CPANEL_HOST'),
             '95.135.254.154',
             '127.0.0.1',
             $_SERVER['HTTP_HOST'] ?? null,
-            's3508.bom1.stableserver.net',
             'localhost',
         ])));
 
@@ -551,64 +572,46 @@ class DatabaseProvisioningService
     {
         $candidates = [];
 
-        // 1. Default configured mysql connection username/password
+        // 1. Primary configured mysql connection username/password (DB_USERNAME_admin / DB_PASSWORD_admin or default mysql connection)
         $defaultUser = config('database.connections.mysql.username');
         $defaultPass = config('database.connections.mysql.password');
-        if (!empty($defaultUser)) {
+        if (!empty($defaultUser) && !empty($defaultPass)) {
             $candidates[] = ['user' => (string) $defaultUser, 'pass' => (string) $defaultPass];
         }
 
-        // 2. DB_USERNAME / DB_PASSWORD (e.g. nooryak_productdbuser / nooryak_launchshopdevuser)
-        $dbUser = env('DB_USERNAME');
-        $dbPass = env('DB_PASSWORD');
-        if (!empty($dbUser)) {
-            $candidates[] = ['user' => (string) $dbUser, 'pass' => (string) $dbPass];
-        }
-
-        // 3. DB_USERNAME_admin / DB_PASSWORD_admin (e.g. nooryak_sassadmindbuser)
         $adminUser = env('DB_USERNAME_admin');
         $adminPass = env('DB_PASSWORD_admin');
-        if (!empty($adminUser)) {
+        if (!empty($adminUser) && !empty($adminPass)) {
             $candidates[] = ['user' => (string) $adminUser, 'pass' => (string) $adminPass];
         }
 
-        // 4. LAUNCHSHOP_MAIN_DB_USER / LAUNCHSHOP_MAIN_DB_PASS
+        // 2. Main DB credentials if set in .env
+        $dbUser = env('DB_USERNAME');
+        $dbPass = env('DB_PASSWORD');
+        if (!empty($dbUser) && !empty($dbPass)) {
+            $candidates[] = ['user' => (string) $dbUser, 'pass' => (string) $dbPass];
+        }
+
+        // 3. LAUNCHSHOP_MAIN_DB_USER / LAUNCHSHOP_MAIN_DB_PASS
         $mainUser = env('LAUNCHSHOP_MAIN_DB_USER');
         $mainPass = env('LAUNCHSHOP_MAIN_DB_PASS');
-        if (!empty($mainUser)) {
+        if (!empty($mainUser) && !empty($mainPass)) {
             $candidates[] = ['user' => (string) $mainUser, 'pass' => (string) $mainPass];
         }
 
-        // 5. CPANEL_USER / CPANEL_PASSWORD or fallback passwords (e.g. nooryak with Admin@123#, Admin@2004, MySecretPass123!)
-        $cpUser = env('CPANEL_USER', 'nooryak');
-        $cpPasses = array_filter(array_unique([
-            env('CPANEL_PASSWORD'),
-            'Admin@123#',
-            env('DB_PASSWORD'),
-            env('DB_PASSWORD_admin'),
-            'Admin@2004',
-            'MySecretPass123!',
-        ]));
-
-        foreach ($cpPasses as $p) {
-            $candidates[] = ['user' => (string) $cpUser, 'pass' => (string) $p];
-            $candidates[] = ['user' => 'nooryak_productdbuser', 'pass' => (string) $p];
-            $candidates[] = ['user' => 'nooryak_sassadmindbuser', 'pass' => (string) $p];
-        }
-
-        // 5. CPANEL_USER / CPANEL_PASSWORD or DB_PASSWORD (e.g. nooryak)
-        $cpUser = env('CPANEL_USER', 'nooryak');
-        $cpPass = env('CPANEL_PASSWORD') ?: env('DB_PASSWORD');
-        if (!empty($cpUser)) {
+        // 4. cPanel user if CPANEL_PASSWORD is provided in .env
+        $cpUser = env('CPANEL_USER');
+        $cpPass = env('CPANEL_PASSWORD');
+        if (!empty($cpUser) && !empty($cpPass)) {
             $candidates[] = ['user' => (string) $cpUser, 'pass' => (string) $cpPass];
         }
 
-        // Deduplicate candidates by username
+        // Deduplicate candidates by user + pass
         $unique = [];
         foreach ($candidates as $c) {
-            $u = $c['user'];
-            if (!empty($u) && !isset($unique[$u])) {
-                $unique[$u] = $c;
+            $key = $c['user'] . ':' . $c['pass'];
+            if (!empty($c['user']) && !isset($unique[$key])) {
+                $unique[$key] = $c;
             }
         }
 
