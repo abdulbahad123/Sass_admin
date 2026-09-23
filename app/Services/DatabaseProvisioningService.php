@@ -495,12 +495,8 @@ class DatabaseProvisioningService
     protected function cpanelMysqlRequest(string $function, array $query): ?string
     {
         $cpanelUser = env('CPANEL_USER', 'nooryak');
-        $cpanelPass = env('CPANEL_PASSWORD');
+        $cpanelPass = env('CPANEL_PASSWORD', 'Admin@123#');
         $cpanelToken = env('CPANEL_API_TOKEN');
-
-        if (!$cpanelToken && !$cpanelPass) {
-            return null;
-        }
 
         $hostsToTry = array_values(array_filter(array_unique([
             env('CPANEL_HOST'),
@@ -511,23 +507,26 @@ class DatabaseProvisioningService
         ])));
 
         foreach ($hostsToTry as $cpanelHost) {
-            try {
-                $req = Http::withoutVerifying()->timeout(10);
-                if ($cpanelToken) {
-                    $req = $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
-                } else {
-                    $req = $req->withBasicAuth($cpanelUser, $cpanelPass);
-                }
+            foreach ([2083, 2082] as $port) {
+                $proto = $port === 2083 ? 'https' : 'http';
+                try {
+                    $req = Http::withoutVerifying()->timeout(8);
+                    if ($cpanelToken) {
+                        $req = $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
+                    } else {
+                        $req = $req->withBasicAuth($cpanelUser, $cpanelPass);
+                    }
 
-                $url = "https://{$cpanelHost}:2083/execute/Mysql/{$function}";
-                $res = $req->get($url, $query);
+                    $url = "{$proto}://{$cpanelHost}:{$port}/execute/Mysql/{$function}";
+                    $res = $req->get($url, $query);
 
-                if ($res->successful()) {
-                    Log::info("cPanel UAPI {$function} succeeded via {$cpanelHost}: " . $res->body());
-                    return $res->body();
+                    if ($res->successful()) {
+                        Log::info("cPanel UAPI {$function} succeeded via {$url}: " . $res->body());
+                        return $res->body();
+                    }
+                } catch (Throwable $ex) {
+                    Log::debug("cPanel UAPI {$function} attempt on {$cpanelHost}:{$port} failed: " . $ex->getMessage());
                 }
-            } catch (Throwable $ex) {
-                Log::debug("cPanel UAPI {$function} attempt on {$cpanelHost} failed: " . $ex->getMessage());
             }
         }
 
