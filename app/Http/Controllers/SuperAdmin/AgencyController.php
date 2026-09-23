@@ -131,14 +131,18 @@ class AgencyController extends Controller
             'starts_at' => now(),
         ]);
 
-        // Assign products & provision dynamic database + Launchshop tables
+        // Assign products & provision dynamic database + Launchshop tables automatically
         $dbService = new \App\Services\DatabaseProvisioningService();
         $provisionErrors = [];
-        if (!empty($validated['products'])) {
+        $productIdsToProvision = !empty($validated['products'])
+            ? $validated['products']
+            : Product::where('is_active', true)->pluck('id')->toArray();
+
+        if (!empty($productIdsToProvision)) {
             $syncData = [];
             $hasDbCol = \Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name');
 
-            foreach ($validated['products'] as $productId) {
+            foreach ($productIdsToProvision as $productId) {
                 $product = Product::find($productId);
                 $dbName = null;
                 $dbStatus = 'pending';
