@@ -431,15 +431,23 @@ class DatabaseProvisioningService
                 }
             }
 
-            // 2. Try cPanel CLI command (with full binary path targeting)
+            // 2. Try cPanel CLI command: add user to database & set privileges
+            $this->runCpanelCli('Mysql', 'add_user_to_database', [
+                'user' => $dbUser,
+                'database' => $dbName,
+            ]);
             $this->runCpanelCli('Mysql', 'set_privileges_on_database', [
                 'user' => $dbUser,
                 'database' => $dbName,
                 'privileges' => 'ALL PRIVILEGES',
             ]);
 
-            // 3. Try cPanel UAPI HTTP Request
+            // 3. Try cPanel UAPI HTTP Requests
             try {
+                $this->cpanelMysqlRequest('add_user_to_database', [
+                    'user' => $dbUser,
+                    'database' => $dbName,
+                ]);
                 $res = $this->cpanelMysqlRequest('set_privileges_on_database', [
                     'user' => $dbUser,
                     'database' => $dbName,
