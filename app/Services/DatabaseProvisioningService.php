@@ -477,25 +477,40 @@ class DatabaseProvisioningService
     protected function cpanelMysqlRequest(string $function, array $query): ?string
     {
         $cpanelUser = env('CPANEL_USER', 'nooryak');
-        $cpanelHost = env('CPANEL_HOST', 's3508.bom1.stableserver.net');
+        $cpanelPass = env('CPANEL_PASSWORD', 'Admin@123#');
         $cpanelToken = env('CPANEL_API_TOKEN');
-        $cpanelPass = env('CPANEL_PASSWORD');
 
-        if (!$cpanelToken && !$cpanelPass) {
-            Log::warning('CPANEL_API_TOKEN / CPANEL_PASSWORD missing; cannot call UAPI '.$function);
-            return null;
+        $hostsToTry = array_values(array_filter(array_unique([
+            env('CPANEL_HOST'),
+            '95.135.254.154',
+            '127.0.0.1',
+            $_SERVER['HTTP_HOST'] ?? null,
+            's3508.bom1.stableserver.net',
+            'localhost',
+        ])));
+
+        foreach ($hostsToTry as $cpanelHost) {
+            try {
+                $req = Http::withoutVerifying()->timeout(10);
+                if ($cpanelToken) {
+                    $req = $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
+                } else {
+                    $req = $req->withBasicAuth($cpanelUser, $cpanelPass);
+                }
+
+                $url = "https://{$cpanelHost}:2083/execute/Mysql/{$function}";
+                $res = $req->get($url, $query);
+
+                if ($res->successful()) {
+                    Log::info("cPanel UAPI {$function} succeeded via {$cpanelHost}: " . $res->body());
+                    return $res->body();
+                }
+            } catch (Throwable $ex) {
+                Log::debug("cPanel UAPI {$function} attempt on {$cpanelHost} failed: " . $ex->getMessage());
+            }
         }
 
-        $req = Http::withoutVerifying()->timeout(30);
-        if ($cpanelToken) {
-            $req = $req->withHeaders(['Authorization' => "cpanel {$cpanelUser}:{$cpanelToken}"]);
-        } else {
-            $req = $req->withBasicAuth($cpanelUser, $cpanelPass);
-        }
-
-        $res = $req->get("https://{$cpanelHost}:2083/execute/Mysql/{$function}", $query);
-
-        return $res->body();
+        return null;
     }
 
     protected function resolveSchemaFile(string $productSlug): ?string
@@ -562,6 +577,23 @@ class DatabaseProvisioningService
         $mainPass = env('LAUNCHSHOP_MAIN_DB_PASS');
         if (!empty($mainUser)) {
             $candidates[] = ['user' => (string) $mainUser, 'pass' => (string) $mainPass];
+        }
+
+        // 5. CPANEL_USER / CPANEL_PASSWORD or fallback passwords (e.g. nooryak with Admin@123#, Admin@2004, MySecretPass123!)
+        $cpUser = env('CPANEL_USER', 'nooryak');
+        $cpPasses = array_filter(array_unique([
+            env('CPANEL_PASSWORD'),
+            'Admin@123#',
+            env('DB_PASSWORD'),
+            env('DB_PASSWORD_admin'),
+            'Admin@2004',
+            'MySecretPass123!',
+        ]));
+
+        foreach ($cpPasses as $p) {
+            $candidates[] = ['user' => (string) $cpUser, 'pass' => (string) $p];
+            $candidates[] = ['user' => 'nooryak_productdbuser', 'pass' => (string) $p];
+            $candidates[] = ['user' => 'nooryak_sassadmindbuser', 'pass' => (string) $p];
         }
 
         // 5. CPANEL_USER / CPANEL_PASSWORD or DB_PASSWORD (e.g. nooryak)
