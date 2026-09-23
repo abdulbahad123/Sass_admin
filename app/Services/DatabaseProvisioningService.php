@@ -346,10 +346,12 @@ class DatabaseProvisioningService
     protected function createDatabase(string $dbName): void
     {
         try {
-            $cliCmd = 'uapi Mysql create_database name='.escapeshellarg($dbName).' 2>&1';
-            @exec($cliCmd, $cliOutput, $cliReturn);
-            if ($cliReturn === 0) {
-                Log::info("cPanel CLI database creation succeeded for {$dbName}");
+            if (function_exists('exec')) {
+                $cliCmd = 'uapi Mysql create_database name='.escapeshellarg($dbName).' 2>&1';
+                @\exec($cliCmd, $cliOutput, $cliReturn);
+                if ($cliReturn === 0) {
+                    Log::info("cPanel CLI database creation succeeded for {$dbName}");
+                }
             }
         } catch (Throwable $e) {
             Log::info('cPanel CLI execution error: '.$e->getMessage());
@@ -394,12 +396,14 @@ class DatabaseProvisioningService
             }
 
             // 2. Try cPanel CLI command
-            $cliCmd = 'uapi Mysql set_privileges_on_database user='.escapeshellarg($dbUser)
-                .' database='.escapeshellarg($dbName)
-                ." privileges='ALL PRIVILEGES' 2>&1";
-            @exec($cliCmd, $cliOutput, $cliReturn);
-            if ($cliReturn === 0) {
-                Log::info("cPanel CLI granted {$dbUser} on {$dbName}: ".implode(' ', array_slice($cliOutput ?? [], 0, 8)));
+            if (function_exists('exec')) {
+                $cliCmd = 'uapi Mysql set_privileges_on_database user='.escapeshellarg($dbUser)
+                    .' database='.escapeshellarg($dbName)
+                    ." privileges='ALL PRIVILEGES' 2>&1";
+                @\exec($cliCmd, $cliOutput, $cliReturn);
+                if ($cliReturn === 0) {
+                    Log::info("cPanel CLI granted {$dbUser} on {$dbName}: ".implode(' ', array_slice($cliOutput ?? [], 0, 8)));
+                }
             }
 
             // 3. Try cPanel UAPI HTTP Request
@@ -576,16 +580,24 @@ class DatabaseProvisioningService
             escapeshellarg($schemaFile)
         );
 
+        if (!function_exists('exec')) {
+            Log::info('exec() function is disabled or unavailable; falling back to PHP PDO import for '.$dbName);
+            return false;
+        }
+
         $prevPwd = getenv('MYSQL_PWD');
         putenv('MYSQL_PWD='.$pass);
 
         try {
             $output = [];
             $code = 0;
-            exec($cmd, $output, $code);
+            @\exec($cmd, $output, $code);
             Log::info('mysql CLI import exit '.$code.' for '.$dbName.': '.implode("\n", array_slice($output, 0, 20)));
 
             return $code === 0;
+        } catch (Throwable $e) {
+            Log::warning('mysql CLI import exception: ' . $e->getMessage());
+            return false;
         } finally {
             if ($prevPwd === false) {
                 putenv('MYSQL_PWD');
@@ -615,7 +627,7 @@ class DatabaseProvisioningService
         }
 
         $which = stripos(PHP_OS, 'WIN') === 0 ? 'where mysql' : 'command -v mysql';
-        $path = @trim((string) shell_exec($which));
+        $path = function_exists('shell_exec') ? @trim((string) \shell_exec($which)) : '';
         $first = $path ? preg_split('/\r\n|\n/', $path)[0] : '';
 
         return ($first && is_file($first)) ? $first : null;
