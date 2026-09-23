@@ -15,6 +15,11 @@ use Throwable;
 class DatabaseProvisioningService
 {
     /**
+     * Cache working database credentials per tenant database (dbName => ['user' => string, 'pass' => string])
+     */
+    protected array $workingCredentials = [];
+
+    /**
      * Create a dynamic database for an agency + product pair.
      * Rule: nooryak.in is main company admin, so never create dynamic DB for nooryak.in!
      */
@@ -149,27 +154,35 @@ class DatabaseProvisioningService
         }
 
         // Connect to the newly created agency DB
-        try {
-            $tgtDsn = "mysql:host={$host};port={$port};dbname={$targetDbName};charset=utf8mb4";
-            $tgtPdo = new \PDO($tgtDsn, $mainUser, $mainPass, [
-                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-                \PDO::ATTR_TIMEOUT            => 10,
-            ]);
-        } catch (\Throwable $e) {
-            // Try with the Sass Admin user as fallback
-            $sassUser = env('DB_USERNAME');
-            $sassPass = env('DB_PASSWORD', '');
+        $workingCreds = $this->workingCredentials[$targetDbName] ?? null;
+        $targetUsersToTry = [];
+        if ($workingCreds) {
+            $targetUsersToTry[] = [$workingCreds['user'], $workingCreds['pass']];
+        }
+        $targetUsersToTry[] = [$mainUser, $mainPass];
+        $targetUsersToTry[] = [env('DB_USERNAME'), env('DB_PASSWORD', '')];
+        $targetUsersToTry[] = [env('DB_USERNAME_admin'), env('DB_PASSWORD_admin', '')];
+        $targetUsersToTry[] = [env('CPANEL_USER', 'nooryak'), env('DB_PASSWORD', '')];
+
+        $tgtPdo = null;
+        foreach ($targetUsersToTry as [$u, $p]) {
+            if (empty($u)) continue;
             try {
                 $tgtDsn = "mysql:host={$host};port={$port};dbname={$targetDbName};charset=utf8mb4";
-                $tgtPdo = new \PDO($tgtDsn, $sassUser, $sassPass, [
+                $tgtPdo = new \PDO($tgtDsn, $u, $p, [
                     \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
                     \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                    \PDO::ATTR_TIMEOUT            => 10,
                 ]);
-            } catch (\Throwable $e2) {
-                Log::warning("seedTemplateUsers: Cannot connect to target DB '{$targetDbName}': " . $e2->getMessage());
-                return;
+                if ($tgtPdo) break;
+            } catch (\Throwable $e) {
+                // Continue trying next candidate DB user
             }
+        }
+
+        if (!$tgtPdo) {
+            Log::warning("seedTemplateUsers: Cannot connect to target DB '{$targetDbName}' with any candidate credentials.");
+            return;
         }
 
         // Get template users from main DB
@@ -430,15 +443,22 @@ class DatabaseProvisioningService
     {
         $cpanelUser     = env('CPANEL_USER', 'nooryak');
         $appUser        = (string) config('database.connections.mysql.username');
-        $launchshopUser = env('LAUNCHSHOP_MAIN_DB_USER', "{$cpanelUser}_launchshop");
+        $launchshopUser = env('LAUNCHSHOP_MAIN_DB_USER', env('DB_USERNAME', "{$cpanelUser}_launchshop"));
 
         $users = array_filter([
             $appUser,
             $launchshopUser,
+            env('DB_USERNAME'),
+            env('DB_USERNAME_admin'),
             "{$cpanelUser}_launchshop",
+            "{$cpanelUser}_productdbuser",
             "{$cpanelUser}_launchshopdevuser",
+            "{$cpanelUser}_sassadmindbuser",
             "{$cpanelUser}_sass_admindb",
             'nooryak_launchshop',
+            'nooryak_productdbuser',
+            'nooryak_launchshopdevuser',
+            'nooryak_sassadmindbuser',
             'nooryak_sass_admindb',
             env('CPANEL_DB_USER'),
             $cpanelUser,
@@ -507,9 +527,76 @@ class DatabaseProvisioningService
         return null;
     }
 
-    protected function tenantConnectionConfig(string $dbName): array
+    /**
+     * Return list of candidate DB credentials to try when connecting to dynamic tenant databases.
+     * On cPanel, secondary users (like nooryak_sassadmindbuser) may not have access to newly created DBs,
+     * while primary users (like nooryak_productdbuser, nooryak_launchshopdevuser, or cPanel user) do.
+     */
+    protected function getCandidateDbCredentials(): array
+    {
+        $candidates = [];
+
+        // 1. Default configured mysql connection username/password
+        $defaultUser = config('database.connections.mysql.username');
+        $defaultPass = config('database.connections.mysql.password');
+        if (!empty($defaultUser)) {
+            $candidates[] = ['user' => (string) $defaultUser, 'pass' => (string) $defaultPass];
+        }
+
+        // 2. DB_USERNAME / DB_PASSWORD (e.g. nooryak_productdbuser / nooryak_launchshopdevuser)
+        $dbUser = env('DB_USERNAME');
+        $dbPass = env('DB_PASSWORD');
+        if (!empty($dbUser)) {
+            $candidates[] = ['user' => (string) $dbUser, 'pass' => (string) $dbPass];
+        }
+
+        // 3. DB_USERNAME_admin / DB_PASSWORD_admin (e.g. nooryak_sassadmindbuser)
+        $adminUser = env('DB_USERNAME_admin');
+        $adminPass = env('DB_PASSWORD_admin');
+        if (!empty($adminUser)) {
+            $candidates[] = ['user' => (string) $adminUser, 'pass' => (string) $adminPass];
+        }
+
+        // 4. LAUNCHSHOP_MAIN_DB_USER / LAUNCHSHOP_MAIN_DB_PASS
+        $mainUser = env('LAUNCHSHOP_MAIN_DB_USER');
+        $mainPass = env('LAUNCHSHOP_MAIN_DB_PASS');
+        if (!empty($mainUser)) {
+            $candidates[] = ['user' => (string) $mainUser, 'pass' => (string) $mainPass];
+        }
+
+        // 5. CPANEL_USER / CPANEL_PASSWORD or DB_PASSWORD (e.g. nooryak)
+        $cpUser = env('CPANEL_USER', 'nooryak');
+        $cpPass = env('CPANEL_PASSWORD') ?: env('DB_PASSWORD');
+        if (!empty($cpUser)) {
+            $candidates[] = ['user' => (string) $cpUser, 'pass' => (string) $cpPass];
+        }
+
+        // Deduplicate candidates by username
+        $unique = [];
+        foreach ($candidates as $c) {
+            $u = $c['user'];
+            if (!empty($u) && !isset($unique[$u])) {
+                $unique[$u] = $c;
+            }
+        }
+
+        return array_values($unique);
+    }
+
+    protected function tenantConnectionConfig(string $dbName, ?string $user = null, ?string $pass = null): array
     {
         $mysql = config('database.connections.mysql');
+
+        if ($user === null && isset($this->workingCredentials[$dbName])) {
+            $user = $this->workingCredentials[$dbName]['user'];
+            $pass = $this->workingCredentials[$dbName]['pass'];
+        }
+
+        if ($user !== null) {
+            $mysql['username'] = $user;
+            $mysql['password'] = (string) $pass;
+        }
+
         $options = $mysql['options'] ?? [];
 
         if (extension_loaded('pdo_mysql')) {
@@ -530,22 +617,30 @@ class DatabaseProvisioningService
     protected function waitForTenantConnection(string $dbName): void
     {
         $lastError = null;
+        $candidates = $this->getCandidateDbCredentials();
 
         for ($attempt = 1; $attempt <= 10; $attempt++) {
-            try {
-                config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
-                DB::purge('target_tenant_db');
-                DB::reconnect('target_tenant_db');
-                DB::connection('target_tenant_db')->getPdo();
-                return;
-            } catch (Throwable $e) {
-                $lastError = $e;
-                Log::warning("Tenant DB connect attempt {$attempt}/10 for {$dbName}: ".$e->getMessage());
-                if (str_contains($e->getMessage(), '1044') || str_contains($e->getMessage(), 'Access denied')) {
-                    $this->grantAppUserOnDatabase($dbName);
+            foreach ($candidates as $candidate) {
+                try {
+                    $config = $this->tenantConnectionConfig($dbName, $candidate['user'], $candidate['pass']);
+                    config(['database.connections.target_tenant_db' => $config]);
+                    DB::purge('target_tenant_db');
+                    DB::reconnect('target_tenant_db');
+                    DB::connection('target_tenant_db')->getPdo();
+
+                    // Working credentials found! Cache them for subsequent operations on $dbName
+                    $this->workingCredentials[$dbName] = $candidate;
+                    Log::info("Connected to tenant DB '{$dbName}' using user '{$candidate['user']}' (attempt {$attempt})");
+                    return;
+                } catch (Throwable $e) {
+                    $lastError = $e;
+                    Log::warning("Tenant DB connect attempt {$attempt} failed for {$dbName} with user '{$candidate['user']}': ".$e->getMessage());
                 }
-                usleep(700000);
             }
+
+            // Attempt to grant access via cPanel UAPI or direct SQL
+            $this->grantAppUserOnDatabase($dbName);
+            usleep(500000);
         }
 
         throw new RuntimeException("Could not connect to {$dbName}: ".($lastError?->getMessage() ?? 'unknown error'));
@@ -568,10 +663,11 @@ class DatabaseProvisioningService
             return false;
         }
 
+        $creds = $this->workingCredentials[$dbName] ?? null;
         $host = config('database.connections.mysql.host', '127.0.0.1');
         $port = config('database.connections.mysql.port', '3306');
-        $user = config('database.connections.mysql.username');
-        $pass = (string) config('database.connections.mysql.password');
+        $user = $creds['user'] ?? config('database.connections.mysql.username');
+        $pass = (string) ($creds['pass'] ?? config('database.connections.mysql.password'));
 
         $cmd = sprintf(
             '%s --host=%s --port=%s --user=%s --default-character-set=utf8mb4 --force %s < %s 2>&1',
