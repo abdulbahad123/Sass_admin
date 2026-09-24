@@ -34,12 +34,13 @@ class DatabaseProvisioningService
         }
 
         $cpanelUser = env('CPANEL_USER', 'nooryak');
-        $agencySlug = Str::slug($agency->name);
+        $agencyDomain = !empty($agency->custom_domain) ? $agency->clean_domain : ($agency->slug ?: $agency->name);
+        $agencySlug = Str::slug($agencyDomain);
         $productSlug = Str::slug($product->slug ?? $product->name);
 
-        // Sanitize name for MySQL DB format
-        $cleanAgencySlug = str_replace('-', '_', substr($agencySlug, 0, 16));
-        $cleanProductSlug = str_replace('-', '_', substr($productSlug, 0, 12));
+        // Sanitize domain/slug for MySQL DB format
+        $cleanAgencySlug = str_replace(['-', '.'], '_', substr($agencySlug, 0, 16));
+        $cleanProductSlug = str_replace(['-', '.'], '_', substr($productSlug, 0, 12));
 
         $rawDbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
         $dbName = substr($rawDbName, 0, 32);
