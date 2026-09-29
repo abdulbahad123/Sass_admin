@@ -34,16 +34,20 @@ class DatabaseProvisioningService
         }
 
         $cpanelUser = env('CPANEL_USER', 'nooryak');
-        $agencyDomain = !empty($agency->custom_domain) ? $agency->clean_domain : ($agency->slug ?: $agency->name);
-        $agencySlug = Str::slug($agencyDomain);
-        $productSlug = Str::slug($product->slug ?? $product->name);
+        
+        // Derive clean agency slug (strip domain extensions like .in, .com so youverse.in -> youverse)
+        $rawAgencyName = !empty($agency->slug) ? $agency->slug : ($agency->name ?? 'agency');
+        $cleanAgencyName = preg_replace('/\.(in|com|org|net|co\.in|top|dev)$/i', '', strtolower(trim($rawAgencyName)));
+        $cleanAgencyName = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $cleanAgencyName);
+        $cleanAgencySlug = str_replace('-', '_', Str::slug($cleanAgencyName));
+        $cleanAgencySlug = preg_replace('/[^a-z0-9_]/', '', $cleanAgencySlug);
 
-        // Sanitize domain/slug for MySQL DB format
-        $cleanAgencySlug = str_replace(['-', '.'], '_', substr($agencySlug, 0, 16));
-        $cleanProductSlug = str_replace(['-', '.'], '_', substr($productSlug, 0, 12));
+        // Standardized product suffix: launchshop or webbuild
+        $prodSlugLower = strtolower($product->slug ?? $product->name ?? '');
+        $isWb = in_array($prodSlugLower, ['website-builder', 'websitebuilder', 'webbuild']);
+        $cleanProductSlug = $isWb ? 'webbuild' : 'launchshop';
 
-        $rawDbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
-        $dbName = substr($rawDbName, 0, 32);
+        $dbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
 
         $this->createDatabase($dbName);
 
