@@ -167,7 +167,7 @@ class Agency extends Model
     public function getCleanDomainAttribute()
     {
         if (empty($this->custom_domain)) {
-            return 'nooryak.in';
+            return 'saasreselling.com';
         }
         $domain = preg_replace('#^https?://#', '', trim($this->custom_domain));
         return rtrim($domain, '/');

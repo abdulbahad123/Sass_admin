@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ (!empty($isMainDomain) ? 'Platform Portal Access — Nooryak' : (isset($agency) && $agency ? $agency->name . ' Portal Access' : 'Agency Portal Access')) }}</title>
+    <title>{{ (!empty($isMainDomain) ? 'Platform Portal Access — SaaSReselling' : (isset($agency) && $agency ? $agency->name . ' Portal Access' : 'Agency Portal Access')) }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -107,7 +107,7 @@
             </form>
 
             @if(!empty($isMainDomain))
-                <!-- Demo Quick Fill ONLY shown on main domain (nooryak.in / localhost) -->
+                <!-- Demo Quick Fill ONLY shown on main domain (saasreselling.com / localhost) -->
                 <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
                     <p class="text-xs text-slate-400 font-medium text-center">Click a Demo Account to Fill Credentials:</p>
                     <div class="grid grid-cols-3 gap-2 text-xs">

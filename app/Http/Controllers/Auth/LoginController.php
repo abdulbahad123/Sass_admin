@@ -26,8 +26,8 @@ class LoginController extends Controller
         $host = strtolower($request->getHost());
         $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-        // Check if current domain is main platform domain (nooryak.in or localhost)
-        $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+        // Check if current domain is main platform domain (saasreselling.com or localhost)
+        $isMainDomain = str_contains($cleanHost, 'saasreselling') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
         if ($isMainDomain) {
             $agency = null;
@@ -76,14 +76,14 @@ class LoginController extends Controller
 
             $host = strtolower($request->getHost());
             $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
-            $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+            $isMainDomain = str_contains($cleanHost, 'saasreselling') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
             $isAgencyPortal = $request->boolean('is_agency_portal') || (!$isMainDomain);
 
             // On agency domains (e.g. maturednature.com), restrict login strictly to White Label Agency users
             if ($isAgencyPortal && !$user->isWhiteLabelAgency()) {
                 Auth::logout();
-                return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please log in via nooryak.in']);
+                return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please log in via saasreselling.com']);
             }
 
             if (!$user->isSuperAdmin() && !$user->isMasterAgency() && !$user->isWhiteLabelAgency()) {

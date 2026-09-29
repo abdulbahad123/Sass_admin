@@ -16,7 +16,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     $host = strtolower($request->getHost());
     $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-    $isMainDomain = str_contains($cleanHost, 'nooryak') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+    $isMainDomain = str_contains($cleanHost, 'saasreselling') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
     if ($isMainDomain) {
         return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->show();
