@@ -28,8 +28,8 @@ class DatabaseProvisioningService
         @set_time_limit(0);
         @ini_set('memory_limit', '512M');
 
-        // 1. Skip main company agency / saasreselling.com / nooryak.in
-        if ($agency->clean_domain === 'saasreselling.com' || $agency->clean_domain === 'nooryak.in' || $agency->type === 'super_admin') {
+        // Skip only for internal system super_admin if no custom agency domain is set
+        if ($agency->type === 'super_admin' && empty($agency->custom_domain)) {
             return env('LAUNCHSHOP_MAIN_DB', env('CPANEL_USER', 'nooryak') . '_launchshop');
         }
 
