@@ -60,8 +60,14 @@ class WhiteLabelDashboardController extends Controller
                 $ap->db_name ?? null,
                 "{$cpanelUser}_ps_{$agencySlug}_{$prodSlug}",
                 "{$cpanelUser}_ps_{$agencySlug}_launchshop",
+                "bazaarwa_ps_{$agencySlug}_{$prodSlug}",
+                "bazaarwa_ps_{$agencySlug}_launchshop",
                 "nooryak_ps_{$agencySlug}_{$prodSlug}",
                 "nooryak_ps_{$agencySlug}_launchshop",
+                "bazaarwa_launchshop",
+                "nooryak_launchshop",
+                env('DB_DATABASE'),
+                env('LAUNCHSHOP_MAIN_DB'),
             ]));
 
             $foundDb = null;
