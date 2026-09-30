@@ -299,7 +299,7 @@ class DatabaseProvisioningService
         // Ensure user_item_images dataset is fully populated in target agency DB
         try {
             $userImgCount = (int) $tgtPdo->query("SELECT COUNT(*) FROM user_item_images")->fetchColumn();
-            if ($userImgCount === 0) {
+            if ($userImgCount < 100) {
                 $sqlPath = database_path('schema/user_item_images.sql');
                 if (!file_exists($sqlPath)) {
                     $sqlPath = base_path('user_item_images.sql');
@@ -311,7 +311,9 @@ class DatabaseProvisioningService
                 if (file_exists($sqlPath)) {
                     $sqlContent = file_get_contents($sqlPath);
                     if (!empty($sqlContent)) {
+                        $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=0;');
                         $tgtPdo->exec($sqlContent);
+                        $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=1;');
                         Log::info("seedTemplateUsers: Automatically imported user_item_images.sql into new agency DB {$targetDbName}.");
                     }
                 }
