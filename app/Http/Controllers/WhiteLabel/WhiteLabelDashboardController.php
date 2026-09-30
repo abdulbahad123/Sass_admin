@@ -79,6 +79,7 @@ class WhiteLabelDashboardController extends Controller
 
             $countInThisDb = 0;
             $dbOnline = false;
+            $totalDbMrr = 0;
 
             if ($foundDb) {
                 try {
@@ -92,7 +93,6 @@ class WhiteLabelDashboardController extends Controller
                         })
                         ->get();
                     $dbOnline = true;
-                    $totalDbMrr = 0;
                     foreach ($tenantUsers as $tu) {
                         $name = trim(($tu->first_name ?? '') . ' ' . ($tu->last_name ?? ''));
                         if (empty($name)) {
