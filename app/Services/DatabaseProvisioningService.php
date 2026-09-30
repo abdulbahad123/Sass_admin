@@ -296,70 +296,26 @@ class DatabaseProvisioningService
             }
         }
 
-        // Ensure user_item_images dataset is fully populated in target agency DB
-        try {
-            $userImgCount = (int) $tgtPdo->query("SELECT COUNT(*) FROM user_item_images")->fetchColumn();
-            if ($userImgCount < 100) {
-                $sqlPath = database_path('schema/user_item_images.sql');
-                if (!file_exists($sqlPath)) {
-                    $sqlPath = base_path('user_item_images.sql');
-                }
-                if (!file_exists($sqlPath) && file_exists('d:/xamp/htdocs/launchshop_dev/user_item_images.sql')) {
-                    $sqlPath = 'd:/xamp/htdocs/launchshop_dev/user_item_images.sql';
-                }
-
-                if (file_exists($sqlPath)) {
-                    $sqlContent = file_get_contents($sqlPath);
-                    if (!empty($sqlContent)) {
-                        $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=0;');
-                        $tgtPdo->exec($sqlContent);
-                        $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=1;');
-                        Log::info("seedTemplateUsers: Automatically imported user_item_images.sql into new agency DB {$targetDbName}.");
-                    }
-                }
-            }
-        } catch (\Throwable $e) {
-            Log::warning("seedTemplateUsers: Error importing user_item_images.sql into {$targetDbName}: " . $e->getMessage());
-        }
-
-        // Ensure every item in user_items has at least 4 slider images in user_item_images table in target DB
+        // Ensure user_items have clean item-matched slider images if thumbnail exists
         try {
             $itemsWithoutSliders = $tgtPdo->query("
-                SELECT i.id 
+                SELECT i.id, i.thumbnail 
                 FROM user_items i 
                 LEFT JOIN user_item_images img ON i.id = img.item_id 
-                GROUP BY i.id 
-                HAVING COUNT(img.id) < 4
-            ")->fetchAll(\PDO::FETCH_COLUMN);
+                WHERE img.id IS NULL AND i.thumbnail IS NOT NULL AND i.thumbnail != ''
+            ")->fetchAll(\PDO::FETCH_ASSOC);
 
             if (!empty($itemsWithoutSliders)) {
-                $availableSliderImages = $tgtPdo->query("SELECT DISTINCT image FROM user_item_images WHERE image IS NOT NULL AND image != '' LIMIT 10")->fetchAll(\PDO::FETCH_COLUMN);
-
-                if (empty($availableSliderImages)) {
-                    $availableSliderImages = [
-                        'fa6f4603b445de7eceaa9a5f5307cc600d4a199e.png',
-                        '29c6d979278edc97f36301b51f73b4feeff7d18f.png',
-                        'e2cf46a7b5dbe2044369be7ffbdc87195b2f14f2.png',
-                        'ec9865898fe0aa6a81fece45b43989975774dc96.png',
-                        'abb4859aab9e3612fd6e175ab080642324f48a6e.png'
-                    ];
-                }
-
                 $insertImgStmt = $tgtPdo->prepare("INSERT INTO user_item_images (item_id, image, created_at, updated_at) VALUES (?, ?, NOW(), NOW())");
-
-                foreach ($itemsWithoutSliders as $itemId) {
-                    $existingCount = (int) $tgtPdo->query("SELECT COUNT(*) FROM user_item_images WHERE item_id = " . (int)$itemId)->fetchColumn();
-                    $needed = 4 - $existingCount;
-                    
-                    for ($n = 0; $n < $needed; $n++) {
-                        $imgToInsert = $availableSliderImages[$n % count($availableSliderImages)];
-                        $insertImgStmt->execute([$itemId, $imgToInsert]);
+                foreach ($itemsWithoutSliders as $item) {
+                    $thumbName = basename(parse_url($item['thumbnail'], PHP_URL_PATH));
+                    if (!empty($thumbName)) {
+                        $insertImgStmt->execute([$item['id'], $thumbName]);
                     }
                 }
-                Log::info("seedTemplateUsers: Seeded missing slider images into user_item_images table for " . count($itemsWithoutSliders) . " items in {$targetDbName}.");
             }
         } catch (\Throwable $e) {
-            Log::warning("seedTemplateUsers: Error populating missing slider images: " . $e->getMessage());
+            Log::warning("seedTemplateUsers: Error setting thumbnail slider images: " . $e->getMessage());
         }
 
         $tgtPdo->exec('SET FOREIGN_KEY_CHECKS=1');
