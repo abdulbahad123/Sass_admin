@@ -296,6 +296,30 @@ class DatabaseProvisioningService
             }
         }
 
+        // Ensure user_item_images dataset is fully populated in target agency DB
+        try {
+            $userImgCount = (int) $tgtPdo->query("SELECT COUNT(*) FROM user_item_images")->fetchColumn();
+            if ($userImgCount === 0) {
+                $sqlPath = database_path('schema/user_item_images.sql');
+                if (!file_exists($sqlPath)) {
+                    $sqlPath = base_path('user_item_images.sql');
+                }
+                if (!file_exists($sqlPath) && file_exists('d:/xamp/htdocs/launchshop_dev/user_item_images.sql')) {
+                    $sqlPath = 'd:/xamp/htdocs/launchshop_dev/user_item_images.sql';
+                }
+
+                if (file_exists($sqlPath)) {
+                    $sqlContent = file_get_contents($sqlPath);
+                    if (!empty($sqlContent)) {
+                        $tgtPdo->exec($sqlContent);
+                        Log::info("seedTemplateUsers: Automatically imported user_item_images.sql into new agency DB {$targetDbName}.");
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning("seedTemplateUsers: Error importing user_item_images.sql into {$targetDbName}: " . $e->getMessage());
+        }
+
         // Ensure every item in user_items has at least 4 slider images in user_item_images table in target DB
         try {
             $itemsWithoutSliders = $tgtPdo->query("
