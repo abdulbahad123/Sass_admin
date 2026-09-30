@@ -43,8 +43,8 @@ class DatabaseProvisioningService
         $cleanAgencySlug = preg_replace('/[^a-z0-9_]/', '', $cleanAgencySlug);
 
         // Standardized product suffix: launchshop or webbuild
-        $prodSlugLower = strtolower($product->slug ?? $product->name ?? '');
-        $isWb = in_array($prodSlugLower, ['website-builder', 'websitebuilder', 'webbuild']);
+        $productSlug = strtolower($product->slug ?? $product->name ?? 'launchshop');
+        $isWb = in_array($productSlug, ['website-builder', 'websitebuilder', 'webbuild']);
         $cleanProductSlug = $isWb ? 'webbuild' : 'launchshop';
 
         $dbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
