@@ -24,9 +24,15 @@ class LoginController extends Controller
         }
 
         $host = strtolower($request->getHost());
+
+        // Disconnect launchshop.in from Sass_admin — redirect to standalone launchshop.in app
+        if (str_contains($host, 'launchshop.in')) {
+            return redirect()->away('https://launchshop.in' . $request->getRequestUri(), 301);
+        }
+
         $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-        $platformHosts = ['saasreselling', 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1'];
+        $platformHosts = ['saasreselling', 'nooryak.in', 'localhost', '127.0.0.1'];
         $isMainDomain = false;
         foreach ($platformHosts as $pHost) {
             if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {

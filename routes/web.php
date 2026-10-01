@@ -14,9 +14,28 @@ use Illuminate\Support\Facades\Route;
 // Public Agency Landing Page & Legal Routes
 Route::get('/', function (\Illuminate\Http\Request $request) {
     $host = strtolower($request->getHost());
+
+    // Disconnect launchshop.in from Sass_admin — redirect to standalone launchshop.in app
+    if (str_contains($host, 'launchshop.in')) {
+        $parts = explode('.', $host);
+        if (count($parts) >= 3 && !in_array($parts[0], ['www', 'app', 'launchshop', 'admin'])) {
+            $subCandidate = strtolower($parts[0]);
+            $themeAliasMap = [
+                'ecomgrocery' => 'grocery2',
+                'grocery'     => 'vegetables',
+                'multipurpose'=> 'manti',
+            ];
+            if (isset($themeAliasMap[$subCandidate])) {
+                $subCandidate = $themeAliasMap[$subCandidate];
+            }
+            return redirect()->away('https://launchshop.in/' . $subCandidate, 301);
+        }
+        return redirect()->away('https://launchshop.in' . $request->getRequestUri(), 301);
+    }
+
     $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-    $platformHosts = ['saasreselling', 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1'];
+    $platformHosts = ['saasreselling', 'nooryak.in', 'localhost', '127.0.0.1'];
     $isMainDomain = false;
     foreach ($platformHosts as $pHost) {
         if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {
