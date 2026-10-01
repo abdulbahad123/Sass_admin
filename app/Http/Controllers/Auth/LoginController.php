@@ -32,7 +32,7 @@ class LoginController extends Controller
 
         $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-        $platformHosts = ['saasreselling', 'nooryak.in', 'localhost', '127.0.0.1'];
+        $platformHosts = ['saasreselling', 'localhost', '127.0.0.1'];
         $isMainDomain = false;
         foreach ($platformHosts as $pHost) {
             if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {
@@ -97,7 +97,7 @@ class LoginController extends Controller
             $host = strtolower($request->getHost());
             $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
             
-            $platformHosts = ['saasreselling', 'launchshop.in', 'nooryak.in', 'localhost', '127.0.0.1'];
+            $platformHosts = ['saasreselling', 'localhost', '127.0.0.1'];
             $isMainDomain = false;
             foreach ($platformHosts as $pHost) {
                 if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {
