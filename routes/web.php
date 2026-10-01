@@ -16,22 +16,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     $host = strtolower($request->getHost());
     $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-    $platformHosts = array_filter([
-        'saasreselling',
-        'launchshop.in',
-        'nooryak.in',
-        'localhost',
-        '127.0.0.1',
-        strtolower((string) env('WEBSITE_HOST', '')),
-    ]);
-
-    $isMainDomain = false;
-    foreach ($platformHosts as $pHost) {
-        if (!empty($pHost) && (str_contains($cleanHost, $pHost) || str_contains($host, $pHost))) {
-            $isMainDomain = true;
-            break;
-        }
-    }
+    $isMainDomain = str_contains($cleanHost, 'saasreselling') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
 
     if ($isMainDomain) {
         return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->show();
