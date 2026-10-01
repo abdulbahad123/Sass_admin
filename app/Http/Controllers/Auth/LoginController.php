@@ -26,8 +26,22 @@ class LoginController extends Controller
         $host = strtolower($request->getHost());
         $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
-        // Check if current domain is main platform domain (saasreselling.com or localhost)
-        $isMainDomain = str_contains($cleanHost, 'saasreselling') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+        $platformHosts = array_filter([
+            'saasreselling',
+            'launchshop.in',
+            'nooryak.in',
+            'localhost',
+            '127.0.0.1',
+            strtolower((string) env('WEBSITE_HOST', '')),
+        ]);
+
+        $isMainDomain = false;
+        foreach ($platformHosts as $pHost) {
+            if (!empty($pHost) && (str_contains($cleanHost, $pHost) || str_contains($host, $pHost))) {
+                $isMainDomain = true;
+                break;
+            }
+        }
 
         if ($isMainDomain) {
             $agency = null;
@@ -42,7 +56,7 @@ class LoginController extends Controller
                       ->orWhere('custom_domain', 'like', "%{$cleanHost}%");
                 })->first();
 
-            if (!$agency) {
+            if (!$agency && !$isMainDomain) {
                 $agency = Agency::where('type', 'white_label')->first() ?? Agency::first();
             }
 
@@ -53,7 +67,7 @@ class LoginController extends Controller
                     ?? \App\Models\User::where('role', 'agency')->first();
             }
 
-            $isAgencyPortal = true;
+            $isAgencyPortal = ($agency !== null);
         }
 
         return view('auth.login', compact('agency', 'agencyUser', 'isAgencyPortal', 'isMainDomain'));
@@ -74,9 +88,22 @@ class LoginController extends Controller
                 return back()->withErrors(['email' => 'Account is inactive. Please contact support.']);
             }
 
-            $host = strtolower($request->getHost());
-            $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
-            $isMainDomain = str_contains($cleanHost, 'saasreselling') || str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+            $platformHosts = array_filter([
+                'saasreselling',
+                'launchshop.in',
+                'nooryak.in',
+                'localhost',
+                '127.0.0.1',
+                strtolower((string) env('WEBSITE_HOST', '')),
+            ]);
+
+            $isMainDomain = false;
+            foreach ($platformHosts as $pHost) {
+                if (!empty($pHost) && (str_contains($cleanHost, $pHost) || str_contains($host, $pHost))) {
+                    $isMainDomain = true;
+                    break;
+                }
+            }
 
             $isAgencyPortal = $request->boolean('is_agency_portal') || (!$isMainDomain);
 
