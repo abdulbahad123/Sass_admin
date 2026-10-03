@@ -171,10 +171,6 @@
                     <a href="{{ $data['lp_book_demo_url'] }}" class="px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm">
                         Book a Demo
                     </a>
-                    <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient px-6 py-2.5 rounded-full text-white text-xs font-bold shadow-lg shadow-orange-500/30 flex items-center space-x-2">
-                        <span>{{ $data['lp_cta_button_text'] }}</span>
-                        <i class="fas fa-arrow-right text-[10px]"></i>
-                    </a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -193,9 +189,6 @@
             <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
             <div class="pt-4 border-t border-slate-100 space-y-2">
                 <a href="{{ $data['lp_book_demo_url'] }}" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 text-xs font-bold text-slate-700">Book a Demo</a>
-                <a href="{{ $data['lp_cta_button_url'] }}" class="block w-full text-center btn-gradient text-white px-4 py-3 rounded-full text-xs font-bold shadow-md">
-                    {{ $data['lp_cta_button_text'] }}
-                </a>
             </div>
         </div>
     </header>
@@ -459,11 +452,11 @@
         </div>
     </section>
 
-    <!-- SECTION 5: OUR PRODUCTS (Task 3: Mobile view 2 columns per row) -->
-    <section id="products" class="py-10 lg:py-14 bg-white reveal">
+    <!-- SECTION 5: OUR PRODUCTS (First Reference Layout for Products + Glassmorphism Coming Soon Cards) -->
+    <section id="products" class="py-12 lg:py-16 bg-white reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+            <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
                 <span class="badge-pill mx-auto">{{ $data['lp_products_tag'] }}</span>
                 <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
                     {{ $data['lp_products_title'] }}
@@ -473,71 +466,280 @@
                 </p>
             </div>
 
-            <!-- Dynamic Super Admin Active Products Grid (Task 3: 2 columns per row on mobile) -->
-            @php
-                $dbProds = $data['db_products'] ?? collect();
-            @endphp
-            @if($dbProds->count() > 0)
-                <div class="grid grid-cols-2 sm:grid-cols-2 {{ $dbProds->count() > 2 ? 'lg:grid-cols-3' : 'max-w-4xl mx-auto' }} gap-3 sm:gap-6">
-                    @foreach($dbProds as $prod)
-                    @php
-                        $pIcon = trim($prod->icon ?? '');
-                        if (!$pIcon || $pIcon === 'fas fa-store' || $pIcon === 'fas fa-shopping-bag' || $pIcon === 'fas fa-box') {
-                            $slugLower = strtolower(($prod->slug ?? '') . ' ' . ($prod->name ?? ''));
-                            if (str_contains($slugLower, 'launch') || str_contains($slugLower, 'shop') || str_contains($slugLower, 'store')) {
-                                $pIcon = 'fas fa-bag-shopping';
-                            } elseif (str_contains($slugLower, 'website') || str_contains($slugLower, 'builder')) {
-                                $pIcon = 'fas fa-cubes';
-                            } elseif (str_contains($slugLower, 'review') || str_contains($slugLower, 'gmb')) {
-                                $pIcon = 'fas fa-star';
-                            } elseif (str_contains($slugLower, 'menu') || str_contains($slugLower, 'qr')) {
-                                $pIcon = 'fas fa-utensils';
-                            } elseif (str_contains($slugLower, 'vcard') || str_contains($slugLower, 'nfc') || str_contains($slugLower, 'card')) {
-                                $pIcon = 'fas fa-id-card';
-                            } elseif (str_contains($slugLower, 'loyalty') || str_contains($slugLower, 'reward')) {
-                                $pIcon = 'fas fa-gift';
-                            } else {
-                                $pIcon = 'fas fa-store';
-                            }
-                        }
-                    @endphp
-                    <div class="p-3.5 sm:p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:bg-white hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col justify-between group">
+            <!-- Products Grid: First Reference Layout (2 Active Products + 2 Coming Soon Glassmorphism Cards) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+
+                <!-- CARD 1: LAUNCHSHOP ECOM BUILDER (Active Product 1 - Reference Image 1 Layout) -->
+                <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col md:flex-row group relative">
+                    <!-- Left Panel: Soft Warm Peach Tint -->
+                    <div class="md:w-5/12 bg-gradient-to-b from-[#fff6f0] to-[#fff1e8] p-6 sm:p-7 border-b md:border-b-0 md:border-r border-orange-100/80 flex flex-col justify-between text-left">
                         <div>
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl btn-gradient flex items-center justify-center text-white text-base sm:text-xl shadow-md shadow-orange-500/20 mb-3 sm:mb-5">
-                                <i class="{{ $pIcon }}"></i>
-                            </div>
-                            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-100/80 px-2 sm:px-2.5 py-0.5 rounded-full inline-block mb-1.5 sm:mb-2">Active Product</span>
-                            <h4 class="font-space font-extrabold text-sm sm:text-lg text-slate-900 mb-1 sm:mb-2 group-hover:text-[#ff3d00] transition-colors leading-snug">{{ $prod->name }}</h4>
-                            <p class="text-[11px] sm:text-xs text-slate-600 leading-snug sm:leading-relaxed mb-4 sm:mb-6 font-medium line-clamp-3 sm:line-clamp-none">{{ $prod->tagline ?: $prod->description }}</p>
-                        </div>
-                        <a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="inline-flex items-center text-[11px] sm:text-xs font-bold text-[#ff3d00] hover:text-orange-700 group/link mt-auto pt-2.5 sm:pt-3 border-t border-slate-200/60">
-                            <span>Explore {{ $prod->name }}</span>
-                            <i class="fas fa-arrow-right text-[9px] sm:text-[10px] ml-1 sm:ml-1.5 transition-transform group-hover/link:translate-x-1"></i>
-                        </a>
-                    </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6">
-                    @if(is_array($data['lp_products_grid']))
-                        @foreach($data['lp_products_grid'] as $prod)
-                        <div class="p-3.5 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-xl transition-all duration-200 flex flex-col justify-between">
-                            <div>
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white text-sm sm:text-base shadow-md mb-3 sm:mb-4 btn-gradient">
-                                    <i class="{{ $prod['icon'] ?? 'fas fa-box' }}"></i>
+                            <!-- Brand Logo Badge -->
+                            <div class="inline-flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-orange-200/80 shadow-sm mb-4">
+                                <div class="w-6 h-6 rounded-lg bg-[#ff3d00] text-white flex items-center justify-center text-xs font-bold">
+                                    <i class="fas fa-bag-shopping"></i>
                                 </div>
-                                <h4 class="font-space font-bold text-xs sm:text-sm text-slate-900 mb-1 sm:mb-2 leading-snug">{{ $prod['title'] ?? '' }}</h4>
-                                <p class="text-[11px] sm:text-xs text-slate-600 leading-snug sm:leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">{{ $prod['desc'] ?? '' }}</p>
+                                <span class="font-space font-extrabold text-xs text-slate-900 tracking-tight uppercase">ECOM BUILDER</span>
                             </div>
-                            <a href="{{ $prod['link'] ?? '/login' }}" class="inline-flex items-center text-[11px] sm:text-xs font-bold text-[#ff3d00] hover:text-orange-700 group mt-auto">
-                                <span>Learn More</span>
-                                <i class="fas fa-arrow-right text-[9px] sm:text-[10px] ml-1 sm:ml-1.5 transition-transform group-hover:translate-x-1"></i>
-                            </a>
+
+                            <span class="block text-[11px] font-extrabold tracking-widest text-[#ff3d00] uppercase mb-1">BUILD • SELL • GROW</span>
+                            <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 mb-2 leading-tight">Complete E-Commerce Solution</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-normal">Launch your online store, manage products, payments, and customers — all in one place.</p>
+                            
+                            <!-- Product Image Mockup -->
+                            <div class="mt-5 relative">
+                                <img src="{{ asset('/assets/images/user_dashboard.png') }}" alt="Launchshop E-Commerce Solution" class="w-full h-auto rounded-2xl shadow-md border border-orange-200/60 object-cover transform group-hover:scale-[1.02] transition-transform duration-300">
+                            </div>
                         </div>
-                        @endforeach
-                    @endif
+
+                        <div class="flex items-center space-x-2 mt-5 text-[11px] font-bold text-slate-600 border-t border-orange-200/50 pt-3">
+                            <i class="fas fa-store text-[#ff3d00]"></i>
+                            <span>Trusted by 10,000+ Sellers</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Feature Details & Action -->
+                    <div class="md:w-7/12 bg-white p-6 sm:p-7 flex flex-col justify-between text-left">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-orange-100/90 text-[#ff3d00] text-[11px] font-extrabold px-3 py-1 rounded-md uppercase tracking-wide border border-orange-200/80">STARTER</span>
+                                <span class="text-xs font-bold text-slate-500">For Solopreneurs</span>
+                            </div>
+
+                            <h4 class="font-space font-extrabold text-2xl text-slate-900 mb-1">Starter Growth</h4>
+                            <p class="text-xs text-slate-500 mb-5 leading-relaxed">Everything you need to start & scale your online store business.</p>
+
+                            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
+
+                            <ul class="space-y-2.5 mb-6 text-xs text-slate-700 font-medium">
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>1 Online Store (Product Module)</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Up to 1,000 Orders / Customers</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Inventory & Order Management</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Basic Analytics & Reports</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Standard Email Support</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Custom Domain Setup</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <a href="{{ url('/login') }}" class="btn-gradient w-full py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                                <span>Explore Launchshop</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                            <p class="text-center text-[11px] text-slate-400 font-medium mt-3">No credit card required • Setup in minutes</p>
+                        </div>
+                    </div>
                 </div>
-            @endif
+
+                <!-- CARD 2: WEBSITE BUILDER (Active Product 2 - Reference Image 1 Layout) -->
+                <div class="bg-white rounded-3xl border-2 border-blue-400/80 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col md:flex-row group relative">
+                    <!-- Left Panel: Soft Cool Blue Tint -->
+                    <div class="md:w-5/12 bg-gradient-to-b from-[#f0f7ff] to-[#e4f1ff] p-6 sm:p-7 border-b md:border-b-0 md:border-r border-blue-100/80 flex flex-col justify-between text-left">
+                        <div>
+                            <!-- Brand Logo Badge -->
+                            <div class="inline-flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-blue-200/80 shadow-sm mb-4">
+                                <div class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <span class="font-space font-extrabold text-xs text-slate-900 tracking-tight uppercase">WebsiteBuilder</span>
+                            </div>
+
+                            <span class="block text-[11px] font-extrabold tracking-widest text-blue-600 uppercase mb-1">DESIGN • BUILD • GROW</span>
+                            <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 mb-2 leading-tight">Professional Website Solution</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-normal">Create stunning websites with ease, no coding required.</p>
+                            
+                            <!-- Product Image Mockup -->
+                            <div class="mt-5 relative">
+                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" alt="Website Builder Solution" class="w-full h-auto rounded-2xl shadow-md border border-blue-200/60 object-cover transform group-hover:scale-[1.02] transition-transform duration-300">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-2 mt-5 text-[11px] font-bold text-slate-600 border-t border-blue-200/50 pt-3">
+                            <i class="fas fa-globe text-blue-600"></i>
+                            <span>Trusted by 50,000+ Creators</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Feature Details & Action -->
+                    <div class="md:w-7/12 bg-white p-6 sm:p-7 flex flex-col justify-between text-left">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-blue-100/90 text-blue-700 text-[11px] font-extrabold px-3 py-1 rounded-md uppercase tracking-wide border border-blue-200/80">PRO BUSINESS</span>
+                                <span class="text-xs font-bold text-blue-600">Most Popular</span>
+                            </div>
+
+                            <h4 class="font-space font-extrabold text-2xl text-slate-900 mb-1">Professional Pro</h4>
+                            <p class="text-xs text-slate-500 mb-5 leading-relaxed">All the tools to create, manage, and grow your professional website.</p>
+
+                            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
+
+                            <ul class="space-y-2.5 mb-6 text-xs text-slate-700 font-medium">
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Unlimited Pages & Websites</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Drag & Drop Website Builder</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Custom Domain & SSL</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>SEO Tools & Analytics</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>Priority Email & Live Support</span>
+                                </li>
+                                <li class="flex items-center space-x-2.5">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                    <span>AI Templates & Widgets</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <a href="{{ url('/login') }}" class="w-full bg-blue-600 hover:bg-blue-700 py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                                <span>Explore Website Builder</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                            <p class="text-center text-[11px] text-slate-400 font-medium mt-3">No credit card required • Cancel anytime</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: AI REVIEWS & GMB AUTOMATION (Extra Product Display with GLASSMORPHISM COMING SOON Effect) -->
+                <div class="bg-white rounded-3xl border border-purple-200/90 shadow-xl overflow-hidden flex flex-col md:flex-row relative group">
+                    
+                    <!-- Background Content (First Reference Layout structure visible behind blur) -->
+                    <div class="w-full flex flex-col md:flex-row filter blur-[3px] opacity-65 select-none pointer-events-none">
+                        <div class="md:w-5/12 bg-gradient-to-b from-purple-50 to-indigo-50 p-6 sm:p-7 border-r border-purple-100 flex flex-col justify-between text-left">
+                            <div>
+                                <div class="inline-flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-purple-200 shadow-sm mb-4">
+                                    <div class="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="font-space font-extrabold text-xs text-slate-900 tracking-tight uppercase">AI REVIEWS</span>
+                                </div>
+                                <span class="block text-[11px] font-extrabold tracking-widest text-purple-600 uppercase mb-1">AUTOMATE • REVIEWS • GROW</span>
+                                <h3 class="font-space font-extrabold text-xl text-slate-900 mb-2">AI Reputation & GMB Manager</h3>
+                                <p class="text-xs text-slate-600">Generate 5-star Google reviews and automate AI responses for local businesses.</p>
+                                <img src="{{ asset('/assets/images/user_dashboard.png') }}" class="w-full h-auto rounded-2xl shadow-md mt-4">
+                            </div>
+                        </div>
+                        <div class="md:w-7/12 bg-white p-6 sm:p-7 flex flex-col justify-between text-left">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="bg-purple-100 text-purple-700 text-[11px] font-extrabold px-3 py-1 rounded-md uppercase">ENTERPRISE</span>
+                                    <span class="text-xs font-bold text-purple-600">AI Powered</span>
+                                </div>
+                                <h4 class="font-space font-extrabold text-2xl text-slate-900 mb-1">AI Reviews & GMB</h4>
+                                <ul class="space-y-2 my-4 text-xs text-slate-600">
+                                    <li><i class="fas fa-check text-purple-600"></i> Google My Business Auto Sync</li>
+                                    <li><i class="fas fa-check text-purple-600"></i> AI Reply Generator</li>
+                                    <li><i class="fas fa-check text-purple-600"></i> Review Cards & QR Codes</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Glassmorphism "COMING SOON" Overlay -->
+                    <div class="absolute inset-0 z-20 bg-slate-950/70 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-500 via-indigo-500 to-pink-500 text-white flex items-center justify-center text-2xl shadow-xl shadow-purple-500/40 mb-4 animate-bounce">
+                            <i class="fas fa-star text-amber-300"></i>
+                        </div>
+                        <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white font-extrabold text-xs tracking-widest uppercase shadow-lg shadow-purple-500/40 mb-3">
+                            COMING SOON
+                        </span>
+                        <h4 class="font-space font-extrabold text-2xl sm:text-3xl text-white tracking-tight">AI Reviews & Reputation SaaS</h4>
+                        <p class="text-xs sm:text-sm text-slate-200 max-w-md mt-2.5 leading-relaxed font-medium">
+                            Automate 5-star Google customer reviews, AI response management, and local search ranking. Launching soon!
+                        </p>
+                        <div class="mt-6 inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md shadow-inner">
+                            <i class="fas fa-lock text-amber-400 text-sm"></i>
+                            <span>Under Active Development</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CARD 4: DIGITAL V-CARD & LOYALTY (Extra Product Display with GLASSMORPHISM COMING SOON Effect) -->
+                <div class="bg-white rounded-3xl border border-emerald-200/90 shadow-xl overflow-hidden flex flex-col md:flex-row relative group">
+                    
+                    <!-- Background Content (First Reference Layout structure visible behind blur) -->
+                    <div class="w-full flex flex-col md:flex-row filter blur-[3px] opacity-65 select-none pointer-events-none">
+                        <div class="md:w-5/12 bg-gradient-to-b from-emerald-50 to-teal-50 p-6 sm:p-7 border-r border-emerald-100 flex flex-col justify-between text-left">
+                            <div>
+                                <div class="inline-flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-emerald-200 shadow-sm mb-4">
+                                    <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
+                                        <i class="fas fa-id-card"></i>
+                                    </div>
+                                    <span class="font-space font-extrabold text-xs text-slate-900 tracking-tight uppercase">DIGITAL VCARD</span>
+                                </div>
+                                <span class="block text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase mb-1">CONNECT • ENGAGE • REWARD</span>
+                                <h3 class="font-space font-extrabold text-xl text-slate-900 mb-2">Digital V-Card & NFC Suite</h3>
+                                <p class="text-xs text-slate-600">Share contact info instantly with NFC cards and issue digital customer rewards.</p>
+                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" class="w-full h-auto rounded-2xl shadow-md mt-4">
+                            </div>
+                        </div>
+                        <div class="md:w-7/12 bg-white p-6 sm:p-7 flex flex-col justify-between text-left">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="bg-emerald-100 text-emerald-700 text-[11px] font-extrabold px-3 py-1 rounded-md uppercase">PRO SUITE</span>
+                                    <span class="text-xs font-bold text-emerald-600">Smart Cards</span>
+                                </div>
+                                <h4 class="font-space font-extrabold text-2xl text-slate-900 mb-1">Digital V-Card & Loyalty</h4>
+                                <ul class="space-y-2 my-4 text-xs text-slate-600">
+                                    <li><i class="fas fa-check text-emerald-600"></i> Smart NFC Business Cards</li>
+                                    <li><i class="fas fa-check text-emerald-600"></i> QR Code Contact Sharing</li>
+                                    <li><i class="fas fa-check text-emerald-600"></i> Digital Loyalty Program</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Glassmorphism "COMING SOON" Overlay -->
+                    <div class="absolute inset-0 z-20 bg-slate-950/70 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 text-white flex items-center justify-center text-2xl shadow-xl shadow-emerald-500/40 mb-4 animate-bounce">
+                            <i class="fas fa-id-card text-emerald-200"></i>
+                        </div>
+                        <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-extrabold text-xs tracking-widest uppercase shadow-lg shadow-emerald-500/40 mb-3">
+                            COMING SOON
+                        </span>
+                        <h4 class="font-space font-extrabold text-2xl sm:text-3xl text-white tracking-tight">Digital V-Card & Loyalty Suite</h4>
+                        <p class="text-xs sm:text-sm text-slate-200 max-w-md mt-2.5 leading-relaxed font-medium">
+                            Smart NFC business cards, digital QR contact sharing, and customer loyalty rewards platform. Launching soon!
+                        </p>
+                        <div class="mt-6 inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md shadow-inner">
+                            <i class="fas fa-lock text-emerald-400 text-sm"></i>
+                            <span>Under Active Development</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
     </section>
