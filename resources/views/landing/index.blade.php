@@ -1,3 +1,6 @@
+@php
+    $dbProds = $data['db_products'] ?? collect();
+@endphp
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
