@@ -21,7 +21,6 @@ class DatabaseProvisioningService
 
     /**
      * Create a dynamic database for an agency + product pair.
-     * Rule: nooryak.in is main company admin, so never create dynamic DB for nooryak.in!
      */
     public function provisionDatabaseForAgencyProduct(Agency $agency, Product $product): ?string
     {

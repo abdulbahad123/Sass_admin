@@ -55,7 +55,7 @@ class LoginController extends Controller
                 })->first();
 
             $isPlatformSubdomain = false;
-            foreach (['launchshop.in', 'nooryak.in', 'saasreselling'] as $pHost) {
+            foreach (['launchshop.in', 'saasreselling'] as $pHost) {
                 if (str_contains($host, $pHost) || str_contains($cleanHost, $pHost)) {
                     $isPlatformSubdomain = true;
                     break;
