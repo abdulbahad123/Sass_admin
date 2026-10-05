@@ -33,6 +33,11 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
         return redirect()->away('https://launchshop.in' . $request->getRequestUri(), 301);
     }
 
+    $rawHost = preg_replace('/^www\./i', '', $host);
+    if (str_starts_with($rawHost, 'launchshop.') || str_starts_with($rawHost, 'websitebuilder.') || str_starts_with($rawHost, 'website-builder.')) {
+        return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->show();
+    }
+
     $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
 
     $platformHosts = ['saasreselling', 'localhost', '127.0.0.1'];
