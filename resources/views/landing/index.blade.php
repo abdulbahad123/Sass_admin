@@ -203,8 +203,8 @@
                 
                 <!-- Left Text Column (6 cols on lg for dedicated text space) -->
                 <div class="lg:col-span-6 min-w-0 space-y-6 text-left relative z-20">
-                    <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[11px] font-bold tracking-wide uppercase shadow-sm">
-                        <span>YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.</span>
+                    <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[10px] font-bold tracking-wide uppercase shadow-sm">
+                        <span><i class="fas fa-users mr-1 opacity-70"></i> FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS</span>
                     </div>
 
                     <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.12] tracking-tight">
@@ -680,7 +680,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 
                 <!-- Left: Why Choose Us (7 cols) -->
-                <div class="lg:col-span-7">
+                <div class="lg:col-span-7 lg:pr-8 xl:pr-16">
                     <div class="mb-8 text-left">
                         <span class="badge-pill mb-3 inline-block">{{ $data['lp_why_choose_tag'] }}</span>
                         <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
@@ -878,24 +878,177 @@
                         </div>
                     </div>
 
-                    <!-- Coming Soon Overlay -->
-                    <div class="absolute inset-0 z-20 bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-3xl shadow-xl shadow-orange-500/30 mb-5 animate-bounce">
-                            <i class="fas fa-rocket"></i>
+    <!-- SECTION 8: PRICING -->
+    <section id="pricing" class="py-12 lg:py-16 bg-[#f4f7ff] border-t border-[#e2e8f0] relative">
+        <div class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="badge-pill mx-auto mb-3">{{ $data['lp_pricing_tag'] }}</span>
+                <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight mt-3">
+                    {{ $data['lp_pricing_title'] }}
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">{{ $data['lp_pricing_desc'] }}</p>
+            </div>
+
+            <!-- Monthly / Yearly Toggle -->
+            <div class="flex flex-col items-center justify-center mb-10">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white p-1 rounded-full border border-slate-200 shadow-sm flex items-center relative">
+                        <!-- Active Indicator Background -->
+                        <div id="pricingToggleBg" class="absolute left-1 top-1 bottom-1 w-[90px] bg-[#4f46e5] rounded-full transition-all duration-300 ease-in-out"></div>
+                        
+                        <button id="toggleMonthlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-white transition-colors duration-300" onclick="setPricing('monthly')">Monthly</button>
+                        <button id="toggleYearlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-slate-600 transition-colors duration-300" onclick="setPricing('yearly')">Yearly</button>
+                    </div>
+                    <div class="text-[11px] font-bold text-[#4f46e5] flex items-center">
+                        <i class="fas fa-reply fa-flip-vertical mr-1 -mt-1"></i> Save up to 50%
+                    </div>
+                </div>
+                
+                <div id="pricingSubtextContainer" class="mt-4 bg-white px-4 py-1.5 rounded-full border border-blue-100 shadow-sm flex items-center space-x-2 transition-colors duration-300">
+                    <i id="pricingSubtextIcon" class="far fa-calendar-alt text-blue-500 text-[10px]"></i>
+                    <span id="pricingSubtext" class="text-[10px] font-bold text-blue-600 transition-colors duration-300">Monthly Plan Selected — Switch to Yearly and save 50%</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch max-w-full mx-auto">
+                
+                <!-- Card 1: White-Label Panel -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-200 flex flex-col relative hover:shadow-2xl transition-all duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-blue-100 h-max">
+                            <i class="fas fa-user-tie"></i> <span>For Agencies & Freelancers</span>
                         </div>
-                        <span class="px-5 py-2 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-extrabold text-sm tracking-widest uppercase shadow-lg shadow-orange-500/40 mb-3">
-                            COMING SOON
-                        </span>
-                        <h4 class="font-space font-extrabold text-2xl text-white tracking-tight">Master Label Panel</h4>
-                        <p class="text-xs text-slate-200 max-w-xs mt-3 leading-relaxed font-medium">
-                            Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
-                        </p>
-                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
-                            <i class="fas fa-lock text-amber-400 text-xs"></i>
-                            <span>Under Active Development</span>
+                        
+                        <div class="text-right flex flex-col items-end">
+                            <span class="text-[9px] font-extrabold text-blue-600 leading-tight">5 Powerful Products<br/>One Dashboard<br/>Your Brand</span>
+                            <div class="mt-1 relative right-2">
+                                <i class="fas fa-level-down-alt fa-flip-horizontal text-blue-400 text-lg"></i>
+                            </div>
                         </div>
                     </div>
 
+                    <div class="flex justify-between items-start">
+                        <div class="pr-2">
+                            <h3 class="font-space font-extrabold text-2xl text-slate-900 mb-0.5 tracking-tight">White-Label Panel</h3>
+                            <h4 class="font-space font-extrabold text-3xl text-blue-600 mb-3 tracking-tight">Launch Your Brand.</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed min-h-[50px] pr-2">Get 5 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.</p>
+                        </div>
+                        <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-100">
+                            <img src="{{ asset('/assets/images/user_dashboard.png') }}" class="w-full h-auto object-cover opacity-90" alt="Dashboard Preview">
+                        </div>
+                    </div>
+                    
+                    <div class="my-6 flex flex-col items-start justify-end h-16">
+                        <div class="flex items-end">
+                            <span id="priceValue1" class="font-space font-extrabold text-[44px] text-slate-900 tracking-tighter leading-none">₹4,999</span>
+                            <span id="pricePeriod1" class="text-sm text-slate-500 font-bold mb-1.5 ml-1">/ mo</span>
+                        </div>
+                        <div id="priceSave1" class="hidden mt-1"></div>
+                    </div>
+
+                    <a href="{{ $data['lp_cta_button_url'] }}" class="w-full block text-center py-3.5 rounded-xl bg-[#2563eb] hover:bg-[#1d4ed8] transition-colors text-white font-bold text-sm shadow-md mb-4">
+                        <i class="far fa-calendar-alt mr-1.5"></i> Book Free Live Demo <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+
+                    <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 pb-5 mb-5">
+                        <span class="flex items-center"><i class="fas fa-video mr-1"></i> 1:1 Demo on Google Meet</span>
+                        <span class="flex items-center"><i class="far fa-credit-card mr-1"></i> No Credit Card</span>
+                        <span class="flex items-center"><i class="fas fa-check-circle mr-1"></i> 100% Free Demo</span>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-extrabold text-slate-900">Everything You Get</span>
+                        <span class="text-[9px] font-bold text-blue-600">All features included in yearly plan</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-3 gap-y-3 mt-2 text-[10px] text-slate-600 font-medium">
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-green-500 mt-0.5"></i> <span>5 White-Label SaaS Products - Ready to sell</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-blue-500 mt-0.5"></i> <span>SSO Ready - Single Login for all products</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-blue-500 mt-0.5"></i> <span>Custom Domain - Run under your brand</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-blue-500 mt-0.5"></i> <span>Unified Admin Dashboard - Manage everything in one place</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5"></i> <span>Full White-Label Control - Your logo, your brand</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5"></i> <span>Unlimited SaaS Subscriptions - Sell as many plans as you want</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-users text-purple-500 mt-0.5"></i> <span>Unlimited Customers - Onboard unlimited clients with no restrictions</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-briefcase text-red-500 mt-0.5"></i> <span>Build. Sell. Scale. All Under Your Own Brand.</span></div>
+                    </div>
+
+                    <div class="mt-8 bg-[#f4f7ff] rounded-xl p-4 flex items-start space-x-3 border border-blue-50">
+                        <div class="w-8 h-8 rounded-md bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0"><i class="fas fa-users"></i></div>
+                        <div>
+                            <span class="block text-[11px] font-extrabold text-slate-900 mb-0.5">Best For</span>
+                            <span class="block text-[9px] text-slate-500 leading-relaxed font-medium">Freelancers, Digital Marketing Agencies, Website Development Agencies and Growing Businesses.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: White-Label Master Panel -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-200 flex flex-col relative hover:shadow-2xl transition-all duration-300">
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="inline-flex items-center space-x-2 bg-purple-50 text-purple-600 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-purple-100 h-max">
+                            <i class="fas fa-network-wired"></i> <span>For Network Builders</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-end">
+                            <div class="bg-[#ff8a00] text-white text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm mb-1">
+                                <i class="fas fa-star mr-1"></i> Most Popular
+                            </div>
+                            <span class="text-[9px] font-extrabold text-purple-600 text-right leading-tight mr-1">Create<br/>Manage<br/>Scale</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-start">
+                        <div class="pr-2">
+                            <h3 class="font-space font-extrabold text-2xl text-slate-900 mb-0.5 tracking-tight">White-Label Master Panel</h3>
+                            <h4 class="font-space font-extrabold text-3xl text-purple-600 mb-3 tracking-tight">Build Your Network.</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed min-h-[50px] pr-2">Create and manage unlimited white-label sub-panels. Onboard your own reseller partners and control your entire ecosystem from one master dashboard.</p>
+                        </div>
+                        <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-800 bg-slate-900">
+                            <img src="{{ asset('/assets/images/user_dashboard2.png') }}" class="w-full h-auto object-cover opacity-90" alt="Master Dashboard Preview">
+                        </div>
+                    </div>
+                    
+                    <div class="my-6 flex flex-col items-start justify-end h-16">
+                        <div class="flex items-end">
+                            <span id="priceValue2" class="font-space font-extrabold text-[44px] text-slate-900 tracking-tighter leading-none">₹49,999</span>
+                            <span id="pricePeriod2" class="text-sm text-slate-500 font-bold mb-1.5 ml-1">/ mo</span>
+                        </div>
+                        <div id="priceSave2" class="hidden mt-1"></div>
+                    </div>
+
+                    <a href="{{ $data['lp_cta_button_url'] }}" class="w-full block text-center py-3.5 rounded-xl bg-[#ff8a00] hover:bg-[#e67a00] transition-colors text-white font-bold text-sm shadow-md mb-4">
+                        <i class="far fa-calendar-alt mr-1.5"></i> Book Free Live Demo <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+
+                    <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 pb-5 mb-5">
+                        <span class="flex items-center"><i class="fas fa-video mr-1"></i> 1:1 Demo on Google Meet</span>
+                        <span class="flex items-center"><i class="far fa-credit-card mr-1"></i> No Credit Card</span>
+                        <span class="flex items-center"><i class="fas fa-check-circle mr-1"></i> 100% Free Demo</span>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-extrabold text-slate-900">Everything You Get</span>
+                        <span class="text-[9px] font-bold text-purple-600">All features included in yearly plan</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-3 gap-y-3 mt-2 text-[10px] text-slate-600 font-medium">
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-blue-500 mt-0.5"></i> <span>Create Unlimited White-Label Panels</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-green-500 mt-0.5"></i> <span>5 White-Label SaaS Products Included</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-lock text-orange-500 mt-0.5"></i> <span>Single Login (SSO Ready)</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-globe text-blue-500 mt-0.5"></i> <span>One Master Domain</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-columns text-purple-500 mt-0.5"></i> <span>One Unified Master Admin Dashboard</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-users text-purple-600 mt-0.5"></i> <span>Manage Unlimited White-Label Partners</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-bolt text-red-500 mt-0.5"></i> <span>Complete Master-Level Control</span></div>
+                    </div>
+
+                    <div class="mt-8 bg-purple-50/70 rounded-xl p-4 flex items-start space-x-3 border border-purple-100">
+                        <div class="w-8 h-8 rounded-md bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0"><i class="fas fa-globe"></i></div>
+                        <div>
+                            <span class="block text-[11px] font-extrabold text-slate-900 mb-0.5">Best For</span>
+                            <span class="block text-[9px] text-slate-500 leading-relaxed font-medium">IT Companies, Larger Agencies, Entrepreneurs, Consultants and Businesses Building a Reseller Network.</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -911,6 +1064,13 @@
                 const price2 = document.getElementById('priceValue2');
                 const period1 = document.getElementById('pricePeriod1');
                 const period2 = document.getElementById('pricePeriod2');
+                
+                const save1 = document.getElementById('priceSave1');
+                const save2 = document.getElementById('priceSave2');
+
+                const subtextContainer = document.getElementById('pricingSubtextContainer');
+                const subtextIcon = document.getElementById('pricingSubtextIcon');
+                const subtext = document.getElementById('pricingSubtext');
 
                 if (plan === 'monthly') {
                     toggleBg.style.transform = 'translateX(0)';
@@ -919,10 +1079,23 @@
                     btnYearly.classList.remove('text-white');
                     btnYearly.classList.add('text-slate-600');
                     
-                    price1.innerHTML = '₹999';
-                    price2.innerHTML = '₹2,499';
-                    period1.innerHTML = '/ month';
-                    period2.innerHTML = '/ month';
+                    price1.innerHTML = '₹4,999';
+                    price2.innerHTML = '₹49,999';
+                    period1.innerHTML = '/ mo';
+                    period2.innerHTML = '/ mo';
+                    
+                    save1.classList.add('hidden');
+                    save2.classList.add('hidden');
+                    
+                    if(subtextContainer) {
+                        subtextContainer.classList.remove('bg-green-50', 'border-green-200');
+                        subtextContainer.classList.add('bg-white', 'border-blue-100');
+                        subtextIcon.classList.remove('text-green-600', 'fa-gift');
+                        subtextIcon.classList.add('text-blue-500', 'fa-calendar-alt');
+                        subtext.classList.remove('text-green-700');
+                        subtext.classList.add('text-blue-600');
+                        subtext.innerHTML = 'Monthly Plan Selected — Switch to Yearly and save 50%';
+                    }
                 } else {
                     toggleBg.style.transform = 'translateX(90px)';
                     btnYearly.classList.remove('text-slate-600');
@@ -930,10 +1103,28 @@
                     btnMonthly.classList.remove('text-white');
                     btnMonthly.classList.add('text-slate-600');
                     
-                    price1.innerHTML = '₹9,990';
-                    price2.innerHTML = '₹24,990';
+                    price1.innerHTML = '₹29,999';
+                    price2.innerHTML = '₹300,000';
                     period1.innerHTML = '/ year';
                     period2.innerHTML = '/ year';
+                    
+                    save1.innerHTML = '<span class="inline-block text-[10px] ml-2 px-2 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-200 font-extrabold flex items-center shadow-sm"><i class="fas fa-check mr-1 text-[8px]"></i> Save ₹30,000</span>';
+                    save1.classList.remove('hidden');
+                    save1.classList.add('flex');
+                    
+                    save2.innerHTML = '<span class="inline-block text-[10px] ml-2 px-2 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-200 font-extrabold flex items-center shadow-sm"><i class="fas fa-check mr-1 text-[8px]"></i> Save ₹3,00,000</span>';
+                    save2.classList.remove('hidden');
+                    save2.classList.add('flex');
+
+                    if(subtextContainer) {
+                        subtextContainer.classList.remove('bg-white', 'border-blue-100');
+                        subtextContainer.classList.add('bg-green-50', 'border-green-200');
+                        subtextIcon.classList.remove('text-blue-500', 'fa-calendar-alt');
+                        subtextIcon.classList.add('text-green-600', 'fa-gift');
+                        subtext.classList.remove('text-blue-600');
+                        subtext.classList.add('text-green-700');
+                        subtext.innerHTML = 'Yearly Plan Selected (Best Value) — Save up to 50%';
+                    }
                 }
             }
         </script>
