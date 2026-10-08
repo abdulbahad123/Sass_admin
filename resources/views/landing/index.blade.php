@@ -1578,10 +1578,10 @@
         });
     </script>
     <!-- Exit Intent / Delayed Popup Modal -->
-    <div id="promoModal" class="fixed inset-0 z-[100] flex bg-slate-900/80 backdrop-blur-sm opacity-0 invisible transition-all duration-500 px-4 py-6 overflow-y-auto">
+    <div id="promoModal" class="fixed inset-0 z-[100] flex items-start md:items-center justify-center bg-slate-900/80 backdrop-blur-sm opacity-0 invisible transition-all duration-500 overflow-y-auto">
         
         <!-- Modal Container -->
-        <div class="relative w-full max-w-4xl m-auto flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 delay-100" id="promoModalContent">
+        <div class="relative w-full max-w-4xl mx-auto my-6 md:my-auto mx-4 flex flex-col md:flex-row bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 delay-100" id="promoModalContent">
             
             <!-- Close Button -->
             <button onclick="closePromoModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 text-white hover:bg-slate-700 transition-colors focus:outline-none shadow-lg">
@@ -1589,87 +1589,87 @@
             </button>
             
             <!-- Left Side (Light) -->
-            <div class="w-full md:w-1/2 p-6 sm:p-8 md:p-12 flex flex-col justify-center">
-                <div class="inline-flex items-center space-x-1.5 bg-orange-100 text-orange-600 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider w-max mb-5 border border-orange-200">
+            <div class="w-full md:w-1/2 p-5 md:p-12 flex flex-col justify-center">
+                <div class="inline-flex items-center space-x-1.5 bg-orange-100 text-orange-600 px-3 py-1 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider w-max mb-3 md:mb-5 border border-orange-200">
                     <i class="fas fa-bolt"></i> <span>Exclusive Offer</span>
                 </div>
                 
-                <h3 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 leading-tight mb-4 tracking-tight">
+                <h3 class="font-space font-extrabold text-2xl md:text-4xl text-slate-900 leading-tight mb-2 md:mb-4 tracking-tight">
                     🚀 All-in-One White Label SaaS Panel
                 </h3>
                 
-                <p class="text-sm text-slate-500 mb-8 leading-relaxed font-medium">
+                <p class="text-[11px] md:text-sm text-slate-500 mb-4 md:mb-8 leading-relaxed font-medium">
                     Save Extra on All-in-One White-Label 2 Year Plan
                 </p>
                 
-                <div class="space-y-3 mb-8 text-sm font-semibold text-slate-700">
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>5 White-Label SaaS Products</span></div>
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>One Simple Subscription</span></div>
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Priority Customer Support</span></div>
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Unlimited SaaS Subscriptions</span></div>
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Fully White-Label Control</span></div>
+                <div class="space-y-2 md:space-y-3 mb-4 md:mb-8 text-[11px] md:text-sm font-semibold text-slate-700">
+                    <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>5 White-Label SaaS Products</span></div>
+                    <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>One Simple Subscription</span></div>
+                    <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Priority Customer Support</span></div>
+                    <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Unlimited SaaS Subscriptions</span></div>
+                    <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Fully White-Label Control</span></div>
                 </div>
                 
-                <div class="flex items-center space-x-3 text-lg">
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center"><i class="fas fa-comment-dots"></i></div>
-                    <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center"><i class="far fa-envelope"></i></div>
-                    <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center"><i class="fas fa-coins"></i></div>
+                <div class="flex items-center space-x-2 md:space-x-3 text-sm md:text-lg">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center"><i class="fas fa-comment-dots"></i></div>
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center"><i class="far fa-envelope"></i></div>
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center"><i class="fas fa-coins"></i></div>
                 </div>
             </div>
             
             <!-- Right Side (Dark) -->
-            <div class="w-full md:w-1/2 bg-slate-900 p-6 sm:p-8 md:p-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <div class="w-full md:w-1/2 bg-slate-900 p-5 md:p-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <!-- Background ambient glow -->
                 <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent pointer-events-none"></div>
                 
                 <div class="relative z-10 w-full">
-                    <div class="w-16 h-16 rounded-full bg-white mx-auto flex items-center justify-center mb-6 shadow-lg shadow-orange-500/20">
-                        <i class="fas fa-stopwatch text-3xl text-slate-800"></i>
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white mx-auto flex items-center justify-center mb-3 md:mb-6 shadow-lg shadow-orange-500/20">
+                        <i class="fas fa-stopwatch text-xl md:text-3xl text-slate-800"></i>
                     </div>
                     
-                    <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-white mb-3 tracking-tight">
+                    <h3 class="font-space font-extrabold text-xl md:text-3xl text-white mb-1.5 md:mb-3 tracking-tight">
                         WAIT! BEFORE YOU GO
                     </h3>
                     
-                    <p class="text-xs sm:text-sm text-slate-400 mb-6">
+                    <p class="text-[10px] md:text-sm text-slate-400 mb-4 md:mb-6">
                         Save Extra on All-in-One White-Label 2 Year Plan
                     </p>
                     
-                    <div class="flex items-center justify-center space-x-4 w-full mb-8">
+                    <div class="flex items-center justify-center space-x-4 w-full mb-4 md:mb-8">
                         <div class="w-full h-px bg-slate-800"></div>
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Offer Expires In</span>
+                        <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Offer Expires In</span>
                         <div class="w-full h-px bg-slate-800"></div>
                     </div>
                     
                     <!-- Timer -->
-                    <div class="flex items-center justify-center space-x-4 mb-8">
+                    <div class="flex items-center justify-center space-x-3 md:space-x-4 mb-5 md:mb-8">
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg mb-2">
-                                <span class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900" id="promoHrs">02</span>
+                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
+                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900" id="promoHrs">02</span>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Hrs</span>
+                            <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Hrs</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg mb-2">
-                                <span class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900" id="promoMins">13</span>
+                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
+                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900" id="promoMins">13</span>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Min</span>
+                            <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Min</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg mb-2">
-                                <span class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900" id="promoSecs">29</span>
+                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
+                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900" id="promoSecs">29</span>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Sec</span>
+                            <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Sec</span>
                         </div>
                     </div>
                     
-                    <div class="bg-orange-500 text-slate-900 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-lg mb-4 shadow-lg shadow-orange-500/20">
+                    <div class="bg-orange-500 text-slate-900 font-bold text-[10px] md:text-sm py-2 px-2 md:py-2.5 md:px-4 rounded-lg mb-3 md:mb-4 shadow-lg shadow-orange-500/20">
                         Don't lose your savings! Go for 2 Years Plan & Get 10% Off
                     </div>
                     
-                    <a href="https://wa.me/6374913298" target="_blank" class="w-full block bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-sm sm:text-base py-4 rounded-xl transition-colors shadow-lg">
-                        Claim My Discount Now <i class="fas fa-arrow-right ml-2"></i>
+                    <a href="https://wa.me/6374913298" target="_blank" class="w-full block bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-[13px] md:text-base py-3 md:py-4 rounded-xl transition-colors shadow-lg">
+                        Claim My Discount Now <i class="fas fa-arrow-right ml-2 text-[10px] md:text-sm"></i>
                     </a>
                 </div>
             </div>
