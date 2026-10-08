@@ -674,167 +674,57 @@
         </div>
     </section>
 
-    <!-- SECTION 7: WHY CHOOSE NOORYAK? -->
-    <section class="py-10 lg:py-14 bg-white reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
-            <div class="mb-14">
-                <span class="badge-pill mx-auto mb-3">{{ $data['lp_why_choose_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
-                    {{ $data['lp_why_choose_title'] }}
-                </h2>
-            </div>
-
-            @if(is_array($data['lp_why_choose_items']))
-            @php
-                // Curated pastel background color mappings to match reference screenshot
-                $colorStyles = [
-                    0 => ['bg' => 'bg-emerald-100/90 text-emerald-600'],
-                    1 => ['bg' => 'bg-sky-100/90 text-sky-600'],
-                    2 => ['bg' => 'bg-orange-100/90 text-orange-600'],
-                    3 => ['bg' => 'bg-teal-100/90 text-teal-600'],
-                    4 => ['bg' => 'bg-purple-100/90 text-purple-600'],
-                    5 => ['bg' => 'bg-blue-100/90 text-blue-600'],
-                ];
-            @endphp
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 items-start text-center">
-                @foreach($data['lp_why_choose_items'] as $index => $item)
-                @php
-                    $style = $colorStyles[$index % count($colorStyles)];
-                @endphp
-                <div class="flex flex-col items-center group px-1">
-                    <!-- Soft Pastel Colored Circle Icon Container -->
-                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full {{ $style['bg'] }} flex items-center justify-center text-xl sm:text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                        <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
-                    </div>
-                    
-                    <!-- Title -->
-                    <h4 class="font-space font-extrabold text-xs sm:text-sm text-slate-900 mb-1.5 leading-snug">{{ $item['title'] ?? '' }}</h4>
-                    
-                    <!-- Description -->
-                    <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed max-w-[170px]">{{ $item['desc'] ?? '' }}</p>
-                </div>
-                @endforeach
-            </div>
-            @endif
-
-        </div>
-    </section>
-
-    <!-- SECTION 8: PRICING & REVENUE CALCULATOR -->
-    <section id="pricing" class="py-10 lg:py-14 bg-slate-50/80 border-t border-slate-200/80">
+    <!-- SECTION 7: WHY CHOOSE & REVENUE CALCULATOR -->
+    <section class="py-10 lg:py-14 bg-white reveal border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="badge-pill mx-auto">{{ $data['lp_pricing_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
-                    {{ $data['lp_pricing_title'] }}
-                </h2>
-                <p class="text-xs sm:text-sm text-slate-600 mt-1">{{ $data['lp_pricing_desc'] }}</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 
-                <!-- Left Pricing Cards (7 Cols): 2 Containers (Monthly & Yearly) for White-Label Panel -->
-                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    
-                    <!-- Container 1: White-Label Panel (Monthly) -->
-                    <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-200 flex flex-col justify-between relative hover:shadow-2xl transition-all">
-                        <div class="absolute -top-3 right-6 bg-slate-800 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                            Monthly Plan
-                        </div>
-                        <div>
-                            <h4 class="font-space font-bold text-base text-slate-900">White-Label Panel</h4>
-                            <p class="text-[11px] text-slate-500 mt-1">Billed monthly • Cancel anytime</p>
-                            
-                            <div class="my-5">
-                                <span class="font-space font-extrabold text-3xl text-slate-900">₹999</span>
-                                <span class="text-xs text-slate-500 font-medium">/month</span>
-                            </div>
-
-                            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>1 White-Label Platform</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>5 White-Label SaaS Products</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>Custom Domain & Logo</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>Unlimited End-Customers</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>Full Partner Dashboard</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <a href="{{ url('/login') }}" class="w-full block text-center py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all">
-                            Get Started Monthly
-                        </a>
+                <!-- Left: Why Choose Us (7 cols) -->
+                <div class="lg:col-span-7">
+                    <div class="mb-8 text-left">
+                        <span class="badge-pill mb-3 inline-block">{{ $data['lp_why_choose_tag'] }}</span>
+                        <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
+                            {{ $data['lp_why_choose_title'] }}
+                        </h2>
                     </div>
 
-                    <!-- Container 2: White-Label Panel (Yearly - Best Value) -->
-                    <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-orange-500/80 flex flex-col justify-between relative hover:shadow-2xl transition-all">
-                        <div class="absolute -top-3 right-6 btn-gradient text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                            Best Value • Save 20%
-                        </div>
-                        <div>
-                            <h4 class="font-space font-bold text-base text-slate-900">White-Label Panel</h4>
-                            <p class="text-[11px] text-orange-600 font-bold mt-1">Billed annually (Get 2 Months FREE)</p>
-                            
-                            <div class="my-5">
-                                <span class="font-space font-extrabold text-3xl text-slate-900">₹9,990</span>
-                                <span class="text-xs text-slate-500 font-medium">/year</span>
-                                <p class="text-[10px] text-slate-500 font-medium mt-0.5">(Equivalent to ₹832/month)</p>
+                    @if(is_array($data['lp_why_choose_items']))
+                    @php
+                        // Curated pastel background color mappings to match reference screenshot
+                        $colorStyles = [
+                            0 => ['bg' => 'bg-emerald-100/90 text-emerald-600'],
+                            1 => ['bg' => 'bg-sky-100/90 text-sky-600'],
+                            2 => ['bg' => 'bg-orange-100/90 text-orange-600'],
+                            3 => ['bg' => 'bg-teal-100/90 text-teal-600'],
+                            4 => ['bg' => 'bg-purple-100/90 text-purple-600'],
+                            5 => ['bg' => 'bg-blue-100/90 text-blue-600'],
+                        ];
+                    @endphp
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                        @foreach($data['lp_why_choose_items'] as $index => $item)
+                        @php
+                            $style = $colorStyles[$index % count($colorStyles)];
+                        @endphp
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-start text-left">
+                            <div class="w-12 h-12 rounded-xl {{ $style['bg'] }} flex items-center justify-center text-xl mb-3">
+                                <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
                             </div>
-
-                            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>All Monthly Features Included</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>2 Months FREE Included</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>Priority 1-on-1 Onboarding</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>Free Custom Domain Setup</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check text-orange-500 text-xs"></i>
-                                    <span>24/7 Priority Support</span>
-                                </div>
-                            </div>
+                            <h4 class="font-space font-extrabold text-sm sm:text-base text-slate-900 mb-1.5">{{ $item['title'] ?? '' }}</h4>
+                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">{{ $item['desc'] ?? '' }}</p>
                         </div>
-
-                        <a href="{{ url('/login') }}" class="btn-gradient w-full block text-center py-3 rounded-xl text-white font-bold text-xs shadow-md">
-                            Get Started Yearly
-                        </a>
+                        @endforeach
                     </div>
-
+                    @endif
                 </div>
 
-                <!-- Right Revenue Calculator Card (5 Cols) -->
+                <!-- Right: Revenue Calculator (5 cols) -->
                 <div class="lg:col-span-5">
-                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}'); background-size: cover;">
+                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}'); background-size: cover; background-color: #0f172a;">
                         
                         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
                             <div>
                                 <h3 class="font-space font-extrabold text-lg text-white">{{ $data['lp_rev_calc_title'] }}</h3>
-                                <p class="text-xs text-slate-400 mt-0.5">{{ $data['lp_rev_calc_subtitle'] }}</p>
+                                <p class="text-[11px] text-slate-400 mt-0.5">{{ $data['lp_rev_calc_subtitle'] }}</p>
                             </div>
                             <div class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-base">
                                 <i class="fas fa-calculator"></i>
@@ -862,11 +752,11 @@
                         </div>
 
                         <!-- Bullets -->
-                        <div class="grid grid-cols-2 gap-2.5 mb-6 text-xs font-semibold">
+                        <div class="grid grid-cols-2 gap-2.5 mb-6 text-[11px] font-semibold">
                             @if(is_array($data['lp_rev_calc_bullets']))
                                 @foreach($data['lp_rev_calc_bullets'] as $bullet)
                                 <div class="flex items-center space-x-2 text-slate-200">
-                                    <i class="fas fa-check-circle text-orange-400 text-xs"></i>
+                                    <i class="fas fa-check-circle text-orange-400 text-[11px]"></i>
                                     <span>{{ $bullet }}</span>
                                 </div>
                                 @endforeach
@@ -874,8 +764,8 @@
                         </div>
 
                         <!-- CTA -->
-                        <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient w-full block text-center py-3.5 rounded-2xl text-white font-bold text-xs shadow-lg">
-                            Start Building Your Revenue <i class="fas fa-arrow-right ml-2"></i>
+                        <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient w-full block text-center py-3.5 rounded-2xl text-white font-bold text-[11px] shadow-lg">
+                            Start Building Your Revenue <i class="fas fa-arrow-right ml-2 text-[10px]"></i>
                         </a>
 
                     </div>
@@ -883,6 +773,170 @@
 
             </div>
         </div>
+    </section>
+
+    <!-- SECTION 8: PRICING -->
+    <section id="pricing" class="py-12 lg:py-16 bg-slate-50/80 border-t border-slate-200/80 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="badge-pill mx-auto mb-3">{{ $data['lp_pricing_tag'] }}</span>
+                <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight mt-3">
+                    {{ $data['lp_pricing_title'] }}
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2">{{ $data['lp_pricing_desc'] }}</p>
+            </div>
+
+            <!-- Monthly / Yearly Toggle -->
+            <div class="flex flex-col items-center justify-center mb-12">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white p-1 rounded-full border border-slate-200 shadow-sm flex items-center relative">
+                        <!-- Active Indicator Background -->
+                        <div id="pricingToggleBg" class="absolute left-1 top-1 bottom-1 w-[90px] btn-gradient rounded-full transition-all duration-300 ease-in-out"></div>
+                        
+                        <button id="toggleMonthlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-white transition-colors duration-300" onclick="setPricing('monthly')">Monthly</button>
+                        <button id="toggleYearlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-slate-600 transition-colors duration-300" onclick="setPricing('yearly')">Yearly</button>
+                    </div>
+                    <div class="text-[11px] font-bold text-orange-600 flex items-center">
+                        <i class="fas fa-reply fa-flip-vertical mr-1 -mt-1"></i> Save 20%
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-5xl mx-auto">
+                
+                <!-- Card 1: White-Label Panel -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-200 flex flex-col relative hover:shadow-2xl transition-all duration-300">
+                    <div class="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-100 w-max mb-4">
+                        <i class="fas fa-user-tie"></i> <span>For Agencies & Freelancers</span>
+                    </div>
+
+                    <h3 class="font-space font-extrabold text-2xl text-slate-900 mb-1">White-Label Panel</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed min-h-[40px]">Get 5 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.</p>
+                    
+                    <div class="my-6 flex items-end">
+                        <span id="priceValue1" class="font-space font-extrabold text-5xl text-slate-900">₹999</span>
+                        <span id="pricePeriod1" class="text-sm text-slate-500 font-bold mb-1 ml-1">/ month</span>
+                    </div>
+
+                    <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient w-full block text-center py-3.5 rounded-xl text-white font-bold text-sm shadow-md mb-4 hover:scale-[1.02] transition-transform">
+                        Get Started <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+
+                    <div class="grid grid-cols-1 gap-y-3 mt-4 text-[12px] text-slate-700 font-medium">
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>1 White-Label Platform</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products Included</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Custom Domain & Logo</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Unlimited End-Customers</span></div>
+                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Full Partner Dashboard Access</span></div>
+                    </div>
+
+                    <div class="mt-8 bg-orange-50/50 rounded-xl p-4 flex items-start space-x-3 border border-orange-100/50">
+                        <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 flex-shrink-0"><i class="fas fa-rocket"></i></div>
+                        <div>
+                            <span class="block text-[11px] font-bold text-slate-900 mb-0.5">Most Popular Choice</span>
+                            <span class="block text-[10px] text-slate-500 leading-relaxed">Perfect for getting started and building your customer base.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: White-Label Master Panel (With Coming Soon Overlay) -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-2xl border-2 border-orange-400 flex flex-col relative overflow-hidden group hover:shadow-orange-500/10 transition-all duration-300">
+                    
+                    <!-- Blurred background content -->
+                    <div class="flex flex-col flex-grow filter blur-[2px] opacity-60 select-none pointer-events-none">
+                        <div class="inline-flex items-center space-x-2 bg-slate-100 text-slate-600 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-slate-200 w-max mb-4">
+                            <i class="fas fa-network-wired"></i> <span>For Network Builders</span>
+                        </div>
+
+                        <h3 class="font-space font-extrabold text-2xl text-slate-900 mb-1">White-Label Master Panel</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed min-h-[40px]">Create and manage unlimited white-label sub-panels. Onboard your own reseller partners and control your entire ecosystem.</p>
+                        
+                        <div class="my-6 flex items-end">
+                            <span id="priceValue2" class="font-space font-extrabold text-5xl text-slate-900">₹2,499</span>
+                            <span id="pricePeriod2" class="text-sm text-slate-500 font-bold mb-1 ml-1">/ month</span>
+                        </div>
+
+                        <div class="w-full block text-center py-3.5 rounded-xl bg-slate-800 text-white font-bold text-sm shadow-md mb-4">
+                            Get Started <i class="fas fa-arrow-right ml-1"></i>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-y-3 mt-4 text-[12px] text-slate-700 font-medium">
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Unlimited White Label Panels</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Partner Management System</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Centralized Master Dashboard</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Complete Reseller Control</span></div>
+                        </div>
+
+                        <div class="mt-8 bg-slate-50 rounded-xl p-4 flex items-start space-x-3 border border-slate-200">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 flex-shrink-0"><i class="fas fa-globe"></i></div>
+                            <div>
+                                <span class="block text-[11px] font-bold text-slate-900 mb-0.5">Scale Globally</span>
+                                <span class="block text-[10px] text-slate-500 leading-relaxed">Ideal for businesses building a vast reseller network.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coming Soon Overlay -->
+                    <div class="absolute inset-0 z-20 bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-3xl shadow-xl shadow-orange-500/30 mb-5 animate-bounce">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <span class="px-5 py-2 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-extrabold text-sm tracking-widest uppercase shadow-lg shadow-orange-500/40 mb-3">
+                            COMING SOON
+                        </span>
+                        <h4 class="font-space font-extrabold text-2xl text-white tracking-tight">Master Label Panel</h4>
+                        <p class="text-xs text-slate-200 max-w-xs mt-3 leading-relaxed font-medium">
+                            Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
+                        </p>
+                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
+                            <i class="fas fa-lock text-amber-400 text-xs"></i>
+                            <span>Under Active Development</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        
+        <script>
+            // Pricing Toggle Script
+            function setPricing(plan) {
+                const toggleBg = document.getElementById('pricingToggleBg');
+                const btnMonthly = document.getElementById('toggleMonthlyBtn');
+                const btnYearly = document.getElementById('toggleYearlyBtn');
+                const price1 = document.getElementById('priceValue1');
+                const price2 = document.getElementById('priceValue2');
+                const period1 = document.getElementById('pricePeriod1');
+                const period2 = document.getElementById('pricePeriod2');
+
+                if (plan === 'monthly') {
+                    toggleBg.style.transform = 'translateX(0)';
+                    btnMonthly.classList.remove('text-slate-600');
+                    btnMonthly.classList.add('text-white');
+                    btnYearly.classList.remove('text-white');
+                    btnYearly.classList.add('text-slate-600');
+                    
+                    price1.innerHTML = '₹999';
+                    price2.innerHTML = '₹2,499';
+                    period1.innerHTML = '/ month';
+                    period2.innerHTML = '/ month';
+                } else {
+                    toggleBg.style.transform = 'translateX(90px)';
+                    btnYearly.classList.remove('text-slate-600');
+                    btnYearly.classList.add('text-white');
+                    btnMonthly.classList.remove('text-white');
+                    btnMonthly.classList.add('text-slate-600');
+                    
+                    price1.innerHTML = '₹9,990';
+                    price2.innerHTML = '₹24,990';
+                    period1.innerHTML = '/ year';
+                    period2.innerHTML = '/ year';
+                }
+            }
+        </script>
     </section>
 
     <!-- SECTION 9: YOUR GROWTH PATH & TESTIMONIALS -->
