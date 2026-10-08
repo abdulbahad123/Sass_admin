@@ -1602,7 +1602,7 @@
                     Save Extra on All-in-One White-Label 2 Year Plan
                 </p>
                 
-                <div class="space-y-2 md:space-y-3 mb-4 md:mb-8 text-[11px] md:text-sm font-semibold text-slate-700">
+                <div class="space-y-2 md:space-y-3 mb-4 md:mb-8 text-[11px] md:text-sm font-semibold text-slate-700 hidden md:block">
                     <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>5 White-Label SaaS Products</span></div>
                     <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>One Simple Subscription</span></div>
                     <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Priority Customer Support</span></div>
