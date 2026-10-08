@@ -162,11 +162,108 @@
                 </a>
 
                 <!-- Desktop Menu Navigation -->
-                <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-                    <a href="#hero" class="hover:text-[#ff3d00] transition-colors">Home</a>
-                    <a href="#about" class="hover:text-[#ff3d00] transition-colors">Solutions <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
-                    <a href="#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a>
-                    <a href="#products" class="hover:text-[#ff3d00] transition-colors">Resources <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600 relative">
+                    <a href="#hero" class="hover:text-[#ff3d00] transition-colors py-6">Home</a>
+                    
+                    <!-- Solutions Dropdown -->
+                    <div class="relative group">
+                        <a href="#about" class="hover:text-[#ff3d00] transition-colors flex items-center py-6 cursor-pointer">
+                            Solutions <i class="fas fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180"></i>
+                        </a>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[420px] bg-[#0f172a] rounded-2xl border border-slate-700/50 shadow-2xl shadow-slate-900/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <div class="p-4 flex flex-col space-y-2">
+                                <!-- Bundle -->
+                                <a href="#" class="flex items-start space-x-4 p-4 rounded-xl hover:bg-white/5 transition-colors group/item">
+                                    <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <span class="text-white font-bold text-sm group-hover/item:text-indigo-400 transition-colors">All-in-one-SaaS Bundle</span>
+                                            <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full tracking-wider shadow-md">BEST VALUE</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">Access to all 5 SaaS applications at a single subscription price.</p>
+                                    </div>
+                                </a>
+                                
+                                <div class="w-full h-px bg-slate-800/80 my-2"></div>
+                                
+                                <div class="grid grid-cols-2 gap-2">
+                                    <!-- Product 1 -->
+                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                        <div class="w-8 h-8 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5">AI Reviews</span>
+                                            <span class="block text-[10px] text-slate-400">Auto reply & manage reputation.</span>
+                                        </div>
+                                    </a>
+                                    <!-- Product 2 -->
+                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <i class="fas fa-globe"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5">Website Builder</span>
+                                            <span class="block text-[10px] text-slate-400">Create sites with AI & templates.</span>
+                                        </div>
+                                    </a>
+                                    <!-- Product 3 -->
+                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors col-span-2">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <i class="fas fa-qrcode"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5">Restaurant Menu</span>
+                                            <span class="block text-[10px] text-slate-400">QR digital menus & ordering.</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#pricing" class="hover:text-[#ff3d00] transition-colors py-6">Pricing</a>
+                    
+                    <!-- Resources Dropdown -->
+                    <div class="relative group">
+                        <a href="#products" class="hover:text-[#ff3d00] transition-colors flex items-center py-6 cursor-pointer">
+                            Resources <i class="fas fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180"></i>
+                        </a>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[380px] bg-[#0f172a] rounded-2xl border border-slate-700/50 shadow-2xl shadow-slate-900/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <div class="p-4 grid grid-cols-2 gap-2">
+                                <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                    <i class="fab fa-youtube text-red-500 text-lg mt-0.5 w-6 text-center"></i>
+                                    <div>
+                                        <span class="block text-white font-bold text-sm mb-0.5">YouTube</span>
+                                        <span class="block text-xs text-slate-400">Tutorials & demos</span>
+                                    </div>
+                                </a>
+                                <a href="mailto:{{ $data['lp_contact_email'] ?? '' }}" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                    <i class="far fa-envelope text-sky-400 text-lg mt-0.5 w-6 text-center"></i>
+                                    <div>
+                                        <span class="block text-white font-bold text-sm mb-0.5">Contact Us</span>
+                                        <span class="block text-xs text-slate-400">Get in touch</span>
+                                    </div>
+                                </a>
+                                <a href="#faq" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                    <i class="far fa-question-circle text-sky-500 text-lg mt-0.5 w-6 text-center"></i>
+                                    <div>
+                                        <span class="block text-white font-bold text-sm mb-0.5">FAQ</span>
+                                        <span class="block text-xs text-slate-400">Common questions</span>
+                                    </div>
+                                </a>
+                                <a href="https://wa.me/6374913298" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                    <i class="fab fa-whatsapp text-green-500 text-lg mt-0.5 w-6 text-center"></i>
+                                    <div>
+                                        <span class="block text-white font-bold text-sm mb-0.5">WhatsApp</span>
+                                        <span class="block text-xs text-slate-400">Chat with us</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </nav>
 
                 <!-- Action Buttons -->
@@ -677,7 +774,7 @@
     <!-- SECTION 7: WHY CHOOSE & REVENUE CALCULATOR -->
     <section class="py-10 lg:py-14 bg-white reveal border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
                 
                 <!-- Left: Why Choose Us (7 cols) -->
                 <div class="lg:col-span-7 lg:pr-8 xl:pr-16">
@@ -706,7 +803,7 @@
                             $style = $colorStyles[$index % count($colorStyles)];
                         @endphp
                         <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-start text-left">
-                            <div class="w-12 h-12 rounded-xl {{ $style['bg'] }} flex items-center justify-center text-xl mb-3">
+                            <div class="w-9 h-9 rounded-xl {{ $style['bg'] }} flex items-center justify-center text-sm mb-3">
                                 <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
                             </div>
                             <h4 class="font-space font-extrabold text-sm sm:text-base text-slate-900 mb-1.5">{{ $item['title'] ?? '' }}</h4>
@@ -718,8 +815,8 @@
                 </div>
 
                 <!-- Right: Revenue Calculator (5 cols) -->
-                <div class="lg:col-span-5">
-                    <div class="relative text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}'); background-size: cover; background-color: #0f172a;">
+                <div class="lg:col-span-5 flex">
+                    <div class="relative w-full text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden flex flex-col justify-between" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}'); background-size: cover; background-color: #0f172a;">
                         
                         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
                             <div>
@@ -819,7 +916,7 @@
                         </div>
                         
                         <div class="text-right flex flex-col items-end">
-                            <span class="text-[9px] font-extrabold text-orange-600 leading-tight">5 Powerful Products<br/>One Dashboard<br/>Your Brand</span>
+                            <span class="text-[9px] font-extrabold text-orange-600 leading-tight">3 Powerful Products<br/>One Dashboard<br/>Your Brand</span>
                             <div class="mt-1 relative right-2">
                                 <i class="fas fa-level-down-alt fa-flip-horizontal text-orange-400 text-lg"></i>
                             </div>
