@@ -1578,18 +1578,18 @@
         });
     </script>
     <!-- Exit Intent / Delayed Popup Modal -->
-    <div id="promoModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm opacity-0 invisible transition-all duration-500 px-4">
+    <div id="promoModal" class="fixed inset-0 z-[100] flex bg-slate-900/80 backdrop-blur-sm opacity-0 invisible transition-all duration-500 px-4 py-6 overflow-y-auto">
         
         <!-- Modal Container -->
-        <div class="relative w-full max-w-4xl flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 delay-100" id="promoModalContent">
+        <div class="relative w-full max-w-4xl m-auto flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 delay-100" id="promoModalContent">
             
             <!-- Close Button -->
-            <button onclick="closePromoModal()" class="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors focus:outline-none">
+            <button onclick="closePromoModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 text-white hover:bg-slate-700 transition-colors focus:outline-none shadow-lg">
                 <i class="fas fa-times"></i>
             </button>
             
             <!-- Left Side (Light) -->
-            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+            <div class="w-full md:w-1/2 p-6 sm:p-8 md:p-12 flex flex-col justify-center">
                 <div class="inline-flex items-center space-x-1.5 bg-orange-100 text-orange-600 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider w-max mb-5 border border-orange-200">
                     <i class="fas fa-bolt"></i> <span>Exclusive Offer</span>
                 </div>
@@ -1619,7 +1619,7 @@
             </div>
             
             <!-- Right Side (Dark) -->
-            <div class="w-full md:w-1/2 bg-slate-900 p-8 md:p-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <div class="w-full md:w-1/2 bg-slate-900 p-6 sm:p-8 md:p-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <!-- Background ambient glow -->
                 <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent pointer-events-none"></div>
                 
