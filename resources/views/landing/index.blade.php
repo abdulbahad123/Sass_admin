@@ -191,12 +191,12 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     <!-- Product 1 -->
                                     <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                                        <div class="w-8 h-8 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <i class="fas fa-star"></i>
+                                        <div class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <i class="fas fa-shopping-cart"></i>
                                         </div>
                                         <div>
-                                            <span class="block text-white font-bold text-[13px] mb-0.5">AI Reviews</span>
-                                            <span class="block text-[10px] text-slate-400">Auto reply & manage reputation.</span>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5">Ecom Builder</span>
+                                            <span class="block text-[10px] text-slate-400">Launch e-commerce stores easily.</span>
                                         </div>
                                     </a>
                                     <!-- Product 2 -->
@@ -211,12 +211,12 @@
                                     </a>
                                     <!-- Product 3 -->
                                     <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors col-span-2">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <i class="fas fa-qrcode"></i>
+                                        <div class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <i class="fab fa-whatsapp"></i>
                                         </div>
                                         <div>
-                                            <span class="block text-white font-bold text-[13px] mb-0.5">Restaurant Menu</span>
-                                            <span class="block text-[10px] text-slate-400">QR digital menus & ordering.</span>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5">WhatsApp Automation</span>
+                                            <span class="block text-[10px] text-slate-400">Automate messaging & marketing.</span>
                                         </div>
                                     </a>
                                 </div>
