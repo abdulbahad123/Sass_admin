@@ -468,7 +468,8 @@
         }
 
         html { scroll-behavior: smooth; }
-    </style>
+        .footer-social-btn svg { width:16px; height:16px; stroke:#ffffff !important; color:#ffffff !important; opacity: 1 !important; visibility: visible !important; }
+</style>
 <style>
         .footer-social-btn {
             display:flex; align-items:center; justify-content:center;
@@ -489,7 +490,8 @@
             50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; } 
             100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.5; } 
         }
-    </style>
+        .footer-social-btn svg { width:16px; height:16px; stroke:#ffffff !important; color:#ffffff !important; opacity: 1 !important; visibility: visible !important; }
+</style>
 </head>
 <body>
 
@@ -767,7 +769,7 @@
                 ];
             @endphp
             @foreach($features as $fi => $f)
-                <div style="background:#fff; border:1px solid #e9eef4; border-radius:20px; padding:28px 22px; transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px -12px rgba(79,70,229,.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div class="feat-card" style="background:#fff; border:1px solid #e9eef4; border-radius:20px; padding:28px 22px; transition:all .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px -12px rgba(79,70,229,.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
                     <div style="width:54px; height:54px; border-radius:16px; background:{{ $featIconGradients[$fi] ?? $featIconGradients[0] }}; display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
                         <i data-lucide="{{ $f['icon'] ?? 'zap' }}" style="width:26px;height:26px;color:#fff"></i>
                     </div>
@@ -850,6 +852,27 @@
                 Powerful tools to grow your business. Simple, transparent pricing.<br>No hidden fees. Upgrade or downgrade anytime.
             </p>
         </div>
+        <!-- Monthly / Yearly Toggle -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:40px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div style="background:#fff; padding:4px; border-radius:999px; border:1px solid #e2e8f0; box-shadow:0 2px 4px rgba(0,0,0,0.02); display:flex; position:relative;">
+                    <div id="pricingToggleBg" style="position:absolute; left:4px; top:4px; bottom:4px; width:90px; background:linear-gradient(135deg,#3b82f6,#6366f1); border-radius:999px; transition:all 0.3s ease;"></div>
+                    <button id="toggleMonthlyBtn" style="position:relative; z-index:10; width:90px; padding:8px 0; font-size:12px; font-weight:800; color:#fff; border:none; background:transparent; cursor:pointer;" onclick="setPricing('monthly')">Monthly</button>
+                    <button id="toggleYearlyBtn" style="position:relative; z-index:10; width:90px; padding:8px 0; font-size:12px; font-weight:800; color:#64748b; border:none; background:transparent; cursor:pointer;" onclick="setPricing('yearly')">Yearly</button>
+                </div>
+                <div style="font-size:11px; font-weight:800; color:#ea580c; display:flex; align-items:center;">
+                    <i data-lucide="corner-down-left" style="width:14px; height:14px; margin-right:4px;"></i> Save 20%
+                </div>
+            </div>
+        </div>
+        <script>
+        function setPricing(type) {
+            const isMonthly = type === "monthly";
+            document.getElementById("pricingToggleBg").style.left = isMonthly ? "4px" : "94px";
+            document.getElementById("toggleMonthlyBtn").style.color = isMonthly ? "#fff" : "#64748b";
+            document.getElementById("toggleYearlyBtn").style.color = isMonthly ? "#64748b" : "#fff";
+        }
+        </script>
 
         {{-- Product Plan Cards Grid --}}
         <div class="pricing-cards-outer">
@@ -1439,6 +1462,7 @@
         .desktop-ctas { display: flex !important; }
         .mobile-ham { display: none !important; }
     }
+    .footer-social-btn svg { width:16px; height:16px; stroke:#ffffff !important; color:#ffffff !important; opacity: 1 !important; visibility: visible !important; }
 </style>
 
 <script>

@@ -280,7 +280,7 @@
                 <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Action Buttons -->
                     <div class="hidden sm:flex items-center space-x-3">
-                        <a href="{{ $data['lp_book_demo_url'] }}" class="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-100 dark:hover:bg-[#1e293b] transition-all shadow-sm">
+                        <a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-100 dark:hover:bg-[#1e293b] transition-all shadow-sm">
                             Book a Demo
                         </a>
                     </div>
@@ -307,7 +307,7 @@
             <a href="#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Products</a>
             <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">FAQ</a>
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                <a href="{{ $data['lp_book_demo_url'] }}" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-700 dark:text-slate-200">Book a Demo</a>
+                <a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-700 dark:text-slate-200">Book a Demo</a>
             </div>
         </div>
     </header>
@@ -333,11 +333,11 @@
 
                     <!-- CTAs -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                        <a href="{{ $data['lp_hero_cta1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/30 text-center">
+                        <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/30 text-center">
                             {{ $data['lp_hero_cta1_text'] }}
                         </a>
 
-                        <a href="{{ $data['lp_hero_cta2_url'] }}" class="px-7 py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-bold text-xs sm:text-sm hover:bg-slate-50 dark:bg-[#151c2c] transition-all flex items-center justify-center space-x-3 shadow-sm">
+                        <a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="px-7 py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-bold text-xs sm:text-sm hover:bg-slate-50 dark:bg-[#151c2c] transition-all flex items-center justify-center space-x-3 shadow-sm">
                             <div class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">
                                 <i class="fas fa-play ml-0.5"></i>
                             </div>
@@ -491,7 +491,7 @@
 
                     <!-- CTA Button -->
                     <div class="pt-4 border-t border-slate-100 dark:border-slate-800 text-left mt-auto">
-                        <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-3.5 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
+                        <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-3.5 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
                             <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
                             <i class="fas fa-arrow-right"></i>
                         </a>
@@ -880,7 +880,7 @@
                         </div>
 
                         <!-- CTA -->
-                        <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient w-full block text-center py-3.5 rounded-2xl text-white font-bold text-[11px] shadow-lg">
+                        <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient w-full block text-center py-3.5 rounded-2xl text-white font-bold text-[11px] shadow-lg">
                             Start Building Your Revenue <i class="fas fa-arrow-right ml-2 text-[10px]"></i>
                         </a>
 
@@ -960,7 +960,7 @@
                         <div id="priceSave1" class="hidden mt-1"></div>
                     </div>
 
-                    <a href="{{ $data['lp_cta_button_url'] }}" class="btn-gradient w-full block text-center py-3.5 rounded-xl text-white font-bold text-sm shadow-md mb-4 hover:scale-[1.02] transition-transform">
+                    <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient w-full block text-center py-3.5 rounded-xl text-white font-bold text-sm shadow-md mb-4 hover:scale-[1.02] transition-transform">
                         Get Started <i class="fas fa-arrow-right ml-1"></i>
                     </a>
 
@@ -1384,7 +1384,7 @@
                     <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
                         <li><a href="#faq" class="hover:text-[#ff3d00] transition-colors">Help Center</a></li>
                         <li><a href="mailto:{{ $data['lp_contact_email'] }}" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
-                        <li><a href="{{ $data['lp_book_demo_url'] }}" class="hover:text-[#ff3d00] transition-colors">Book a Demo</a></li>
+                        <li><a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="hover:text-[#ff3d00] transition-colors">Book a Demo</a></li>
                         <li><a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
                         <li><a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a></li>
                         <li><a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
