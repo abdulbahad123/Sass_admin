@@ -16,6 +16,11 @@
     @endif
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -342,6 +347,42 @@
             width: 100%;
         }
 
+                /* ── DARK MODE OVERRIDES (FULL BLACK) ── */
+        html.dark body { background: #000000 !important; color: #ffffff !important; }
+        html.dark .site-header { background: rgba(0,0,0,0.9) !important; border-bottom: 1px solid #222 !important; }
+        html.dark .feat-card, html.dark .prod-card, html.dark .step-card, html.dark .review-card, html.dark .pricing-card-item, html.dark .pricing-right-panel, html.dark .cat-pill { 
+            background: #0a0a0a !important; 
+            border-color: #222 !important; 
+            box-shadow: none !important;
+        }
+        html.dark .pricing-left-panel { border-color: #222 !important; }
+        html.dark section, html.dark .about-section, html.dark div[id="mobile-menu"] { 
+            background: #000000 !important; 
+        }
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark p, html.dark a:not(.btn-brand) { 
+            color: #ffffff !important; 
+        }
+        html.dark p, html.dark .text-slate-600, html.dark .text-slate-500, html.dark span[style*="color:#64748b"], html.dark span[style*="color:#475569"], html.dark a[style*="color:#475569"] {
+            color: #a1a1aa !important;
+        }
+        html.dark .cat-pill:hover { background: #111 !important; border-color: #333 !important; color: #fff !important; }
+        html.dark .site-footer { background: #050505 !important; }
+        html.dark .btn-outline { background: #111 !important; border-color: #333 !important; color: #fff !important; }
+        html.dark .btn-outline:hover { background: #222 !important; }
+        html.dark .badge-top-left, html.dark .badge-top-right, html.dark .badge-mid-left, html.dark .badge-bot-left {
+            background: #111 !important; border-color: #333 !important;
+        }
+        html.dark .badge-top-left span[style*="color:#0f172a"], html.dark .badge-top-right span[style*="color:#0f172a"], html.dark .badge-bot-left span[style*="color:#0f172a"] {
+            color: #fff !important;
+        }
+        html.dark div[style*="background:#fff"] { background: #0a0a0a !important; border-color: #222 !important; }
+        html.dark div[style*="background:#f8fafc"] { background: #000000 !important; }
+        html.dark section[style*="background:#fff"] { background: #000000 !important; border-color: #222 !important; }
+        html.dark section[style*="background:#f5f4ff"] { background: #000000 !important; }
+        html.dark section[style*="background:#f0efff"] { background: #000000 !important; }
+        html.dark .text-brand { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+        html.dark button[title="Toggle Dark Mode"] { background: transparent !important; border-color: #444 !important; }
+        html.dark button[title="Toggle Dark Mode"]:hover { border-color: #fff !important; }
         /* ── RESPONSIVE GRIDS ── */
         @media(max-width: 1024px) {
             .feat-grid { grid-template-columns: repeat(2,1fr) !important; }
@@ -413,8 +454,9 @@
 
         {{-- Desktop CTAs --}}
         <div class="desktop-ctas" style="display:flex;align-items:center;gap:10px">
-            <button style="width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode" onmouseover="this.style.borderColor='#4f46e5'" onmouseout="this.style.borderColor='#e2e8f0'">
-                <i data-lucide="moon" style="width:16px;height:16px"></i>
+            <button onclick="toggleTheme()" style="width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
+                <i data-lucide="moon" id="moonIcon" style="width:16px;height:16px"></i>
+                <i data-lucide="sun" id="sunIcon" style="width:16px;height:16px;color:#fbbf24;display:none;"></i>
             </button>
             <a href="{{ $agency->cta_url ?? '/login' }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
             <a href="{{ $agency->cta_url ?? '/login' }}" class="btn-brand" style="border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800">
@@ -1374,6 +1416,33 @@
             autoRevTimer = setInterval(nextRev, 3500);
         });
     }
+</script>
+<script>
+    function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('moonIcon').style.display = 'block';
+            document.getElementById('sunIcon').style.display = 'none';
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('moonIcon').style.display = 'none';
+            document.getElementById('sunIcon').style.display = 'block';
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            if (document.getElementById('moonIcon')) document.getElementById('moonIcon').style.display = 'none';
+            if (document.getElementById('sunIcon')) document.getElementById('sunIcon').style.display = 'block';
+        } else {
+            document.documentElement.classList.remove('dark');
+            if (document.getElementById('moonIcon')) document.getElementById('moonIcon').style.display = 'block';
+            if (document.getElementById('sunIcon')) document.getElementById('sunIcon').style.display = 'none';
+        }
+    });
 </script>
 </body>
 </html>
