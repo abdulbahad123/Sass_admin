@@ -23,6 +23,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -131,6 +132,15 @@
             opacity: 1;
             transform: translateY(0);
         }
+    
+        html.dark body {
+            background-color: #0B0F19;
+            color: #f8fafc;
+        }
+        /* Fix the dropdowns in dark mode */
+        html.dark .group-hover\\:opacity-100 {
+            /* If any specific dark mode fixes are needed */
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -144,7 +154,7 @@
     @endif
 
     <!-- STICKY NAVBAR -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300">
+    <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700/80 transition-all duration-300">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
@@ -156,13 +166,13 @@
                             <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
                                 <i class="fas fa-layer-group text-lg sm:text-xl"></i>
                             </div>
-                            <span class="font-space font-bold text-2xl sm:text-3xl tracking-tight text-slate-900">Nooryak</span>
+                            <span class="font-space font-bold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">Nooryak</span>
                         </div>
                     @endif
                 </a>
 
                 <!-- Desktop Menu Navigation -->
-                <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600 relative">
+                <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600 dark:text-slate-300 relative">
                     <a href="#hero" class="hover:text-[#ff3d00] transition-colors py-6">Home</a>
                     
                     <!-- Solutions Dropdown -->
@@ -173,7 +183,7 @@
                         <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[420px] bg-[#0f172a] rounded-2xl border border-slate-700/50 shadow-2xl shadow-slate-900/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
                             <div class="p-4 flex flex-col space-y-2">
                                 <!-- Bundle -->
-                                <a href="#" class="flex items-start space-x-4 p-4 rounded-xl hover:bg-white/5 transition-colors group/item">
+                                <a href="#" class="flex items-start space-x-4 p-4 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors group/item">
                                     <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <i class="fas fa-bolt"></i>
                                     </div>
@@ -190,7 +200,7 @@
                                 
                                 <div class="grid grid-cols-2 gap-2">
                                     <!-- Product 1 -->
-                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                         <div class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-shopping-cart"></i>
                                         </div>
@@ -200,7 +210,7 @@
                                         </div>
                                     </a>
                                     <!-- Product 2 -->
-                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                         <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-globe"></i>
                                         </div>
@@ -210,7 +220,7 @@
                                         </div>
                                     </a>
                                     <!-- Product 3 -->
-                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors col-span-2">
+                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors col-span-2">
                                         <div class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fab fa-whatsapp"></i>
                                         </div>
@@ -233,28 +243,28 @@
                         </a>
                         <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[380px] bg-[#0f172a] rounded-2xl border border-slate-700/50 shadow-2xl shadow-slate-900/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
                             <div class="p-4 grid grid-cols-2 gap-2">
-                                <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                     <i class="fab fa-youtube text-red-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
                                         <span class="block text-white font-bold text-sm mb-0.5">YouTube</span>
                                         <span class="block text-xs text-slate-400">Tutorials & demos</span>
                                     </div>
                                 </a>
-                                <a href="mailto:{{ $data['lp_contact_email'] ?? '' }}" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                <a href="mailto:{{ $data['lp_contact_email'] ?? '' }}" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                     <i class="far fa-envelope text-sky-400 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
                                         <span class="block text-white font-bold text-sm mb-0.5">Contact Us</span>
                                         <span class="block text-xs text-slate-400">Get in touch</span>
                                     </div>
                                 </a>
-                                <a href="#faq" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                <a href="#faq" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                     <i class="far fa-question-circle text-sky-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
                                         <span class="block text-white font-bold text-sm mb-0.5">FAQ</span>
                                         <span class="block text-xs text-slate-400">Common questions</span>
                                     </div>
                                 </a>
-                                <a href="https://wa.me/6374913298" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                                <a href="https://wa.me/6374913298" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                     <i class="fab fa-whatsapp text-green-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
                                         <span class="block text-white font-bold text-sm mb-0.5">WhatsApp</span>
@@ -266,49 +276,58 @@
                     </div>
                 </nav>
 
-                <!-- Action Buttons -->
-                <div class="hidden sm:flex items-center space-x-3">
-                    <a href="{{ $data['lp_book_demo_url'] }}" class="px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm">
-                        Book a Demo
-                    </a>
-                </div>
+                <!-- Right Side Actions & Menu -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <!-- Action Buttons -->
+                    <div class="hidden sm:flex items-center space-x-3">
+                        <a href="{{ $data['lp_book_demo_url'] }}" class="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-100 dark:hover:bg-[#1e293b] transition-all shadow-sm">
+                            Book a Demo
+                        </a>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" class="p-2 sm:p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i class="fas fa-moon dark:hidden text-lg"></i>
+                        <i class="fas fa-sun hidden dark:block text-lg text-amber-400"></i>
+                    </button>
 
-                <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Mobile Drawer Menu -->
-        <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-4 pb-6 space-y-3 shadow-lg">
-            <a href="#hero" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
-            <a href="#about" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Solutions</a>
-            <a href="#pricing" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Pricing</a>
-            <a href="#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Products</a>
-            <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
-            <div class="pt-4 border-t border-slate-100 space-y-2">
-                <a href="{{ $data['lp_book_demo_url'] }}" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 text-xs font-bold text-slate-700">Book a Demo</a>
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0B0F19] px-4 pt-4 pb-6 space-y-3 shadow-lg">
+            <a href="#hero" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Home</a>
+            <a href="#about" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Solutions</a>
+            <a href="#pricing" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Pricing</a>
+            <a href="#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Products</a>
+            <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">FAQ</a>
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                <a href="{{ $data['lp_book_demo_url'] }}" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-700 dark:text-slate-200">Book a Demo</a>
             </div>
         </div>
     </header>
 
     <!-- SECTION 1: HERO SECTION -->
-    <section id="hero" class="relative py-8 sm:py-10 lg:py-12 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent reveal">
+    <section id="hero" class="relative py-8 sm:py-10 lg:py-12 overflow-hidden bg-gradient-to-b from-orange-50/60 via-amber-50/20 to-transparent dark:from-indigo-950/40 dark:via-purple-900/20 dark:to-[#0B0F19] reveal">
         <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 
                 <!-- Left Text Column (6 cols on lg for dedicated text space) -->
                 <div class="lg:col-span-6 min-w-0 space-y-6 text-left relative z-20">
-                    <div class="inline-flex items-center space-x-2 bg-orange-100/90 border border-orange-200/80 px-4 py-1.5 rounded-full text-orange-700 text-[10px] font-bold tracking-wide uppercase shadow-sm">
+                    <div class="inline-flex items-center space-x-2 bg-orange-100 dark:bg-orange-900/30/90 border border-orange-200/80 dark:border-indigo-700/50 px-4 py-1.5 rounded-full text-orange-700 dark:text-indigo-300 text-[10px] font-bold tracking-wide uppercase shadow-sm">
                         <span><i class="fas fa-users mr-1 opacity-70"></i> FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS</span>
                     </div>
 
-                    <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.12] tracking-tight">
+                    <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 dark:text-white leading-[1.12] tracking-tight">
                         Launch Your Own SaaS Business <span class="gradient-text">Under Your Brand</span>
                     </h1>
 
-                    <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl">
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl">
                         {{ $data['lp_hero_subtitle'] }}
                     </p>
 
@@ -318,7 +337,7 @@
                             {{ $data['lp_hero_cta1_text'] }}
                         </a>
 
-                        <a href="{{ $data['lp_hero_cta2_url'] }}" class="px-7 py-4 rounded-full bg-white border border-slate-300 text-slate-900 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 shadow-sm">
+                        <a href="{{ $data['lp_hero_cta2_url'] }}" class="px-7 py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-bold text-xs sm:text-sm hover:bg-slate-50 dark:bg-[#151c2c] transition-all flex items-center justify-center space-x-3 shadow-sm">
                             <div class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">
                                 <i class="fas fa-play ml-0.5"></i>
                             </div>
@@ -327,7 +346,7 @@
                     </div>
 
                     <!-- Hero Feature Checkmarks -->
-                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-slate-700">
+                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-slate-700 dark:text-slate-200">
                         @if(is_array($data['lp_hero_badges']))
                             @foreach($data['lp_hero_badges'] as $badge)
                             <div class="flex items-center space-x-2">
@@ -354,21 +373,21 @@
 
     <!-- SECTION 2: COUNTER STATS BAR CARD -->
     <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-6 relative z-20 reveal">
-        <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-xl border border-slate-100">
+        <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-4 sm:p-5 shadow-xl border border-slate-100 dark:border-slate-800">
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center">
                 @if(is_array($data['lp_stats_bar']))
                     @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-orange-50/50 transition-colors">
+                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-orange-50 dark:bg-[#1e293b]/50 transition-colors">
                         <div class="flex items-center justify-center space-x-2.5 mb-0.5">
-                            <div class="w-9 h-9 rounded-xl bg-orange-100/90 text-[#ff3d00] flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
+                            <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/30/90 text-[#ff3d00] flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
                                 <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
                             </div>
                             <!-- Task 3: Animated Running Counter Number -->
-                            <span class="stat-counter font-space font-extrabold text-xl sm:text-2xl text-slate-900" data-target="{{ $stat['count'] ?? '0' }}">
+                            <span class="stat-counter font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white" data-target="{{ $stat['count'] ?? '0' }}">
                                 {{ $stat['count'] ?? '0' }}
                             </span>
                         </div>
-                        <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wide mt-0.5">{{ $stat['label'] ?? '' }}</p>
+                        <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-0.5">{{ $stat['label'] ?? '' }}</p>
                     </div>
                     @endforeach
                 @endif
@@ -377,17 +396,17 @@
     </div>
 
     <!-- SECTION 3: ABOUT NOORYAK -->
-    <section id="about" class="py-10 lg:py-14 bg-white">
+    <section id="about" class="py-10 lg:py-14 bg-white dark:bg-[#0B0F19]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
                 <!-- Left Content -->
                 <div class="lg:col-span-6 space-y-5 text-left">
                     <span class="badge-pill">{{ $data['lp_about_tag'] }}</span>
-                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
                         {{ $data['lp_about_title'] }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {{ $data['lp_about_desc'] }}
                     </p>
                     <p class="text-xs sm:text-sm font-bold text-[#ff3d00]">
@@ -398,11 +417,11 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-3">
                         @if(is_array($data['lp_about_features']))
                             @foreach(array_slice($data['lp_about_features'], 0, 3) as $feat)
-                            <div class="flex items-center space-x-2.5 p-3 rounded-2xl bg-orange-50/60 border border-orange-100">
+                            <div class="flex items-center space-x-2.5 p-3 rounded-2xl bg-orange-50 dark:bg-[#1e293b]/60 border border-orange-100 dark:border-slate-700">
                                 <div class="w-8 h-8 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-xs flex-shrink-0">
                                     <i class="{{ $feat['icon'] ?? 'fas fa-star' }}"></i>
                                 </div>
-                                <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 leading-snug break-words">{{ $feat['title'] ?? '' }}</h4>
+                                <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 dark:text-white leading-snug break-words">{{ $feat['title'] ?? '' }}</h4>
                             </div>
                             @endforeach
                         @endif
@@ -421,22 +440,22 @@
     </section>
 
     <!-- SECTION 4: WHITE LABEL SAAS PARTNER & MASTER PANEL CARDS (Task 1: Master Label SaaS Glassmorphism Coming Soon Overlay) -->
-    <section class="py-10 lg:py-12 bg-slate-50/80 border-t border-slate-200/80 reveal">
+    <section class="py-10 lg:py-12 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
                 
                 <!-- Card 1: White Label SaaS Partner Card (Active) -->
                 @php $model = $data['lp_model_cards'][0] ?? null; @endphp
                 @if($model)
-                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
                     <div class="text-left">
-                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 text-[#ff3d00] border border-orange-200/80">
+                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200/80 dark:border-indigo-700/50">
                             {{ $model['badge'] ?? 'White Label SaaS' }}
                         </span>
-                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2 text-left">
+                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white mb-2 text-left">
                             {{ $model['title'] ?? 'White Label SaaS Partner' }}
                         </h3>
-                        <p class="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed text-left">
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-left">
                             {{ $model['desc'] ?? '' }}
                         </p>
 
@@ -456,7 +475,7 @@
                                         ];
                                 @endphp
                                 @foreach($cardFeatures as $f)
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 text-left">
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200 text-left">
                                     <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
@@ -465,13 +484,13 @@
                                 @endforeach
                             </div>
                             <div class="sm:col-span-6 mt-4 sm:mt-0">
-                                <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
+                                <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="Dashboard Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
                             </div>
                         </div>
                     </div>
 
                     <!-- CTA Button -->
-                    <div class="pt-4 border-t border-slate-100 text-left mt-auto">
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800 text-left mt-auto">
                         <a href="{{ $model['cta_url'] ?? '/login' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-3.5 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/20">
                             <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
                             <i class="fas fa-arrow-right"></i>
@@ -481,41 +500,41 @@
                 @endif
 
                 <!-- Card 2: White Label Master Panel (With Glassmorphism COMING SOON Overlay) -->
-                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between relative overflow-hidden text-left group">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between relative overflow-hidden text-left group">
                     
                     <!-- Background Card Content (Visible behind glass blur) -->
                     <div class="text-left filter blur-[2px] opacity-75 select-none pointer-events-none">
-                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-slate-100 text-slate-700 border border-slate-200">
+                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-slate-100 dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
                             Master Label SaaS
                         </span>
-                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 mb-2 text-left">
+                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white mb-2 text-left">
                             White Label Master Panel
                         </h3>
-                        <p class="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed text-left">
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-left">
                             Ideal for business network builders who want to create & manage SaaS reseller partners.
                         </p>
 
                         <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center mb-6 text-left">
                             <div class="sm:col-span-6 space-y-2.5 text-left">
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
                                     <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
                                     <span>Create Unlimited Reseller Panels</span>
                                 </div>
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
                                     <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
                                     <span>Partner Management System</span>
                                 </div>
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
                                     <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
                                     <span>Set Your Own Reseller Pricing</span>
                                 </div>
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700">
+                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
                                     <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
                                         <i class="fas fa-check"></i>
                                     </div>
@@ -523,7 +542,7 @@
                                 </div>
                             </div>
                             <div class="sm:col-span-6 mt-4 sm:mt-0">
-                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" alt="Master Panel Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200">
+                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" alt="Master Panel Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
                             </div>
                         </div>
                     </div>
@@ -540,7 +559,7 @@
                         <p class="text-xs text-slate-200 max-w-xs mt-2 leading-relaxed">
                             Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
                         </p>
-                        <div class="mt-5 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
+                        <div class="mt-5 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#0B0F19]/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
                             <i class="fas fa-lock text-amber-400 text-xs"></i>
                             <span>Under Active Development</span>
                         </div>
@@ -553,15 +572,15 @@
     </section>
 
     <!-- SECTION 5: OUR PRODUCTS (First Reference Layout for Products + Glassmorphism Coming Soon Cards) -->
-    <section id="products" class="py-12 lg:py-16 bg-white reveal">
+    <section id="products" class="py-12 lg:py-16 bg-white dark:bg-[#0B0F19] reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
                 <span class="badge-pill mx-auto">{{ $data['lp_products_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
+                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mt-3">
                     {{ $data['lp_products_title'] }}
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-600 mt-2">
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
                     {{ $data['lp_products_desc'] }}
                 </p>
             </div>
@@ -570,25 +589,25 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
 
                 <!-- CARD 1: LAUNCHSHOP ECOM BUILDER -->
-                <div class="bg-white rounded-3xl border border-orange-200/90 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between p-6 sm:p-7 group relative">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl border border-orange-200/90 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between p-6 sm:p-7 group relative">
                     <div>
                         <!-- Brand Logo -->
                         <div class="flex items-center justify-between mb-4">
                             <img src="{{ asset('/assets/landing_page/ecom_logo.png') }}" alt="Ecom Builder Logo" class="h-10 w-auto object-contain">
-                            <span class="text-[11px] font-extrabold tracking-widest text-[#ff3d00] uppercase bg-orange-50 px-2.5 py-1 rounded-lg border border-orange-200/60">STORE BUILDER</span>
+                            <span class="text-[11px] font-extrabold tracking-widest text-[#ff3d00] uppercase bg-orange-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-orange-200/60 dark:border-slate-700">STORE BUILDER</span>
                         </div>
 
-                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 mb-2 leading-tight">Complete E-Commerce Solution</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Launch your online store, manage products, payments, and customers — all in one place.</p>
+                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">Complete E-Commerce Solution</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Launch your online store, manage products, payments, and customers — all in one place.</p>
                         
                         <!-- Product Image Mockup -->
                         <div class="my-5 relative overflow-hidden rounded-2xl">
-                            <img src="{{ asset('/assets/landing_page/ecombuilder_image.png') }}" alt="Launchshop E-Commerce Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-orange-200/60 transform group-hover:scale-[1.03] transition-transform duration-300">
+                            <img src="{{ asset('/assets/landing_page/ecombuilder_image.png') }}" alt="Launchshop E-Commerce Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-orange-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
                         </div>
 
                         <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
 
-                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 font-medium">
+                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-200 font-medium">
                             <li class="flex items-center space-x-2.5">
                                 <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
                                 <span>1 Online Store (Product Module)</span>
@@ -622,25 +641,25 @@
                 </div>
 
                 <!-- CARD 2: WEBSITE BUILDER -->
-                <div class="bg-white rounded-3xl border-2 border-blue-400/80 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between p-6 sm:p-7 group relative">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl border-2 border-blue-400/80 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between p-6 sm:p-7 group relative">
                     <div>
                         <!-- Brand Logo -->
                         <div class="flex items-center justify-between mb-4">
                             <img src="{{ asset('/assets/landing_page/websitebuilder_logo.png') }}" alt="Website Builder Logo" class="h-10 w-auto object-contain">
-                            <span class="text-[11px] font-extrabold tracking-widest text-blue-600 uppercase bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/60">WEBSITE BUILDER</span>
+                            <span class="text-[11px] font-extrabold tracking-widest text-blue-600 uppercase bg-blue-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-blue-200/60 dark:border-slate-700">WEBSITE BUILDER</span>
                         </div>
 
-                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 mb-2 leading-tight">Professional Website Solution</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed font-normal">Create stunning websites with ease using our drag-and-drop website builder with zero coding required.</p>
+                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">Professional Website Solution</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Create stunning websites with ease using our drag-and-drop website builder with zero coding required.</p>
                         
                         <!-- Product Image Mockup -->
                         <div class="my-5 relative overflow-hidden rounded-2xl">
-                            <img src="{{ asset('/assets/landing_page/websitebuilder_image.png') }}" alt="Website Builder Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-blue-200/60 transform group-hover:scale-[1.03] transition-transform duration-300">
+                            <img src="{{ asset('/assets/landing_page/websitebuilder_image.png') }}" alt="Website Builder Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-blue-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
                         </div>
 
                         <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
 
-                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 font-medium">
+                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-200 font-medium">
                             <li class="flex items-center space-x-2.5">
                                 <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
                                 <span>Unlimited Pages & Custom Designs</span>
@@ -674,20 +693,20 @@
                 </div>
 
                 <!-- CARD 3: WHATSAPP AUTOMATION TOOL (COMING SOON) -->
-                <div class="bg-white rounded-3xl border border-emerald-200/90 shadow-xl overflow-hidden flex flex-col justify-between p-6 sm:p-7 relative group">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl border border-emerald-200/90 shadow-xl overflow-hidden flex flex-col justify-between p-6 sm:p-7 relative group">
                     
                     <!-- Background Content visible behind blur -->
                     <div class="w-full flex flex-col justify-between filter blur-[3px] opacity-60 select-none pointer-events-none">
                         <div>
-                            <div class="inline-flex items-center space-x-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 mb-4">
+                            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-[#1e293b] px-3 py-1.5 rounded-xl border border-emerald-200 mb-4">
                                 <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
                                     <i class="fab fa-whatsapp"></i>
                                 </div>
                                 <span class="font-space font-extrabold text-xs text-emerald-900 uppercase">WHATSAPP AUTOMATION</span>
                             </div>
-                            <h3 class="font-space font-extrabold text-xl text-slate-900 mb-2">WhatsApp Automation Tool</h3>
-                            <p class="text-xs text-slate-600">Automate customer messaging, broadcast marketing campaigns, and AI chatbots directly on WhatsApp.</p>
-                            <div class="my-5 rounded-2xl bg-emerald-50 p-4 border border-emerald-200/60">
+                            <h3 class="font-space font-extrabold text-xl text-slate-900 dark:text-white mb-2">WhatsApp Automation Tool</h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-300">Automate customer messaging, broadcast marketing campaigns, and AI chatbots directly on WhatsApp.</p>
+                            <div class="my-5 rounded-2xl bg-emerald-50 dark:bg-[#1e293b] p-4 border border-emerald-200/60">
                                 <div class="w-full h-32 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-bold text-sm">
                                     <i class="fab fa-whatsapp text-4xl"></i>
                                 </div>
@@ -707,7 +726,7 @@
                         <p class="text-xs text-slate-200 max-w-xs mt-2.5 leading-relaxed font-medium">
                             Automate bulk WhatsApp campaigns, instant AI auto-replies, catalog sharing, and order notifications. Launching soon!
                         </p>
-                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md shadow-inner">
+                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#0B0F19]/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md shadow-inner">
                             <i class="fas fa-lock text-emerald-400 text-sm"></i>
                             <span>Under Active Development</span>
                         </div>
@@ -721,11 +740,11 @@
     </section>
 
     <!-- SECTION 6: HOW NOORYAK WORKS (Task 2: Mobile scroll animation & downward arrows between steps) -->
-    <section class="py-10 lg:py-14 bg-slate-50/60 border-t border-slate-200/70 reveal">
+    <section class="py-10 lg:py-14 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/70 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
             <span class="badge-pill mx-auto mb-3">{{ $data['lp_how_works_tag'] }}</span>
-            <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mb-14">
+            <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mb-14">
                 {{ $data['lp_how_works_title'] }}
             </h2>
 
@@ -744,16 +763,16 @@
                         <span class="text-xs font-bold text-[#ff3d00] uppercase tracking-wide mb-1">Step {{ $step['step'] ?? ($index + 1) }}</span>
                         
                         <!-- Title -->
-                        <h4 class="font-space font-extrabold text-base sm:text-lg text-slate-900 mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
+                        <h4 class="font-space font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
                         
                         <!-- Description -->
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-[240px]">{{ $step['desc'] ?? '' }}</p>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-[240px]">{{ $step['desc'] ?? '' }}</p>
                     </div>
 
                     <!-- Downward Arrow Connector between steps (MOBILE ONLY - Task 2) -->
                     @if(!$loop->last)
                     <div class="step-arrow flex lg:hidden items-center justify-center my-3 text-[#ff3d00] animate-bounce transition-all duration-500 opacity-0 transform translate-y-4">
-                        <div class="w-9 h-9 rounded-full bg-orange-100/90 border border-orange-200 text-[#ff3d00] flex items-center justify-center text-xs shadow-sm">
+                        <div class="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-900/30/90 border border-orange-200 text-[#ff3d00] flex items-center justify-center text-xs shadow-sm">
                             <i class="fas fa-arrow-down"></i>
                         </div>
                     </div>
@@ -772,7 +791,7 @@
     </section>
 
     <!-- SECTION 7: WHY CHOOSE & REVENUE CALCULATOR -->
-    <section class="py-10 lg:py-14 bg-white reveal border-t border-slate-200/80">
+    <section class="py-10 lg:py-14 bg-white dark:bg-[#0B0F19] reveal border-t border-slate-200 dark:border-slate-700/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
                 
@@ -780,7 +799,7 @@
                 <div class="lg:col-span-7 lg:pr-8 xl:pr-16">
                     <div class="mb-8 text-left">
                         <span class="badge-pill mb-3 inline-block">{{ $data['lp_why_choose_tag'] }}</span>
-                        <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
+                        <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
                             {{ $data['lp_why_choose_title'] }}
                         </h2>
                     </div>
@@ -791,7 +810,7 @@
                         $colorStyles = [
                             0 => ['bg' => 'bg-emerald-100/90 text-emerald-600'],
                             1 => ['bg' => 'bg-sky-100/90 text-sky-600'],
-                            2 => ['bg' => 'bg-orange-100/90 text-orange-600'],
+                            2 => ['bg' => 'bg-orange-100 dark:bg-orange-900/30/90 text-orange-600'],
                             3 => ['bg' => 'bg-teal-100/90 text-teal-600'],
                             4 => ['bg' => 'bg-purple-100/90 text-purple-600'],
                             5 => ['bg' => 'bg-blue-100/90 text-blue-600'],
@@ -802,12 +821,12 @@
                         @php
                             $style = $colorStyles[$index % count($colorStyles)];
                         @endphp
-                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-start text-left">
+                        <div class="bg-slate-50 dark:bg-[#151c2c] p-5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md transition-all flex flex-col items-start text-left">
                             <div class="w-9 h-9 rounded-xl {{ $style['bg'] }} flex items-center justify-center text-sm mb-3">
                                 <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
                             </div>
-                            <h4 class="font-space font-extrabold text-sm sm:text-base text-slate-900 mb-1.5">{{ $item['title'] ?? '' }}</h4>
-                            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">{{ $item['desc'] ?? '' }}</p>
+                            <h4 class="font-space font-extrabold text-sm sm:text-base text-slate-900 dark:text-white mb-1.5">{{ $item['title'] ?? '' }}</h4>
+                            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ $item['desc'] ?? '' }}</p>
                         </div>
                         @endforeach
                     </div>
@@ -838,7 +857,7 @@
                         </div>
 
                         <!-- Revenue Output -->
-                        <div class="bg-white/10 rounded-2xl p-5 border border-white/10 text-center mb-5 backdrop-blur-sm">
+                        <div class="bg-white dark:bg-[#0B0F19]/10 rounded-2xl p-5 border border-white/10 text-center mb-5 backdrop-blur-sm">
                             <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Estimated Monthly Revenue</p>
                             <p id="monthlyRevDisplay" class="font-space font-extrabold text-2xl sm:text-3xl text-orange-400">
                                 ₹99,900 <span class="text-xs font-normal text-slate-400">/month</span>
@@ -874,33 +893,33 @@
 
 
     <!-- SECTION 8: PRICING -->
-    <section id="pricing" class="py-12 lg:py-16 bg-slate-50/80 border-t border-slate-200/80 relative">
+    <section id="pricing" class="py-12 lg:py-16 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 relative">
         <div class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="badge-pill mx-auto mb-3">{{ $data['lp_pricing_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight mt-3">
+                <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mt-3">
                     {{ $data['lp_pricing_title'] }}
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-500 mt-2">{{ $data['lp_pricing_desc'] }}</p>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">{{ $data['lp_pricing_desc'] }}</p>
             </div>
 
             <!-- Monthly / Yearly Toggle -->
             <div class="flex flex-col items-center justify-center mb-10">
                 <div class="flex items-center space-x-4">
-                    <div class="bg-white p-1 rounded-full border border-slate-200 shadow-sm flex items-center relative">
+                    <div class="bg-white dark:bg-[#0B0F19] p-1 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
                         <!-- Active Indicator Background -->
                         <div id="pricingToggleBg" class="absolute left-1 top-1 bottom-1 w-[90px] btn-gradient rounded-full transition-all duration-300 ease-in-out"></div>
                         
                         <button id="toggleMonthlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-white transition-colors duration-300" onclick="setPricing('monthly')">Monthly</button>
-                        <button id="toggleYearlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-slate-600 transition-colors duration-300" onclick="setPricing('yearly')">Yearly</button>
+                        <button id="toggleYearlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="setPricing('yearly')">Yearly</button>
                     </div>
                     <div class="text-[11px] font-bold text-orange-600 flex items-center">
                         <i class="fas fa-reply fa-flip-vertical mr-1 -mt-1"></i> Save 20%
                     </div>
                 </div>
                 
-                <div id="pricingSubtextContainer" class="mt-4 bg-white px-4 py-1.5 rounded-full border border-orange-100 shadow-sm flex items-center space-x-2 transition-colors duration-300">
+                <div id="pricingSubtextContainer" class="mt-4 bg-white dark:bg-[#0B0F19] px-4 py-1.5 rounded-full border border-orange-100 dark:border-slate-700 shadow-sm flex items-center space-x-2 transition-colors duration-300">
                     <i id="pricingSubtextIcon" class="far fa-calendar-alt text-orange-500 text-[10px]"></i>
                     <span id="pricingSubtext" class="text-[10px] font-bold text-orange-600 transition-colors duration-300">Monthly Plan Selected — Switch to Yearly and save 20%</span>
                 </div>
@@ -909,9 +928,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch max-w-full mx-auto">
                 
                 <!-- Card 1: White-Label Panel -->
-                <div class="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-200 flex flex-col relative hover:shadow-2xl transition-all duration-300">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-[2rem] p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col relative hover:shadow-2xl transition-all duration-300">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-100 h-max">
+                        <div class="inline-flex items-center space-x-2 bg-orange-50 dark:bg-[#1e293b] text-orange-600 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-100 dark:border-slate-700 h-max">
                             <i class="fas fa-user-tie"></i> <span>For Agencies & Freelancers</span>
                         </div>
                         
@@ -925,18 +944,18 @@
 
                     <div class="flex justify-between items-start">
                         <div class="pr-2">
-                            <h3 class="font-space font-extrabold text-2xl text-slate-900 mb-0.5 tracking-tight">White-Label Panel</h3>
-                            <p class="text-[11px] text-slate-500 leading-relaxed min-h-[50px] pr-2 mt-2">Get 5 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.</p>
+                            <h3 class="font-space font-extrabold text-2xl text-slate-900 dark:text-white mb-0.5 tracking-tight">White-Label Panel</h3>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed min-h-[50px] pr-2 mt-2">Get 5 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.</p>
                         </div>
-                        <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-100">
+                        <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-100 dark:border-slate-800">
                             <img src="{{ asset('/assets/images/user_dashboard.png') }}" class="w-full h-auto object-cover opacity-90" alt="Dashboard Preview">
                         </div>
                     </div>
                     
                     <div class="my-6 flex flex-col items-start justify-end h-16">
                         <div class="flex items-end">
-                            <span id="priceValue1" class="font-space font-extrabold text-[44px] text-slate-900 tracking-tighter leading-none">₹999</span>
-                            <span id="pricePeriod1" class="text-sm text-slate-500 font-bold mb-1.5 ml-1">/ month</span>
+                            <span id="priceValue1" class="font-space font-extrabold text-[44px] text-slate-900 dark:text-white tracking-tighter leading-none">₹999</span>
+                            <span id="pricePeriod1" class="text-sm text-slate-500 dark:text-slate-400 font-bold mb-1.5 ml-1">/ month</span>
                         </div>
                         <div id="priceSave1" class="hidden mt-1"></div>
                     </div>
@@ -945,18 +964,18 @@
                         Get Started <i class="fas fa-arrow-right ml-1"></i>
                     </a>
 
-                    <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 pb-5 mb-5">
+                    <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-5 mb-5">
                         <span class="flex items-center"><i class="fas fa-video mr-1"></i> 1:1 Demo on Google Meet</span>
                         <span class="flex items-center"><i class="far fa-credit-card mr-1"></i> No Credit Card</span>
                         <span class="flex items-center"><i class="fas fa-check-circle mr-1"></i> 100% Free Demo</span>
                     </div>
 
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-extrabold text-slate-900">Everything You Get</span>
+                        <span class="text-sm font-extrabold text-slate-900 dark:text-white">Everything You Get</span>
                         <span class="text-[9px] font-bold text-orange-600">All features included in yearly plan</span>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-y-3 mt-2 text-[11px] text-slate-700 font-medium">
+                    <div class="grid grid-cols-1 gap-y-3 mt-2 text-[11px] text-slate-700 dark:text-slate-200 font-medium">
                         <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>1 White-Label Platform</span></div>
                         <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products Included</span></div>
                         <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Custom Domain & Logo</span></div>
@@ -964,34 +983,34 @@
                         <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Full Partner Dashboard Access</span></div>
                     </div>
 
-                    <div class="mt-8 bg-orange-50/70 rounded-xl p-4 flex items-start space-x-3 border border-orange-100">
-                        <div class="w-8 h-8 rounded-md bg-orange-100 flex items-center justify-center text-orange-600 flex-shrink-0"><i class="fas fa-rocket"></i></div>
+                    <div class="mt-8 bg-orange-50 dark:bg-[#1e293b]/70 rounded-xl p-4 flex items-start space-x-3 border border-orange-100 dark:border-slate-700">
+                        <div class="w-8 h-8 rounded-md bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 flex-shrink-0"><i class="fas fa-rocket"></i></div>
                         <div>
-                            <span class="block text-[11px] font-extrabold text-slate-900 mb-0.5">Most Popular Choice</span>
-                            <span class="block text-[9px] text-slate-500 leading-relaxed font-medium">Perfect for getting started and building your customer base.</span>
+                            <span class="block text-[11px] font-extrabold text-slate-900 dark:text-white mb-0.5">Most Popular Choice</span>
+                            <span class="block text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Perfect for getting started and building your customer base.</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 2: White-Label Master Panel (With Coming Soon Overlay) -->
-                <div class="bg-white rounded-[2rem] p-8 shadow-2xl border-2 border-orange-400 flex flex-col relative overflow-hidden group hover:shadow-orange-500/10 transition-all duration-300">
+                <div class="bg-white dark:bg-[#0B0F19] rounded-[2rem] p-8 shadow-2xl border-2 border-orange-400 flex flex-col relative overflow-hidden group hover:shadow-orange-500/10 transition-all duration-300">
                     
                     <!-- Blurred background content -->
                     <div class="flex flex-col flex-grow filter blur-[2px] opacity-60 select-none pointer-events-none">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="inline-flex items-center space-x-2 bg-slate-100 text-slate-600 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-slate-200 h-max">
+                            <div class="inline-flex items-center space-x-2 bg-slate-100 dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-slate-200 dark:border-slate-700 h-max">
                                 <i class="fas fa-network-wired"></i> <span>For Network Builders</span>
                             </div>
                             
                             <div class="flex flex-col items-end">
-                                <span class="text-[9px] font-extrabold text-slate-600 text-right leading-tight mr-1">Create<br/>Manage<br/>Scale</span>
+                                <span class="text-[9px] font-extrabold text-slate-600 dark:text-slate-300 text-right leading-tight mr-1">Create<br/>Manage<br/>Scale</span>
                             </div>
                         </div>
 
                         <div class="flex justify-between items-start">
                             <div class="pr-2">
-                                <h3 class="font-space font-extrabold text-2xl text-slate-900 mb-0.5 tracking-tight">White-Label Master Panel</h3>
-                                <p class="text-[11px] text-slate-500 leading-relaxed min-h-[50px] pr-2 mt-2">Create and manage unlimited white-label sub-panels. Onboard your own reseller partners and control your entire ecosystem.</p>
+                                <h3 class="font-space font-extrabold text-2xl text-slate-900 dark:text-white mb-0.5 tracking-tight">White-Label Master Panel</h3>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed min-h-[50px] pr-2 mt-2">Create and manage unlimited white-label sub-panels. Onboard your own reseller partners and control your entire ecosystem.</p>
                             </div>
                             <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-800 bg-slate-900">
                                 <img src="{{ asset('/assets/images/user_dashboard2.png') }}" class="w-full h-auto object-cover opacity-90" alt="Master Dashboard Preview">
@@ -1000,8 +1019,8 @@
                         
                         <div class="my-6 flex flex-col items-start justify-end h-16">
                             <div class="flex items-end">
-                                <span id="priceValue2" class="font-space font-extrabold text-[44px] text-slate-900 tracking-tighter leading-none">₹2,499</span>
-                                <span id="pricePeriod2" class="text-sm text-slate-500 font-bold mb-1.5 ml-1">/ month</span>
+                                <span id="priceValue2" class="font-space font-extrabold text-[44px] text-slate-900 dark:text-white tracking-tighter leading-none">₹2,499</span>
+                                <span id="pricePeriod2" class="text-sm text-slate-500 dark:text-slate-400 font-bold mb-1.5 ml-1">/ month</span>
                             </div>
                             <div id="priceSave2" class="hidden mt-1"></div>
                         </div>
@@ -1010,30 +1029,30 @@
                             Get Started <i class="fas fa-arrow-right ml-1"></i>
                         </div>
 
-                        <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 pb-5 mb-5">
+                        <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-5 mb-5">
                             <span class="flex items-center"><i class="fas fa-video mr-1"></i> 1:1 Demo on Google Meet</span>
                             <span class="flex items-center"><i class="far fa-credit-card mr-1"></i> No Credit Card</span>
                             <span class="flex items-center"><i class="fas fa-check-circle mr-1"></i> 100% Free Demo</span>
                         </div>
 
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm font-extrabold text-slate-900">Everything You Get</span>
-                            <span class="text-[9px] font-bold text-slate-600">All features included in yearly plan</span>
+                            <span class="text-sm font-extrabold text-slate-900 dark:text-white">Everything You Get</span>
+                            <span class="text-[9px] font-bold text-slate-600 dark:text-slate-300">All features included in yearly plan</span>
                         </div>
 
-                        <div class="grid grid-cols-1 gap-y-3 mt-2 text-[11px] text-slate-700 font-medium">
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Unlimited White Label Panels</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Partner Management System</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Centralized Master Dashboard</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 mt-0.5 text-[10px]"></i> <span>Complete Reseller Control</span></div>
+                        <div class="grid grid-cols-1 gap-y-3 mt-2 text-[11px] text-slate-700 dark:text-slate-200 font-medium">
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Unlimited White Label Panels</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Partner Management System</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Centralized Master Dashboard</span></div>
+                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Complete Reseller Control</span></div>
                         </div>
 
-                        <div class="mt-8 bg-slate-50 rounded-xl p-4 flex items-start space-x-3 border border-slate-200">
-                            <div class="w-8 h-8 rounded-md bg-slate-200 flex items-center justify-center text-slate-700 flex-shrink-0"><i class="fas fa-globe"></i></div>
+                        <div class="mt-8 bg-slate-50 dark:bg-[#151c2c] rounded-xl p-4 flex items-start space-x-3 border border-slate-200 dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-md bg-slate-200 flex items-center justify-center text-slate-700 dark:text-slate-200 flex-shrink-0"><i class="fas fa-globe"></i></div>
                             <div>
-                                <span class="block text-[11px] font-extrabold text-slate-900 mb-0.5">Scale Globally</span>
-                                <span class="block text-[9px] text-slate-500 leading-relaxed font-medium">Ideal for businesses building a vast reseller network.</span>
+                                <span class="block text-[11px] font-extrabold text-slate-900 dark:text-white mb-0.5">Scale Globally</span>
+                                <span class="block text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Ideal for businesses building a vast reseller network.</span>
                             </div>
                         </div>
                     </div>
@@ -1050,7 +1069,7 @@
                         <p class="text-xs text-slate-200 max-w-xs mt-3 leading-relaxed font-medium">
                             Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
                         </p>
-                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
+                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#0B0F19]/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
                             <i class="fas fa-lock text-amber-400 text-xs"></i>
                             <span>Under Active Development</span>
                         </div>
@@ -1081,10 +1100,10 @@
 
                 if (plan === 'monthly') {
                     toggleBg.style.transform = 'translateX(0)';
-                    btnMonthly.classList.remove('text-slate-600');
+                    btnMonthly.classList.remove('text-slate-600 dark:text-slate-300');
                     btnMonthly.classList.add('text-white');
                     btnYearly.classList.remove('text-white');
-                    btnYearly.classList.add('text-slate-600');
+                    btnYearly.classList.add('text-slate-600 dark:text-slate-300');
                     
                     price1.innerHTML = '₹999';
                     price2.innerHTML = '₹2,499';
@@ -1096,7 +1115,7 @@
                     
                     if(subtextContainer) {
                         subtextContainer.classList.remove('bg-green-50', 'border-green-200');
-                        subtextContainer.classList.add('bg-white', 'border-orange-100');
+                        subtextContainer.classList.add('bg-white dark:bg-[#0B0F19]', 'border-orange-100 dark:border-slate-700');
                         subtextIcon.classList.remove('text-green-600', 'fa-gift');
                         subtextIcon.classList.add('text-orange-500', 'fa-calendar-alt');
                         subtext.classList.remove('text-green-700');
@@ -1105,10 +1124,10 @@
                     }
                 } else {
                     toggleBg.style.transform = 'translateX(90px)';
-                    btnYearly.classList.remove('text-slate-600');
+                    btnYearly.classList.remove('text-slate-600 dark:text-slate-300');
                     btnYearly.classList.add('text-white');
                     btnMonthly.classList.remove('text-white');
-                    btnMonthly.classList.add('text-slate-600');
+                    btnMonthly.classList.add('text-slate-600 dark:text-slate-300');
                     
                     price1.innerHTML = '₹9,990';
                     price2.innerHTML = '₹24,990';
@@ -1124,7 +1143,7 @@
                     save2.classList.add('flex');
 
                     if(subtextContainer) {
-                        subtextContainer.classList.remove('bg-white', 'border-orange-100');
+                        subtextContainer.classList.remove('bg-white dark:bg-[#0B0F19]', 'border-orange-100 dark:border-slate-700');
                         subtextContainer.classList.add('bg-green-50', 'border-green-200');
                         subtextIcon.classList.remove('text-orange-500', 'fa-calendar-alt');
                         subtextIcon.classList.add('text-green-600', 'fa-gift');
@@ -1138,29 +1157,29 @@
     </section>
 
     <!-- SECTION 9: YOUR GROWTH PATH & TESTIMONIALS -->
-    <section class="py-10 lg:py-14 bg-white border-t border-slate-200/80 reveal">
+    <section class="py-10 lg:py-14 bg-white dark:bg-[#0B0F19] border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             
             <!-- Growth Path -->
             <div>
                 <div class="text-center mb-10">
                     <span class="badge-pill mx-auto">{{ $data['lp_growth_tag'] }}</span>
-                    <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mt-3">
+                    <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mt-3">
                         {{ $data['lp_growth_title'] }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-1">{{ $data['lp_growth_subtitle'] }}</p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">{{ $data['lp_growth_subtitle'] }}</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     @if(is_array($data['lp_growth_steps']))
                         @foreach($data['lp_growth_steps'] as $gstep)
-                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start space-x-3">
-                            <div class="w-8 h-8 rounded-full bg-orange-100 text-[#ff3d00] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-700/80 flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
                                 <i class="{{ $gstep['icon'] ?? 'fas fa-arrow-right' }}"></i>
                             </div>
                             <div>
                                 <span class="text-[10px] font-bold text-[#ff3d00] uppercase tracking-wider">{{ $gstep['step'] ?? '' }}</span>
-                                <h5 class="font-bold text-xs text-slate-900 mt-0.5">{{ $gstep['title'] ?? '' }}</h5>
+                                <h5 class="font-bold text-xs text-slate-900 dark:text-white mt-0.5">{{ $gstep['title'] ?? '' }}</h5>
                             </div>
                         </div>
                         @endforeach
@@ -1172,10 +1191,10 @@
             <div>
                 <div class="text-center mb-10">
                     <span class="badge-pill mx-auto">{{ $data['lp_testimonials_tag'] }}</span>
-                    <h2 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight mt-3">
+                    <h2 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tight mt-3">
                         {{ $data['lp_testimonials_title'] }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-1">{{ $data['lp_testimonials_subtitle'] }}</p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">{{ $data['lp_testimonials_subtitle'] }}</p>
                 </div>
 
                 <!-- Testimonials Mobile Horizontal Auto-Slider & Desktop Grid -->
@@ -1183,18 +1202,18 @@
                     <div id="testimonialSlider" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth md:grid md:grid-cols-3 gap-6 pb-4 md:pb-0 no-scrollbar">
                         @if(is_array($data['lp_testimonials_items']))
                             @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
-                            <div class="testimonial-card w-full min-w-full md:min-w-0 snap-center flex-shrink-0 p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-4">
+                            <div class="testimonial-card w-full min-w-full md:min-w-0 snap-center flex-shrink-0 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-700/90 shadow-sm flex flex-col justify-between space-y-4">
                                 <div class="space-y-3">
                                     <div class="flex items-center space-x-1 text-amber-400 text-xs">
                                         @for($r = 0; $r < ($testi['rating'] ?? 5); $r++)
                                             <i class="fas fa-star"></i>
                                         @endfor
                                     </div>
-                                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium break-words">"{{ $testi['quote'] ?? '' }}"</p>
+                                    <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium break-words">"{{ $testi['quote'] ?? '' }}"</p>
                                 </div>
-                                <div class="pt-4 border-t border-slate-200/70 flex items-center justify-between text-xs sm:text-sm">
-                                    <span class="font-bold text-slate-900">{{ $testi['name'] ?? '' }}</span>
-                                    <span class="text-slate-500 font-medium text-xs">{{ $testi['role'] ?? '' }}</span>
+                                <div class="pt-4 border-t border-slate-200 dark:border-slate-700/70 flex items-center justify-between text-xs sm:text-sm">
+                                    <span class="font-bold text-slate-900 dark:text-white">{{ $testi['name'] ?? '' }}</span>
+                                    <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">{{ $testi['role'] ?? '' }}</span>
                                 </div>
                             </div>
                             @endforeach
@@ -1216,23 +1235,23 @@
     </section>
 
     <!-- SECTION 10: FAQ ACCORDION -->
-    <section id="faq" class="py-14 lg:py-20 bg-slate-50/60 border-t border-slate-200/60 reveal">
+    <section id="faq" class="py-14 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/60 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 
                 <!-- Left FAQ Header (4 Cols) -->
                 <div class="lg:col-span-4 text-left space-y-4">
-                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-[#ff3d00] border border-orange-200">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200">
                         {{ $data['lp_faqs_tag'] }}
                     </span>
-                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight leading-tight">
+                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight leading-tight">
                         {{ $data['lp_faqs_title'] }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {{ $data['lp_faqs_subtitle'] }}
                     </p>
                     <div class="pt-2">
-                        <a href="#contact" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 space-x-1">
+                        <a href="#contact" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 dark:text-indigo-300 space-x-1">
                             <span>View All FAQs</span>
                             <i class="fas fa-arrow-right text-[10px]"></i>
                         </a>
@@ -1240,15 +1259,15 @@
                 </div>
 
                 <!-- Right FAQ Accordion Card (8 Cols) -->
-                <div class="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 space-y-3">
+                <div class="lg:col-span-8 bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700/80 space-y-3">
                     @if(is_array($data['lp_faqs_items']))
                         @foreach($data['lp_faqs_items'] as $fIndex => $faq)
-                        <div class="border-b border-slate-100 last:border-0 pb-3 last:pb-0">
-                            <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 bg-white hover:text-[#ff3d00] flex items-center justify-between focus:outline-none transition-colors">
+                        <div class="border-b border-slate-100 dark:border-slate-800 last:border-0 pb-3 last:pb-0">
+                            <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 dark:text-white bg-white dark:bg-[#0B0F19] hover:text-[#ff3d00] flex items-center justify-between focus:outline-none transition-colors">
                                 <span class="pr-4">{{ $faq['question'] ?? '' }}</span>
                                 <i class="fas fa-plus text-xs text-slate-400 font-normal transition-transform duration-200 ml-2 flex-shrink-0"></i>
                             </button>
-                            <div class="faq-content hidden pt-1 pb-3 text-xs text-slate-600 leading-relaxed">
+                            <div class="faq-content hidden pt-1 pb-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                                 {{ $faq['answer'] ?? '' }}
                             </div>
                         </div>
@@ -1301,38 +1320,38 @@
     </section>
 
     <!-- SECTION 12: FOOTER (Task 5: Mobile 2 columns per row & Dynamic active products only) -->
-    <footer class="bg-white text-slate-600 py-12 border-t border-slate-200/80">
+    <footer class="bg-white dark:bg-[#0B0F19] text-slate-600 dark:text-slate-300 py-12 border-t border-slate-200 dark:border-slate-700/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200/80">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200 dark:border-slate-700/80">
                 
                 <!-- Col 1: Logo & Socials (Span 2 on mobile, 3 Cols on lg) -->
                 <div class="col-span-2 lg:col-span-3 space-y-4">
-                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 font-space font-bold text-xl">
+                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 dark:text-white font-space font-bold text-xl">
                         @if($data['lp_header_logo'])
                             <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-9 w-auto object-contain">
                         @else
                             <div class="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
                                 <i class="fas fa-layer-group"></i>
                             </div>
-                            <span class="text-xl font-bold tracking-tight text-slate-900">Nooryak</span>
+                            <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Nooryak</span>
                         @endif
                     </a>
-                    <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
                         {{ $data['lp_footer_desc'] }}
                     </p>
                     <div class="flex items-center space-x-2.5 pt-1">
-                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
-                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
-                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
-                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
+                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
+                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
+                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
+                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
+                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
                     </div>
                 </div>
 
                 <!-- Col 2: Quick Links (Col 1 on mobile, 2 Cols on lg) -->
                 <div class="col-span-1 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Quick Links</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Quick Links</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
                         <li><a href="#hero" class="hover:text-[#ff3d00] transition-colors">Home</a></li>
                         <li><a href="#about" class="hover:text-[#ff3d00] transition-colors">Solutions</a></li>
                         <li><a href="#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a></li>
@@ -1343,8 +1362,8 @@
 
                 <!-- Col 3: Our Products (Task 5: Dynamic Active Products Only - Remove Unwanted Products) -->
                 <div class="col-span-1 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Our Products</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Our Products</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
                         @if($dbProds->count() > 0)
                             @foreach($dbProds as $prod)
                                 <li><a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="hover:text-[#ff3d00] transition-colors">{{ $prod->name }}</a></li>
@@ -1361,8 +1380,8 @@
 
                 <!-- Col 4: Support & Legal Policies (Col 1 on mobile, 2 Cols on lg) -->
                 <div class="col-span-1 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600">
+                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Support</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
                         <li><a href="#faq" class="hover:text-[#ff3d00] transition-colors">Help Center</a></li>
                         <li><a href="mailto:{{ $data['lp_contact_email'] }}" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
                         <li><a href="{{ $data['lp_book_demo_url'] }}" class="hover:text-[#ff3d00] transition-colors">Book a Demo</a></li>
@@ -1375,10 +1394,10 @@
 
                 <!-- Col 5: Newsletter Subscription (Span 2 on mobile, 3 Cols on lg) -->
                 <div class="col-span-2 lg:col-span-3 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Subscribe to Our Newsletter</h5>
-                    <p class="text-xs text-slate-500">Get the latest updates and offers.</p>
+                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Subscribe to Our Newsletter</h5>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Get the latest updates and offers.</p>
                     <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex items-center space-x-0 pt-1">
-                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-xs text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-[#151c2c] focus:bg-white dark:bg-[#0B0F19] focus:outline-none focus:ring-1 focus:ring-orange-500">
                         <button type="submit" class="px-4 py-2.5 rounded-r-xl btn-gradient text-white font-bold text-xs flex-shrink-0 transition-all">
                             Subscribe
                         </button>
@@ -1388,7 +1407,7 @@
             </div>
 
             <!-- Bottom Copyright & Legal Links (Task 6: Legal Policy Links) -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-3">
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium gap-3">
                 <p>{{ $data['lp_copyright_text'] }}</p>
                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
                     <a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
@@ -1581,7 +1600,7 @@
     <div id="promoModal" class="fixed inset-0 z-[100] flex items-start md:items-center justify-center bg-slate-900/80 backdrop-blur-sm opacity-0 invisible transition-all duration-500 overflow-y-auto">
         
         <!-- Modal Container -->
-        <div class="relative w-full max-w-4xl mx-auto my-6 md:my-auto mx-4 flex flex-col md:flex-row bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 delay-100" id="promoModalContent">
+        <div class="relative w-full max-w-4xl mx-auto my-6 md:my-auto mx-4 flex flex-col md:flex-row bg-white dark:bg-[#0B0F19] rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 delay-100" id="promoModalContent">
             
             <!-- Close Button -->
             <button onclick="closePromoModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 text-white hover:bg-slate-700 transition-colors focus:outline-none shadow-lg">
@@ -1590,19 +1609,19 @@
             
             <!-- Left Side (Light) -->
             <div class="w-full md:w-1/2 p-5 md:p-12 flex flex-col justify-center">
-                <div class="inline-flex items-center space-x-1.5 bg-orange-100 text-orange-600 px-3 py-1 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider w-max mb-3 md:mb-5 border border-orange-200">
+                <div class="inline-flex items-center space-x-1.5 bg-orange-100 dark:bg-orange-900/30 text-orange-600 px-3 py-1 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider w-max mb-3 md:mb-5 border border-orange-200">
                     <i class="fas fa-bolt"></i> <span>Exclusive Offer</span>
                 </div>
                 
-                <h3 class="font-space font-extrabold text-2xl md:text-4xl text-slate-900 leading-tight mb-2 md:mb-4 tracking-tight">
+                <h3 class="font-space font-extrabold text-2xl md:text-4xl text-slate-900 dark:text-white leading-tight mb-2 md:mb-4 tracking-tight">
                     🚀 All-in-One White Label SaaS Panel
                 </h3>
                 
-                <p class="text-[11px] md:text-sm text-slate-500 mb-4 md:mb-8 leading-relaxed font-medium">
+                <p class="text-[11px] md:text-sm text-slate-500 dark:text-slate-400 mb-4 md:mb-8 leading-relaxed font-medium">
                     Save Extra on All-in-One White-Label 2 Year Plan
                 </p>
                 
-                <div class="space-y-2 md:space-y-3 mb-4 md:mb-8 text-[11px] md:text-sm font-semibold text-slate-700 hidden md:block">
+                <div class="space-y-2 md:space-y-3 mb-4 md:mb-8 text-[11px] md:text-sm font-semibold text-slate-700 dark:text-slate-200 hidden md:block">
                     <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>5 White-Label SaaS Products</span></div>
                     <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>One Simple Subscription</span></div>
                     <div class="flex items-center space-x-2 md:space-x-3"><i class="fas fa-check-circle text-green-500"></i> <span>Priority Customer Support</span></div>
@@ -1611,7 +1630,7 @@
                 </div>
                 
                 <div class="flex items-center space-x-2 md:space-x-3 text-sm md:text-lg">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-50 dark:bg-[#1e293b] text-blue-500 flex items-center justify-center"><i class="fas fa-bolt"></i></div>
                     <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center"><i class="fas fa-comment-dots"></i></div>
                     <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center"><i class="far fa-envelope"></i></div>
                     <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center"><i class="fas fa-coins"></i></div>
@@ -1624,8 +1643,8 @@
                 <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent pointer-events-none"></div>
                 
                 <div class="relative z-10 w-full">
-                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white mx-auto flex items-center justify-center mb-3 md:mb-6 shadow-lg shadow-orange-500/20">
-                        <i class="fas fa-stopwatch text-xl md:text-3xl text-slate-800"></i>
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white dark:bg-[#0B0F19] mx-auto flex items-center justify-center mb-3 md:mb-6 shadow-lg shadow-orange-500/20">
+                        <i class="fas fa-stopwatch text-xl md:text-3xl text-slate-800 dark:text-slate-100"></i>
                     </div>
                     
                     <h3 class="font-space font-extrabold text-xl md:text-3xl text-white mb-1.5 md:mb-3 tracking-tight">
@@ -1638,37 +1657,37 @@
                     
                     <div class="flex items-center justify-center space-x-4 w-full mb-4 md:mb-8">
                         <div class="w-full h-px bg-slate-800"></div>
-                        <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Offer Expires In</span>
+                        <span class="text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">Offer Expires In</span>
                         <div class="w-full h-px bg-slate-800"></div>
                     </div>
                     
                     <!-- Timer -->
                     <div class="flex items-center justify-center space-x-3 md:space-x-4 mb-5 md:mb-8">
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
-                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900" id="promoHrs">02</span>
+                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white dark:bg-[#0B0F19] rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
+                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900 dark:text-white" id="promoHrs">02</span>
                             </div>
                             <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Hrs</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
-                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900" id="promoMins">13</span>
+                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white dark:bg-[#0B0F19] rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
+                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900 dark:text-white" id="promoMins">13</span>
                             </div>
                             <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Min</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
-                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900" id="promoSecs">29</span>
+                            <div class="w-12 h-12 md:w-20 md:h-20 bg-white dark:bg-[#0B0F19] rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg mb-1.5 md:mb-2">
+                                <span class="font-space font-extrabold text-2xl md:text-4xl text-slate-900 dark:text-white" id="promoSecs">29</span>
                             </div>
                             <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Sec</span>
                         </div>
                     </div>
                     
-                    <div class="bg-orange-500 text-slate-900 font-bold text-[10px] md:text-sm py-2 px-2 md:py-2.5 md:px-4 rounded-lg mb-3 md:mb-4 shadow-lg shadow-orange-500/20">
+                    <div class="bg-orange-500 text-slate-900 dark:text-white font-bold text-[10px] md:text-sm py-2 px-2 md:py-2.5 md:px-4 rounded-lg mb-3 md:mb-4 shadow-lg shadow-orange-500/20">
                         Don't lose your savings! Go for 2 Years Plan & Get 10% Off
                     </div>
                     
-                    <a href="https://wa.me/6374913298" target="_blank" class="w-full block bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-[13px] md:text-base py-3 md:py-4 rounded-xl transition-colors shadow-lg">
+                    <a href="https://wa.me/6374913298" target="_blank" class="w-full block bg-white dark:bg-[#0B0F19] hover:bg-slate-50 dark:bg-[#151c2c] text-slate-900 dark:text-white font-extrabold text-[13px] md:text-base py-3 md:py-4 rounded-xl transition-colors shadow-lg">
                         Claim My Discount Now <i class="fas fa-arrow-right ml-2 text-[10px] md:text-sm"></i>
                     </a>
                 </div>
@@ -1732,5 +1751,23 @@
             }, 1000);
         }
     </script>
+<script>
+    function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    
+    // On page load
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+</script>
 </body>
 </html>
