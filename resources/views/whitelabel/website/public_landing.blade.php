@@ -401,7 +401,7 @@
         html.dark section[style*="background:#fff"], html.dark section[style*="background:#f5f4ff"], html.dark section[style*="background:#f0efff"] { 
             background: transparent !important; border-color: rgba(255,255,255,0.05) !important; 
         }
-        html.dark .text-brand { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+        /* Removed .text-brand color override to allow gradient in dark mode */
         html.dark button[title="Toggle Dark Mode"] { background: transparent !important; border-color: rgba(255,255,255,0.2) !important; color: #fff !important; }
         html.dark button[title="Toggle Dark Mode"]:hover { border-color: #fff !important; }
         
@@ -576,7 +576,7 @@
     <div style="position:absolute;bottom:-80px;left:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.10) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
 
     <div style="max-width:1200px; margin:0 auto; padding:0 24px; position:relative; z-index:1;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;" class="hero-grid">
+        <div style="display:grid; grid-template-columns:42% 58%; gap:48px; align-items:center;" class="hero-grid">
 
             {{-- Left --}}
             <div style="display:flex; flex-direction:column; gap:28px;">
@@ -593,7 +593,7 @@
                 </h1>
 
                 {{-- Subtitle --}}
-                <p style="font-size:15px; color:#475569; line-height:1.8; max-width:460px; margin:0">
+                <p style="font-size:15px; color:#475569; line-height:1.8; max-width:460px; margin:0; text-align:justify;">
                     {{ $agency->hero_subtitle ?? ($agency->name . ' helps Indian businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation – all in one place.') }}
                 </p>
 
@@ -606,7 +606,7 @@
                         Start Your Free Trial
                         <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                     </a>
-                    <a href="#how-it-works"
+                    <a href="#how-it-works" class="btn-outline"
                        style="display:inline-flex; align-items:center; gap:10px; background:#fff; color:#1e293b; font-weight:700; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; border:1.5px solid #e2e8f0; transition:all .2s; white-space:nowrap;"
                        onmouseover="this.style.borderColor='#a5b4fc';this.style.background='#fafafa'"
                        onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#fff'">
@@ -631,10 +631,10 @@
                 
                 {{-- Hero Image --}}
                 <img src="{{ $heroImg }}" alt="{{ $agency->name }} Dashboard"
-                     style="position:relative;z-index:2;width:100%;max-width:750px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15));">
+                     style="position:relative;z-index:2;width:100%;max-width:850px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15)); margin-right:-20px;">
 
                 {{-- Floating Element 1 (Top-Right): AI Powered --}}
-                <div class="badge-top-right" style="position:absolute; top:20px; right:0px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
+                <div class="badge-top-right" style="position:absolute; top:20px; right:-35px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #7c3aed, #4f46e5); display:flex; align-items:center; justify-content:center;">
                         <i data-lucide="sparkles" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
@@ -645,7 +645,7 @@
                 </div>
 
                 {{-- Floating Element 2 (Bottom-Left): Growth Ready --}}
-                <div class="badge-bot-left" style="position:absolute; bottom:30px; left:0px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
+                <div class="badge-bot-left" style="position:absolute; bottom:40px; left:-25px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #10b981, #059669); display:flex; align-items:center; justify-content:center;">
                         <i data-lucide="trending-up" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
@@ -660,56 +660,6 @@
 </section>
 
 
-
-{{-- ══ TRUST BAR — Category Pills ════════════════════════ --}}
-<section style="background:#fff;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;padding:36px 0">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px;text-align:center">
-        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:20px">
-            Trusted by 10,000+ Local Businesses Across India
-        </p>
-        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
-            @foreach($categories as $cat)
-                <div class="cat-pill">
-                    <span class="cat-icon">{{ $cat['icon'] }}</span>
-                    <span>{{ $cat['label'] }}</span>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- ══ WHY CHOOSE — 4 Feature Cards (Pixel-Perfect 4th Reference) ═════════ --}}
-<section id="features" style="background:#f5f4ff; padding:72px 0">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-        <div style="text-align:center;margin-bottom:52px">
-            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#0f172a;margin-bottom:12px">Why Choose {{ $agency->name }}?</h2>
-            <p style="font-size:14px;color:#64748b;max-width:600px;margin:0 auto;line-height:1.7">
-                Everything you need to run, grow and scale your business — without juggling
-                <span style="color:#4f46e5;font-weight:600">multiple tools</span>.
-            </p>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px" class="feat-grid">
-            @php
-                $featIconGradients = [
-                    0 => 'linear-gradient(135deg,#7c3aed,#6d28d9)',  /* purple */
-                    1 => 'linear-gradient(135deg,#10b981,#059669)',  /* green */
-                    2 => 'linear-gradient(135deg,#f97316,#ea580c)',  /* orange */
-                    3 => 'linear-gradient(135deg,#3b82f6,#1d4ed8)',  /* blue */
-                ];
-            @endphp
-            @foreach($features as $fi => $f)
-                <div style="background:#fff; border:1px solid #e9eef4; border-radius:20px; padding:28px 22px; transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px -12px rgba(79,70,229,.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                    <div style="width:54px; height:54px; border-radius:16px; background:{{ $featIconGradients[$fi] ?? $featIconGradients[0] }}; display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
-                        <i data-lucide="{{ $f['icon'] ?? 'zap' }}" style="width:26px;height:26px;color:#fff"></i>
-                    </div>
-                    <h3 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:10px">{{ $f['title'] }}</h3>
-                    <p style="font-size:13px;color:#4f46e5;line-height:1.75">{{ $f['desc'] }}</p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
 
 {{-- ══ BUILT FOR ENTREPRENEURS — features_leftside + KB Floating Elements ══ --}}
 <section id="about-section" class="about-section" style="padding:72px 0; background: transparent; overflow: hidden;">
@@ -774,6 +724,58 @@
             </div>
         </div>
 
+    </div>
+</section>
+
+
+
+{{-- ══ TRUST BAR — Category Pills ════════════════════════ --}}
+<section style="background:#fff;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;padding:36px 0">
+    <div style="max-width:1200px;margin:0 auto;padding:0 24px;text-align:center">
+        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:20px">
+            Trusted by 10,000+ Local Businesses Across India
+        </p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
+            @foreach($categories as $cat)
+                <div class="cat-pill">
+                    <span class="cat-icon">{{ $cat['icon'] }}</span>
+                    <span>{{ $cat['label'] }}</span>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- ══ WHY CHOOSE — 4 Feature Cards (Pixel-Perfect 4th Reference) ═════════ --}}
+<section id="features" style="background:#f5f4ff; padding:72px 0">
+    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+        <div style="text-align:center;margin-bottom:52px">
+            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#0f172a;margin-bottom:12px">Why Choose {{ $agency->name }}?</h2>
+            <p style="font-size:14px;color:#64748b;max-width:600px;margin:0 auto;line-height:1.7">
+                Everything you need to run, grow and scale your business — without juggling
+                <span style="color:#4f46e5;font-weight:600">multiple tools</span>.
+            </p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px" class="feat-grid">
+            @php
+                $featIconGradients = [
+                    0 => 'linear-gradient(135deg,#7c3aed,#6d28d9)',  /* purple */
+                    1 => 'linear-gradient(135deg,#10b981,#059669)',  /* green */
+                    2 => 'linear-gradient(135deg,#f97316,#ea580c)',  /* orange */
+                    3 => 'linear-gradient(135deg,#3b82f6,#1d4ed8)',  /* blue */
+                ];
+            @endphp
+            @foreach($features as $fi => $f)
+                <div style="background:#fff; border:1px solid #e9eef4; border-radius:20px; padding:28px 22px; transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px -12px rgba(79,70,229,.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                    <div style="width:54px; height:54px; border-radius:16px; background:{{ $featIconGradients[$fi] ?? $featIconGradients[0] }}; display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
+                        <i data-lucide="{{ $f['icon'] ?? 'zap' }}" style="width:26px;height:26px;color:#fff"></i>
+                    </div>
+                    <h3 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:10px">{{ $f['title'] }}</h3>
+                    <p style="font-size:13px;color:#4f46e5;line-height:1.75">{{ $f['desc'] }}</p>
+                </div>
+            @endforeach
+        </div>
     </div>
 </section>
 
