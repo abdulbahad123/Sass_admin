@@ -347,42 +347,90 @@
             width: 100%;
         }
 
-                /* ── DARK MODE OVERRIDES (FULL BLACK) ── */
-        html.dark body { background: #000000 !important; color: #ffffff !important; }
-        html.dark .site-header { background: rgba(0,0,0,0.9) !important; border-bottom: 1px solid #222 !important; }
-        html.dark .feat-card, html.dark .prod-card, html.dark .step-card, html.dark .review-card, html.dark .pricing-card-item, html.dark .pricing-right-panel, html.dark .cat-pill { 
-            background: #0a0a0a !important; 
-            border-color: #222 !important; 
-            box-shadow: none !important;
-        }
-        html.dark .pricing-left-panel { border-color: #222 !important; }
-        html.dark section, html.dark .about-section, html.dark div[id="mobile-menu"] { 
-            background: #000000 !important; 
-        }
-        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark p, html.dark a:not(.btn-brand) { 
+                /* ── DARK MODE OVERRIDES (DEEP GRADIENT & ANIMATION) ── */
+        html.dark body { 
+            background: transparent !important; 
             color: #ffffff !important; 
         }
-        html.dark p, html.dark .text-slate-600, html.dark .text-slate-500, html.dark span[style*="color:#64748b"], html.dark span[style*="color:#475569"], html.dark a[style*="color:#475569"] {
-            color: #a1a1aa !important;
+        /* Animated Background Gradient */
+        html.dark body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at top right, #1e1b4b 0%, #020617 60%, #000000 100%) !important;
+            z-index: -2;
         }
-        html.dark .cat-pill:hover { background: #111 !important; border-color: #333 !important; color: #fff !important; }
-        html.dark .site-footer { background: #050505 !important; }
-        html.dark .btn-outline { background: #111 !important; border-color: #333 !important; color: #fff !important; }
-        html.dark .btn-outline:hover { background: #222 !important; }
+
+        html.dark .site-header { background: rgba(2, 6, 23, 0.7) !important; backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+        
+        /* Glassmorphism for Cards */
+        html.dark .feat-card, html.dark .prod-card, html.dark .step-card, html.dark .review-card, html.dark .pricing-card-item, html.dark .pricing-right-panel, html.dark .cat-pill { 
+            background: rgba(15, 23, 42, 0.5) !important; 
+            backdrop-filter: blur(10px);
+            border-color: rgba(255,255,255,0.08) !important; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+        }
+        html.dark .pricing-left-panel { border-color: rgba(255,255,255,0.08) !important; background: rgba(15, 23, 42, 0.3) !important; }
+        
+        /* Transparent sections to show animated background */
+        html.dark section, html.dark .about-section, html.dark div[id="mobile-menu"], html.dark div[style*="background:#f8fafc"] { 
+            background: transparent !important; 
+        }
+        
+        /* Text Color Fixes */
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark p, html.dark a:not(.btn-brand), html.dark li { 
+            color: #ffffff !important; 
+        }
+        html.dark [style*="color:#0f172a"], html.dark [style*="color:#1e293b"], html.dark [style*="color:#334155"] {
+            color: #ffffff !important;
+        }
+        html.dark p, html.dark .text-slate-600, html.dark .text-slate-500, html.dark [style*="color:#64748b"], html.dark [style*="color:#475569"] {
+            color: #94a3b8 !important;
+        }
+        html.dark .cat-pill:hover { background: rgba(30, 41, 59, 0.8) !important; border-color: rgba(255,255,255,0.15) !important; color: #fff !important; }
+        html.dark .site-footer { background: rgba(2, 6, 23, 0.9) !important; border-top: 1px solid rgba(255,255,255,0.05); }
+        html.dark .btn-outline { background: rgba(15, 23, 42, 0.6) !important; border-color: rgba(255,255,255,0.1) !important; color: #fff !important; }
+        html.dark .btn-outline:hover { background: rgba(30, 41, 59, 0.8) !important; }
         html.dark .badge-top-left, html.dark .badge-top-right, html.dark .badge-mid-left, html.dark .badge-bot-left {
-            background: #111 !important; border-color: #333 !important;
+            background: rgba(15, 23, 42, 0.8) !important; border-color: rgba(255,255,255,0.1) !important; backdrop-filter: blur(8px);
         }
         html.dark .badge-top-left span[style*="color:#0f172a"], html.dark .badge-top-right span[style*="color:#0f172a"], html.dark .badge-bot-left span[style*="color:#0f172a"] {
             color: #fff !important;
         }
-        html.dark div[style*="background:#fff"] { background: #0a0a0a !important; border-color: #222 !important; }
-        html.dark div[style*="background:#f8fafc"] { background: #000000 !important; }
-        html.dark section[style*="background:#fff"] { background: #000000 !important; border-color: #222 !important; }
-        html.dark section[style*="background:#f5f4ff"] { background: #000000 !important; }
-        html.dark section[style*="background:#f0efff"] { background: #000000 !important; }
+        html.dark div[style*="background:#fff"] { background: transparent !important; border-color: rgba(255,255,255,0.08) !important; }
+        html.dark section[style*="background:#fff"], html.dark section[style*="background:#f5f4ff"], html.dark section[style*="background:#f0efff"] { 
+            background: transparent !important; border-color: rgba(255,255,255,0.05) !important; 
+        }
         html.dark .text-brand { color: #fff !important; -webkit-text-fill-color: #fff !important; }
-        html.dark button[title="Toggle Dark Mode"] { background: transparent !important; border-color: #444 !important; }
+        html.dark button[title="Toggle Dark Mode"] { background: transparent !important; border-color: rgba(255,255,255,0.2) !important; color: #fff !important; }
         html.dark button[title="Toggle Dark Mode"]:hover { border-color: #fff !important; }
+        
+        /* FAQ Card Background Override Fixes */
+        html.dark .faq-item { background: rgba(15, 23, 42, 0.5) !important; border-color: rgba(255,255,255,0.08) !important; }
+        html.dark .faq-item h3 { color: #fff !important; }
+        
+        /* Background Animation Dots */
+        @keyframes floatUpDots {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+        }
+        .dark-mode-stars {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none; overflow: hidden;
+        }
+        html.dark .dark-mode-stars { display: block; }
+        .star-dot {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: floatUpDots linear infinite;
+            box-shadow: 0 0 4px #fff;
+        }
         /* ── RESPONSIVE GRIDS ── */
         @media(max-width: 1024px) {
             .feat-grid { grid-template-columns: repeat(2,1fr) !important; }
@@ -423,6 +471,22 @@
     </style>
 </head>
 <body>
+
+<!-- Floating Background Animation -->
+<div class="dark-mode-stars">
+    <div class="star-dot" style="left: 10%; width: 3px; height: 3px; animation-duration: 15s; animation-delay: 0s;"></div>
+    <div class="star-dot" style="left: 25%; width: 2px; height: 2px; animation-duration: 22s; animation-delay: 2s;"></div>
+    <div class="star-dot" style="left: 40%; width: 4px; height: 4px; animation-duration: 18s; animation-delay: 5s;"></div>
+    <div class="star-dot" style="left: 60%; width: 2px; height: 2px; animation-duration: 25s; animation-delay: 1s;"></div>
+    <div class="star-dot" style="left: 80%; width: 3px; height: 3px; animation-duration: 17s; animation-delay: 3s;"></div>
+    <div class="star-dot" style="left: 90%; width: 2px; height: 2px; animation-duration: 28s; animation-delay: 6s;"></div>
+    <div class="star-dot" style="left: 35%; width: 1.5px; height: 1.5px; animation-duration: 19s; animation-delay: 8s;"></div>
+    <div class="star-dot" style="left: 75%; width: 3.5px; height: 3.5px; animation-duration: 24s; animation-delay: 4s;"></div>
+    <div class="star-dot" style="left: 50%; width: 2.5px; height: 2.5px; animation-duration: 16s; animation-delay: 7s;"></div>
+    <div class="star-dot" style="left: 15%; width: 1px; height: 1px; animation-duration: 21s; animation-delay: 9s;"></div>
+    <div class="star-dot" style="left: 5%; width: 2px; height: 2px; animation-duration: 14s; animation-delay: 11s;"></div>
+    <div class="star-dot" style="left: 85%; width: 3px; height: 3px; animation-duration: 26s; animation-delay: 12s;"></div>
+</div>
 
 {{-- ══ ANNOUNCEMENT BAR ══════════════════════════════════ --}}
 <div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
