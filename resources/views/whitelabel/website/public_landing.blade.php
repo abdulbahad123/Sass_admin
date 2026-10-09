@@ -469,6 +469,27 @@
 
         html { scroll-behavior: smooth; }
     </style>
+<style>
+        .footer-social-btn {
+            display:flex; align-items:center; justify-content:center;
+            width:32px; height:32px; border-radius:50%;
+            background: rgba(255,255,255,0.05); color: #fff;
+            transition: all 0.2s ease;
+        }
+        .footer-social-btn:hover {
+            background: var(--brand-primary); color: #fff;
+        }
+        html.dark .products-container-card { 
+            background: rgba(15, 23, 42, 0.5) !important; 
+            backdrop-filter: blur(10px) !important;
+            border-color: rgba(255,255,255,0.08) !important; 
+        }
+        @keyframes pulseCircle { 
+            0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.5; } 
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; } 
+            100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.5; } 
+        }
+    </style>
 </head>
 <body>
 
@@ -500,7 +521,7 @@
         {{-- Logo --}}
         <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
             @if(!empty($agency->logo))
-                <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:36px;width:auto;object-fit:contain">
+                <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:50px;width:auto;object-fit:contain">
             @else
                 <div class="bg-brand" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center">
                     <i data-lucide="layers" style="width:18px;height:18px;color:#fff"></i>
@@ -566,9 +587,9 @@
                 </span>
 
                 {{-- Headline --}}
-                <h1 style="font-size:clamp(2.2rem,4.5vw,3.6rem); font-weight:900; color:#0f172a; line-height:1.08; letter-spacing:-.8px; margin:0">
-                    {{ $agency->hero_title ?? 'Build. Automate.' }}
-                    <span class="text-brand" style="display:block; margin-top:2px">Scale. All in One</span>
+                <h1 style="font-size:clamp(1.8rem,3.8vw,3.2rem); font-weight:900; color:#0f172a; line-height:1.15; letter-spacing:-.8px; margin:0">
+                    Grow, Manage &<br>Automate Your<br>Business — <span class="text-brand">All in One Place</span><br>
+                    Scale. All in One
                 </h1>
 
                 {{-- Subtitle --}}
@@ -602,22 +623,36 @@
                 </div>
             </div>
 
-            {{-- Right: Dashboard image with slight perspective tilt --}}
-            <div style="display:flex; justify-content:flex-end; position:relative;">
-                {{-- Glow behind the image --}}
-                <div style="position:absolute;inset:-24px;background:radial-gradient(ellipse at 60% 50%,rgba(139,92,246,.12) 0%,transparent 70%);border-radius:32px;z-index:0;"></div>
+                        {{-- Right: Dashboard image with animated circles and floating elements --}}
+            <div style="display:flex; justify-content:center; position:relative; width:100%;">
+                {{-- Animated Concentric Circles --}}
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:350px; height:350px; border:1px solid rgba(167,139,250,0.3); border-radius:50%; animation: pulseCircle 4s infinite ease-in-out;"></div>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:500px; height:500px; border:1px solid rgba(167,139,250,0.15); border-radius:50%; animation: pulseCircle 4s infinite ease-in-out 1s;"></div>
+                
+                {{-- Hero Image --}}
                 <img src="{{ $heroImg }}" alt="{{ $agency->name }} Dashboard"
-                     style="position:relative;z-index:1;width:100%;max-width:600px;height:auto;border-radius:20px;box-shadow:0 32px 80px -16px rgba(79,70,229,.22),0 0 0 1px rgba(226,232,240,.5);object-fit:contain;transform:perspective(1200px) rotateY(-4deg) rotateX(2deg);transition:transform .4s;"
-                     onmouseover="this.style.transform='perspective(1200px) rotateY(-1deg) rotateX(0deg) scale(1.01)'"
-                     onmouseout="this.style.transform='perspective(1200px) rotateY(-4deg) rotateX(2deg)'">
+                     style="position:relative;z-index:2;width:100%;max-width:750px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15));">
 
-                {{-- Floating brand badge (the S icon in reference) --}}
-                <div style="position:absolute; bottom:-18px; right:-10px; z-index:2; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(79,70,229,.35); border:3px solid #fff; animation:floatAnim 3.5s ease-in-out infinite;">
-                    @if(!empty($agency->logo))
-                        <img src="{{ asset($agency->logo) }}" alt="" style="width:32px;height:32px;object-fit:contain;border-radius:50%;">
-                    @else
-                        <i data-lucide="layers" style="width:22px;height:22px;color:#fff"></i>
-                    @endif
+                {{-- Floating Element 1 (Top-Right): AI Powered --}}
+                <div class="badge-top-right" style="position:absolute; top:20px; right:0px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #7c3aed, #4f46e5); display:flex; align-items:center; justify-content:center;">
+                        <i data-lucide="sparkles" style="width:18px; height:18px; color:#fff;"></i>
+                    </div>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:14px; font-weight:800; color:#fff;">AI Powered</span>
+                        <span style="font-size:12px; font-weight:600; color:#a78bfa;">Smart automation</span>
+                    </div>
+                </div>
+
+                {{-- Floating Element 2 (Bottom-Left): Growth Ready --}}
+                <div class="badge-bot-left" style="position:absolute; bottom:30px; left:0px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #10b981, #059669); display:flex; align-items:center; justify-content:center;">
+                        <i data-lucide="trending-up" style="width:18px; height:18px; color:#fff;"></i>
+                    </div>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:14px; font-weight:800; color:#fff;">Growth Ready</span>
+                        <span style="font-size:12px; font-weight:600; color:#34d399;">Scale instantly</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1222,7 +1257,7 @@
             <div style="display:flex;flex-direction:column;gap:14px">
                 <div style="display:flex;align-items:center;gap:10px">
                     @if(!empty($agency->logo))
-                        <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:32px;width:auto">
+                        <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:50px;width:auto">
                     @else
                         <div class="bg-brand" style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                             <i data-lucide="layers" style="width:16px;height:16px;color:#fff"></i>
