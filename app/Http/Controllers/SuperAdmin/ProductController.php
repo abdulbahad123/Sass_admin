@@ -151,6 +151,8 @@ class ProductController extends Controller
                 'nonce' => $nonce,
                 'signature' => $signature,
             ]);
+        } elseif ($slug === 'whatsappbulk' || $slug === 'whatsapp-bulk' || $slug === 'whatsapp') {
+            $ssoUrl = !empty($product->app_url) ? rtrim($product->app_url, '/') . '/admin' : "https://whatsappbulk.{$rootDomain}/admin";
         } else {
             $baseUrl = "https://{$slug}.{$rootDomain}";
             $ssoUrl = "{$baseUrl}/X9_AdMiN-Portal_V7/sso-login?" . http_build_query([

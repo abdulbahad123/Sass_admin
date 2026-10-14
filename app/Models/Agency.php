@@ -189,6 +189,10 @@ class Agency extends Model
             return "https://websitebuilder.{$rootDomain}";
         }
 
+        if ($cleanProductSlug === 'whatsappbulk' || $cleanProductSlug === 'whatsapp-bulk' || $cleanProductSlug === 'whatsapp') {
+            return "https://whatsappbulk.{$rootDomain}";
+        }
+
         return "https://{$cleanProductSlug}.{$rootDomain}";
     }
 
@@ -299,6 +303,30 @@ class Agency extends Model
                 'features' => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
                 'cta_text' => 'View Details →',
                 'cta_subnote' => 'No credit card required • Cancel anytime',
+            ],
+            'whatsappbulk'     => [
+                'color' => '#25d366',
+                'gradient' => 'linear-gradient(135deg, #25d366 0%, #128c7e 100%)',
+                'left_bg' => '#f0fdf4',
+                'product_logo' => 'assets/landing_page/whatsapp_logo.png',
+                'product_image' => 'assets/landing_page/whatsapp_image.png',
+                'product_tagline' => 'Automate • Broadcast • Convert',
+                'product_title' => 'WhatsApp Automation & Bulk Marketing',
+                'product_subtitle' => 'Scale your business with AI WhatsApp chatbots, bulk sender & autoresponder.',
+                'icon' => 'message-square',
+                'plan_badge' => '⚡ AUTOMATION PRO',
+                'plan_subbadge' => 'High ROI',
+                'plan_badge_bg' => '#dcfce7',
+                'plan_badge_color' => '#15803d',
+                'plan_name' => 'WhatsApp Enterprise',
+                'plan_subtitle' => 'Unlimited WhatsApp messaging, AI chatbot builder, contact management & auto-responder.',
+                'price_monthly' => '1999',
+                'price_yearly' => '19999',
+                'trust_count' => '',
+                'is_popular' => false,
+                'features' => ['Multi-Device WhatsApp Connect', 'Bulk Messaging Campaigns', 'AI Chatbot & Flow Builder', 'Auto Responder & Keywords', 'Contact Lists & CSV Import', 'API & Webhook Integrations'],
+                'cta_text' => 'View Details →',
+                'cta_subnote' => 'Safe interval delays • High inbox rate',
             ],
             'websitebuilder'   => [
                 'color' => '#2563eb',

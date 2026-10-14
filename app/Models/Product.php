@@ -38,6 +38,10 @@ class Product extends Model
             return "https://websitebuilder.{$rootDomain}";
         }
 
+        if ($slug === 'whatsappbulk' || $slug === 'whatsapp-bulk' || $slug === 'whatsapp') {
+            return $this->app_url ?: "https://whatsappbulk.{$rootDomain}";
+        }
+
         return "https://{$slug}.{$rootDomain}";
     }
 

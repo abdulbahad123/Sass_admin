@@ -41,10 +41,11 @@ class DatabaseProvisioningService
         $cleanAgencySlug = str_replace('-', '_', Str::slug($cleanAgencyName));
         $cleanAgencySlug = preg_replace('/[^a-z0-9_]/', '', $cleanAgencySlug);
 
-        // Standardized product suffix: launchshop or webbuild
+        // Standardized product suffix: launchshop, webbuild, or whatsapp
         $productSlug = strtolower($product->slug ?? $product->name ?? 'launchshop');
         $isWb = in_array($productSlug, ['website-builder', 'websitebuilder', 'webbuild']);
-        $cleanProductSlug = $isWb ? 'webbuild' : 'launchshop';
+        $isWa = in_array($productSlug, ['whatsappbulk', 'whatsapp-bulk', 'whatsapp', 'whatautomation', 'whatsapp-automation']);
+        $cleanProductSlug = $isWa ? 'whatsapp' : ($isWb ? 'webbuild' : 'launchshop');
 
         $dbName = "{$cpanelUser}_ps_{$cleanAgencySlug}_{$cleanProductSlug}";
 
@@ -76,12 +77,13 @@ class DatabaseProvisioningService
         $tableCount = $this->countTables($dbName);
         $hasRequiredTables = false;
         $isWb = in_array(Str::slug($productSlug), ['website-builder', 'websitebuilder']);
+        $isWa = in_array(Str::slug($productSlug), ['whatsappbulk', 'whatsapp-bulk', 'whatsapp', 'whatautomation', 'whatsapp-automation']);
 
         if ($tableCount > 0) {
             try {
                 config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
                 DB::purge('target_tenant_db');
-                $checkTable = $isWb ? 'wb_customers' : 'packages';
+                $checkTable = $isWa ? 'accounts' : ($isWb ? 'wb_customers' : 'packages');
                 $pkgCheck = DB::connection('target_tenant_db')->select("SHOW TABLES LIKE '{$checkTable}'");
                 $hasRequiredTables = !empty($pkgCheck);
             } catch (Throwable $e) {
@@ -91,7 +93,7 @@ class DatabaseProvisioningService
 
         if ($tableCount > 0 && $hasRequiredTables) {
             Log::info("Database {$dbName} already has {$tableCount} tables including required tables; skipping fresh schema import...");
-            if (!$isWb) {
+            if (!$isWb && !$isWa) {
                 $this->seedTemplateUsersFromMainDb($dbName);
             }
             return;
@@ -113,7 +115,7 @@ class DatabaseProvisioningService
         Log::info("Populated {$tableCount} tables into {$dbName} from {$schemaFile}");
 
         // Automatically seed template users (themes) into every new agency DB (for Launchshop)
-        if (!$isWb) {
+        if (!$isWb && !$isWa) {
             $this->seedTemplateUsersFromMainDb($dbName);
         }
     }
@@ -561,6 +563,10 @@ class DatabaseProvisioningService
 
         if (in_array($slug, ['website_builder', 'websitebuilder'])) {
             array_unshift($candidates, database_path('schema/website_builder_clean_template.sql'));
+        }
+
+        if (in_array($slug, ['whatsappbulk', 'whatsapp_bulk', 'whatsapp', 'whatautomation', 'whatsapp_automation'])) {
+            array_unshift($candidates, database_path('schema/whatsappbulk_clean_template.sql'));
         }
 
         foreach ($candidates as $file) {
