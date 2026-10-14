@@ -24,6 +24,9 @@ $waProduct = DB::table('products')->where('slug', $slug)->first();
 if ($waProduct) {
     echo "Product 'WhatsApp Bulk' already exists (ID: {$waProduct->id}).\n";
     $waId = $waProduct->id;
+    DB::table('products')->where('id', $waId)->update([
+        'app_url' => 'https://whatsappbulk.saasreselling.com',
+    ]);
 } else {
     $waId = DB::table('products')->insertGetId([
         'name' => 'WhatsApp Bulk',
@@ -31,7 +34,7 @@ if ($waProduct) {
         'tagline' => 'AI WhatsApp Bulk Sender, Chatbot & Automation SaaS',
         'description' => 'Multi-device WhatsApp automation, bulk messaging campaigns, AI chatbot autoresponder & CRM integration suite',
         'icon' => 'fab fa-whatsapp',
-        'app_url' => 'https://waziper.nooryak.in',
+        'app_url' => 'https://whatsappbulk.saasreselling.com',
         'is_active' => 1,
         'is_featured' => 1,
         'api_key' => 'pk_' . bin2hex(random_bytes(12)),

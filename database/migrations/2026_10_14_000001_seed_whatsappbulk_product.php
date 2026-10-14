@@ -18,7 +18,7 @@ return new class extends Migration
                 'tagline' => 'AI WhatsApp Bulk Sender, Chatbot & Automation SaaS',
                 'description' => 'Multi-device WhatsApp automation, bulk messaging campaigns, AI chatbot autoresponder & CRM integration suite',
                 'icon' => 'message-square',
-                'app_url' => 'https://waziper.nooryak.in',
+                'app_url' => 'https://whatsappbulk.saasreselling.com',
                 'is_active' => 1,
                 'is_featured' => 1,
                 'api_key' => 'pk_' . bin2hex(random_bytes(12)),
@@ -27,6 +27,9 @@ return new class extends Migration
             ]);
         } else {
             $productId = $product->id;
+            DB::table('products')->where('id', $productId)->update([
+                'app_url' => 'https://whatsappbulk.saasreselling.com',
+            ]);
         }
 
         // Attach to existing agencies in agency_products pivot
