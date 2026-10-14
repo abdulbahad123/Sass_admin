@@ -58,6 +58,22 @@ class DatabaseProvisioningService
     }
 
     /**
+     * Create & seed the main platform WhatsApp Bulk database (nooryak_whatautomation).
+     */
+    public function provisionMainWhatsappDatabase(): string
+    {
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $dbName = "{$cpanelUser}_whatautomation";
+
+        $this->createDatabase($dbName);
+        $this->seedFreshProductSchema($dbName, 'whatsappbulk');
+
+        return $dbName;
+    }
+
+    /**
      * Import schema into an already-created (possibly empty) database.
      */
     public function seedFreshProductSchema(string $dbName, string $productSlug = 'launchshop'): void

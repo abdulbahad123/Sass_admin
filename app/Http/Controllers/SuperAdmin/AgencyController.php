@@ -419,6 +419,20 @@ class AgencyController extends Controller
         foreach ($products as $product) {
             try {
                 $dbName = $dbService->provisionDatabaseForAgencyProduct($agency, $product);
+                if ($dbName) {
+                    $agency->products()->updateExistingPivot($product->id, [
+                        'db_name' => $dbName,
+                        'db_status' => 'active',
+                        'status' => 'enabled'
+                    ]);
+                }
+                $isWa = in_array(strtolower($product->slug ?? ''), ['whatsappbulk', 'whatsapp', 'whatautomation']);
+                if ($isWa) {
+                    try {
+                        $mainWaDb = $dbService->provisionMainWhatsappDatabase();
+                        $successes[] = "Main platform database '{$mainWaDb}' verified and seeded!";
+                    } catch (\Throwable $waEx) {}
+                }
                 $successes[] = "Tables successfully imported into database '{$dbName}' for {$product->name}!";
             } catch (\Throwable $e) {
                 $errors[] = "Failed for {$product->name}: " . $e->getMessage();
