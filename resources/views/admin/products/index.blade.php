@@ -38,7 +38,13 @@
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center space-x-3">
                             <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-                                <i data-lucide="{{ $product->icon ?? 'box' }}" class="w-6 h-6"></i>
+                                @php
+                                    $pIcon = $product->icon ?? 'box';
+                                    if (str_contains($pIcon, 'fa-') || str_contains($pIcon, ' ') || empty($pIcon) || $pIcon === 'box') {
+                                        $pIcon = ($product->slug === 'launchshop') ? 'shopping-bag' : (($product->slug === 'websitebuilder' || $product->slug === 'website-builder') ? 'layout' : 'message-square');
+                                    }
+                                @endphp
+                                <i data-lucide="{{ $pIcon }}" class="w-6 h-6"></i>
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">

@@ -16,7 +16,7 @@ class WhiteLabelDashboardController extends Controller
     /**
      * Helper to fetch end-clients dynamically from both Sass Admin DB and product tenant DBs (e.g. bazaarwa_ps_ysquare_launchshop).
      */
-    protected function getAgencyClientsData($agency)
+protected function getAgencyClientsData($agency)
     {
         if (!$agency) {
             return ['clients' => [], 'productCounts' => [], 'productCards' => []];
@@ -25,7 +25,6 @@ class WhiteLabelDashboardController extends Controller
         $cpanelUser = env('CPANEL_USER', 'nooryak');
         $agencySlug = str_replace('-', '_', strtolower($agency->slug ?? 'ysquare'));
 
-        // Fetch products entitlement from agency_products pivot
         $agencyProducts = DB::table('agency_products')
             ->join('products', 'products.id', '=', 'agency_products.product_id')
             ->where('agency_products.agency_id', $agency->id)
@@ -33,7 +32,6 @@ class WhiteLabelDashboardController extends Controller
             ->get();
 
         if ($agencyProducts->isEmpty()) {
-            // Fallback: default Launchshop & KB Elements products
             $allProds = DB::table('products')->get();
             $agencyProducts = collect();
             foreach ($allProds as $p) {
@@ -49,21 +47,38 @@ class WhiteLabelDashboardController extends Controller
         $allClients = [];
         $productCounts = [];
         $productCards = [];
-        $colors = ['#6366F1', '#0EA5E9', '#10B981', '#F59E0B', '#EC4899'];
-        $icons  = ['shopping-bag', 'users', 'layout', 'zap', 'box'];
 
         foreach ($agencyProducts as $idx => $ap) {
-            $prodName = $ap->product_name ?? 'Launchshop';
+            $prodName = $ap->product_name ?? 'Product';
             $prodSlug = $ap->product_slug ?? 'launchshop';
+            if ($prodSlug === 'launchshop') {
+                $prodName = 'Ecombuilder';
+            }
+            $cleanSlug = str_replace('-', '_', $prodSlug);
 
             $dbCandidates = array_unique(array_filter([
                 $ap->db_name ?? null,
                 "{$cpanelUser}_ps_{$agencySlug}_{$prodSlug}",
+                "{$cpanelUser}_ps_{$agencySlug}_{$cleanSlug}",
+                "{$cpanelUser}_ps_{$agencySlug}_websitebuilder",
+                "{$cpanelUser}_ps_{$agencySlug}_website_builder",
+                "{$cpanelUser}_ps_{$agencySlug}_whatsappbulk",
+                "{$cpanelUser}_ps_{$agencySlug}_whatsapp_bulk",
                 "{$cpanelUser}_ps_{$agencySlug}_launchshop",
                 "bazaarwa_ps_{$agencySlug}_{$prodSlug}",
+                "bazaarwa_ps_{$agencySlug}_{$cleanSlug}",
+                "bazaarwa_ps_{$agencySlug}_websitebuilder",
+                "bazaarwa_ps_{$agencySlug}_whatsappbulk",
                 "bazaarwa_ps_{$agencySlug}_launchshop",
                 "nooryak_ps_{$agencySlug}_{$prodSlug}",
+                "nooryak_ps_{$agencySlug}_{$cleanSlug}",
+                "nooryak_ps_{$agencySlug}_websitebuilder",
+                "nooryak_ps_{$agencySlug}_website_builder",
+                "nooryak_ps_{$agencySlug}_whatsappbulk",
+                "nooryak_ps_{$agencySlug}_whatsapp_bulk",
                 "nooryak_ps_{$agencySlug}_launchshop",
+                "{$cpanelUser}_whatautomation",
+                "nooryak_whatautomation",
                 "bazaarwa_launchshop",
                 "nooryak_launchshop",
                 env('DB_DATABASE'),
@@ -78,9 +93,7 @@ class WhiteLabelDashboardController extends Controller
                         $foundDb = $cand;
                         break;
                     }
-                } catch (\Throwable $e) {
-                    // ignore
-                }
+                } catch (\Throwable $e) {}
             }
 
             $countInThisDb = 0;
@@ -88,72 +101,151 @@ class WhiteLabelDashboardController extends Controller
             $totalDbMrr = 0;
 
             if ($foundDb) {
+                $dbOnline = true;
                 try {
-                    // Exclude theme preview template users (preview_template = 1) so only real end-clients are counted
-                    $tenantUsers = DB::table("{$foundDb}.users")
-                        ->where(function ($q) {
-                            $q->whereNull('preview_template')
-                              ->orWhere('preview_template', 0)
-                              ->orWhere('preview_template', '0')
-                              ->orWhere('preview_template', '');
-                        })
-                        ->get();
-                    $dbOnline = true;
-                    foreach ($tenantUsers as $tu) {
-                        $name = trim(($tu->first_name ?? '') . ' ' . ($tu->last_name ?? ''));
-                        if (empty($name)) {
-                            $name = $tu->username ?? $tu->email ?? 'Client';
-                        }
-                        $status = ($tu->status ?? 1) == 1 ? 'active' : 'inactive';
+                    // Check if 'users' table exists in tenant database
+                    $hasUsersTable = !empty(DB::select("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users'", [$foundDb]));
 
-                        // Fetch real plan title & price from memberships table
-                        $planTitle = 'Standard';
-                        $planPrice = 2999;
-                        try {
-                            $memb = DB::table("{$foundDb}.memberships")
-                                ->where('user_id', $tu->id)
-                                ->orderBy('id', 'desc')
-                                ->first();
-                            if ($memb) {
-                                $planPrice = floatval($memb->price ?? 0);
-                                $pkg = DB::table("{$foundDb}.packages")->where('id', $memb->package_id)->first();
-                                if ($pkg) {
-                                    $planTitle = $pkg->title;
-                                    if ($planPrice <= 0) {
-                                        $planPrice = floatval($pkg->price ?? 2999);
-                                    }
+                    if ($hasUsersTable) {
+                        // Check if preview_template column exists (Launchshop)
+                        $hasPreviewCol = !empty(DB::select("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users' AND COLUMN_NAME = 'preview_template'", [$foundDb]));
+
+                        $query = DB::table("{$foundDb}.users");
+                        if ($hasPreviewCol) {
+                            $query->where(function ($q) {
+                                $q->whereNull('preview_template')
+                                  ->orWhere('preview_template', 0)
+                                  ->orWhere('preview_template', '0')
+                                  ->orWhere('preview_template', '');
+                            });
+                        } else {
+                            $userCount = DB::table("{$foundDb}.users")->count();
+                            if ($userCount > 1) {
+                                $hasRoleCol = !empty(DB::select("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users' AND COLUMN_NAME = 'role'", [$foundDb]));
+                                if ($hasRoleCol) {
+                                    $query->where('role', '!=', 1);
+                                } else {
+                                    $query->where('id', '>', 1);
                                 }
                             }
-                        } catch (\Throwable $mEx) {}
-
-                        $allClients[] = [
-                            'id'           => $tu->id,
-                            'name'         => $name,
-                            'username'     => $tu->username ?? '',
-                            'email'        => $tu->email ?? 'N/A',
-                            'product_id'   => $ap->product_id,
-                            'product_name' => $prodName,
-                            'db_name'      => $foundDb,
-                            'plan'         => $planTitle,
-                            'price'        => $planPrice,
-                            'status'       => $status,
-                            'status_color' => $status === 'active' ? 'emerald' : 'amber',
-                            'joined'       => !empty($tu->created_at) ? \Carbon\Carbon::parse($tu->created_at)->format('M d, Y') : now()->format('M d, Y'),
-                            'products'     => ['shopping-bag', 'users', 'layout'],
-                        ];
-
-                        $countInThisDb++;
-                        $totalDbMrr += $planPrice;
-
-                        if (!isset($productCounts[$prodName])) {
-                            $productCounts[$prodName] = 0;
                         }
-                        $productCounts[$prodName]++;
+
+                        $tenantUsers = $query->get();
+
+                        foreach ($tenantUsers as $tu) {
+                            $name = trim(($tu->first_name ?? '') . ' ' . ($tu->last_name ?? ''));
+                            if (empty($name)) {
+                                $name = $tu->fullname ?? $tu->name ?? $tu->username ?? $tu->email ?? 'Client';
+                            }
+                            $status = ($tu->status ?? 1) == 1 ? 'active' : 'inactive';
+
+                            $planTitle = 'Standard';
+                            $planPrice = 2999;
+
+                            // 1. Check memberships + packages (Launchshop)
+                            try {
+                                $hasMemberships = !empty(DB::select("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'memberships'", [$foundDb]));
+                                if ($hasMemberships) {
+                                    $memb = DB::table("{$foundDb}.memberships")->where('user_id', $tu->id)->orderBy('id', 'desc')->first();
+                                    if ($memb) {
+                                        $planPrice = floatval($memb->price ?? 0);
+                                        $pkg = DB::table("{$foundDb}.packages")->where('id', $memb->package_id)->first();
+                                        if ($pkg) {
+                                            $planTitle = $pkg->title ?? $pkg->name ?? 'Standard';
+                                            if ($planPrice <= 0) {
+                                                $planPrice = floatval($pkg->price ?? 2999);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (\Throwable $mEx) {}
+
+                            // 2. Check plans table (WhatsApp Bulk)
+                            try {
+                                if (isset($tu->plan_id) && $tu->plan_id > 0) {
+                                    $hasPlans = !empty(DB::select("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'plans'", [$foundDb]));
+                                    if ($hasPlans) {
+                                        $waPlan = DB::table("{$foundDb}.plans")->where('id', $tu->plan_id)->first();
+                                        if ($waPlan) {
+                                            $planTitle = $waPlan->name ?? 'Pro Plan';
+                                            $planPrice = floatval($waPlan->price ?? 1999);
+                                        }
+                                    }
+                                }
+                            } catch (\Throwable $pEx) {}
+
+                            $createdDate = now()->format('M d, Y');
+                            if (!empty($tu->created_at)) {
+                                $createdDate = \Carbon\Carbon::parse($tu->created_at)->format('M d, Y');
+                            } elseif (!empty($tu->created)) {
+                                $createdDate = \Carbon\Carbon::createFromTimestamp($tu->created)->format('M d, Y');
+                            }
+
+                            $allClients[] = [
+                                'id'           => $tu->id,
+                                'name'         => $name,
+                                'username'     => $tu->username ?? '',
+                                'email'        => $tu->email ?? 'N/A',
+                                'product_id'   => $ap->product_id,
+                                'product_name' => $prodName,
+                                'db_name'      => $foundDb,
+                                'plan'         => $planTitle,
+                                'price'        => $planPrice,
+                                'status'       => $status,
+                                'status_color' => $status === 'active' ? 'emerald' : 'amber',
+                                'joined'       => $createdDate,
+                                'products'     => [$prodSlug === 'launchshop' ? 'shopping-bag' : ($prodSlug === 'whatsappbulk' ? 'message-square' : 'layout')],
+                            ];
+
+                            $countInThisDb++;
+                            $totalDbMrr += $planPrice;
+
+                            if (!isset($productCounts[$prodName])) {
+                                $productCounts[$prodName] = 0;
+                            }
+                            $productCounts[$prodName]++;
+                        }
                     }
-                } catch (\Throwable $e) {
-                    // query failed
-                }
+
+                    // Check wb_customers table for Website Builder
+                    $hasWbCustomers = !empty(DB::select("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'wb_customers'", [$foundDb]));
+                    if ($hasWbCustomers) {
+                        $wbCustomers = DB::table("{$foundDb}.wb_customers")->get();
+                        foreach ($wbCustomers as $wc) {
+                            $cName = $wc->username ?? $wc->name ?? $wc->email ?? 'Client';
+                            $cStatus = ($wc->status ?? 1) == 1 ? 'active' : 'inactive';
+                            $cPrice = 2999;
+                            $cCreated = !empty($wc->created_at) ? \Carbon\Carbon::parse($wc->created_at)->format('M d, Y') : now()->format('M d, Y');
+
+                            $allClients[] = [
+                                'id'           => 'wb_' . $wc->id,
+                                'name'         => $cName,
+                                'username'     => $wc->username ?? '',
+                                'email'        => $wc->email ?? 'N/A',
+                                'product_id'   => $ap->product_id,
+                                'product_name' => $prodName,
+                                'db_name'      => $foundDb,
+                                'plan'         => 'Agency Pro',
+                                'price'        => $cPrice,
+                                'status'       => $cStatus,
+                                'status_color' => $cStatus === 'active' ? 'emerald' : 'amber',
+                                'joined'       => $cCreated,
+                                'products'     => ['layout'],
+                            ];
+                            $countInThisDb++;
+                            $totalDbMrr += $cPrice;
+
+                            if (!isset($productCounts[$prodName])) {
+                                $productCounts[$prodName] = 0;
+                            }
+                            $productCounts[$prodName]++;
+                        }
+                    }
+                } catch (\Throwable $e) {}
             }
+
+            $cardColor = ($prodSlug === 'launchshop') ? '#6366F1' : (($prodSlug === 'whatsappbulk' || $prodSlug === 'whatsapp-bulk') ? '#10B981' : '#0EA5E9');
+            $cardIcon  = ($prodSlug === 'launchshop') ? 'shopping-bag' : (($prodSlug === 'whatsappbulk' || $prodSlug === 'whatsapp-bulk') ? 'message-square' : 'layout');
 
             $productCards[] = [
                 'name'      => $prodName,
@@ -161,16 +253,33 @@ class WhiteLabelDashboardController extends Controller
                 'count'     => $countInThisDb,
                 'db_name'   => $foundDb ?? ($ap->db_name ?? 'Not Created'),
                 'is_online' => $dbOnline,
-                'color'     => $colors[$idx % count($colors)],
-                'icon'      => $icons[$idx % count($icons)],
+                'color'     => $cardColor,
+                'icon'      => $cardIcon,
                 'mrr'       => $totalDbMrr,
             ];
         }
 
+        // Sort product cards: 1: Launchshop (Ecombuilder), 2: Website Builder, 3: WhatsApp Bulk
+        $cardOrder = [
+            'launchshop'       => 1,
+            'websitebuilder'   => 2,
+            'website-builder'  => 2,
+            'whatsappbulk'     => 3,
+            'whatsapp-bulk'    => 3,
+        ];
+        usort($productCards, function ($a, $b) use ($cardOrder) {
+            $oa = $cardOrder[$a['slug']] ?? 99;
+            $ob = $cardOrder[$b['slug']] ?? 99;
+            return $oa <=> $ob;
+        });
+
         // Include any clients in Sass Admin DB
         $localUsers = User::where('agency_id', $agency->id)->where('role', 'client')->with('product')->get();
         foreach ($localUsers as $lu) {
-            $pName = $lu->product->name ?? 'Launchshop';
+            $pName = $lu->product->name ?? 'Ecombuilder';
+            if ($lu->product && $lu->product->slug === 'launchshop') {
+                $pName = 'Ecombuilder';
+            }
             $status = $lu->status ?? 'active';
             $allClients[] = [
                 'id'           => 'local_' . $lu->id,

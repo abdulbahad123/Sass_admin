@@ -16,9 +16,13 @@ class ProductController extends Controller
             abort(403, 'Access Denied: You do not have permission to view products.');
         }
 
-        // Auto-sync Launchshop product name to Ecombuilder if needed
+        // Auto-sync product details (Ecombuilder name & Website Builder slug/icon)
         try {
             Product::where('slug', 'launchshop')->where('name', '!=', 'Ecombuilder')->update(['name' => 'Ecombuilder']);
+            Product::where('slug', 'website-builder')->update(['slug' => 'websitebuilder', 'icon' => 'layout']);
+            Product::where('slug', 'websitebuilder')->where(function ($q) {
+                $q->whereNull('icon')->orWhere('icon', 'like', '%fa-%')->orWhere('icon', 'box');
+            })->update(['icon' => 'layout']);
         } catch (\Throwable $e) {}
 
         $products = Product::withCount(['plans', 'agencies'])->get();
@@ -26,6 +30,8 @@ class ProductController extends Controller
         // Strict order: 1: Launchshop (Ecombuilder), 2: Website Builder, 3: WhatsApp Bulk
         $orderMap = [
             'launchshop' => 1,
+            'websitebuilder' => 2,
+            'websitebuilder' => 2,
             'website-builder' => 2,
             'whatsappbulk' => 3,
         ];
@@ -90,6 +96,8 @@ class ProductController extends Controller
 
         if ($product->slug === 'launchshop' || $product->slug === 'ecombuilder') {
             $validated['slug'] = 'launchshop';
+        } elseif ($product->slug === 'websitebuilder' || $product->slug === 'website-builder') {
+            $validated['slug'] = 'websitebuilder';
         } else {
             $validated['slug'] = Str::slug($validated['name']);
         }
