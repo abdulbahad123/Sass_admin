@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'SaaS Products Catalog')
-@section('page_title', 'SaaS Products Directory & Launchshop')
+@section('page_title', 'SaaS Products Directory & Ecombuilder')
 
 @section('header_actions')
 <button onclick="document.getElementById('createProductModal').classList.remove('hidden')" 
@@ -21,9 +21,9 @@
                 <i data-lucide="shopping-bag" class="w-6 h-6"></i>
             </div>
             <div>
-                <h2 class="text-xl font-bold font-heading">Product Catalog & Launchshop Control</h2>
+                <h2 class="text-xl font-bold font-heading">Product Catalog & Ecombuilder Control</h2>
                 <p class="text-xs text-indigo-200 mt-1 max-w-2xl">
-                    Super Admin defines core SaaS products (like <b>Launchshop</b> e-commerce builder). Assign products to pricing plans, edit product parameters, or launch direct single-click credential-free Admin Access.
+                    Super Admin defines core SaaS products (like <b>Ecombuilder</b> e-commerce builder). Assign products to pricing plans, edit product parameters, or launch direct single-click credential-free Admin Access.
                 </p>
             </div>
         </div>
@@ -42,10 +42,7 @@
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
-                                    <h3 class="text-lg font-bold text-slate-900 font-heading">{{ $product->name }}</h3>
-                                    @if($product->is_featured)
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">Featured</span>
-                                    @endif
+                                    <h3 class="text-lg font-bold text-slate-900 font-heading">{{ $product->slug === 'launchshop' ? 'Ecombuilder' : $product->name }}</h3>
                                 </div>
                                 <p class="text-[11px] text-indigo-600 font-mono">slug: {{ $product->slug }}</p>
                             </div>
@@ -71,10 +68,6 @@
                         <span class="flex items-center font-medium">
                             <i data-lucide="building-2" class="w-3.5 h-3.5 mr-1.5 text-indigo-600"></i>
                             {{ $product->agencies_count }} Agencies
-                        </span>
-                        <span class="flex items-center font-medium">
-                            <i data-lucide="layers" class="w-3.5 h-3.5 mr-1.5 text-violet-600"></i>
-                            {{ $product->plans_count }} Plans Included
                         </span>
                     </div>
 
@@ -103,21 +96,12 @@
                         </div>
 
                         <!-- Edit Product Button (Task 1) -->
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                        <div class="flex items-center justify-start pt-2 border-t border-slate-100 text-xs">
                             <button onclick="openEditProductModal({{ json_encode($product) }})" 
                                     class="text-indigo-600 hover:text-indigo-800 font-bold flex items-center space-x-1">
                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 <span>Edit Product</span>
                             </button>
-
-                            <form action="{{ route('admin.products.destroy', $product) }}" method="POST" onsubmit="return confirm('Delete product {{ $product->name }}?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-slate-400 hover:text-rose-600 transition-colors flex items-center space-x-1">
-                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                    <span>Remove</span>
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -131,7 +115,7 @@
 <div id="createProductModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-bold text-slate-900 font-heading">Add SaaS Product (e.g. Launchshop)</h3>
+            <h3 class="text-lg font-bold text-slate-900 font-heading">Add SaaS Product (e.g. Ecombuilder)</h3>
             <button onclick="document.getElementById('createProductModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -141,7 +125,7 @@
             @csrf
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Product Name</label>
-                <input type="text" name="name" placeholder="e.g. Launchshop E-Commerce" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
+                <input type="text" name="name" placeholder="e.g. Ecombuilder E-Commerce" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-indigo-500">
             </div>
 
             <div>

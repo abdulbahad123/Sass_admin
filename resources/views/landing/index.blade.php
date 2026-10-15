@@ -377,7 +377,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center">
                 @if(is_array($data['lp_stats_bar']))
                     @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-orange-50 dark:bg-[#1e293b]/50 transition-colors">
+                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-orange-50 dark:bg-[#1e293b]/50 dark:hover:bg-[#1e293b] transition-colors">
                         <div class="flex items-center justify-center space-x-2.5 mb-0.5">
                             <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/30/90 text-[#ff3d00] flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
                                 <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
@@ -1340,11 +1340,11 @@
                         {{ $data['lp_footer_desc'] }}
                     </p>
                     <div class="flex items-center space-x-2.5 pt-1">
-                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
-                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
-                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
-                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
+                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-white text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
+                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-white text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
+                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-white text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
+                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-white text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
+                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#1e293b] hover:bg-orange-50 dark:bg-[#1e293b] hover:text-[#ff3d00] flex items-center justify-center text-slate-500 dark:text-white text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
                     </div>
                 </div>
 

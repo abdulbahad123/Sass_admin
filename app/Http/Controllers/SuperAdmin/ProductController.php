@@ -16,7 +16,24 @@ class ProductController extends Controller
             abort(403, 'Access Denied: You do not have permission to view products.');
         }
 
-        $products = Product::withCount(['plans', 'agencies'])->latest()->get();
+        // Auto-sync Launchshop product name to Ecombuilder if needed
+        try {
+            Product::where('slug', 'launchshop')->where('name', '!=', 'Ecombuilder')->update(['name' => 'Ecombuilder']);
+        } catch (\Throwable $e) {}
+
+        $products = Product::withCount(['plans', 'agencies'])->get();
+
+        // Strict order: 1: Launchshop (Ecombuilder), 2: Website Builder, 3: WhatsApp Bulk
+        $orderMap = [
+            'launchshop' => 1,
+            'website-builder' => 2,
+            'whatsappbulk' => 3,
+        ];
+
+        $products = $products->sortBy(function ($product) use ($orderMap) {
+            return $orderMap[$product->slug] ?? 99;
+        })->values();
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -71,7 +88,11 @@ class ProductController extends Controller
             'is_featured' => 'nullable|boolean',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        if ($product->slug === 'launchshop' || $product->slug === 'ecombuilder') {
+            $validated['slug'] = 'launchshop';
+        } else {
+            $validated['slug'] = Str::slug($validated['name']);
+        }
         $validated['is_active'] = $request->has('is_active');
         $validated['is_featured'] = $request->has('is_featured');
 

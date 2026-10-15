@@ -545,8 +545,8 @@
                 <i data-lucide="moon" id="moonIcon" style="width:16px;height:16px"></i>
                 <i data-lucide="sun" id="sunIcon" style="width:16px;height:16px;color:#fbbf24;display:none;"></i>
             </button>
-            <a href="{{ $agency->cta_url ?? '/login' }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
-            <a href="{{ $agency->cta_url ?? '/login' }}" class="btn-brand" style="border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800">
+            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
+            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-brand" style="border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800">
                 {{ $agency->cta_text ?? 'Get Started Free' }}
             </a>
         </div>
@@ -565,8 +565,8 @@
             @endforeach
         </nav>
         <div style="display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid #f1f5f9">
-            <a href="{{ $agency->cta_url ?? '/login' }}" style="text-align:center;font-size:14px;font-weight:700;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px;text-decoration:none">Login</a>
-            <a href="{{ $agency->cta_url ?? '/login' }}" class="btn-brand" style="justify-content:center;border-radius:12px">{{ $agency->cta_text ?? 'Get Started Free' }}</a>
+            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" style="text-align:center;font-size:14px;font-weight:700;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px;text-decoration:none">Login</a>
+            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-brand" style="justify-content:center;border-radius:12px">{{ $agency->cta_text ?? 'Get Started Free' }}</a>
         </div>
     </div>
 </header>
@@ -601,7 +601,7 @@
 
                 {{-- CTA Buttons --}}
                 <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-                    <a href="{{ $agency->cta_url ?? '/login' }}"
+                    <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business"
                        style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14px; padding:15px 30px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
                        onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
                        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
@@ -796,7 +796,7 @@
                     <p style="font-size:13px; color:#64748b; line-height:1.75">
                         A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.
                     </p>
-                    <a href="{{ $agencyGet('cta_url') ?? '/login' }}" class="btn-brand" style="width:fit-content; border-radius:14px; padding:12px 24px">
+                    <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-brand" style="width:fit-content; border-radius:14px; padding:12px 24px">
                         Explore All Products
                         <i data-lucide="arrow-right" style="width:15px; height:15px"></i>
                     </a>
@@ -1258,7 +1258,7 @@
 
             {{-- Right: CTA button --}}
             <div style="position:relative; z-index:2; flex-shrink:0;">
-                <a href="{{ $agency->cta_url ?? '/login' }}"
+                <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business"
                    style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:14px 26px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
