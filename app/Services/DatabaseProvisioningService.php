@@ -134,6 +134,23 @@ class DatabaseProvisioningService
         if (!$isWb && !$isWa) {
             $this->seedTemplateUsersFromMainDb($dbName);
         }
+
+        // Automatically set WhatsApp Server URL for every newly provisioned WhatsApp agency DB
+        if ($isWa) {
+            try {
+                config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
+                DB::purge('target_tenant_db');
+                DB::connection('target_tenant_db')->table('options')->updateOrInsert(
+                    ['name' => 'whatsapp_server_url'],
+                    ['value' => 'http://127.0.0.1:8000']
+                );
+                Log::info("Auto-configured whatsapp_server_url = http://127.0.0.1:8000 for {$dbName}");
+            } catch (\Throwable $e) {
+                Log::warning("Could not set whatsapp_server_url for {$dbName}: " . $e->getMessage());
+            } finally {
+                DB::purge('target_tenant_db');
+            }
+        }
     }
 
     /**
