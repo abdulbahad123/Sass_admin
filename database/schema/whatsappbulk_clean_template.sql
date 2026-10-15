@@ -55,7 +55,6 @@ CREATE TABLE `accounts` (
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (2,'xEm9jyk3cx','AppChannelWhatsappUnofficial','whatsapp_unofficial','profile','app/whatsapp_unofficial/profile/oauth/6944B3FE0348',1,2,0,'919360157880','919360157880','919360157880','6944B3FE0348','channel_avatars/api_Zjw3my','https://wa.me/919360157880','','{\"instance_id\":\"6944B3FE0348\",\"profile\":{\"id\":\"919360157880\",\"name\":\"919360157880\",\"avatar\":\"https:\\/\\/ui-avatars.com\\/api\\/?name=919360157880&background=F7A400&color=fff&font-size=0.5&rounded=false&format=png\"}}',0,NULL,1,1791888792,1791888792);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -481,7 +480,6 @@ CREATE TABLE `cache` (
 
 LOCK TABLES `cache` WRITE;
 /*!40000 ALTER TABLE `cache` DISABLE KEYS */;
-INSERT INTO `cache` VALUES ('module_assets','a:2:{s:3:\"css\";a:0:{}s:2:\"js\";a:3:{i:0;s:76:\"http://localhost:8080/modules/AppAIContents/resources/assets/js/aicontent.js\";i:1;s:88:\"http://localhost:8080/modules/AppFiles/resources/assets/js/filerobot-image-editor.min.js\";i:2;s:67:\"http://localhost:8080/modules/AppFiles/resources/assets/js/files.js\";}}',1792050073);
 /*!40000 ALTER TABLE `cache` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -637,7 +635,6 @@ CREATE TABLE `files` (
 
 LOCK TABLES `files` WRITE;
 /*!40000 ALTER TABLE `files` DISABLE KEYS */;
-INSERT INTO `files` VALUES (1,'O83KK28anT',1,0,1,'IMAGES',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1791956143),(2,'HGJvjK7Dxi',0,1,1,'screenshot-2026-10-12-171220_GCF13R.png','files/screenshot-2026-10-12-171220_GCF13R.png','image/png','png','image',278706,1,376,555,NULL,1791958341);
 /*!40000 ALTER TABLE `files` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -837,7 +834,6 @@ CREATE TABLE `notification_manual` (
 
 LOCK TABLES `notification_manual` WRITE;
 /*!40000 ALTER TABLE `notification_manual` DISABLE KEYS */;
-INSERT INTO `notification_manual` VALUES (1,'BiRGIo6fFG','we are currently undermaintain','sorry for inconvenienc','https://youverse.in/','news',1,'2026-10-14 05:21:33','2026-10-14 05:21:33');
 /*!40000 ALTER TABLE `notification_manual` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -872,7 +868,6 @@ CREATE TABLE `notifications` (
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (1,'Ikdnyhpl0W',1,'manual',1,'news',NULL,'https://youverse.in/','2026-10-14 05:21:51','2026-10-14 05:21:33','2026-10-14 05:21:51');
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -897,7 +892,7 @@ CREATE TABLE `options` (
 
 LOCK TABLES `options` WRITE;
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
-INSERT INTO `options` VALUES (1,'mail_protocol','mail'),(2,'smtp_server',''),(3,'smtp_port','587'),(4,'smtp_username',''),(5,'smtp_password',''),(6,'smtp_encryption','tls'),(7,'mail_sender_email','example@gmail.com'),(8,'mail_sender_name','Admin'),(9,'ai_openai_api_key',''),(10,'ai_deepseek_api_key',''),(11,'ai_gemini_api_key',''),(12,'ai_claude_api_key',''),(13,'broadcast_driver','0'),(14,'whatsapp_unofficial_profile_status','1'),(15,'paypal_status','0'),(16,'paypal_recurring_status','0'),(17,'stripe_status','0'),(18,'stripe_recurring_status','0'),(19,'frontend_theme','waziper'),(20,'format_date','d/m/Y'),(21,'format_datetime','d/m/Y H:i'),(22,'auth_landing_page_status','1'),(23,'currency','USD'),(24,'currency_symbol','$'),(25,'currency_symbol_postion','1'),(26,'website_title',''),(27,'website_keyword','Social media management, social media scheduler, automation tool, social media strategy, content management, social media publisher'),(28,'website_description','Unlock your brand\'s full potential with Stackposts, the essential social media management tool for growth.'),(29,'website_favicon','http://127.0.0.1:8080/public/img/favicon.png'),(30,'embed_code_status','0'),(31,'auth_signup_page_status','1'),(32,'social_page_facebook',''),(33,'social_page_instagram',''),(34,'social_page_x',''),(35,'captcha_type','disable'),(36,'auth_google_login_status','0'),(37,'auth_facebook_login_status','0'),(38,'auth_x_login_status','0'),(39,'whatsapp_server_url','http://127.0.0.1:8000'),(40,'file_addobe_express_status',''),(41,'file_onedrive_status',''),(42,'file_google_drive_status',''),(43,'file_dropbox_status',''),(44,'backend_sidebar_type','1'),(45,'file_allowed_file_types','jpeg,gif,png,jpg,webp,mp4,csv,pdf,mp3,wmv,json'),(46,'website_logo_dark','http://localhost:8080/public/img/logo-dark.png'),(47,'website_logo_brand_dark','http://localhost:8080/public/img/logo-brand-dark.png'),(48,'backend_sidebar_icon_color','1'),(49,'ai_language','en-US'),(50,'ai_tone_of_voice','Friendly'),(51,'ai_creativity','0'),(52,'ai_max_input_lenght','0'),(53,'file_storage_server','local'),(54,'terms_of_use_status','1'),(55,'terms_of_use',''),(56,'credit_rates','{}'),(57,'auth_user_change_username_status','0'),(58,'auth_user_change_email_status','0'),(59,'ai_status','1'),(60,'url_shorteners_platform','0'),(61,'ai_max_output_lenght','1000'),(62,'ai_platform','openai');
+INSERT INTO `options` VALUES (1,'mail_protocol','mail'),(2,'smtp_server',''),(3,'smtp_port','587'),(4,'smtp_username',''),(5,'smtp_password',''),(6,'smtp_encryption','tls'),(7,'mail_sender_email','example@gmail.com'),(8,'mail_sender_name','Admin'),(9,'ai_openai_api_key',''),(10,'ai_deepseek_api_key',''),(11,'ai_gemini_api_key',''),(12,'ai_claude_api_key',''),(13,'broadcast_driver','0'),(14,'whatsapp_unofficial_profile_status','1'),(15,'paypal_status','0'),(16,'paypal_recurring_status','0'),(17,'stripe_status','0'),(18,'stripe_recurring_status','0'),(19,'frontend_theme','waziper'),(20,'format_date','d/m/Y'),(21,'format_datetime','d/m/Y H:i'),(22,'auth_landing_page_status','1'),(23,'currency','USD'),(24,'currency_symbol','$'),(25,'currency_symbol_postion','1'),(26,'website_title',''),(27,'website_keyword','Social media management, social media scheduler, automation tool, social media strategy, content management, social media publisher'),(28,'website_description','Unlock your brand\'s full potential with Stackposts, the essential social media management tool for growth.'),(29,'website_favicon','http://127.0.0.1:8080/public/img/favicon.png'),(30,'embed_code_status','0'),(31,'auth_signup_page_status','1'),(32,'social_page_facebook',''),(33,'social_page_instagram',''),(34,'social_page_x',''),(35,'captcha_type','disable'),(36,'auth_google_login_status','0'),(37,'auth_facebook_login_status','0'),(38,'auth_x_login_status','0'),(39,'whatsapp_server_url','http://127.0.0.1:8000'),(40,'file_addobe_express_status',''),(41,'file_onedrive_status',''),(42,'file_google_drive_status',''),(43,'file_dropbox_status',''),(44,'backend_sidebar_type','1'),(45,'file_allowed_file_types','jpeg,gif,png,jpg,webp,mp4,csv,pdf,mp3,wmv,json'),(46,'website_logo_dark','/public/img/logo-dark.png'),(47,'website_logo_brand_dark','/public/img/logo-brand-dark.png'),(48,'backend_sidebar_icon_color','1'),(49,'ai_language','en-US'),(50,'ai_tone_of_voice','Friendly'),(51,'ai_creativity','0'),(52,'ai_max_input_lenght','0'),(53,'file_storage_server','local'),(54,'terms_of_use_status','1'),(55,'terms_of_use',''),(56,'credit_rates','{}'),(57,'auth_user_change_username_status','0'),(58,'auth_user_change_email_status','0'),(59,'ai_status','1'),(60,'url_shorteners_platform','0'),(61,'ai_max_output_lenght','1000'),(62,'ai_platform','openai');
 /*!40000 ALTER TABLE `options` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1548,7 +1543,6 @@ CREATE TABLE `whatsapp_chatbot` (
 
 LOCK TABLES `whatsapp_chatbot` WRITE;
 /*!40000 ALTER TABLE `whatsapp_chatbot` DISABLE KEYS */;
-INSERT INTO `whatsapp_chatbot` VALUES (1,'rSURLFio2d','Test BOT','hi,hello,start,help,pricing','6944B3FE0348',1,1,0,1,'pintax {Hi|Hello}🙏',NULL,0,NULL,NULL,1,1,1791962971,1791960118),(2,'oxRwZOzijE','Test BOT','hi,hello','6944B3FE0348',1,1,0,1,'Hai hello','http://localhost:8080/storage/files/screenshot-2026-10-12-171220_GCF13R.png',0,NULL,NULL,1,1,1791962971,1791960431),(3,'ADvJVMij83','tes','hi','6944B3FE0348',1,1,0,1,'Write a short and friendly WhatsApp chatbot reply for customers asking about pricing.',NULL,0,NULL,NULL,2,1,1791962971,1791962847);
 /*!40000 ALTER TABLE `whatsapp_chatbot` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1577,7 +1571,6 @@ CREATE TABLE `whatsapp_contacts` (
 
 LOCK TABLES `whatsapp_contacts` WRITE;
 /*!40000 ALTER TABLE `whatsapp_contacts` DISABLE KEYS */;
-INSERT INTO `whatsapp_contacts` VALUES (1,'uDtLTJljPH',1,'Test Number',1,1791956374,1791956374);
 /*!40000 ALTER TABLE `whatsapp_contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1605,7 +1598,6 @@ CREATE TABLE `whatsapp_phone_numbers` (
 
 LOCK TABLES `whatsapp_phone_numbers` WRITE;
 /*!40000 ALTER TABLE `whatsapp_phone_numbers` DISABLE KEYS */;
-INSERT INTO `whatsapp_phone_numbers` VALUES (1,'boSDYOQfME',1,1,'6374913298',NULL),(2,'X6Edbo6RkE',1,1,'8111009929',NULL),(3,'roAJSZiGUH',1,1,'8667702473',NULL),(4,'PoDtxk0z5y',1,1,'7200770351',NULL),(5,'Tjw5DaEQwa',1,1,'9095111682',NULL);
 /*!40000 ALTER TABLE `whatsapp_phone_numbers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1650,7 +1642,6 @@ CREATE TABLE `whatsapp_schedules` (
 
 LOCK TABLES `whatsapp_schedules` WRITE;
 /*!40000 ALTER TABLE `whatsapp_schedules` DISABLE KEYS */;
-INSERT INTO `whatsapp_schedules` VALUES (1,'eBnOEsgeds',1,'[2]',1,1,1,0,1791957163,30,'','Asia/Kolkata',60,'Test campaign','TEST OFFER DON\'T REPLY FROM Waziper PLATFORM',NULL,4,0,'[{\"phone_number\":\"6374913298\",\"status\":1},{\"phone_number\":\"8111009929\",\"status\":1},{\"phone_number\":\"8667702473\",\"status\":1},{\"phone_number\":\"7200770351\",\"status\":1}]',0,2,1791956960,1791956960),(2,'mDcfxAiwml',1,'[2]',1,1,1,0,1791957573,30,'','Asia/Kolkata',60,'Test Number','Test campayn message',NULL,4,0,'[{\"phone_number\":\"6374913298\",\"status\":1},{\"phone_number\":\"8111009929\",\"status\":1},{\"phone_number\":\"8667702473\",\"status\":1},{\"phone_number\":\"7200770351\",\"status\":1}]',0,2,1791957323,1791957323),(3,'9i7fMYfuhx',1,'[2]',1,1,1,0,1791958693,30,'','Asia/Kolkata',60,'Test campaign from the Waziper Starter','Hai Test campaign from the Waziper Starter So don\'t reply','http://localhost:8080/storage/files/screenshot-2026-10-12-171220_GCF13R.png',5,0,'[{\"phone_number\":\"6374913298\",\"status\":1},{\"phone_number\":\"8111009929\",\"status\":1},{\"phone_number\":\"8667702473\",\"status\":1},{\"phone_number\":\"7200770351\",\"status\":1},{\"phone_number\":\"9095111682\",\"status\":1}]',0,2,1791958410,1791958410);
 /*!40000 ALTER TABLE `whatsapp_schedules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1678,7 +1669,6 @@ CREATE TABLE `whatsapp_sessions` (
 
 LOCK TABLES `whatsapp_sessions` WRITE;
 /*!40000 ALTER TABLE `whatsapp_sessions` DISABLE KEYS */;
-INSERT INTO `whatsapp_sessions` VALUES (12,'f5HfKWed1u',1,'509B9E33A761','{\"id\":\"919360157880\",\"name\":\"919360157880\",\"avatar\":\"https:\\/\\/ui-avatars.com\\/api\\/?name=919360157880&background=12492F&color=fff&font-size=0.5&rounded=false&format=png\"}',1),(13,'QmhxQlcnTu',1,'6944B3FE0348','{\"id\":\"919360157880\",\"name\":\"919360157880\",\"avatar\":\"https:\\/\\/ui-avatars.com\\/api\\/?name=919360157880&background=F7A400&color=fff&font-size=0.5&rounded=false&format=png\"}',1);
 /*!40000 ALTER TABLE `whatsapp_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1713,7 +1703,6 @@ CREATE TABLE `whatsapp_stats` (
 
 LOCK TABLES `whatsapp_stats` WRITE;
 /*!40000 ALTER TABLE `whatsapp_stats` DISABLE KEYS */;
-INSERT INTO `whatsapp_stats` VALUES (1,'lncaep2rqz',1,61,46,0,0,33,13,13,0,1794481165,1791962606);
 /*!40000 ALTER TABLE `whatsapp_stats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1770,7 +1759,6 @@ CREATE TABLE `whatsapp_webhook` (
 
 LOCK TABLES `whatsapp_webhook` WRITE;
 /*!40000 ALTER TABLE `whatsapp_webhook` DISABLE KEYS */;
-INSERT INTO `whatsapp_webhook` VALUES (1,'R9vuWgqnys',1,'9BF1015F6EF6','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/9BF1015F6EF6?team_id=1&key=2518a8214c7547b6c568fac269e30453add19ae9de571a0f1d8f092f00e21f69',1),(2,'SLOkEpte5Z',1,'DF1C7F9DC14E','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/DF1C7F9DC14E?team_id=1&key=4b958fc4080e759f0cba9359ad22d1612e5378cdf35943f83f4a900d73440a45',1),(3,'qaiBGJRzPY',1,'66D9CCC9FF43','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/66D9CCC9FF43?team_id=1&key=3ade914748639293a738a13009bb72a3b5cd9b64fff920f3d2a11ba63425393b',1),(4,'bPaB9Ek3HX',1,'09B1B2A1F57B','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/09B1B2A1F57B?team_id=1&key=53d7f5c0cfb5d6f0fdf4ccf2f18db51f66294de82b588cb1c8891e28e2b404f2',1),(5,'miyYArW5MI',1,'B1E803039CF2','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/B1E803039CF2?team_id=1&key=fb84a27022d9f51e2ffb32312fb55b3611ebb21d4e81a55d7ad085aca4569cf6',1),(6,'d2WyglhXGU',1,'A69395BED78C','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/A69395BED78C?team_id=1&key=d78b3bfaaad967d72e0d521870c35330365e4558410f34b82bd550ebb94bb672',1),(7,'hETQEqqVTn',1,'406FEC688D71','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/406FEC688D71?team_id=1&key=67a6d51323a511ccee84c6f6e00df5b9d43876451a94b09d59a0c77195d58189',1),(8,'1S5jYEKrVv',1,'B12B742678C6','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/B12B742678C6?team_id=1&key=89aaf91b56f9c1f0ce8d95603e01efdb63cfe843c8bade27dd28dcd016babacd',1),(9,'tGPfB109jA',1,'A099D6744249','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/A099D6744249?team_id=1&key=8a3ca0c089e8bfaa9869c9cee87ce8faf7499443778cf40c13fb8e33d628c308',1),(10,'VuQvXs6koJ',1,'B57F76F35FD7','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/B57F76F35FD7?team_id=1&key=0a691bb16a1d8940115e503b5957e5a664e78804e922bb042f7325f2b2c716e5',1),(11,'lgRt43eALO',1,'509B9E33A761','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/509B9E33A761?team_id=1&key=f959a3d802c6bb7a236bbd25065b302ab55ad305cff842ef0e0d575d6bd97110',1),(12,'wnkf4WigEt',1,'6944B3FE0348','http://localhost:8080/app/whatsapp_unofficial/profile/webhook/6944B3FE0348?team_id=1&key=ea4e3b9b3e2d15a8b505faddc393ecd73937ab742d05cf7ba6e00f3f2e60205a',1);
 /*!40000 ALTER TABLE `whatsapp_webhook` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

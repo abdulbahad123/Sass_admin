@@ -135,18 +135,56 @@ class DatabaseProvisioningService
             $this->seedTemplateUsersFromMainDb($dbName);
         }
 
-        // Automatically set WhatsApp Server URL for every newly provisioned WhatsApp agency DB
+        // Automatically configure WhatsApp Server URL, unique API keys, and enforce 100% clean data slate
         if ($isWa) {
             try {
                 config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
                 DB::purge('target_tenant_db');
-                DB::connection('target_tenant_db')->table('options')->updateOrInsert(
+                $tenantDb = DB::connection('target_tenant_db');
+
+                // 1. Ensure server URL is configured
+                $tenantDb->table('options')->updateOrInsert(
                     ['name' => 'whatsapp_server_url'],
                     ['value' => 'http://127.0.0.1:8000']
                 );
-                Log::info("Auto-configured whatsapp_server_url = http://127.0.0.1:8000 for {$dbName}");
+
+                // 2. Generate a TRULY UNIQUE Access Token / API Key for the Agency Team
+                $uniqueTeamToken = 'team_' . bin2hex(random_bytes(16));
+                $tenantDb->table('teams')->where('id', 1)->update([
+                    'id_secure' => $uniqueTeamToken,
+                ]);
+
+                // 3. Generate a TRULY UNIQUE user token for Admin
+                $uniqueUserToken = 'adm_' . bin2hex(random_bytes(6));
+                $tenantDb->table('users')->where('id', 1)->update([
+                    'id_secure' => $uniqueUserToken,
+                ]);
+
+                // 4. Wipe any dummy contacts, campaigns, files, channels to ensure a 100% clean slate
+                $tablesToClean = [
+                    'accounts',
+                    'files',
+                    'notifications',
+                    'notification_manual',
+                    'whatsapp_contacts',
+                    'whatsapp_phone_numbers',
+                    'whatsapp_schedules',
+                    'whatsapp_sessions',
+                    'whatsapp_stats',
+                    'whatsapp_chatbot',
+                    'whatsapp_autoresponder',
+                    'whatsapp_webhook',
+                ];
+
+                foreach ($tablesToClean as $table) {
+                    try {
+                        $tenantDb->statement("TRUNCATE TABLE `{$table}`");
+                    } catch (\Throwable $ex) {}
+                }
+
+                Log::info("Auto-configured unique team token {$uniqueTeamToken} and cleaned test tables for {$dbName}");
             } catch (\Throwable $e) {
-                Log::warning("Could not set whatsapp_server_url for {$dbName}: " . $e->getMessage());
+                Log::warning("Could not finalize WhatsApp configuration for {$dbName}: " . $e->getMessage());
             } finally {
                 DB::purge('target_tenant_db');
             }
