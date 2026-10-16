@@ -365,6 +365,9 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
     Route::get('/whatsapp-gateway', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'index'])->name('whatsapp-gateway.index');
     Route::post('/whatsapp-gateway', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'update'])->name('whatsapp-gateway.update');
     Route::post('/whatsapp-gateway/test', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'testSend'])->name('whatsapp-gateway.test');
+    Route::get('/whatsapp_gateway', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'index']);
+    Route::post('/whatsapp_gateway', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'update']);
+    Route::post('/whatsapp_gateway/test', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'testSend']);
 
     // Website & Landing Page Management Section
     Route::prefix('website')->name('website.')->group(function () {

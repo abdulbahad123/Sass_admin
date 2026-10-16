@@ -31,8 +31,8 @@ class WhiteLabelWhatsAppGatewayController extends Controller
 
         return [
             'whatsapp_gateway_url' => $dbSettings['whatsapp_gateway_url'] ?? env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000'),
-            'whatsapp_access_token' => $dbSettings['whatsapp_access_token'] ?? 'token_6005c0f6de385fe7',
-            'whatsapp_instance_id' => $dbSettings['whatsapp_instance_id'] ?? 'E351BB42DC82',
+            'whatsapp_access_token' => $dbSettings['whatsapp_access_token'] ?? '',
+            'whatsapp_instance_id' => $dbSettings['whatsapp_instance_id'] ?? '',
             'whatsapp_database' => $dbSettings['whatsapp_database'] ?? 'nooryak_whatautomation',
             'whatsapp_is_active' => (int)($dbSettings['whatsapp_is_active'] ?? 1),
             'whatsapp_otp_active' => (int)($dbSettings['whatsapp_otp_active'] ?? 1),
@@ -73,14 +73,28 @@ class WhiteLabelWhatsAppGatewayController extends Controller
         $autoDb = self::getAgencyDefaultDb($agency);
         $autoGateway = env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000');
 
+        $needSave = false;
         if (empty($agency->whatsapp_database) || in_array($agency->whatsapp_database, ['nooryak_whatautomation', 'nooryak_whatsapp'])) {
             $agency->whatsapp_database = $autoDb;
-            $agency->save();
+            $needSave = true;
         }
         if (empty($agency->whatsapp_gateway_url) || $agency->whatsapp_gateway_url === 'http://localhost:8000') {
             $agency->whatsapp_gateway_url = $autoGateway;
-            $agency->save();
+            $needSave = true;
         }
+
+        if ($needSave) {
+            $agency->save();
+            try {
+                DB::table('agencies')->where('id', $agency->id)->update([
+                    'whatsapp_database' => $agency->whatsapp_database,
+                    'whatsapp_gateway_url' => $agency->whatsapp_gateway_url,
+                ]);
+            } catch (\Throwable $e) {}
+        }
+
+        // Auto-heal WhatsApp Bulk logo and options for this agency's database
+        $this->syncWhatsAppBulkLogo($agency, $autoDb);
 
         return view('whitelabel.whatsapp.index', compact('user', 'agency', 'systemDefaults', 'autoDb', 'autoGateway'));
     }
@@ -102,6 +116,9 @@ class WhiteLabelWhatsAppGatewayController extends Controller
         $autoDb = self::getAgencyDefaultDb($agency);
         $autoGateway = env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000');
 
+        $accessToken = trim((string)$request->input('whatsapp_access_token'));
+        $instanceId = trim((string)$request->input('whatsapp_instance_id'));
+
         $data = [
             'is_whatsapp_active' => $request->has('is_whatsapp_active') ? 1 : 0,
             'is_whatsapp_otp_active' => $request->has('is_whatsapp_otp_active') ? 1 : 0,
@@ -113,15 +130,27 @@ class WhiteLabelWhatsAppGatewayController extends Controller
             'whatsapp_database' => $autoDb,
 
             // Agency provides API Token and Instance ID
-            'whatsapp_access_token' => trim((string)$request->input('whatsapp_access_token')),
-            'whatsapp_instance_id' => trim((string)$request->input('whatsapp_instance_id')),
+            'whatsapp_access_token' => $accessToken,
+            'whatsapp_instance_id' => $instanceId,
 
             'whatsapp_otp_template' => $request->input('whatsapp_otp_template'),
             'whatsapp_credentials_template' => $request->input('whatsapp_credentials_template'),
             'whatsapp_invoice_template' => $request->input('whatsapp_invoice_template'),
         ];
 
-        $agency->update($data);
+        // 1. Direct Eloquent assignment & save
+        foreach ($data as $key => $val) {
+            $agency->{$key} = $val;
+        }
+        $agency->save();
+
+        // 2. Direct DB query update to guarantee persistence even if model events or fillable intervene
+        try {
+            DB::table('agencies')->where('id', $agency->id)->update($data);
+        } catch (\Throwable $e) {}
+
+        // 3. Auto-fix logo and options in agency's WhatsApp bulk database
+        $this->syncWhatsAppBulkLogo($agency, $autoDb);
 
         AuditLog::create([
             'user_id' => $user->id,
@@ -154,10 +183,18 @@ class WhiteLabelWhatsAppGatewayController extends Controller
         $autoGateway = env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000');
 
         // Resolve credentials: from request inputs (what user typed) or from saved agency record
-        $token = trim((string)($request->input('access_token') ?: ($agency->whatsapp_access_token ?: $systemDefaults['whatsapp_access_token'])));
-        $instanceId = trim((string)($request->input('instance_id') ?: ($agency->whatsapp_instance_id ?: $systemDefaults['whatsapp_instance_id'])));
+        $token = trim((string)($request->input('access_token') ?: ($agency->whatsapp_access_token ?: '')));
+        $instanceId = trim((string)($request->input('instance_id') ?: ($agency->whatsapp_instance_id ?: '')));
         $endpoint = $autoGateway;
         $dbName = $agency->whatsapp_database ?: $autoDb;
+
+        if (empty($token) || empty($instanceId)) {
+            return response()->json([
+                'success' => false,
+                'status_code' => 400,
+                'error' => 'Please enter your WhatsApp API Key / Access Token and Instance ID first, then click Save.',
+            ], 200);
+        }
 
         $productName = $agency->name ?? 'Ecom Builder';
         $phone = preg_replace('/[^0-9]/', '', $request->input('test_phone'));
@@ -200,15 +237,12 @@ class WhiteLabelWhatsAppGatewayController extends Controller
             $endpoint,
             'http://127.0.0.1:8000',
             'http://localhost:8000',
-            'https://whatsappbulk.saasreselling.com',
         ])));
 
-        $tokensToTry = [$token];
-        if (str_starts_with($token, 'token_')) {
-            $tokensToTry[] = substr($token, 6);
-        } else {
-            $tokensToTry[] = 'token_' . $token;
-        }
+        $tokensToTry = array_values(array_unique(array_filter([
+            $token,
+            str_starts_with($token, 'token_') ? substr($token, 6) : 'token_' . $token,
+        ])));
 
         $lastError = null;
         $lastStatus = 500;
@@ -226,7 +260,7 @@ class WhiteLabelWhatsAppGatewayController extends Controller
                 ]);
 
                 try {
-                    $response = Http::asForm()->timeout(6)->withoutVerifying()->post($queryUrl, [
+                    $response = Http::asForm()->timeout(5)->withoutVerifying()->post($queryUrl, [
                         'access_token' => $currentToken,
                         'instance_id' => $instanceId,
                         'number' => $phone,
@@ -260,7 +294,7 @@ class WhiteLabelWhatsAppGatewayController extends Controller
 
                     $lastStatus = $status;
                     $lastResponse = $json;
-                    $lastError = $json['message'] ?? 'Gateway rejected credentials.';
+                    $lastError = $json['message'] ?? 'Gateway rejected credentials. Please verify your Access Token and Instance ID in WhatsApp Bulk portal.';
                 } catch (\Throwable $e) {
                     $lastError = $e->getMessage();
                 }
@@ -279,24 +313,89 @@ class WhiteLabelWhatsAppGatewayController extends Controller
     }
 
     /**
+     * Auto-heal logo and image options in agency's WhatsApp bulk database.
+     * Fixes broken images caused by hardcoded localhost:8080 or /public/ prefixes.
+     */
+    protected function syncWhatsAppBulkLogo(Agency $agency, string $primaryDb): void
+    {
+        $slug = str_replace(['-', ' '], '_', strtolower($agency->slug ?: Str::slug($agency->name)));
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+
+        $candidateDbs = array_unique([
+            $primaryDb,
+            "{$cpanelUser}_ps_{$slug}_whatsapp",
+            "{$cpanelUser}_ps_{$slug}_whatsappbulk",
+            "bazaarwa_ps_{$slug}_whatsappbulk",
+            "bazaarwa_ps_{$slug}_whatsapp",
+            "nooryak_whatautomation",
+            "nooryak_whatsapp",
+        ]);
+
+        $logoVal = 'img/logo-dark.png';
+        if (!empty($agency->logo)) {
+            $logoVal = str_starts_with($agency->logo, 'http') ? $agency->logo : url($agency->logo);
+        }
+
+        $brandLogoVal = 'img/logo-brand-dark.png';
+        if (!empty($agency->logo)) {
+            $brandLogoVal = $logoVal;
+        }
+
+        $faviconVal = 'img/favicon.png';
+        if (!empty($agency->favicon)) {
+            $faviconVal = str_starts_with($agency->favicon, 'http') ? $agency->favicon : url($agency->favicon);
+        }
+
+        $host = env('DB_HOST', '127.0.0.1');
+        $port = env('DB_PORT', '3306');
+        $user = env('DB_USERNAME_admin', env('DB_USERNAME', 'root'));
+        $pass = env('DB_PASSWORD_admin', env('DB_PASSWORD', ''));
+
+        foreach ($candidateDbs as $db) {
+            try {
+                $pdo = new \PDO("mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4", $user, $pass, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_SILENT,
+                    \PDO::ATTR_TIMEOUT => 2,
+                ]);
+
+                // Check if options table exists
+                $stmt = $pdo->query("SHOW TABLES LIKE 'options'");
+                if ($stmt && $stmt->fetch()) {
+                    $uStmt = $pdo->prepare("UPDATE `options` SET `value` = ? WHERE `name` = ?");
+                    $uStmt->execute([$logoVal, 'website_logo_dark']);
+                    $uStmt->execute([$brandLogoVal, 'website_logo_brand_dark']);
+                    $uStmt->execute([$faviconVal, 'website_favicon']);
+                    $uStmt->execute(['http://127.0.0.1:8000', 'whatsapp_server_url']);
+                }
+            } catch (\Throwable $e) {}
+        }
+    }
+
+    /**
      * Ensure columns exist in agencies table safely without crashing.
      */
     protected function ensureAgencyColumns(): void
     {
-        try {
-            Schema::table('agencies', function ($table) {
-                if (!Schema::hasColumn('agencies', 'whatsapp_gateway_url')) $table->string('whatsapp_gateway_url', 255)->nullable();
-                if (!Schema::hasColumn('agencies', 'whatsapp_access_token')) $table->string('whatsapp_access_token', 255)->nullable();
-                if (!Schema::hasColumn('agencies', 'whatsapp_instance_id')) $table->string('whatsapp_instance_id', 100)->nullable();
-                if (!Schema::hasColumn('agencies', 'whatsapp_database')) $table->string('whatsapp_database', 100)->nullable();
-                if (!Schema::hasColumn('agencies', 'is_whatsapp_active')) $table->tinyInteger('is_whatsapp_active')->default(1);
-                if (!Schema::hasColumn('agencies', 'is_whatsapp_otp_active')) $table->tinyInteger('is_whatsapp_otp_active')->default(1);
-                if (!Schema::hasColumn('agencies', 'is_whatsapp_credentials_active')) $table->tinyInteger('is_whatsapp_credentials_active')->default(1);
-                if (!Schema::hasColumn('agencies', 'is_whatsapp_invoice_active')) $table->tinyInteger('is_whatsapp_invoice_active')->default(1);
-                if (!Schema::hasColumn('agencies', 'whatsapp_otp_template')) $table->text('whatsapp_otp_template')->nullable();
-                if (!Schema::hasColumn('agencies', 'whatsapp_credentials_template')) $table->text('whatsapp_credentials_template')->nullable();
-                if (!Schema::hasColumn('agencies', 'whatsapp_invoice_template')) $table->text('whatsapp_invoice_template')->nullable();
-            });
-        } catch (\Throwable $e) {}
+        $cols = [
+            'whatsapp_gateway_url' => "VARCHAR(255) NULL",
+            'whatsapp_access_token' => "VARCHAR(255) NULL",
+            'whatsapp_instance_id' => "VARCHAR(100) NULL",
+            'whatsapp_database' => "VARCHAR(100) NULL",
+            'is_whatsapp_active' => "TINYINT DEFAULT 1",
+            'is_whatsapp_otp_active' => "TINYINT DEFAULT 1",
+            'is_whatsapp_credentials_active' => "TINYINT DEFAULT 1",
+            'is_whatsapp_invoice_active' => "TINYINT DEFAULT 1",
+            'whatsapp_otp_template' => "TEXT NULL",
+            'whatsapp_credentials_template' => "TEXT NULL",
+            'whatsapp_invoice_template' => "TEXT NULL",
+        ];
+
+        foreach ($cols as $col => $sqlType) {
+            try {
+                if (!Schema::hasColumn('agencies', $col)) {
+                    DB::statement("ALTER TABLE `agencies` ADD COLUMN `{$col}` {$sqlType}");
+                }
+            } catch (\Throwable $e) {}
+        }
     }
 }

@@ -72,6 +72,17 @@ class Agency extends Model
         'openai_api_key',
         'is_gemini_active',
         'is_openai_active',
+        'whatsapp_gateway_url',
+        'whatsapp_access_token',
+        'whatsapp_instance_id',
+        'whatsapp_database',
+        'is_whatsapp_active',
+        'is_whatsapp_otp_active',
+        'is_whatsapp_credentials_active',
+        'is_whatsapp_invoice_active',
+        'whatsapp_otp_template',
+        'whatsapp_credentials_template',
+        'whatsapp_invoice_template',
     ];
 
     public function getParsedServicesAttribute()

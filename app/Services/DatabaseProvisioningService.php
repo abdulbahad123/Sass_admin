@@ -142,10 +142,22 @@ class DatabaseProvisioningService
                 DB::purge('target_tenant_db');
                 $tenantDb = DB::connection('target_tenant_db');
 
-                // 1. Ensure server URL is configured
+                // 1. Ensure server URL and clean relative logo paths are configured
                 $tenantDb->table('options')->updateOrInsert(
                     ['name' => 'whatsapp_server_url'],
                     ['value' => 'http://127.0.0.1:8000']
+                );
+                $tenantDb->table('options')->updateOrInsert(
+                    ['name' => 'website_logo_dark'],
+                    ['value' => 'img/logo-dark.png']
+                );
+                $tenantDb->table('options')->updateOrInsert(
+                    ['name' => 'website_logo_brand_dark'],
+                    ['value' => 'img/logo-brand-dark.png']
+                );
+                $tenantDb->table('options')->updateOrInsert(
+                    ['name' => 'website_favicon'],
+                    ['value' => 'img/favicon.png']
                 );
 
                 // 2. Generate a TRULY UNIQUE Access Token / API Key for the Agency Team
