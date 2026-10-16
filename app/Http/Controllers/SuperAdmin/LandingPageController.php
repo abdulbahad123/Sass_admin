@@ -165,7 +165,12 @@ class LandingPageController extends Controller
     {
         $request->validate([
             'image_key' => 'required|string',
-            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'image_file' => extension_loaded('fileinfo') ? 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120' : ['required', 'file', function($attr, $val, $fail) {
+                if (!$val) return;
+                if ($val->getSize() > 5120 * 1024) { $fail('Image must not exceed 5MB.'); return; }
+                $ext = strtolower(pathinfo($val->getClientOriginalName(), PATHINFO_EXTENSION));
+                if (!in_array($ext, ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp'])) { $fail('Image must be an image file (jpeg, png, jpg, gif, svg, webp).'); }
+            }],
         ]);
 
         $key = $request->input('image_key');

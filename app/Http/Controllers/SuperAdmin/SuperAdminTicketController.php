@@ -92,14 +92,11 @@ class SuperAdminTicketController extends Controller
         $ticket = Ticket::findOrFail($id);
         $user = auth()->user();
 
-        $request->validate([
+        $request->validate(array_merge([
             'message' => 'required|string',
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
             'status' => 'nullable|in:open,in_progress,pending_reply,resolved,closed',
             'is_internal_note' => 'nullable|boolean',
-        ]);
+        ], $this->getAttachmentValidationRules()));
 
         $uploadedPaths = [];
         if ($request->hasFile('attachments')) {

@@ -68,15 +68,12 @@ class WhiteLabelTicketController extends Controller
             return redirect()->back()->with('error', 'Agency profile not found.');
         }
 
-        $request->validate([
+        $request->validate(array_merge([
             'subject' => 'required|string|max:255',
             'product_id' => 'nullable|exists:products,id',
             'priority' => 'required|in:low,medium,high,urgent',
             'message' => 'required|string',
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
-        ]);
+        ], $this->getAttachmentValidationRules()));
 
         $uploadedPaths = [];
         if ($request->hasFile('attachments')) {
@@ -132,12 +129,9 @@ class WhiteLabelTicketController extends Controller
 
         $ticket = Ticket::where('agency_id', $agency->id)->findOrFail($id);
 
-        $request->validate([
+        $request->validate(array_merge([
             'message' => 'required|string',
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,zip|max:10240',
-        ]);
+        ], $this->getAttachmentValidationRules()));
 
         $uploadedPaths = [];
         if ($request->hasFile('attachments')) {

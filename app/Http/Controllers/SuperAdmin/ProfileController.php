@@ -29,7 +29,12 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:4096',
+            'avatar' => extension_loaded('fileinfo') ? 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:4096' : ['nullable', 'file', function($attr, $val, $fail) {
+                if (!$val) return;
+                if ($val->getSize() > 4096 * 1024) { $fail('Avatar must not exceed 4MB.'); return; }
+                $ext = strtolower(pathinfo($val->getClientOriginalName(), PATHINFO_EXTENSION));
+                if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'svg'])) { $fail('Avatar must be an image (jpg, jpeg, png, webp, svg).'); }
+            }],
         ]);
 
         $user->name = $validated['name'];

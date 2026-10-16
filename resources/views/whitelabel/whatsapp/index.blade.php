@@ -18,12 +18,9 @@
         </div>
 
         <div class="flex items-center gap-2">
-            @php
-                $hasCustomCreds = !empty($agency->whatsapp_gateway_url) || !empty($agency->whatsapp_access_token) || !empty($agency->whatsapp_instance_id);
-            @endphp
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold {{ $hasCustomCreds ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-blue-100 text-blue-800 border border-blue-200' }}">
-                <span class="w-2 h-2 rounded-full {{ $hasCustomCreds ? 'bg-emerald-500' : 'bg-blue-500' }} animate-pulse"></span>
-                {{ $hasCustomCreds ? 'Using Custom Agency Gateway' : 'Inheriting System Default Gateway' }}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Dedicated Agency Gateway
             </span>
         </div>
     </div>
@@ -46,15 +43,15 @@
         @csrf
 
         <!-- 1. Gateway Connection & API Keys Card -->
-        <div class="card-white rounded-2xl p-6 space-y-6" x-data="{ useCustom: {{ $hasCustomCreds ? 'true' : 'false' }} }">
+        <div class="card-white rounded-2xl p-6 space-y-6">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
                         <i data-lucide="key" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-slate-900 font-heading">API Connection & Gateway Engine</h3>
-                        <p class="text-[11px] text-slate-500">Choose between inheriting SuperAdmin's default gateway or connecting your agency's own WhatsApp instance</p>
+                        <h3 class="text-sm font-bold text-slate-900 font-heading">Custom Agency WhatsApp Gateway</h3>
+                        <p class="text-[11px] text-slate-500">Provide your dedicated WhatsApp API Key / Token and Instance ID. Server URL and database are assigned automatically.</p>
                     </div>
                 </div>
 
@@ -66,77 +63,64 @@
                 </label>
             </div>
 
-            <!-- Mode Selector Switch -->
+            <!-- Credentials Grid (Only API Key & Instance ID are editable) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <label class="relative flex items-start p-4 rounded-xl border-2 cursor-pointer transition-all"
-                       :class="!useCustom ? 'border-blue-600 bg-blue-50/50 shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-white'">
-                    <input type="radio" name="use_custom_gateway" value="0" class="sr-only" x-model="useCustom" :value="false">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
-                             :class="!useCustom ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300'">
-                            <span class="w-2 h-2 rounded-full bg-white" x-show="!useCustom"></span>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-900">System Default Gateway (Zero Setup)</p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">Use the master platform's verified WhatsApp instance. No API key setup required.</p>
-                        </div>
+                <!-- Gateway Server URL (Readonly / Locked) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="text-xs font-bold text-slate-700">Gateway Server URL</label>
+                        <span class="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <i data-lucide="lock" class="w-3 h-3 text-slate-400"></i> Locked
+                        </span>
                     </div>
-                </label>
+                    <input type="text" name="whatsapp_gateway_url" 
+                           value="{{ $autoGateway ?? 'http://127.0.0.1:8000' }}" 
+                           readonly
+                           class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-500 font-mono cursor-not-allowed select-none">
+                    <p class="text-[10px] text-slate-400 mt-1">Universal Node gateway base URL (auto-assigned).</p>
+                </div>
 
-                <label class="relative flex items-start p-4 rounded-xl border-2 cursor-pointer transition-all"
-                       :class="useCustom ? 'border-emerald-600 bg-emerald-50/50 shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-white'">
-                    <input type="radio" name="use_custom_gateway" value="1" class="sr-only" x-model="useCustom" :value="true">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
-                             :class="useCustom ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-slate-300'">
-                            <span class="w-2 h-2 rounded-full bg-white" x-show="useCustom"></span>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-slate-900">Custom Agency WhatsApp Gateway</p>
-                            <p class="text-[11px] text-slate-500 mt-0.5">Connect your own dedicated WhatsApp number, team token, and instance ID.</p>
-                        </div>
+                <!-- API Key / Access Token (Editable) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="text-xs font-bold text-slate-700">API Key / Access Token <span class="text-rose-500">*</span></label>
+                        <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Editable</span>
                     </div>
-                </label>
-            </div>
+                    <input type="text" name="whatsapp_access_token" id="whatsapp_access_token"
+                           value="{{ $agency->whatsapp_access_token ?? '' }}" 
+                           placeholder="e.g. team_0c4d122df386433837b99c94245"
+                           required
+                           class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none">
+                    <p class="text-[10px] text-slate-400 mt-1">API Bearer token or team authentication key.</p>
+                </div>
 
-            <!-- Custom Gateway Inputs (Shown when Custom is selected) -->
-            <div x-show="useCustom" x-collapse class="space-y-4 pt-2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Gateway Server URL</label>
-                        <input type="text" name="whatsapp_gateway_url" 
-                               value="{{ $agency->whatsapp_gateway_url ?? $systemDefaults['whatsapp_gateway_url'] }}" 
-                               placeholder="e.g. https://whatsappbulk.saasreselling.com"
-                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:bg-white focus:outline-none focus:border-emerald-600">
-                        <p class="text-[10px] text-slate-400 mt-1">Universal Node gateway base URL.</p>
+                <!-- Instance ID (Editable) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="text-xs font-bold text-slate-700">Instance ID <span class="text-rose-500">*</span></label>
+                        <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Editable</span>
                     </div>
+                    <input type="text" name="whatsapp_instance_id" id="whatsapp_instance_id"
+                           value="{{ $agency->whatsapp_instance_id ?? '' }}" 
+                           placeholder="e.g. 43192DD2DFD7"
+                           required
+                           class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none">
+                    <p class="text-[10px] text-slate-400 mt-1">Linked WhatsApp account instance token.</p>
+                </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">API Key / Access Token</label>
-                        <input type="text" name="whatsapp_access_token" 
-                               value="{{ $agency->whatsapp_access_token ?? $systemDefaults['whatsapp_access_token'] }}" 
-                               placeholder="e.g. token_6005c0f6de385fe7"
-                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:bg-white focus:outline-none focus:border-emerald-600">
-                        <p class="text-[10px] text-slate-400 mt-1">API Bearer token or team authentication key.</p>
+                <!-- Database Name (Readonly / Locked) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="text-xs font-bold text-slate-700">Database Name</label>
+                        <span class="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <i data-lucide="lock" class="w-3 h-3 text-slate-400"></i> Locked
+                        </span>
                     </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Instance ID</label>
-                        <input type="text" name="whatsapp_instance_id" 
-                               value="{{ $agency->whatsapp_instance_id ?? $systemDefaults['whatsapp_instance_id'] }}" 
-                               placeholder="e.g. 5B5B74F98319"
-                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:bg-white focus:outline-none focus:border-emerald-600">
-                        <p class="text-[10px] text-slate-400 mt-1">Linked WhatsApp account instance token.</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Database Name</label>
-                        <input type="text" name="whatsapp_database" 
-                               value="{{ $agency->whatsapp_database ?? $systemDefaults['whatsapp_database'] }}" 
-                               placeholder="e.g. nooryak_whatautomation"
-                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:bg-white focus:outline-none focus:border-emerald-600">
-                        <p class="text-[10px] text-slate-400 mt-1">Multi-tenant account database routing tag.</p>
-                    </div>
+                    <input type="text" name="whatsapp_database" 
+                           value="{{ $autoDb ?? 'nooryak_ps_youverse_whatsapp' }}" 
+                           readonly
+                           class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-500 font-mono cursor-not-allowed select-none">
+                    <p class="text-[10px] text-slate-400 mt-1">Multi-tenant account database routing tag (auto-assigned).</p>
                 </div>
             </div>
         </div>
@@ -280,6 +264,9 @@
             this.loading = true;
             this.result = null;
 
+            const tokenInput = document.getElementById('whatsapp_access_token');
+            const instanceInput = document.getElementById('whatsapp_instance_id');
+
             fetch('{{ route('whitelabel.whatsapp-gateway.test') }}', {
                 method: 'POST',
                 headers: {
@@ -289,7 +276,9 @@
                 body: JSON.stringify({
                     test_phone: this.phone,
                     test_type: this.type,
-                    custom_message: this.customMsg
+                    custom_message: this.customMsg,
+                    access_token: tokenInput ? tokenInput.value : '',
+                    instance_id: instanceInput ? instanceInput.value : ''
                 })
             })
             .then(res => res.json())
