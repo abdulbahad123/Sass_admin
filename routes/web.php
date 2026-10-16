@@ -253,6 +253,11 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::patch('/tickets/{ticket}/assign-staff', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'assignStaff'])->name('tickets.assign-staff');
     Route::patch('/tickets/{ticket}/status', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'updateStatus'])->name('tickets.update-status');
     Route::delete('/tickets/{ticket}', [\App\Http\Controllers\SuperAdmin\SuperAdminTicketController::class, 'destroy'])->name('tickets.destroy');
+
+    // WhatsApp Gateway
+    Route::get('/whatsapp-gateway', [\App\Http\Controllers\SuperAdmin\WhatsAppGatewayController::class, 'index'])->name('whatsapp-gateway.index');
+    Route::post('/whatsapp-gateway', [\App\Http\Controllers\SuperAdmin\WhatsAppGatewayController::class, 'update'])->name('whatsapp-gateway.update');
+    Route::post('/whatsapp-gateway/test', [\App\Http\Controllers\SuperAdmin\WhatsAppGatewayController::class, 'testSend'])->name('whatsapp-gateway.test');
 });
 
 // Shared Authenticated Product Single-Click SSO Launch Routes (Accessible to Super Admin, Master & White Label Agencies)
@@ -315,6 +320,11 @@ Route::prefix('master')->name('master.')->middleware([\App\Http\Middleware\Maste
 
     // 11. Integrations
     Route::get('/integrations', [\App\Http\Controllers\MasterAgency\MasterIntegrationController::class, 'index'])->name('integrations.index');
+
+    // WhatsApp Gateway
+    Route::get('/whatsapp-gateway', [\App\Http\Controllers\MasterAgency\MasterWhatsAppGatewayController::class, 'index'])->name('whatsapp-gateway.index');
+    Route::post('/whatsapp-gateway', [\App\Http\Controllers\MasterAgency\MasterWhatsAppGatewayController::class, 'update'])->name('whatsapp-gateway.update');
+    Route::post('/whatsapp-gateway/test', [\App\Http\Controllers\MasterAgency\MasterWhatsAppGatewayController::class, 'testSend'])->name('whatsapp-gateway.test');
 });
 
 // White Label Agency Dedicated Portal Routes
@@ -341,6 +351,9 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
     Route::post('/branding', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'updateBranding'])->name('branding.update');
     Route::get('/ai-settings', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'aiSettings'])->name('ai-settings.index');
     Route::post('/ai-settings', [\App\Http\Controllers\WhiteLabel\WhiteLabelGeneralController::class, 'updateAiSettings'])->name('ai-settings.update');
+    Route::get('/whatsapp-gateway', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'index'])->name('whatsapp-gateway.index');
+    Route::post('/whatsapp-gateway', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'update'])->name('whatsapp-gateway.update');
+    Route::post('/whatsapp-gateway/test', [\App\Http\Controllers\WhiteLabel\WhiteLabelWhatsAppGatewayController::class, 'testSend'])->name('whatsapp-gateway.test');
 
     // Website & Landing Page Management Section
     Route::prefix('website')->name('website.')->group(function () {

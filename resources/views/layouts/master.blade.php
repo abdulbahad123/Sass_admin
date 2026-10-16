@@ -187,6 +187,13 @@
                 <span>Settings</span>
             </a>
 
+            <!-- 11. WhatsApp Gateway -->
+            <a href="{{ route('master.whatsapp-gateway.index') }}" 
+               class="flex items-center px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 {{ request()->routeIs('master.whatsapp-gateway.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                <i data-lucide="message-square" class="w-4 h-4 mr-3 text-emerald-400"></i>
+                <span>WhatsApp Gateway</span>
+            </a>
+
         </nav>
 
         <!-- Master Admin User Profile Card -->

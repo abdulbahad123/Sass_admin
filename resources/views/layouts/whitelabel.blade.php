@@ -269,6 +269,12 @@
                         <i data-lucide="cpu" class="w-4 h-4 text-purple-400"></i>
                         <span>AI Engine & API Keys</span>
                     </a>
+
+                    <a href="{{ route('whitelabel.whatsapp-gateway.index') }}" 
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.whatsapp-gateway.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+                        <span>WhatsApp Gateway</span>
+                    </a>
                 </div>
 
             </div>
