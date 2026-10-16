@@ -30,14 +30,27 @@ class LoginController extends Controller
             return redirect()->away('https://launchshop.in' . $request->getRequestUri(), 301);
         }
 
-        $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
+        $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder)\./i', '', $host);
 
-        $platformHosts = ['saasreselling', 'localhost', '127.0.0.1'];
-        $isMainDomain = false;
-        foreach ($platformHosts as $pHost) {
-            if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {
-                $isMainDomain = true;
-                break;
+        $mainSuperAdminHosts = [
+            'saasreselling.com',
+            'www.saasreselling.com',
+            'localhost',
+            '127.0.0.1',
+        ];
+        $configuredAdminHost = strtolower((string) env('MAIN_ADMIN_HOST', 'saasreselling.com'));
+        if (!empty($configuredAdminHost)) {
+            $mainSuperAdminHosts[] = $configuredAdminHost;
+            $mainSuperAdminHosts[] = 'www.' . $configuredAdminHost;
+        }
+
+        $isMainDomain = in_array($cleanHost, $mainSuperAdminHosts, true) || in_array($host, $mainSuperAdminHosts, true);
+        if (!$isMainDomain) {
+            foreach ($mainSuperAdminHosts as $pHost) {
+                if ($pHost !== 'localhost' && $pHost !== '127.0.0.1' && str_ends_with($host, '.' . $pHost)) {
+                    $isMainDomain = true;
+                    break;
+                }
             }
         }
 
@@ -55,7 +68,7 @@ class LoginController extends Controller
                 })->first();
 
             $isPlatformSubdomain = false;
-            foreach (['launchshop.in', 'saasreselling'] as $pHost) {
+            foreach (['launchshop.in', 'saasreselling.com'] as $pHost) {
                 if (str_contains($host, $pHost) || str_contains($cleanHost, $pHost)) {
                     $isPlatformSubdomain = true;
                     break;
@@ -95,14 +108,27 @@ class LoginController extends Controller
             }
 
             $host = strtolower($request->getHost());
-            $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
+            $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder)\./i', '', $host);
             
-            $platformHosts = ['saasreselling', 'localhost', '127.0.0.1'];
-            $isMainDomain = false;
-            foreach ($platformHosts as $pHost) {
-                if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {
-                    $isMainDomain = true;
-                    break;
+            $mainSuperAdminHosts = [
+                'saasreselling.com',
+                'www.saasreselling.com',
+                'localhost',
+                '127.0.0.1',
+            ];
+            $configuredAdminHost = strtolower((string) env('MAIN_ADMIN_HOST', 'saasreselling.com'));
+            if (!empty($configuredAdminHost)) {
+                $mainSuperAdminHosts[] = $configuredAdminHost;
+                $mainSuperAdminHosts[] = 'www.' . $configuredAdminHost;
+            }
+
+            $isMainDomain = in_array($cleanHost, $mainSuperAdminHosts, true) || in_array($host, $mainSuperAdminHosts, true);
+            if (!$isMainDomain) {
+                foreach ($mainSuperAdminHosts as $pHost) {
+                    if ($pHost !== 'localhost' && $pHost !== '127.0.0.1' && str_ends_with($host, '.' . $pHost)) {
+                        $isMainDomain = true;
+                        break;
+                    }
                 }
             }
 

@@ -34,18 +34,29 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     }
 
     $rawHost = preg_replace('/^www\./i', '', $host);
-    if (str_starts_with($rawHost, 'launchshop.') || str_starts_with($rawHost, 'websitebuilder.') || str_starts_with($rawHost, 'website-builder.')) {
-        return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->show();
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder)\./i', '', $host);
+
+    $mainSuperAdminHosts = [
+        'saasreselling.com',
+        'www.saasreselling.com',
+        'localhost',
+        '127.0.0.1',
+    ];
+    $configuredAdminHost = strtolower((string) env('MAIN_ADMIN_HOST', 'saasreselling.com'));
+    if (!empty($configuredAdminHost)) {
+        $mainSuperAdminHosts[] = $configuredAdminHost;
+        $mainSuperAdminHosts[] = 'www.' . $configuredAdminHost;
     }
 
-    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
-
-    $platformHosts = ['saasreselling', 'localhost', '127.0.0.1'];
-    $isMainDomain = false;
-    foreach ($platformHosts as $pHost) {
-        if (str_contains($cleanHost, $pHost) || str_contains($host, $pHost)) {
-            $isMainDomain = true;
-            break;
+    // A host is the main SuperAdmin domain ONLY if it exactly equals saasreselling.com (or localhost / MAIN_ADMIN_HOST)
+    // or is a subdomain strictly under saasreselling.com. Never match saasreselling.in or other agency TLDs!
+    $isMainDomain = in_array($cleanHost, $mainSuperAdminHosts, true) || in_array($host, $mainSuperAdminHosts, true);
+    if (!$isMainDomain) {
+        foreach ($mainSuperAdminHosts as $pHost) {
+            if ($pHost !== 'localhost' && $pHost !== '127.0.0.1' && str_ends_with($host, '.' . $pHost)) {
+                $isMainDomain = true;
+                break;
+            }
         }
     }
 
