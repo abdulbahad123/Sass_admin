@@ -115,15 +115,32 @@ class WhiteLabelWhatsAppGatewayController extends Controller
 
         $autoDb = self::getAgencyDefaultDb($agency);
         $autoGateway = env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000');
+        $systemDefaults = self::getSystemDefaults();
 
         $accessToken = trim((string)$request->input('whatsapp_access_token'));
         $instanceId = trim((string)$request->input('whatsapp_instance_id'));
 
+        // If user mistakenly removed the format or left it empty, automatically restore default format
+        $otpTemplate = trim((string)$request->input('whatsapp_otp_template'));
+        if (empty($otpTemplate)) {
+            $otpTemplate = $systemDefaults['whatsapp_otp_template'];
+        }
+
+        $credsTemplate = trim((string)$request->input('whatsapp_credentials_template'));
+        if (empty($credsTemplate)) {
+            $credsTemplate = $systemDefaults['whatsapp_credentials_template'];
+        }
+
+        $invoiceTemplate = trim((string)$request->input('whatsapp_invoice_template'));
+        if (empty($invoiceTemplate)) {
+            $invoiceTemplate = $systemDefaults['whatsapp_invoice_template'];
+        }
+
         $data = [
-            'is_whatsapp_active' => $request->has('is_whatsapp_active') ? 1 : 0,
-            'is_whatsapp_otp_active' => $request->has('is_whatsapp_otp_active') ? 1 : 0,
-            'is_whatsapp_credentials_active' => $request->has('is_whatsapp_credentials_active') ? 1 : 0,
-            'is_whatsapp_invoice_active' => $request->has('is_whatsapp_invoice_active') ? 1 : 0,
+            'is_whatsapp_active' => 1,
+            'is_whatsapp_otp_active' => 1,
+            'is_whatsapp_credentials_active' => 1,
+            'is_whatsapp_invoice_active' => 1,
 
             // Automatically manage Gateway URL and Database (not editable by agency)
             'whatsapp_gateway_url' => $autoGateway,
@@ -133,9 +150,9 @@ class WhiteLabelWhatsAppGatewayController extends Controller
             'whatsapp_access_token' => $accessToken,
             'whatsapp_instance_id' => $instanceId,
 
-            'whatsapp_otp_template' => $request->input('whatsapp_otp_template'),
-            'whatsapp_credentials_template' => $request->input('whatsapp_credentials_template'),
-            'whatsapp_invoice_template' => $request->input('whatsapp_invoice_template'),
+            'whatsapp_otp_template' => $otpTemplate,
+            'whatsapp_credentials_template' => $credsTemplate,
+            'whatsapp_invoice_template' => $invoiceTemplate,
         ];
 
         // 1. Direct Eloquent assignment & save
