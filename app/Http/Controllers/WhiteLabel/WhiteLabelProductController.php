@@ -29,14 +29,18 @@ class WhiteLabelProductController extends Controller
             ? $agencyProducts 
             : Product::where('is_active', true)->get();
 
-        $orderMap = [
-            'launchshop' => 1,
-            'website-builder' => 2,
-            'whatsappbulk' => 3,
-        ];
-
-        $products = $products->sortBy(function ($prod) use ($orderMap) {
-            return $orderMap[$prod->slug] ?? 99;
+        $products = $products->sortBy(function ($prod) {
+            $identifier = strtolower(trim(($prod->slug ?? '') . ' ' . ($prod->name ?? '')));
+            if (str_contains($identifier, 'ecom') || str_contains($identifier, 'launchshop') || str_contains($identifier, 'store')) {
+                return 1;
+            }
+            if (str_contains($identifier, 'website') || str_contains($identifier, 'site') || str_contains($identifier, 'builder')) {
+                return 2;
+            }
+            if (str_contains($identifier, 'whatsapp') || str_contains($identifier, 'bulk')) {
+                return 3;
+            }
+            return 99;
         })->values();
 
         return view('whitelabel.products.index', compact('user', 'agency', 'products'));

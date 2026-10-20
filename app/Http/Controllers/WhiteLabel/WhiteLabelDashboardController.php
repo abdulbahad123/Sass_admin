@@ -268,9 +268,14 @@ protected function getAgencyClientsData($agency)
             'whatsapp-bulk'    => 3,
         ];
         usort($productCards, function ($a, $b) use ($cardOrder) {
-            $oa = $cardOrder[$a['slug']] ?? 99;
-            $ob = $cardOrder[$b['slug']] ?? 99;
-            return $oa <=> $ob;
+            $getOrd = function ($item) use ($cardOrder) {
+                $id = strtolower(trim(($item['slug'] ?? '') . ' ' . ($item['name'] ?? '')));
+                if (str_contains($id, 'ecom') || str_contains($id, 'launchshop') || str_contains($id, 'store')) return 1;
+                if (str_contains($id, 'website') || str_contains($id, 'site') || str_contains($id, 'builder')) return 2;
+                if (str_contains($id, 'whatsapp') || str_contains($id, 'bulk')) return 3;
+                return $cardOrder[$item['slug'] ?? ''] ?? 99;
+            };
+            return $getOrd($a) <=> $getOrd($b);
         });
 
         // Include any clients in Sass Admin DB
