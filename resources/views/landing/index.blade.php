@@ -442,8 +442,7 @@
     <!-- SECTION 4: WHITE LABEL SAAS PARTNER & MASTER PANEL CARDS (Task 1: Master Label SaaS Glassmorphism Coming Soon Overlay) -->
     <section class="py-10 lg:py-12 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                
+            <div class="max-w-4xl mx-auto">
                 <!-- Card 1: White Label SaaS Partner Card (Active) -->
                 @php $model = $data['lp_model_cards'][0] ?? null; @endphp
                 @if($model)
@@ -497,77 +496,7 @@
                         </a>
                     </div>
                 </div>
-                @endif
-
-                <!-- Card 2: White Label Master Panel (With Glassmorphism COMING SOON Overlay) -->
-                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between relative overflow-hidden text-left group">
-                    
-                    <!-- Background Card Content (Visible behind glass blur) -->
-                    <div class="text-left filter blur-[2px] opacity-75 select-none pointer-events-none">
-                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-slate-100 dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
-                            Master Label SaaS
-                        </span>
-                        <h3 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white mb-2 text-left">
-                            White Label Master Panel
-                        </h3>
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-left">
-                            Ideal for business network builders who want to create & manage SaaS reseller partners.
-                        </p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center mb-6 text-left">
-                            <div class="sm:col-span-6 space-y-2.5 text-left">
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
-                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <span>Create Unlimited Reseller Panels</span>
-                                </div>
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
-                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <span>Partner Management System</span>
-                                </div>
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
-                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <span>Set Your Own Reseller Pricing</span>
-                                </div>
-                                <div class="flex items-start space-x-2.5 text-xs font-medium text-slate-700 dark:text-slate-200">
-                                    <div class="w-4 h-4 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] mt-0.5 flex-shrink-0">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <span>Central Master Admin Portal</span>
-                                </div>
-                            </div>
-                            <div class="sm:col-span-6 mt-4 sm:mt-0">
-                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" alt="Master Panel Preview" class="w-full h-auto rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Glassmorphism "COMING SOON" Overlay -->
-                    <div class="absolute inset-0 z-20 bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-2xl shadow-xl shadow-orange-500/30 mb-4 animate-bounce">
-                            <i class="fas fa-rocket"></i>
-                        </div>
-                        <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-extrabold text-xs tracking-widest uppercase shadow-lg shadow-orange-500/40 mb-2.5">
-                            COMING SOON
-                        </span>
-                        <h4 class="font-space font-extrabold text-xl sm:text-2xl text-white tracking-tight">Master Label SaaS Panel</h4>
-                        <p class="text-xs text-slate-200 max-w-xs mt-2 leading-relaxed">
-                            Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
-                        </p>
-                        <div class="mt-5 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#0B0F19]/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
-                            <i class="fas fa-lock text-amber-400 text-xs"></i>
-                            <span>Under Active Development</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+                @endif</div>
         </div>
     </section>
 
@@ -692,46 +621,58 @@
                     </div>
                 </div>
 
-                <!-- CARD 3: WHATSAPP AUTOMATION TOOL (COMING SOON) -->
-                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl border border-emerald-200/90 shadow-xl overflow-hidden flex flex-col justify-between p-6 sm:p-7 relative group">
-                    
-                    <!-- Background Content visible behind blur -->
-                    <div class="w-full flex flex-col justify-between filter blur-[3px] opacity-60 select-none pointer-events-none">
-                        <div>
-                            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-[#1e293b] px-3 py-1.5 rounded-xl border border-emerald-200 mb-4">
-                                <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
-                                    <i class="fab fa-whatsapp"></i>
-                                </div>
-                                <span class="font-space font-extrabold text-xs text-emerald-900 uppercase">WHATSAPP AUTOMATION</span>
+                <!-- CARD 3: WHATSAPP AUTOMATION TOOL (ACTIVE) -->
+                <div class="bg-white dark:bg-[#0B0F19] rounded-3xl border-2 border-emerald-500/80 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col justify-between p-6 sm:p-7 group relative">
+                    <div>
+                        <!-- Brand Logo -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <img src="{{ asset('/assets/landing_page/whatsapp_logo.png') }}" alt="WhatsApp Automation Logo" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg';">
                             </div>
-                            <h3 class="font-space font-extrabold text-xl text-slate-900 dark:text-white mb-2">WhatsApp Automation Tool</h3>
-                            <p class="text-xs text-slate-600 dark:text-slate-300">Automate customer messaging, broadcast marketing campaigns, and AI chatbots directly on WhatsApp.</p>
-                            <div class="my-5 rounded-2xl bg-emerald-50 dark:bg-[#1e293b] p-4 border border-emerald-200/60">
-                                <div class="w-full h-32 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-bold text-sm">
-                                    <i class="fab fa-whatsapp text-4xl"></i>
-                                </div>
-                            </div>
+                            <span class="text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase bg-emerald-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-emerald-200/60 dark:border-slate-700">WHATSAPP AUTOMATION</span>
                         </div>
+
+                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">WhatsApp Marketing & Automation</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Automate bulk messaging campaigns, AI auto-replies, catalog sharing, and customer engagement directly on WhatsApp.</p>
+                        
+                        <!-- Product Image Mockup -->
+                        <div class="my-5 relative overflow-hidden rounded-2xl">
+                            <img src="{{ asset('/assets/landing_page/whatsapp_image.png') }}" alt="WhatsApp Automation Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-emerald-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
+                        </div>
+
+                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
+
+                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-200 font-medium">
+                            <li class="flex items-center space-x-2.5">
+                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                <span>Bulk WhatsApp Campaigns & Broadcasts</span>
+                            </li>
+                            <li class="flex items-center space-x-2.5">
+                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                <span>AI Smart Auto-Reply & Keyword Rules</span>
+                            </li>
+                            <li class="flex items-center space-x-2.5">
+                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                <span>Multi-Device & QR Code Connection</span>
+                            </li>
+                            <li class="flex items-center space-x-2.5">
+                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                <span>Contact Manager & Group Export</span>
+                            </li>
+                            <li class="flex items-center space-x-2.5">
+                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                                <span>Real-Time Analytics & Delivery Reports</span>
+                            </li>
+                        </ul>
                     </div>
 
-                    <!-- Glassmorphism "COMING SOON" Overlay -->
-                    <div class="absolute inset-0 z-20 bg-slate-950/75 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-green-500 text-white flex items-center justify-center text-3xl shadow-xl shadow-emerald-500/40 mb-4 animate-bounce">
-                            <i class="fab fa-whatsapp text-white"></i>
-                        </div>
-                        <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-white font-extrabold text-xs tracking-widest uppercase shadow-lg shadow-emerald-500/40 mb-3">
-                            COMING SOON
-                        </span>
-                        <h4 class="font-space font-extrabold text-xl sm:text-2xl text-white tracking-tight">WhatsApp Automation Tool</h4>
-                        <p class="text-xs text-slate-200 max-w-xs mt-2.5 leading-relaxed font-medium">
-                            Automate bulk WhatsApp campaigns, instant AI auto-replies, catalog sharing, and order notifications. Launching soon!
-                        </p>
-                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#0B0F19]/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md shadow-inner">
-                            <i class="fas fa-lock text-emerald-400 text-sm"></i>
-                            <span>Under Active Development</span>
-                        </div>
+                    <div>
+                        <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                            <span>Explore WhatsApp Tool</span>
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                        <p class="text-center text-[11px] text-slate-400 font-medium mt-3">Trusted by 5,000+ Businesses</p>
                     </div>
-
                 </div>
 
             </div>
@@ -925,8 +866,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch max-w-full mx-auto">
-                
+            <div class="max-w-xl mx-auto">
                 <!-- Card 1: White-Label Panel -->
                 <div class="bg-white dark:bg-[#0B0F19] rounded-[2rem] p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col relative hover:shadow-2xl transition-all duration-300">
                     <div class="flex justify-between items-start mb-6">
@@ -990,94 +930,7 @@
                             <span class="block text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Perfect for getting started and building your customer base.</span>
                         </div>
                     </div>
-                </div>
-
-                <!-- Card 2: White-Label Master Panel (With Coming Soon Overlay) -->
-                <div class="bg-white dark:bg-[#0B0F19] rounded-[2rem] p-8 shadow-2xl border-2 border-orange-400 flex flex-col relative overflow-hidden group hover:shadow-orange-500/10 transition-all duration-300">
-                    
-                    <!-- Blurred background content -->
-                    <div class="flex flex-col flex-grow filter blur-[2px] opacity-60 select-none pointer-events-none">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="inline-flex items-center space-x-2 bg-slate-100 dark:bg-[#1e293b] text-slate-600 dark:text-slate-300 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-slate-200 dark:border-slate-700 h-max">
-                                <i class="fas fa-network-wired"></i> <span>For Network Builders</span>
-                            </div>
-                            
-                            <div class="flex flex-col items-end">
-                                <span class="text-[9px] font-extrabold text-slate-600 dark:text-slate-300 text-right leading-tight mr-1">Create<br/>Manage<br/>Scale</span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between items-start">
-                            <div class="pr-2">
-                                <h3 class="font-space font-extrabold text-2xl text-slate-900 dark:text-white mb-0.5 tracking-tight">White-Label Master Panel</h3>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed min-h-[50px] pr-2 mt-2">Create and manage unlimited white-label sub-panels. Onboard your own reseller partners and control your entire ecosystem.</p>
-                            </div>
-                            <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-800 bg-slate-900">
-                                <img src="{{ asset('/assets/images/user_dashboard2.png') }}" class="w-full h-auto object-cover opacity-90" alt="Master Dashboard Preview">
-                            </div>
-                        </div>
-                        
-                        <div class="my-6 flex flex-col items-start justify-end h-16">
-                            <div class="flex items-end">
-                                <span id="priceValue2" class="font-space font-extrabold text-[44px] text-slate-900 dark:text-white tracking-tighter leading-none">₹2,499</span>
-                                <span id="pricePeriod2" class="text-sm text-slate-500 dark:text-slate-400 font-bold mb-1.5 ml-1">/ month</span>
-                            </div>
-                            <div id="priceSave2" class="hidden mt-1"></div>
-                        </div>
-
-                        <div class="w-full block text-center py-3.5 rounded-xl bg-slate-800 text-white font-bold text-sm shadow-md mb-4">
-                            Get Started <i class="fas fa-arrow-right ml-1"></i>
-                        </div>
-
-                        <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-5 mb-5">
-                            <span class="flex items-center"><i class="fas fa-video mr-1"></i> 1:1 Demo on Google Meet</span>
-                            <span class="flex items-center"><i class="far fa-credit-card mr-1"></i> No Credit Card</span>
-                            <span class="flex items-center"><i class="fas fa-check-circle mr-1"></i> 100% Free Demo</span>
-                        </div>
-
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm font-extrabold text-slate-900 dark:text-white">Everything You Get</span>
-                            <span class="text-[9px] font-bold text-slate-600 dark:text-slate-300">All features included in yearly plan</span>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-y-3 mt-2 text-[11px] text-slate-700 dark:text-slate-200 font-medium">
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Unlimited White Label Panels</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Partner Management System</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Centralized Master Dashboard</span></div>
-                            <div class="flex items-start space-x-2"><i class="fas fa-check text-slate-800 dark:text-slate-100 mt-0.5 text-[10px]"></i> <span>Complete Reseller Control</span></div>
-                        </div>
-
-                        <div class="mt-8 bg-slate-50 dark:bg-[#151c2c] rounded-xl p-4 flex items-start space-x-3 border border-slate-200 dark:border-slate-700">
-                            <div class="w-8 h-8 rounded-md bg-slate-200 flex items-center justify-center text-slate-700 dark:text-slate-200 flex-shrink-0"><i class="fas fa-globe"></i></div>
-                            <div>
-                                <span class="block text-[11px] font-extrabold text-slate-900 dark:text-white mb-0.5">Scale Globally</span>
-                                <span class="block text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Ideal for businesses building a vast reseller network.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Coming Soon Overlay -->
-                    <div class="absolute inset-0 z-20 bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-3xl shadow-xl shadow-orange-500/30 mb-5 animate-bounce">
-                            <i class="fas fa-rocket"></i>
-                        </div>
-                        <span class="px-5 py-2 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-extrabold text-sm tracking-widest uppercase shadow-lg shadow-orange-500/40 mb-3">
-                            COMING SOON
-                        </span>
-                        <h4 class="font-space font-extrabold text-2xl text-white tracking-tight">Master Label Panel</h4>
-                        <p class="text-xs text-slate-200 max-w-xs mt-3 leading-relaxed font-medium">
-                            Empower your agency network to build & sell SaaS partners under your master brand. Launching soon!
-                        </p>
-                        <div class="mt-6 inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white dark:bg-[#0B0F19]/10 border border-white/25 text-white font-bold text-xs backdrop-blur-md">
-                            <i class="fas fa-lock text-amber-400 text-xs"></i>
-                            <span>Under Active Development</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+                </div></div>
         </div>
         
         <script>
