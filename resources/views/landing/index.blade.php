@@ -629,10 +629,10 @@
                             <div class="flex items-center space-x-2">
                                 <img src="{{ asset('/assets/landing_page/whatsapp_logo.png') }}" alt="WhatsApp Automation Logo" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg';">
                             </div>
-                            <span class="text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase bg-emerald-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-emerald-200/60 dark:border-slate-700">WHATSAPP AUTOMATION</span>
+                            <span class="text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase bg-emerald-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-emerald-200/60 dark:border-slate-700">WHATSAPPBULK</span>
                         </div>
 
-                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">WhatsApp Marketing & Automation</h3>
+                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">Whatsappbulk Marketing & Automation</h3>
                         <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Automate bulk messaging campaigns, AI auto-replies, catalog sharing, and customer engagement directly on WhatsApp.</p>
                         
                         <!-- Product Image Mockup -->
@@ -668,7 +668,7 @@
 
                     <div>
                         <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
-                            <span>Explore WhatsApp Tool</span>
+                            <span>Explore Whatsappbulk</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
                         <p class="text-center text-[11px] text-slate-400 font-medium mt-3">Trusted by 5,000+ Businesses</p>
