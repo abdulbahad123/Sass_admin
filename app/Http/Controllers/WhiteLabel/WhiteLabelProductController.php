@@ -31,13 +31,16 @@ class WhiteLabelProductController extends Controller
 
         $products = $products->sortBy(function ($prod) {
             $identifier = strtolower(trim(($prod->slug ?? '') . ' ' . ($prod->name ?? '')));
-            if (str_contains($identifier, 'ecom') || str_contains($identifier, 'launchshop') || str_contains($identifier, 'store')) {
+            // 1) Ecom Builder
+            if (str_contains($identifier, 'ecom') || str_contains($identifier, 'launchshop') || str_contains($identifier, 'store') || str_contains($identifier, 'shop')) {
                 return 1;
             }
-            if (str_contains($identifier, 'website') || str_contains($identifier, 'site') || str_contains($identifier, 'builder')) {
+            // 2) Website Builder
+            if (str_contains($identifier, 'website') || str_contains($identifier, 'site') || (str_contains($identifier, 'builder') && !str_contains($identifier, 'ecom'))) {
                 return 2;
             }
-            if (str_contains($identifier, 'whatsapp') || str_contains($identifier, 'bulk')) {
+            // 3) WhatsApp Bulk
+            if (str_contains($identifier, 'whatsapp') || str_contains($identifier, 'bulk') || str_contains($identifier, 'wa')) {
                 return 3;
             }
             return 99;

@@ -9,8 +9,27 @@
         <p class="text-xs text-slate-500">Enable or configure white-label products for your client network</p>
     </div>
 
+    @php
+        $orderedProducts = collect($products)->sortBy(function ($prod) {
+            $identifier = strtolower(trim(($prod->slug ?? '') . ' ' . ($prod->name ?? '')));
+            // 1) Ecom Builder
+            if (str_contains($identifier, 'ecom') || str_contains($identifier, 'launchshop') || str_contains($identifier, 'store') || str_contains($identifier, 'shop')) {
+                return 1;
+            }
+            // 2) Website Builder
+            if (str_contains($identifier, 'website') || str_contains($identifier, 'site') || (str_contains($identifier, 'builder') && !str_contains($identifier, 'ecom'))) {
+                return 2;
+            }
+            // 3) WhatsApp Bulk
+            if (str_contains($identifier, 'whatsapp') || str_contains($identifier, 'bulk') || str_contains($identifier, 'wa')) {
+                return 3;
+            }
+            return 99;
+        })->values();
+    @endphp
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach($products as $prod)
+        @foreach($orderedProducts as $prod)
             @php
                 $subdomainUrl = isset($agency) && $agency ? $agency->getProductSubdomainUrl($prod->slug ?? $prod->name) : "https://" . \Illuminate\Support\Str::slug($prod->name) . ".nooryak.in";
             @endphp
