@@ -149,12 +149,6 @@
                 <div class="space-y-1 pt-3 border-t border-slate-800/80">
                     <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Billing & Support</p>
 
-                    <a href="{{ route('whitelabel.billing.index') }}" 
-                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.billing.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
-                        <i data-lucide="receipt" class="w-4 h-4"></i>
-                        <span>Billing & Invoices</span>
-                    </a>
-
                     <a href="{{ route('whitelabel.tickets.index') }}" 
                        class="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.tickets.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
                         <div class="flex items-center space-x-3">
