@@ -169,6 +169,13 @@
                         </form>
                         @endif
 
+                                                <a href="{{ route('admin.website-builder-limits.index', ['agency_id' => $agency->id]) }}" 
+                           class="px-2.5 py-2 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 font-bold border border-violet-200 transition-colors flex items-center space-x-1"
+                           title="Configure Website Builder Limits">
+                            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                            <span>Limits</span>
+                        </a>
+
                         <!-- Edit Agency Button (Task 3) -->
                         @if(auth()->user()->hasPermission('edit-agencies'))
                         <button onclick="openEditAgencyModal({{ json_encode($agency) }})" 

@@ -6,6 +6,7 @@ use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\PlanController;
 use App\Http\Controllers\SuperAdmin\ProductController;
+use App\Http\Controllers\SuperAdmin\WebsiteBuilderLimitsController;
 use App\Http\Controllers\SuperAdmin\StaffController;
 use App\Http\Controllers\SuperAdmin\SubscriptionController;
 use App\Http\Middleware\SuperAdminMiddleware;
@@ -199,6 +200,11 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+    // Website Builder White-Label Limits Management
+    Route::get('/website-builder-limits', [WebsiteBuilderLimitsController::class, 'index'])->name('website-builder-limits.index');
+    Route::post('/website-builder-limits/defaults', [WebsiteBuilderLimitsController::class, 'updateDefaults'])->name('website-builder-limits.update-defaults');
+    Route::post('/website-builder-limits/agency', [WebsiteBuilderLimitsController::class, 'updateAgency'])->name('website-builder-limits.update-agency');
 
     // Agencies & Master Plan Agencies Management
     Route::get('/agencies', [AgencyController::class, 'index'])->name('agencies.index');
