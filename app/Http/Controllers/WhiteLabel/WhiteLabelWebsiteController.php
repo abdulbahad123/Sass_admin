@@ -45,6 +45,19 @@ class WhiteLabelWebsiteController extends Controller
             'about_title'      => 'nullable|string',
             'about_mission'    => 'nullable|string',
             'about_content'    => 'nullable|string',
+            'why_choose_title'         => 'nullable|string|max:255',
+            'why_choose_subtitle'      => 'nullable|string',
+            'products_section_badge'   => 'nullable|string|max:255',
+            'products_section_title'   => 'nullable|string|max:255',
+            'products_section_subtitle'=> 'nullable|string',
+            'products_cta_text'        => 'nullable|string|max:255',
+            'products_cta_url'         => 'nullable|string|max:500',
+            'how_it_works_title'       => 'nullable|string|max:255',
+            'how_it_works_subtitle'    => 'nullable|string',
+            'cta_section_title'        => 'nullable|string|max:255',
+            'cta_section_subtitle'     => 'nullable|string',
+            'cta_button_text'          => 'nullable|string|max:255',
+            'cta_button_url'           => 'nullable|string|max:500',
             'contact_email'    => 'nullable|string|max:255',
             'contact_phone'    => 'nullable|string|max:255',
             'facebook_url'     => 'nullable|string|max:500',
@@ -92,6 +105,68 @@ class WhiteLabelWebsiteController extends Controller
             $fileName = 'cta_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadDir, $fileName);
             $validated['cta_image'] = 'uploads/agency/' . $fileName;
+        }
+
+        // 1. About Features repeater
+        if ($request->has('about_feature_title')) {
+            $afTitles = $request->input('about_feature_title', []);
+            $afDescs  = $request->input('about_feature_desc', []);
+            $afIcons  = $request->input('about_feature_icon', []);
+            $aboutFeatures = [];
+            for ($i = 0; $i < count($afTitles); $i++) {
+                if (!empty(trim($afTitles[$i] ?? ''))) {
+                    $aboutFeatures[] = [
+                        'title' => trim($afTitles[$i]),
+                        'desc'  => trim($afDescs[$i] ?? ''),
+                        'icon'  => trim($afIcons[$i] ?? 'zap'),
+                    ];
+                }
+            }
+            $validated['about_features_data'] = json_encode($aboutFeatures);
+        }
+
+        // 2. Why Choose Us (features_data) repeater
+        if ($request->has('why_choose_item_title')) {
+            $wcTitles = $request->input('why_choose_item_title', []);
+            $wcDescs  = $request->input('why_choose_item_desc', []);
+            $wcIcons  = $request->input('why_choose_item_icon', []);
+            $whyChoose = [];
+            for ($i = 0; $i < count($wcTitles); $i++) {
+                if (!empty(trim($wcTitles[$i] ?? ''))) {
+                    $whyChoose[] = [
+                        'title' => trim($wcTitles[$i]),
+                        'desc'  => trim($wcDescs[$i] ?? ''),
+                        'icon'  => trim($wcIcons[$i] ?? 'rocket'),
+                    ];
+                }
+            }
+            $validated['features_data'] = json_encode($whyChoose);
+        }
+
+        // 3. How It Works (how_it_works_steps) repeater
+        if ($request->has('hiw_step_title')) {
+            $hiwTitles = $request->input('hiw_step_title', []);
+            $hiwDescs  = $request->input('hiw_step_desc', []);
+            $hiwNums   = $request->input('hiw_step_num', []);
+            $hiwIcons  = $request->input('hiw_step_icon', []);
+            $hiwSteps = [];
+            for ($i = 0; $i < count($hiwTitles); $i++) {
+                if (!empty(trim($hiwTitles[$i] ?? ''))) {
+                    $hiwSteps[] = [
+                        'num'   => trim($hiwNums[$i] ?? sprintf('%02d', $i + 1)),
+                        'title' => trim($hiwTitles[$i]),
+                        'desc'  => trim($hiwDescs[$i] ?? ''),
+                        'icon'  => trim($hiwIcons[$i] ?? 'user-plus'),
+                    ];
+                }
+            }
+            $validated['how_it_works_steps'] = json_encode($hiwSteps);
+        }
+
+        // 4. CTA Banner Features / Checkmarks
+        if ($request->has('cta_feature_text')) {
+            $ctaTexts = array_filter(array_map('trim', explode(',', $request->input('cta_feature_text', ''))));
+            $validated['cta_features_data'] = json_encode(array_values($ctaTexts));
         }
 
         // Section toggles

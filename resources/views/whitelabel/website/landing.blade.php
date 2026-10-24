@@ -3,6 +3,36 @@
 @section('title', 'Website - Landing Page')
 
 @section('content')
+@php
+    $aboutFeatures = is_array($agency->about_features_data ?? null)
+        ? $agency->about_features_data
+        : (json_decode($agency->about_features_data ?? '[]', true) ?: [
+            ['title' => 'Lightning Performance', 'desc' => 'Modern architecture delivering sub-second load times and 99.9% uptime.', 'icon' => 'zap'],
+            ['title' => 'Enterprise Security',   'desc' => 'Bank-grade encryption and industry-leading security protocols to protect your data.', 'icon' => 'shield-check'],
+            ['title' => 'Scale Without Limits',   'desc' => 'Infrastructure that grows with your business — from 10 to 10,000 clients.', 'icon' => 'trending-up'],
+        ]);
+
+    $whyChooseItems = is_array($agency->features_data ?? null)
+        ? $agency->features_data
+        : (json_decode($agency->features_data ?? '[]', true) ?: [
+            ['title' => 'Get More Customers', 'desc' => 'Build trust with reviews, smart websites and digital presence.', 'icon' => 'rocket'],
+            ['title' => 'Save Time & Effort',  'desc' => 'Automate repetitive tasks and focus on what matters most.',      'icon' => 'clock'],
+            ['title' => 'Increase Revenue',    'desc' => 'Drive repeat business with loyalty programs & digital tools.',   'icon' => 'trending-up'],
+            ['title' => 'Reliable & Secure',   'desc' => 'Your business data is safe with enterprise-grade security.',     'icon' => 'shield-check'],
+        ]);
+
+    $hiwSteps = is_array($agency->how_it_works_steps ?? null)
+        ? $agency->how_it_works_steps
+        : (json_decode($agency->how_it_works_steps ?? '[]', true) ?: [
+            ['num' => '01', 'title' => 'Sign Up',              'desc' => 'Create your account in less than 2 minutes.',               'icon' => 'user-plus'],
+            ['num' => '02', 'title' => 'Set Up Your Business', 'desc' => 'Choose the tools you need and customize in minutes.',      'icon' => 'monitor'],
+            ['num' => '03', 'title' => 'Grow Faster',          'desc' => 'Get more customers, more reviews and more revenue.',         'icon' => 'bar-chart-2'],
+        ]);
+
+    $ctaCheckmarksRaw = is_array($agency->cta_features_data ?? null)
+        ? implode(', ', $agency->cta_features_data)
+        : (is_string($agency->cta_features_data ?? null) ? implode(', ', json_decode($agency->cta_features_data, true) ?: []) : 'Quick Setup, No Credit Card Required, 24/7 Support');
+@endphp
 <div class="max-w-5xl mx-auto space-y-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -108,7 +138,7 @@
                         <label class="block text-xs font-bold text-slate-800">2. About / Features Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 800×600px PNG/JPG</p>
                         <input type="file" name="about_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset(ltrim($agency->about_image ?? 'assets/landing_page/features_leftside.png', '/')) }}" alt="About" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->about_image ?? 'assets/images/about_right.png', '/')) }}" alt="About" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                     <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
                         <label class="block text-xs font-bold text-slate-800">3. CTA Banner Image</label>
@@ -120,11 +150,14 @@
             </div>
         </div>
 
-        {{-- ─── 3. FOOTER & ABOUT CONTENT ───────────────────────── --}}
+        {{-- ─── 3. ABOUT US SECTION (CONTENT & 3 FEATURES) ─────── --}}
         <div class="card-white rounded-2xl p-6 space-y-4">
-            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center space-x-2">
-                <i data-lucide="file-text" class="w-4 h-4 text-teal-600"></i>
-                <span>Footer & About Content</span>
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="info" class="w-4 h-4 text-teal-600"></i>
+                    <span>About Us Section</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls the dark "Built for entrepreneurs" card</span>
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -132,16 +165,180 @@
                     <input type="text" name="about_title" value="{{ old('about_title', $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Footer Tagline</label>
-                    <textarea name="footer_content" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('footer_content', $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.') }}</textarea>
-                </div>
-                <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-slate-700 mb-1">About Mission Statement</label>
                     <textarea name="about_mission" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('about_mission', $agency->about_mission ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.') }}</textarea>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">About Us Detailed Content</label>
-                    <textarea name="about_content" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('about_content', $agency->about_content ?? '') }}</textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">About Detailed Paragraph</label>
+                    <textarea name="about_content" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('about_content', $agency->about_content ?? '') }}</textarea>
+                </div>
+            </div>
+
+            {{-- 3 About Features Badges --}}
+            <div class="pt-2 border-t border-slate-100 space-y-3">
+                <label class="block text-xs font-bold text-slate-800">About Feature Highlights (3 Cards on Left)</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    @foreach($aboutFeatures as $afi => $af)
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-teal-700 uppercase">Feature #{{ $afi + 1 }}</span>
+                            <input type="text" name="about_feature_icon[]" value="{{ $af['icon'] ?? 'zap' }}" placeholder="zap / shield-check" class="w-24 text-[10px] bg-white border border-slate-200 rounded px-2 py-0.5 font-mono">
+                        </div>
+                        <input type="text" name="about_feature_title[]" value="{{ $af['title'] ?? '' }}" placeholder="Feature Title" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-bold">
+                        <textarea name="about_feature_desc[]" rows="2" placeholder="Description" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[11px]">{{ $af['desc'] ?? '' }}</textarea>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        {{-- ─── 4. WHY CHOOSE US SECTION ───────────────────────── --}}
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-purple-600"></i>
+                    <span>Why Choose Us Section (4 Cards)</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls "Why Choose Youverse"</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Heading</label>
+                    <input type="text" name="why_choose_title" value="{{ old('why_choose_title', $agency->why_choose_title ?? ('Why Choose ' . \$agency->name . '?')) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Subtitle</label>
+                    <input type="text" name="why_choose_subtitle" value="{{ old('why_choose_subtitle', $agency->why_choose_subtitle ?? 'Everything you need to run, grow and scale your business — without juggling multiple tools.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+                @foreach($whyChooseItems as $wci => $wc)
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-purple-700 uppercase">Card #{{ $wci + 1 }}</span>
+                        <input type="text" name="why_choose_item_icon[]" value="{{ $wc['icon'] ?? 'rocket' }}" placeholder="icon" class="w-20 text-[10px] bg-white border border-slate-200 rounded px-2 py-0.5 font-mono">
+                    </div>
+                    <input type="text" name="why_choose_item_title[]" value="{{ $wc['title'] ?? '' }}" placeholder="Card Title" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-bold">
+                    <textarea name="why_choose_item_desc[]" rows="2" placeholder="Description" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[11px]">{{ $wc['desc'] ?? '' }}</textarea>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ─── 5. OUR PRODUCTS SECTION ─────────────────────────── --}}
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="package" class="w-4 h-4 text-blue-600"></i>
+                    <span>Our Products Section Header & CTA</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls "Smart Tools for Smarter Businesses"</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Badge</label>
+                    <input type="text" name="products_section_badge" value="{{ old('products_section_badge', $agency->products_section_badge ?? 'Our Products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Heading</label>
+                    <input type="text" name="products_section_title" value="{{ old('products_section_title', $agency->products_section_title ?? 'Smart Tools for Smarter Businesses') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Subtitle</label>
+                    <textarea name="products_section_subtitle" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">{{ old('products_section_subtitle', $agency->products_section_subtitle ?? 'A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.') }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Button Text</label>
+                    <input type="text" name="products_cta_text" value="{{ old('products_cta_text', $agency->products_cta_text ?? 'Explore All Products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Button URL</label>
+                    <input type="text" name="products_cta_url" value="{{ old('products_cta_url', $agency->products_cta_url ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+            </div>
+        </div>
+
+        {{-- ─── 6. HOW IT WORKS SECTION ─────────────────────────── --}}
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i>
+                    <span>How It Works Section</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls the 3-step setup guide</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Title</label>
+                    <input type="text" name="how_it_works_title" value="{{ old('how_it_works_title', $agency->how_it_works_title ?? 'How It Works?') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Section Subtitle</label>
+                    <input type="text" name="how_it_works_subtitle" value="{{ old('how_it_works_subtitle', $agency->how_it_works_subtitle ?? 'Get started in 3 simple steps and transform your business today.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                @foreach($hiwSteps as $hi => $step)
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-[10px] font-bold text-indigo-600">STEP</span>
+                            <input type="text" name="hiw_step_num[]" value="{{ $step['num'] ?? sprintf('%02d', $hi + 1) }}" class="w-10 text-[10px] text-center font-bold bg-white border border-slate-200 rounded px-1 py-0.5">
+                        </div>
+                        <input type="text" name="hiw_step_icon[]" value="{{ $step['icon'] ?? 'user-plus' }}" placeholder="icon" class="w-20 text-[10px] bg-white border border-slate-200 rounded px-2 py-0.5 font-mono">
+                    </div>
+                    <input type="text" name="hiw_step_title[]" value="{{ $step['title'] ?? '' }}" placeholder="Step Title" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-bold">
+                    <textarea name="hiw_step_desc[]" rows="2" placeholder="Step Description" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[11px]">{{ $step['desc'] ?? '' }}</textarea>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ─── 7. READY TO SCALE CTA BANNER ────────────────────── --}}
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i>
+                    <span>Ready To Scale CTA Banner (Blue Card Above Footer)</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls "Ready to Take Your Business to the Next Level?"</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Banner Headline</label>
+                    <input type="text" name="cta_section_title" value="{{ old('cta_section_title', $agency->cta_section_title ?? 'Ready to Take Your Business to the Next Level?') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Banner Subtitle</label>
+                    <input type="text" name="cta_section_subtitle" value="{{ old('cta_section_subtitle', $agency->cta_section_subtitle ?? ('Join thousands of growing businesses with ' . \$agency->name . ' today.')) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Trust Bullets (comma-separated, e.g. Quick Setup, No Credit Card Required, 24/7 Support)</label>
+                    <input type="text" name="cta_feature_text" value="{{ old('cta_feature_text', \$ctaCheckmarksRaw) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button Text</label>
+                    <input type="text" name="cta_button_text" value="{{ old('cta_button_text', $agency->cta_button_text ?? 'Get Started Free') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button URL</label>
+                    <input type="text" name="cta_button_url" value="{{ old('cta_button_url', $agency->cta_button_url ?? $agency->cta_url ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+            </div>
+        </div>
+
+        {{-- ─── 8. FOOTER & CONTACT INFO ────────────────────────── --}}
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center space-x-2">
+                <i data-lucide="file-text" class="w-4 h-4 text-slate-600"></i>
+                <span>Footer & Contact Information</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Footer Tagline</label>
+                    <textarea name="footer_content" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">{{ old('footer_content', $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.') }}</textarea>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Contact Email</label>

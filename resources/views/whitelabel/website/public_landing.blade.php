@@ -30,7 +30,7 @@
         $secondaryColor = !empty($agency->secondary_color) && $agency->secondary_color != '#9333ea' ? $agency->secondary_color : '#ea580c';
 
         $heroImg  = !empty($agency->hero_image)  ? asset(ltrim($agency->hero_image, '/'))  : asset('assets/images/agency_herobanner.png');
-        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/images/agency_aboutbanner.png');
+        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/images/about_right.png');
         $ctaImg   = !empty($agency->cta_image)   ? asset(ltrim($agency->cta_image, '/'))   : asset('assets/landing_page/footer_card.png');
 
         /* KB stats — dynamically editable */
@@ -79,6 +79,26 @@
                     ['title' => 'Business Analytics',   'desc' => 'Track growth with real-time insights',                 'icon' => 'bar-chart-3'],
                 ]);
         }
+
+        $aboutFeatures = is_array($agency->about_features_data ?? null)
+            ? $agency->about_features_data
+            : (json_decode($agency->about_features_data ?? '[]', true) ?: [
+                ['title' => 'Lightning Performance', 'desc' => 'Modern architecture delivering sub-second load times and 99.9% uptime.', 'icon' => 'zap'],
+                ['title' => 'Enterprise Security',   'desc' => 'Bank-grade encryption and industry-leading security protocols to protect your data.', 'icon' => 'shield-check'],
+                ['title' => 'Scale Without Limits',   'desc' => 'Infrastructure that grows with your business — from 10 to 10,000 clients.', 'icon' => 'trending-up'],
+            ]);
+
+        $hiwSteps = is_array($agency->how_it_works_steps ?? null)
+            ? $agency->how_it_works_steps
+            : (json_decode($agency->how_it_works_steps ?? '[]', true) ?: [
+                ['num' => '01', 'title' => 'Sign Up',              'desc' => 'Create your account in less than 2 minutes.',               'icon' => 'user-plus'],
+                ['num' => '02', 'title' => 'Set Up Your Business', 'desc' => 'Choose the tools you need and customize in minutes.',      'icon' => 'monitor'],
+                ['num' => '03', 'title' => 'Grow Faster',          'desc' => 'Get more customers, more reviews and more revenue.',         'icon' => 'bar-chart-2'],
+            ]);
+
+        $ctaCheckmarks = is_array($agency->cta_features_data ?? null)
+            ? $agency->cta_features_data
+            : (json_decode($agency->cta_features_data ?? '[]', true) ?: ['Quick Setup', 'No Credit Card Required', '24/7 Support']);
 
         $testimonials = is_array($agency->testimonials_data ?? null)
             ? $agency->testimonials_data
@@ -672,48 +692,25 @@
                 {{-- LEFT SIDE: Text and Features --}}
                 <div style="display:flex; flex-direction:column; gap:24px;">
                     <h2 style="font-size:clamp(1.8rem,3vw,2.4rem); font-weight:900; color:#ffffff; line-height:1.2; letter-spacing:-0.5px;">
-                        {{ $agency->about_title ?? 'About Us — Built in India, For India\'s Local Businesses' }}
+                        {{ $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.' }}
                     </h2>
                     
                     <p style="font-size:15px; color:#94a3b8; line-height:1.8; max-width:500px; margin:0;">
-                        {{ $agency->about_mission ?? $agency->about_content ?? 'SaaS Yaari is India\'s all-in-one SaaS platform for local businesses — helping restaurants, salons, clinics, and shops grow with AI reviews, websites, QR menus, v-cards, and loyalty programs, all in one place. Simple, affordable, and made in India.' }}
+                        {{ $agency->about_mission ?? $agency->about_content ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.' }}
                     </p>
 
                     <div style="display:flex; flex-direction:column; gap:20px; margin-top:10px;">
-                        
-                        {{-- Feature 1 --}}
+                        @foreach($aboutFeatures as $af)
                         <div style="display:flex; gap:16px; align-items:flex-start;">
                             <div style="width:40px; height:40px; border-radius:12px; background:rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <i data-lucide="zap" style="width:18px; height:18px; color:#f97316;"></i>
+                                <i data-lucide="{{ $af['icon'] ?? 'zap' }}" style="width:18px; height:18px; color:#f97316;"></i>
                             </div>
                             <div>
-                                <h4 style="color:#ffffff; font-size:14px; font-weight:800; margin-bottom:4px;">Lightning Performance</h4>
-                                <p style="color:#64748b; font-size:12.5px; line-height:1.6; margin:0;">Modern architecture delivering sub-second load times and 99.9% uptime.</p>
+                                <h4 style="color:#ffffff; font-size:14px; font-weight:800; margin-bottom:4px;">{{ $af['title'] }}</h4>
+                                <p style="color:#94a3b8; font-size:12.5px; line-height:1.6; margin:0;">{{ $af['desc'] }}</p>
                             </div>
                         </div>
-
-                        {{-- Feature 2 --}}
-                        <div style="display:flex; gap:16px; align-items:flex-start;">
-                            <div style="width:40px; height:40px; border-radius:12px; background:rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <i data-lucide="shield-check" style="width:18px; height:18px; color:#f97316;"></i>
-                            </div>
-                            <div>
-                                <h4 style="color:#ffffff; font-size:14px; font-weight:800; margin-bottom:4px;">Enterprise Security</h4>
-                                <p style="color:#64748b; font-size:12.5px; line-height:1.6; margin:0;">Bank-grade encryption and industry-leading security protocols to protect your data.</p>
-                            </div>
-                        </div>
-
-                        {{-- Feature 3 --}}
-                        <div style="display:flex; gap:16px; align-items:flex-start;">
-                            <div style="width:40px; height:40px; border-radius:12px; background:rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <i data-lucide="trending-up" style="width:18px; height:18px; color:#f97316;"></i>
-                            </div>
-                            <div>
-                                <h4 style="color:#ffffff; font-size:14px; font-weight:800; margin-bottom:4px;">Scale Without Limits</h4>
-                                <p style="color:#64748b; font-size:12.5px; line-height:1.6; margin:0;">Infrastructure that grows with your business — from 10 to 10,000 clients.</p>
-                            </div>
-                        </div>
-
+                        @endforeach
                     </div>
                 </div>
 
@@ -751,10 +748,9 @@
 <section id="features" style="background:#f5f4ff; padding:72px 0">
     <div style="max-width:1200px;margin:0 auto;padding:0 24px">
         <div style="text-align:center;margin-bottom:52px">
-            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#0f172a;margin-bottom:12px">Why Choose {{ $agency->name }}?</h2>
+            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#0f172a;margin-bottom:12px">{{ $agency->why_choose_title ?? ('Why Choose ' . $agency->name . '?') }}</h2>
             <p style="font-size:14px;color:#64748b;max-width:600px;margin:0 auto;line-height:1.7">
-                Everything you need to run, grow and scale your business — without juggling
-                <span style="color:#4f46e5;font-weight:600">multiple tools</span>.
+                {{ $agency->why_choose_subtitle ?? 'Everything you need to run, grow and scale your business — without juggling multiple tools.' }}
             </p>
         </div>
 
@@ -788,15 +784,15 @@
 
                 {{-- Left column --}}
                 <div style="display:flex; flex-direction:column; gap:18px; position:sticky; top:80px">
-                    <span style="background:#e0e7ff; color:#4338ca; font-size:11px; font-weight:800; padding:5px 14px; border-radius:999px; width:fit-content">Our Products</span>
+                    <span style="background:#e0e7ff; color:#4338ca; font-size:11px; font-weight:800; padding:5px 14px; border-radius:999px; width:fit-content">{{ $agency->products_section_badge ?? 'Our Products' }}</span>
                     <h2 style="font-size:clamp(1.6rem,3vw,2.3rem); font-weight:900; color:#0f172a; line-height:1.18; letter-spacing:-.3px">
-                        Smart Tools for <span class="text-brand">Smarter Businesses</span>
+                        {{ $agency->products_section_title ?? 'Smart Tools for Smarter Businesses' }}
                     </h2>
                     <p style="font-size:13px; color:#64748b; line-height:1.75">
-                        A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.
+                        {{ $agency->products_section_subtitle ?? 'A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.' }}
                     </p>
-                    <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-brand" style="width:fit-content; border-radius:14px; padding:12px 24px">
-                        Explore All Products
+                    <a href="{{ !empty($agency->products_cta_url) ? $agency->products_cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="btn-brand" style="width:fit-content; border-radius:14px; padding:12px 24px">
+                        {{ $agency->products_cta_text ?? 'Explore All Products' }}
                         <i data-lucide="arrow-right" style="width:15px; height:15px"></i>
                     </a>
                 </div>
@@ -1079,64 +1075,40 @@
 <section id="how-it-works" style="background:#f0efff; padding:80px 0; overflow:visible;">
     <div style="max-width:1100px; margin:0 auto; padding:0 24px">
         <div style="text-align:center; margin-bottom:60px">
-            <h2 style="font-size:clamp(1.75rem,3.2vw,2.4rem); font-weight:900; color:#0f172a; margin-bottom:12px; letter-spacing:-0.5px;">How It Works?</h2>
-            <p style="font-size:14px; color:#64748b; font-weight:500;">Get started in 3 simple steps and transform your <span style="color:#4f46e5;font-weight:600;">business</span> today.</p>
+            <h2 style="font-size:clamp(1.75rem,3.2vw,2.4rem); font-weight:900; color:#0f172a; margin-bottom:12px; letter-spacing:-0.5px;">{{ $agency->how_it_works_title ?? 'How It Works?' }}</h2>
+            <p style="font-size:14px; color:#64748b; font-weight:500;">{{ $agency->how_it_works_subtitle ?? 'Get started in 3 simple steps and transform your business today.' }}</p>
         </div>
 
         {{-- Steps row with connector & end arrow --}}
         <div style="display:flex; align-items:stretch; gap:0; position:relative;" class="steps-row">
-
-            {{-- Step 1 --}}
+            @php
+                $stepColors = [
+                    0 => ['grad' => 'linear-gradient(135deg,#7c3aed,#6d28d9)', 'bg' => '#ede9fe', 'clr' => '#7c3aed', 'shadow' => 'rgba(124,58,237,.4)'],
+                    1 => ['grad' => 'linear-gradient(135deg,#2563eb,#1d4ed8)', 'bg' => '#dbeafe', 'clr' => '#2563eb', 'shadow' => 'rgba(37,99,235,.4)'],
+                    2 => ['grad' => 'linear-gradient(135deg,#10b981,#059669)', 'bg' => '#d1fae5', 'clr' => '#059669', 'shadow' => 'rgba(16,185,129,.4)'],
+                ];
+            @endphp
+            @foreach($hiwSteps as $hIdx => $hStep)
+            @php
+                $sc = $stepColors[$hIdx % 3];
+            @endphp
             <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                {{-- 01 Badge top-left --}}
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#7c3aed,#6d28d9); color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(124,58,237,.4); border:2px solid #fff; letter-spacing:.5px;">01</div>
-                {{-- Icon --}}
-                <div style="width:64px; height:64px; border-radius:50%; background:#ede9fe; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="user-plus" style="width:28px; height:28px; color:#7c3aed"></i>
+                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:{{ $sc['grad'] }}; color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px {{ $sc['shadow'] }}; border:2px solid #fff; letter-spacing:.5px;">{{ $hStep['num'] ?? sprintf('%02d', $hIdx + 1) }}</div>
+                <div style="width:64px; height:64px; border-radius:50%; background:{{ $sc['bg'] }}; display:flex; align-items:center; justify-content:center; margin-top:8px;">
+                    <i data-lucide="{{ $hStep['icon'] ?? 'user-plus' }}" style="width:28px; height:28px; color:{{ $sc['clr'] }}"></i>
                 </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Sign Up</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">Create your account in<br>less than 2 minutes.</p>
+                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">{{ $hStep['title'] }}</h3>
+                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">{{ $hStep['desc'] }}</p>
             </div>
-
-            {{-- Connector 1→2: dashed wave --}}
+            @if(!$loop->last)
             <div class="hiw-connector" style="width:80px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative; z-index:0;">
                 <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
                     <path d="M 4 10 Q 20 3 40 10 T 76 10" stroke="#a5b4fc" stroke-width="2" stroke-dasharray="5 4" fill="none" stroke-linecap="round"/>
                     <path d="M 72 7 L 76 10 L 72 13" stroke="#a5b4fc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-
-            {{-- Step 2 --}}
-            <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                {{-- 02 Badge top-left --}}
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(37,99,235,.4); border:2px solid #fff; letter-spacing:.5px;">02</div>
-                {{-- Icon --}}
-                <div style="width:64px; height:64px; border-radius:50%; background:#dbeafe; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="monitor" style="width:28px; height:28px; color:#2563eb"></i>
-                </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Set Up Your Business</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">Choose the tools you need<br>and customize in minutes.</p>
-            </div>
-
-            {{-- Connector 2→3: dashed wave --}}
-            <div class="hiw-connector" style="width:80px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative; z-index:0;">
-                <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
-                    <path d="M 4 10 Q 20 3 40 10 T 76 10" stroke="#a5b4fc" stroke-width="2" stroke-dasharray="5 4" fill="none" stroke-linecap="round"/>
-                    <path d="M 72 7 L 76 10 L 72 13" stroke="#a5b4fc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-
-            {{-- Step 3 --}}
-            <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                {{-- 03 Badge top-left --}}
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(16,185,129,.4); border:2px solid #fff; letter-spacing:.5px;">03</div>
-                {{-- Icon --}}
-                <div style="width:64px; height:64px; border-radius:50%; background:#d1fae5; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="bar-chart-2" style="width:28px; height:28px; color:#059669"></i>
-                </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Grow Faster</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">Get more customers, more<br>reviews and more revenue.</p>
-            </div>
+            @endif
+            @endforeach
 
             {{-- End dark arrow circle --}}
             <div class="hiw-arrow-end" style="width:64px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
@@ -1242,15 +1214,15 @@
             {{-- Left: heading + sub + checkmarks --}}
             <div style="display:flex; flex-direction:column; gap:12px; max-width:380px; position:relative; z-index:2; flex-shrink:0;">
                 <h2 style="font-size:clamp(1.2rem,2.2vw,1.65rem); font-weight:900; color:#fff; line-height:1.25; letter-spacing:-.2px; margin:0">
-                    Ready to Take Your Business to the Next Level?
+                    {{ $agency->cta_section_title ?? 'Ready to Take Your Business to the Next Level?' }}
                 </h2>
                 <p style="font-size:13px; color:rgba(199,210,254,.9); line-height:1.6; margin:0">
-                    Join thousands of growing businesses with {{ $agency->name }} today.
+                    {{ $agency->cta_section_subtitle ?? ('Join thousands of growing businesses with ' . $agency->name . ' today.') }}
                 </p>
                 <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:12px; font-weight:600; color:rgba(199,210,254,.85); margin-top:2px;">
-                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> Quick Setup</span>
-                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> No Credit Card Required</span>
-                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> 24/7 Support</span>
+                    @foreach($ctaCheckmarks as $cc)
+                    <span style="display:flex;align-items:center;gap:5px"><i data-lucide="check" style="width:13px;height:13px"></i> {{ $cc }}</span>
+                    @endforeach
                 </div>
             </div>
 
@@ -1263,11 +1235,11 @@
 
             {{-- Right: CTA button --}}
             <div style="position:relative; z-index:2; flex-shrink:0;">
-                <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business"
+                <a href="{{ !empty($agency->cta_button_url) ? $agency->cta_button_url : (!empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business') }}"
                    style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:14px 26px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
-                    Get Started Free
+                    {{ $agency->cta_button_text ?? 'Get Started Free' }}
                     <i data-lucide="arrow-right" style="width:15px; height:15px"></i>
                 </a>
             </div>

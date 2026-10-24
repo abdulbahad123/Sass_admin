@@ -114,68 +114,63 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- TOP ANNOUNCEMENT BAR -->
+    {{-- ══ EXACT SAME ANNOUNCEMENT BAR AS LANDING PAGE ══ --}}
     <div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
-        🎉 <strong>{{ $agencyName }}</strong> — Official Legal &amp; Policy Center
+        🎉 Special Offer: Get Started with <strong>{{ $agency->name ?? $agencyName }}</strong> Today &amp; Automate Your Business!
     </div>
 
-    <!-- STICKY NAVBAR (Task 4: Exact existing landing page header) -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300">
-        <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
-                <a href="{{ url('/') }}" class="flex items-center space-x-3">
-                    @if(!empty($agency->logo))
-                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="h-10 sm:h-12 w-auto object-contain transition-all">
-                    @else
-                        <div class="flex items-center space-x-2.5">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
-                                <i class="fas fa-layer-group text-base"></i>
-                            </div>
-                            <span class="font-space font-bold text-xl sm:text-2xl tracking-tight text-slate-900">{{ $agencyName }}</span>
-                        </div>
-                    @endif
+    {{-- ══ EXACT SAME HEADER AS LANDING PAGE (Screenshot 2 Match) ══ --}}
+    <header class="site-header" style="background:#fff;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:50">
+        <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px">
+
+            {{-- Logo --}}
+            <a href="{{ url('/') }}" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+                @if(!empty($agency->logo))
+                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:50px;width:auto;object-fit:contain">
+                @else
+                    <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center">
+                        <i class="fas fa-layer-group text-white text-base"></i>
+                    </div>
+                    <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name ?? $agencyName }}</span>
+                @endif
+            </a>
+
+            {{-- Desktop Nav --}}
+            <nav class="hidden lg:flex items-center space-x-8">
+                <a href="{{ url('/') }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Home</a>
+                <a href="{{ url('/') }}#products" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Products</a>
+                <a href="{{ url('/') }}#about-section" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">About Us</a>
+                <a href="{{ url('/') }}#how-it-works" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">How It Works</a>
+                <a href="{{ url('/') }}#testimonials" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Reviews</a>
+                <a href="{{ url('/') }}#faq" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">FAQ</a>
+            </nav>
+
+            {{-- Desktop CTAs --}}
+            <div class="hidden sm:flex items-center space-x-3">
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="text-white text-xs font-extrabold px-6 py-2.5 rounded-full shadow-lg transition-all" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
+                    {{ $agency->cta_text ?? 'Start Free Today' }}
                 </a>
-
-                <!-- Desktop Menu Navigation -->
-                <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-                    <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
-                    <a href="{{ url('/') }}#products" class="hover:text-blue-600 transition-colors">Products</a>
-                    <a href="{{ url('/') }}#about-section" class="hover:text-blue-600 transition-colors">About Us</a>
-                    <a href="{{ url('/') }}#testimonials" class="hover:text-blue-600 transition-colors">Reviews</a>
-                    <a href="{{ url('/') }}#faq" class="hover:text-blue-600 transition-colors">FAQ</a>
-                </nav>
-
-                <!-- Action Buttons -->
-                <div class="hidden sm:flex items-center space-x-3">
-                    <a href="{{ url('/') }}" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm flex items-center gap-1.5">
-                        <i class="fas fa-arrow-left text-[11px]"></i>
-                        <span>Back to Home</span>
-                    </a>
-                    <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="px-5 py-2.5 rounded-xl text-white text-xs font-bold shadow-md shadow-indigo-500/20 flex items-center space-x-2" style="background:linear-gradient(135deg,var(--brand-primary,#2563eb),var(--brand-secondary,#4f46e5));">
-                        <span>{{ $agency->cta_text ?? 'Start Free Trial' }}</span>
-                        <i class="fas fa-arrow-right text-[10px]"></i>
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
             </div>
+
+            {{-- Mobile Menu Button --}}
+            <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
         </div>
 
-        <!-- Mobile Drawer Menu -->
+        {{-- Mobile Drawer Menu --}}
         <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-4 pb-6 space-y-3 shadow-lg">
             <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
             <a href="{{ url('/') }}#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Products</a>
             <a href="{{ url('/') }}#about-section" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">About Us</a>
+            <a href="{{ url('/') }}#how-it-works" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">How It Works</a>
             <a href="{{ url('/') }}#testimonials" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Reviews</a>
             <a href="{{ url('/') }}#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
             <div class="pt-4 border-t border-slate-100 space-y-2">
-                <a href="{{ url('/') }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">Back to Home</a>
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,var(--brand-primary,#2563eb),var(--brand-secondary,#4f46e5));">
-                    {{ $agency->cta_text ?? 'Start Free Trial' }}
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">Login</a>
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
+                    {{ $agency->cta_text ?? 'Start Free Today' }}
                 </a>
             </div>
         </div>
@@ -333,81 +328,88 @@
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white text-slate-600 py-12 border-t border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200/80">
-                
-                <!-- Col 1: Logo & Socials -->
-                <div class="col-span-2 lg:col-span-4 space-y-4">
-                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 font-space font-bold text-xl">
+    {{-- ══ EXACT SAME DARK NAVY FOOTER AS LANDING PAGE (Screenshot 2 Match) ══ --}}
+    @php
+        $footerProds = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? $agency->enabled_products : collect();
+        if ($footerProds->isEmpty()) {
+            $footerProds = collect([
+                (object)['name' => 'Ecombuilder', 'slug' => 'launchshop'],
+                (object)['name' => 'Website Builder', 'slug' => 'websitebuilder'],
+                (object)['name' => 'WhatsApp Bulk', 'slug' => 'whatsappbulk'],
+            ]);
+        }
+    @endphp
+    <footer style="background:#0b132b;padding:60px 0 28px;border-top:1px solid #1e293b;color:#94a3b8">
+        <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:40px;padding-bottom:48px;border-bottom:1px solid #1e293b" class="footer-grid">
+
+                {{-- Col 1: Brand & Tagline & Socials --}}
+                <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;align-items:center;gap:10px">
                         @if(!empty($agency->logo))
-                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="h-9 w-auto object-contain">
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:50px;width:auto">
                         @else
-                            <span class="text-xl font-bold tracking-tight text-slate-900">{{ $agencyName }}</span>
+                            <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#e2e8f0">{{ $agency->name ?? $agencyName }}</span>
                         @endif
-                    </a>
-                    <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
-                        {{ $agency->footer_content ?? ($agencyName . ' — Empowering businesses with smart, scalable digital solutions.') }}
+                    </div>
+                    <p style="font-size:12px;color:#64748b;line-height:1.7;max-width:240px">
+                        {{ $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.' }}
                     </p>
-                    <div class="flex items-center space-x-2.5 pt-1">
-                        @if(!empty($agency->facebook_url))<a href="{{ $agency->facebook_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
-                        @if(!empty($agency->twitter_url))<a href="{{ $agency->twitter_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
-                        @if(!empty($agency->linkedin_url))<a href="{{ $agency->linkedin_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($agency->youtube_url))<a href="{{ $agency->youtube_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-youtube"></i></a>@endif
-                        @if(!empty($agency->instagram_url))<a href="{{ $agency->instagram_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
+                    <div style="display:flex;gap:8px;margin-top:4px">
+                        @if(!empty($agency->facebook_url))<a href="{{ $agency->facebook_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-facebook-f text-xs"></i></a>@endif
+                        @if(!empty($agency->instagram_url))<a href="{{ $agency->instagram_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-instagram text-xs"></i></a>@endif
+                        @if(!empty($agency->youtube_url))<a href="{{ $agency->youtube_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-youtube text-xs"></i></a>@endif
+                        @if(!empty($agency->linkedin_url))<a href="{{ $agency->linkedin_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-linkedin-in text-xs"></i></a>@endif
+                        @if(!empty($agency->twitter_url))<a href="{{ $agency->twitter_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-twitter text-xs"></i></a>@endif
                     </div>
                 </div>
 
-                <!-- Col 2: Quick Links -->
-                <div class="col-span-1 lg:col-span-3 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Quick Links</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a></li>
-                        <li><a href="{{ url('/') }}#products" class="hover:text-blue-600 transition-colors">Products</a></li>
-                        <li><a href="{{ url('/') }}#about-section" class="hover:text-blue-600 transition-colors">About Us</a></li>
-                        <li><a href="{{ url('/') }}#testimonials" class="hover:text-blue-600 transition-colors">Reviews</a></li>
-                        <li><a href="{{ url('/') }}#faq" class="hover:text-blue-600 transition-colors">FAQ</a></li>
+                {{-- Col 2: Products --}}
+                <div style="display:flex;flex-direction:column;gap:14px">
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Products</h4>
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0">
+                        @foreach($footerProds as $fp)
+                            <li>
+                                <a href="{{ url('/#products') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">
+                                    <i class="fas fa-chevron-right text-[9px] text-slate-500"></i>
+                                    {{ $fp->name }}
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
 
-                <!-- Col 3: Support & Legal Policies -->
-                <div class="col-span-1 lg:col-span-3 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support &amp; Policies</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="mailto:{{ $agency->contact_email ?? 'support@' . request()->getHost() }}" class="hover:text-blue-600 transition-colors">Contact Support</a></li>
-                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-blue-600 transition-colors">Privacy Policy</a></li>
-                        <li><a href="{{ route('agency.terms') }}" class="hover:text-blue-600 transition-colors">Terms &amp; Conditions</a></li>
-                        <li><a href="{{ route('agency.refund') }}" class="hover:text-blue-600 transition-colors">Refund Policy</a></li>
-                        <li><a href="{{ route('agency.shipping') }}" class="hover:text-blue-600 transition-colors">Shipping Policy</a></li>
+                {{-- Col 3: Legal Policies --}}
+                <div style="display:flex;flex-direction:column;gap:14px">
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Legal</h4>
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0">
+                        <li><a href="{{ route('agency.about') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> About Us</a></li>
+                        <li><a href="{{ route('agency.contact') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Contact Us</a></li>
+                        <li><a href="{{ route('agency.privacy') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Privacy Policy</a></li>
+                        <li><a href="{{ route('agency.terms') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Terms &amp; Conditions</a></li>
+                        <li><a href="{{ route('agency.shipping') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Shipping Policy</a></li>
+                        <li><a href="{{ route('agency.refund') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Refund Policy</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 4: Contact / Help -->
-                <div class="col-span-2 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Need Help?</h5>
-                    <p class="text-xs text-slate-500">Reach out to our support team anytime.</p>
-                    <a href="{{ url('/') }}" class="inline-block px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all">
-                        Visit Home Page
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- Bottom Copyright & Policy Links -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-3">
-                <p>© {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
-                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-                    <a href="{{ route('agency.privacy') }}" class="hover:text-blue-600 transition-colors">Privacy Policy</a>
-                    <span>|</span>
-                    <a href="{{ route('agency.terms') }}" class="hover:text-blue-600 transition-colors">Terms &amp; Conditions</a>
-                    <span>|</span>
-                    <a href="{{ route('agency.refund') }}" class="hover:text-blue-600 transition-colors">Refund Policy</a>
-                    <span>|</span>
-                    <a href="{{ route('agency.shipping') }}" class="hover:text-blue-600 transition-colors">Shipping Policy</a>
+                {{-- Col 4: Newsletter --}}
+                <div style="display:flex;flex-direction:column;gap:14px">
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Subscribe to our newsletter</h4>
+                    <p style="font-size:12px;color:#64748b;margin:0">Get updates, tips and offers.</p>
+                    <form onsubmit="event.preventDefault(); alert('Thank you for subscribing!');" style="display:flex;align-items:center;background:#1e293b;border-radius:14px;padding:4px 6px;border:1px solid #334155;">
+                        <input type="email" placeholder="Enter your email" required style="background:transparent;border:none;outline:none;color:#fff;font-size:12px;padding:8px 12px;flex:1;">
+                        <button type="submit" style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#ea580c);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
 
+            {{-- Bottom bar --}}
+            <div style="padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:11px;color:#475569">
+                <p style="margin:0">© {{ date('Y') }} {{ $agency->name ?? $agencyName }}. All rights reserved.</p>
+                <p style="margin:0;display:flex;align-items:center;gap:4px">Made with <span style="color:#f43f5e">❤️</span> in India 🇮🇳</p>
+            </div>
         </div>
     </footer>
 

@@ -189,11 +189,7 @@
                                 <i data-lucide="layout" class="w-3.5 h-3.5"></i>
                                 <span>Landing Page</span>
                             </a>
-                            <a href="{{ route('whitelabel.website.about') }}" 
-                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.about') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                                <i data-lucide="info" class="w-3.5 h-3.5"></i>
-                                <span>About</span>
-                            </a>
+
 
                             <a href="{{ route('whitelabel.website.testimonials') }}" 
                                class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.testimonials') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
