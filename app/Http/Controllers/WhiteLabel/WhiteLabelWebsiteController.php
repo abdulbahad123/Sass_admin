@@ -33,6 +33,7 @@ class WhiteLabelWebsiteController extends Controller
             'custom_domain'    => 'nullable|string|max:255',
             'primary_color'    => 'nullable|string|max:20',
             'secondary_color'  => 'nullable|string|max:20',
+            'hero_badge'       => 'nullable|string|max:255',
             'hero_title'       => 'nullable|string',
             'hero_subtitle'    => 'nullable|string',
             'hero_description' => 'nullable|string',

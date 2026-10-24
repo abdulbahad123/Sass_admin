@@ -120,8 +120,8 @@ Route::get('/refund-policy', function (\Illuminate\Http\Request $request) use ($
     return view('whitelabel.website.public_legal', ['type' => 'refund', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.refund');
 
-Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
-    return view('whitelabel.website.public_legal', ['type' => 'cookie', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
+Route::get('/cookie-policy', function () {
+    return redirect()->route('agency.terms');
 })->name('agency.cookies');
 
 // Route aliases for policy pages

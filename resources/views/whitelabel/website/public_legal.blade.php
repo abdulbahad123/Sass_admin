@@ -9,12 +9,11 @@
             'terms' => 'Terms & Conditions',
             'shipping' => 'Shipping & Delivery Policy',
             'refund' => 'Cancellation & Refund Policy',
-            'cookie' => 'Cookie Policy',
             'about' => 'About Us',
             'contact' => 'Contact Us',
         ];
         $data = $data ?? [];
-        $agencyName = $agency->name ?? 'Nooryak';
+        $agencyName = $agency->name ?? 'Youverse';
         $pageTitle = $titles[$type] ?? 'Legal Policy';
         $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('/assets/images/about_right.png');
         $dbProds = $data['db_products'] ?? collect();
@@ -22,10 +21,10 @@
     <title>{{ $pageTitle }} — {{ $data['lp_meta_title'] ?? $agencyName }}</title>
     <meta name="description" content="{{ $pageTitle }} for {{ $agencyName }}. Powering the growth of SaaS businesses.">
 
-    @if(!empty($data['lp_header_logo']))
-        <link rel="icon" href="{{ asset($data['lp_header_logo']) }}" type="image/png">
-    @elseif(!empty($agency->favicon))
-        <link rel="icon" type="image/png" href="{{ asset($agency->favicon) }}">
+    @if(!empty($agency->favicon))
+        <link rel="icon" type="image/png" href="{{ asset(ltrim($agency->favicon, '/')) }}">
+    @elseif(!empty($agency->logo))
+        <link rel="icon" type="image/png" href="{{ asset(ltrim($agency->logo, '/')) }}">
     @else
         <link rel="icon" href="/assets/images/common/Logo-blue.png" type="image/png">
     @endif
@@ -115,13 +114,10 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- TOP ANNOUNCEMENT BAR (Identical to Landing Page) -->
-    @if(!empty($data['lp_announcement_text']))
-    <div class="bg-gradient-to-r from-slate-900 via-orange-950 to-slate-900 text-white text-[11px] sm:text-xs py-2 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
-        <span class="bg-orange-500/30 text-orange-200 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">{{ $data['lp_announcement_badge'] }}</span>
-        <span>{{ $data['lp_announcement_text'] }}</span>
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
+        🎉 <strong>{{ $agencyName }}</strong> — Official Legal &amp; Policy Center
     </div>
-    @endif
 
     <!-- STICKY NAVBAR (Task 4: Exact existing landing page header) -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all duration-300">
@@ -129,35 +125,35 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <a href="{{ url('/') }}" class="flex items-center space-x-3">
-                    @if(!empty($data['lp_header_logo']))
-                        <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak Logo" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
-                    @elseif(!empty($agency->logo))
-                        <img src="{{ asset($agency->logo) }}" alt="{{ $agencyName }} Logo" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
+                    @if(!empty($agency->logo))
+                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="h-10 sm:h-12 w-auto object-contain transition-all">
                     @else
                         <div class="flex items-center space-x-2.5">
-                            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
-                                <i class="fas fa-layer-group text-lg sm:text-xl"></i>
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                                <i class="fas fa-layer-group text-base"></i>
                             </div>
-                            <span class="font-space font-bold text-2xl sm:text-3xl tracking-tight text-slate-900">Nooryak</span>
+                            <span class="font-space font-bold text-xl sm:text-2xl tracking-tight text-slate-900">{{ $agencyName }}</span>
                         </div>
                     @endif
                 </a>
 
                 <!-- Desktop Menu Navigation -->
                 <nav class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-                    <a href="{{ url('/') }}#hero" class="hover:text-[#ff3d00] transition-colors">Home</a>
-                    <a href="{{ url('/') }}#about" class="hover:text-[#ff3d00] transition-colors">Solutions <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
-                    <a href="{{ url('/') }}#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a>
-                    <a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Resources <i class="fas fa-chevron-down text-[10px] ml-1"></i></a>
+                    <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
+                    <a href="{{ url('/') }}#products" class="hover:text-blue-600 transition-colors">Products</a>
+                    <a href="{{ url('/') }}#about-section" class="hover:text-blue-600 transition-colors">About Us</a>
+                    <a href="{{ url('/') }}#testimonials" class="hover:text-blue-600 transition-colors">Reviews</a>
+                    <a href="{{ url('/') }}#faq" class="hover:text-blue-600 transition-colors">FAQ</a>
                 </nav>
 
                 <!-- Action Buttons -->
                 <div class="hidden sm:flex items-center space-x-3">
-                    <a href="{{ $data['lp_book_demo_url'] ?? url('/#faq') }}" class="px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm">
-                        Book a Demo
+                    <a href="{{ url('/') }}" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all shadow-sm flex items-center gap-1.5">
+                        <i class="fas fa-arrow-left text-[11px]"></i>
+                        <span>Back to Home</span>
                     </a>
-                    <a href="{{ $data['lp_cta_button_url'] ?? url('/login') }}" class="btn-gradient px-6 py-2.5 rounded-full text-white text-xs font-bold shadow-lg shadow-orange-500/30 flex items-center space-x-2">
-                        <span>{{ $data['lp_cta_button_text'] ?? 'Start Your SaaS Business' }}</span>
+                    <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="px-5 py-2.5 rounded-xl text-white text-xs font-bold shadow-md shadow-indigo-500/20 flex items-center space-x-2" style="background:linear-gradient(135deg,var(--brand-primary,#2563eb),var(--brand-secondary,#4f46e5));">
+                        <span>{{ $agency->cta_text ?? 'Start Free Trial' }}</span>
                         <i class="fas fa-arrow-right text-[10px]"></i>
                     </a>
                 </div>
@@ -171,15 +167,15 @@
 
         <!-- Mobile Drawer Menu -->
         <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-4 pb-6 space-y-3 shadow-lg">
-            <a href="{{ url('/') }}#hero" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
-            <a href="{{ url('/') }}#about" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Solutions</a>
-            <a href="{{ url('/') }}#pricing" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Pricing</a>
+            <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
             <a href="{{ url('/') }}#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Products</a>
+            <a href="{{ url('/') }}#about-section" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">About Us</a>
+            <a href="{{ url('/') }}#testimonials" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Reviews</a>
             <a href="{{ url('/') }}#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
             <div class="pt-4 border-t border-slate-100 space-y-2">
-                <a href="{{ $data['lp_book_demo_url'] ?? url('/#faq') }}" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 text-xs font-bold text-slate-700">Book a Demo</a>
-                <a href="{{ $data['lp_cta_button_url'] ?? url('/login') }}" class="block w-full text-center btn-gradient text-white px-4 py-3 rounded-full text-xs font-bold shadow-md">
-                    {{ $data['lp_cta_button_text'] ?? 'Start Your SaaS Business' }}
+                <a href="{{ url('/') }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">Back to Home</a>
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,var(--brand-primary,#2563eb),var(--brand-secondary,#4f46e5));">
+                    {{ $agency->cta_text ?? 'Start Free Trial' }}
                 </a>
             </div>
         </div>
@@ -198,7 +194,7 @@
                     <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-space tracking-tight">{{ $pageTitle }}</h1>
                     <p class="text-xs text-slate-500 mt-1.5 font-medium">Effective Date: {{ date('F d, Y') }} — {{ $agencyName }}</p>
                 </div>
-                <a href="{{ url('/') }}" class="self-start sm:self-auto inline-flex items-center space-x-2 text-xs font-bold text-[#ff3d00] bg-orange-50 border border-orange-200 hover:bg-orange-100 px-4 py-2.5 rounded-2xl transition-all">
+                <a href="{{ url('/') }}" class="self-start sm:self-auto inline-flex items-center space-x-2 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 px-4 py-2.5 rounded-2xl transition-all">
                     <i class="fas fa-arrow-left text-xs"></i>
                     <span>Back to Home</span>
                 </a>
@@ -206,10 +202,10 @@
 
             <!-- Policy Navigation Tabs -->
             <div class="flex flex-wrap items-center gap-2 pb-2 border-b border-slate-100 text-xs font-bold">
-                <a href="{{ route('agency.privacy') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'privacy' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Privacy Policy</a>
-                <a href="{{ route('agency.terms') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'terms' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Terms & Conditions</a>
-                <a href="{{ route('agency.refund') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'refund' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Refund Policy</a>
-                <a href="{{ route('agency.shipping') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'shipping' ? 'btn-gradient text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Shipping Policy</a>
+                <a href="{{ route('agency.privacy') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'privacy' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Privacy Policy</a>
+                <a href="{{ route('agency.terms') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'terms' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Terms & Conditions</a>
+                <a href="{{ route('agency.refund') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'refund' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Refund Policy</a>
+                <a href="{{ route('agency.shipping') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'shipping' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Shipping Policy</a>
             </div>
 
             <!-- Page Specific Dynamic Body Content -->
@@ -329,8 +325,7 @@
                     {!! !empty($agency->shipping_policy) ? $agency->shipping_policy : ("<h2>Shipping & Delivery Policy for " . e($agencyName) . "</h2><p>All SaaS products, white-label portals, and software subscriptions purchased from " . e($agencyName) . " are delivered 100% electronically via instant email confirmation and dashboard portal access.</p><h3>Instant Digital Fulfillment</h3><p>No physical shipping or postal dispatch is involved. Account credentials and setup tools become active immediately upon payment confirmation.</p><h3>Delivery Timeline</h3><p>Software provisioning completes automatically within 5 to 15 minutes of purchase.</p><h3>Contact Support</h3><p>Email: <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@nooryak.in') . "</strong></p>") !!}
                 @elseif($type === 'refund')
                     {!! !empty($agency->refund_policy) ? $agency->refund_policy : ("<h2>Cancellation & Refund Policy for " . e($agencyName) . "</h2><p>We offer a hassle-free cancellation and 7-day money-back guarantee for subscription packages.</p><h3>Refund Processing</h3><p>Upon approval of your refund request, funds are automatically remitted to your original payment method within 5 to 7 business days.</p><h3>How to Submit a Request</h3><p>Please contact our support desk at <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@nooryak.in') . "</strong> with your order invoice number and account details.</p>") !!}
-                @elseif($type === 'cookie')
-                    {!! !empty($agency->cookie_policy) ? $agency->cookie_policy : ("<h2>Cookie Policy for " . e($agencyName) . "</h2><p>This site uses cookies to personalize user sessions, maintain security, and optimize web navigation experiences.</p><h3>Managing Cookies</h3><p>You can control or disable cookies via your browser settings at any time.</p><h3>Contact Support</h3><p>Email: <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@nooryak.in') . "</strong></p>") !!}
+
                 @endif
 
             </div>
@@ -338,106 +333,78 @@
         </div>
     </main>
 
-    <!-- FOOTER (Task 4: Exact existing landing page footer layout) -->
+    <!-- FOOTER -->
     <footer class="bg-white text-slate-600 py-12 border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200/80">
                 
                 <!-- Col 1: Logo & Socials -->
-                <div class="col-span-2 lg:col-span-3 space-y-4">
+                <div class="col-span-2 lg:col-span-4 space-y-4">
                     <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 font-space font-bold text-xl">
-                        @if(!empty($data['lp_header_logo']))
-                            <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-9 w-auto object-contain">
-                        @elseif(!empty($agency->logo))
-                            <img src="{{ asset($agency->logo) }}" alt="{{ $agencyName }}" class="h-9 w-auto object-contain">
+                        @if(!empty($agency->logo))
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="h-9 w-auto object-contain">
                         @else
-                            <div class="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                                <i class="fas fa-layer-group"></i>
-                            </div>
-                            <span class="text-xl font-bold tracking-tight text-slate-900">Nooryak</span>
+                            <span class="text-xl font-bold tracking-tight text-slate-900">{{ $agencyName }}</span>
                         @endif
                     </a>
                     <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
-                        {{ $data['lp_footer_desc'] ?? 'Your technology partner in building profitable White-Label SaaS businesses.' }}
+                        {{ $agency->footer_content ?? ($agencyName . ' — Empowering businesses with smart, scalable digital solutions.') }}
                     </p>
                     <div class="flex items-center space-x-2.5 pt-1">
-                        @if(!empty($data['lp_fb_url']))<a href="{{ $data['lp_fb_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
-                        @if(!empty($data['lp_tw_url']))<a href="{{ $data['lp_tw_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
-                        @if(!empty($data['lp_li_url']))<a href="{{ $data['lp_li_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
-                        @if(!empty($data['lp_yt_url']))<a href="{{ $data['lp_yt_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-discord"></i></a>@endif
-                        @if(!empty($data['lp_ig_url']))<a href="{{ $data['lp_ig_url'] }}" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-[#ff3d00] flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
+                        @if(!empty($agency->facebook_url))<a href="{{ $agency->facebook_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-facebook-f"></i></a>@endif
+                        @if(!empty($agency->twitter_url))<a href="{{ $agency->twitter_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-twitter"></i></a>@endif
+                        @if(!empty($agency->linkedin_url))<a href="{{ $agency->linkedin_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-linkedin-in"></i></a>@endif
+                        @if(!empty($agency->youtube_url))<a href="{{ $agency->youtube_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-youtube"></i></a>@endif
+                        @if(!empty($agency->instagram_url))<a href="{{ $agency->instagram_url }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-500 text-xs transition-colors"><i class="fab fa-instagram"></i></a>@endif
                     </div>
                 </div>
 
                 <!-- Col 2: Quick Links -->
-                <div class="col-span-1 lg:col-span-2 space-y-3">
+                <div class="col-span-1 lg:col-span-3 space-y-3">
                     <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Quick Links</h5>
                     <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="{{ url('/') }}#hero" class="hover:text-[#ff3d00] transition-colors">Home</a></li>
-                        <li><a href="{{ url('/') }}#about" class="hover:text-[#ff3d00] transition-colors">Solutions</a></li>
-                        <li><a href="{{ url('/') }}#pricing" class="hover:text-[#ff3d00] transition-colors">Pricing</a></li>
-                        <li><a href="{{ url('/') }}#products" class="hover:text-[#ff3d00] transition-colors">Resources</a></li>
-                        <li><a href="{{ url('/') }}#faq" class="hover:text-[#ff3d00] transition-colors">Blog</a></li>
+                        <li><a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a></li>
+                        <li><a href="{{ url('/') }}#products" class="hover:text-blue-600 transition-colors">Products</a></li>
+                        <li><a href="{{ url('/') }}#about-section" class="hover:text-blue-600 transition-colors">About Us</a></li>
+                        <li><a href="{{ url('/') }}#testimonials" class="hover:text-blue-600 transition-colors">Reviews</a></li>
+                        <li><a href="{{ url('/') }}#faq" class="hover:text-blue-600 transition-colors">FAQ</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 3: Our Products -->
-                <div class="col-span-1 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Our Products</h5>
+                <!-- Col 3: Support & Legal Policies -->
+                <div class="col-span-1 lg:col-span-3 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support &amp; Policies</h5>
                     <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        @if($dbProds->count() > 0)
-                            @foreach($dbProds as $prod)
-                                <li><a href="{{ $prod->getSubdomainPreviewUrl() }}" target="_blank" class="hover:text-[#ff3d00] transition-colors">{{ $prod->name }}</a></li>
-                            @endforeach
-                        @else
-                            @if(is_array($data['lp_products_grid'] ?? null))
-                                @foreach($data['lp_products_grid'] as $prod)
-                                    <li><a href="{{ $prod['link'] ?? '#products' }}" class="hover:text-[#ff3d00] transition-colors">{{ $prod['title'] ?? '' }}</a></li>
-                                @endforeach
-                            @endif
-                        @endif
+                        <li><a href="mailto:{{ $agency->contact_email ?? 'support@' . request()->getHost() }}" class="hover:text-blue-600 transition-colors">Contact Support</a></li>
+                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-blue-600 transition-colors">Privacy Policy</a></li>
+                        <li><a href="{{ route('agency.terms') }}" class="hover:text-blue-600 transition-colors">Terms &amp; Conditions</a></li>
+                        <li><a href="{{ route('agency.refund') }}" class="hover:text-blue-600 transition-colors">Refund Policy</a></li>
+                        <li><a href="{{ route('agency.shipping') }}" class="hover:text-blue-600 transition-colors">Shipping Policy</a></li>
                     </ul>
                 </div>
 
-                <!-- Col 4: Support & Legal Policies -->
-                <div class="col-span-1 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Support</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600">
-                        <li><a href="{{ url('/') }}#faq" class="hover:text-[#ff3d00] transition-colors">Help Center</a></li>
-                        <li><a href="mailto:{{ $data['lp_contact_email'] ?? $agency->contact_email ?? 'support@nooryak.in' }}" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
-                        <li><a href="{{ $data['lp_book_demo_url'] ?? url('/#faq') }}" class="hover:text-[#ff3d00] transition-colors">Book a Demo</a></li>
-                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
-                        <li><a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a></li>
-                        <li><a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
-                        <li><a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a></li>
-                    </ul>
-                </div>
-
-                <!-- Col 5: Newsletter Subscription -->
-                <div class="col-span-2 lg:col-span-3 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Subscribe to Our Newsletter</h5>
-                    <p class="text-xs text-slate-500">Get the latest updates and offers.</p>
-                    <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex items-center space-x-0 pt-1">
-                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 text-xs text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-orange-500">
-                        <button type="submit" class="px-4 py-2.5 rounded-r-xl btn-gradient text-white font-bold text-xs flex-shrink-0 transition-all">
-                            Subscribe
-                        </button>
-                    </form>
+                <!-- Col 4: Contact / Help -->
+                <div class="col-span-2 lg:col-span-2 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Need Help?</h5>
+                    <p class="text-xs text-slate-500">Reach out to our support team anytime.</p>
+                    <a href="{{ url('/') }}" class="inline-block px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all">
+                        Visit Home Page
+                    </a>
                 </div>
 
             </div>
 
             <!-- Bottom Copyright & Policy Links -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-3">
-                <p>{{ $data['lp_copyright_text'] ?? ('© ' . date('Y') . ' Nooryak. All rights reserved.') }}</p>
+                <p>© {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-                    <a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
+                    <a href="{{ route('agency.privacy') }}" class="hover:text-blue-600 transition-colors">Privacy Policy</a>
                     <span>|</span>
-                    <a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a>
+                    <a href="{{ route('agency.terms') }}" class="hover:text-blue-600 transition-colors">Terms &amp; Conditions</a>
                     <span>|</span>
-                    <a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a>
+                    <a href="{{ route('agency.refund') }}" class="hover:text-blue-600 transition-colors">Refund Policy</a>
                     <span>|</span>
-                    <a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a>
+                    <a href="{{ route('agency.shipping') }}" class="hover:text-blue-600 transition-colors">Shipping Policy</a>
                 </div>
             </div>
 

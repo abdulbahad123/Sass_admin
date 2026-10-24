@@ -74,8 +74,12 @@
             </h3>
             <div class="space-y-4">
                 <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Hero Pill Badge</label>
+                    <input type="text" name="hero_badge" value="{{ old('hero_badge', $agency->hero_badge ?? '⚡ All-in-One Growth Platform for Indian Businesses') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hero Main Heading</label>
-                    <input type="text" name="hero_title" value="{{ old('hero_title', $agency->hero_title ?? 'Build. Automate. Scale. All in One') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+                    <input type="text" name="hero_title" value="{{ old('hero_title', $agency->hero_title ?? 'Grow, Manage & Automate Your Business — All in One Place') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hero Subheading / Description</label>
@@ -98,7 +102,7 @@
                         <label class="block text-xs font-bold text-slate-800">1. Hero Dashboard Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 900×600px PNG/JPG</p>
                         <input type="file" name="hero_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset(ltrim($agency->hero_image ?? 'assets/landing_page/herobanner_dashboard.png', '/')) }}" alt="Hero" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->hero_image ?? 'assets/images/agency_herobanner.png', '/')) }}" alt="Hero" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                     <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
                         <label class="block text-xs font-bold text-slate-800">2. About / Features Image</label>

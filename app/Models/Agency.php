@@ -29,6 +29,7 @@ class Agency extends Model
         'status',
         'max_clients',
         'max_products',
+        'hero_badge',
         'hero_title',
         'hero_subtitle',
         'hero_description',

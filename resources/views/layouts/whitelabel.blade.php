@@ -194,11 +194,7 @@
                                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
                                 <span>About</span>
                             </a>
-                            <a href="{{ route('whitelabel.website.services') }}" 
-                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.services') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                                <i data-lucide="grid" class="w-3.5 h-3.5"></i>
-                                <span>Services</span>
-                            </a>
+
                             <a href="{{ route('whitelabel.website.testimonials') }}" 
                                class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.testimonials') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                                 <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
@@ -234,11 +230,7 @@
                                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                                 <span>Refund & Cancellation</span>
                             </a>
-                            <a href="{{ route('whitelabel.website.cookies') }}" 
-                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.cookies') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                                <i data-lucide="cookie" class="w-3.5 h-3.5"></i>
-                                <span>Cookie Policy</span>
-                            </a>
+
                             <a href="{{ route('whitelabel.website.pricing') }}" 
                                class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.pricing') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                                 <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>

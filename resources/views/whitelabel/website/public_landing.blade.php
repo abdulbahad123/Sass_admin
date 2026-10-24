@@ -440,7 +440,7 @@
         }
         @media(max-width: 860px) {
             .hero-grid, .about-grid { grid-template-columns: 1fr !important; }
-            .rev-cards-3 { grid-template-columns: 1fr !important; }
+            .rev-cards-3 .review-card { flex: 0 0 calc((100% - 16px) / 2) !important; min-width: 240px !important; max-width: calc((100% - 16px) / 2) !important; }
             .reviews-grid { grid-template-columns: 1fr !important; }
             .steps-row { flex-direction: column !important; gap: 32px !important; }
             .hiw-connector, .hiw-arrow-end { display: none !important; }
@@ -585,13 +585,12 @@
 
                 {{-- Badge --}}
                 <span style="display:inline-flex; align-items:center; gap:8px; background:rgba(109,40,217,.1); border:1px solid rgba(109,40,217,.2); color:#5b21b6; padding:7px 16px; border-radius:999px; font-size:12px; font-weight:700; width:fit-content; letter-spacing:.01em">
-                    ⚡ All-in-One Growth Platform for Indian Businesses
+                    {{ $agency->hero_badge ?? '⚡ All-in-One Growth Platform for Indian Businesses' }}
                 </span>
 
                 {{-- Headline --}}
                 <h1 style="font-size:clamp(1.8rem,3.8vw,3.2rem); font-weight:900; color:#0f172a; line-height:1.15; letter-spacing:-.8px; margin:0">
-                    Grow, Manage &<br>Automate Your<br>Business — <span class="text-brand">All in One Place</span><br>
-                    Scale. All in One
+                    {!! !empty($agency->hero_title) ? nl2br(e($agency->hero_title)) : 'Grow, Manage &<br>Automate Your<br>Business — <span class="text-brand">All in One Place</span><br>Scale. All in One' !!}
                 </h1>
 
                 {{-- Subtitle --}}
@@ -601,11 +600,11 @@
 
                 {{-- CTA Buttons --}}
                 <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-                    <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business"
+                    <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}"
                        style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14px; padding:15px 30px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
                        onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
                        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
-                        Start Your Free Trial
+                        {{ !empty($agency->cta_text) ? $agency->cta_text : 'Start Your Free Trial' }}
                         <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                     </a>
                     <a href="#how-it-works" class="btn-outline"
@@ -844,12 +843,12 @@
 
             {{-- Main Title --}}
             <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,3.8vw,2.8rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.15;">
-                Choose Your <span style="background:linear-gradient(135deg,#3b82f6,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Perfect Plan</span>
+                {{ $pricingSectionTitle }}
             </h2>
 
             {{-- Subtitle --}}
             <p style="font-size:14px; color:#64748b; max-width:540px; line-height:1.7; margin:0; font-weight:500;">
-                Powerful tools to grow your business. Simple, transparent pricing.<br>No hidden fees. Upgrade or downgrade anytime.
+                {{ $pricingSectionSubtitle }}
             </p>
         </div>
         <!-- Monthly / Yearly Toggle -->
@@ -871,6 +870,12 @@
             document.getElementById("pricingToggleBg").style.left = isMonthly ? "4px" : "94px";
             document.getElementById("toggleMonthlyBtn").style.color = isMonthly ? "#fff" : "#64748b";
             document.getElementById("toggleYearlyBtn").style.color = isMonthly ? "#64748b" : "#fff";
+            document.querySelectorAll(".pricing-card-price-val").forEach(el => {
+                el.textContent = "₹" + (isMonthly ? el.dataset.monthly : el.dataset.yearly);
+            });
+            document.querySelectorAll(".pricing-card-period").forEach(el => {
+                el.textContent = isMonthly ? "/month" : "/year";
+            });
         }
         </script>
 
@@ -990,10 +995,10 @@
 
                         {{-- Price Display --}}
                         <div style="display:flex; align-items:baseline; gap:4px; margin-bottom:16px;">
-                            <span style="font-family:'Outfit',sans-serif; font-size:38px; font-weight:900; color:{{ $planColor }}; line-height:1;">
+                            <span class="pricing-card-price-val" data-monthly="{{ $plan['price_monthly'] ?? '499' }}" data-yearly="{{ !empty($plan['price_yearly']) ? $plan['price_yearly'] : (intval($plan['price_monthly'] ?? 499) * 10) }}" style="font-family:'Outfit',sans-serif; font-size:38px; font-weight:900; color:{{ $planColor }}; line-height:1;">
                                 ₹{{ $plan['price_monthly'] ?? '499' }}
                             </span>
-                            <span style="font-size:13px; color:#64748b; font-weight:700;">/month</span>
+                            <span class="pricing-card-period" style="font-size:13px; color:#64748b; font-weight:700;">/month</span>
                         </div>
 
                         {{-- Included Features Header --}}
@@ -1020,7 +1025,7 @@
                            style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:13.5px; padding:14px 22px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span style="color:#ffffff !important; font-weight:800; font-size:13.5px;">View Details →</span>
+                            <span style="color:#ffffff !important; font-weight:800; font-size:13.5px;">{{ !empty($plan['cta_text']) ? $plan['cta_text'] : 'View Details →' }}</span>
                         </a>
                         @if(!empty($plan['cta_subnote']))
                         <div style="text-align:center; font-size:10.5px; color:#94a3b8; font-weight:600; margin-top:7px;">
@@ -1167,15 +1172,15 @@
                     </div>
                 </div>
 
-                {{-- Right: 3 review cards --}}
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; overflow-x:auto; scroll-behavior:smooth; scrollbar-width:none;" id="rev-grid" class="rev-cards-3">
+                {{-- Right: horizontal review cards carousel --}}
+                <div style="display:flex; flex-wrap:nowrap; gap:16px; overflow-x:auto; scroll-behavior:smooth; scrollbar-width:none; -webkit-overflow-scrolling:touch; padding-bottom:8px;" id="rev-grid" class="rev-cards-3">
                     @foreach($testimonials as $t)
                         @php
                             $initials = strtoupper(substr(trim($t['name'] ?? 'U'), 0, 1));
                             $parts = explode(' ', trim($t['name'] ?? 'U'));
                             $initials = strtoupper(substr($parts[0],0,1) . (isset($parts[1]) ? substr($parts[1],0,1) : ''));
                         @endphp
-                        <div class="review-card" style="background:#fff; border:1px solid #f1f5f9; border-radius:18px; padding:22px 20px; box-shadow:0 4px 20px rgba(0,0,0,0.04); transition:transform .25s, box-shadow .25s; display:flex; flex-direction:column; gap:0;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 30px rgba(79,70,229,.09)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.04)'">
+                        <div class="review-card" style="flex:0 0 calc((100% - 32px)/3); min-width:280px; max-width:calc((100% - 32px)/3); box-sizing:border-box; background:#fff; border:1px solid #f1f5f9; border-radius:18px; padding:22px 20px; box-shadow:0 4px 20px rgba(0,0,0,0.04); transition:transform .25s, box-shadow .25s; display:flex; flex-direction:column; gap:0;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 30px rgba(79,70,229,.09)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.04)'">
                             {{-- Reviewer top: avatar + name/role --}}
                             <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
                                 @if(!empty($t['avatar']))
@@ -1391,22 +1396,21 @@
         .prod-cards-3x2 { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
         .prod-cards-3x2 .prod-card { padding: 16px 14px !important; }
 
-        /* Single row slider for review section on mobile */
+        /* Single row slider for review section */
         .rev-cards-3 {
             display: flex !important;
+            flex-wrap: nowrap !important;
             grid-template-columns: none !important;
             overflow-x: auto !important;
-            scroll-snap-type: x mandatory !important;
             scroll-behavior: smooth !important;
             -webkit-overflow-scrolling: touch !important;
             gap: 16px !important;
-            padding-bottom: 12px !important;
+            padding-bottom: 8px !important;
         }
-        .rev-cards-3::-webkit-scrollbar { display: none; }
+        .rev-cards-3::-webkit-scrollbar { display: none !important; }
         .rev-cards-3 .review-card {
             flex: 0 0 88% !important;
             min-width: 88% !important;
-            scroll-snap-align: center !important;
         }
 
         /* Ready to take your business CTA container image centered & larger on mobile only */
