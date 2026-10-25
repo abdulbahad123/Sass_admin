@@ -56,7 +56,11 @@
                 'customer_month'  => '+192 this month',
             ]);
 
-        $dynamicProducts = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? $agency->enabled_products : collect();
+        try {
+            $dynamicProducts = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? ($agency->enabled_products ?? collect()) : collect();
+        } catch (\Throwable $e) {
+            $dynamicProducts = collect();
+        }
         if ($dynamicProducts->isNotEmpty() && empty($agency->services_data)) {
             $services = [];
             foreach ($dynamicProducts as $dp) {
@@ -125,9 +129,9 @@
                 ['q' => 'Is technical knowledge required?',              'a' => 'Not at all! Our software is built for non-technical business owners with clean, easy-to-use interfaces.'],
             ]);
 
-        $categories = is_array($agency->categories_data ?? null)
-            ? $agency->categories_data
-            : (json_decode($agency->categories_data ?? '[]', true) ?: [
+        $categories = ($agency && method_exists($agency, 'getParsedCategoriesAttribute'))
+            ? $agency->parsed_categories
+            : [
                 ['label' => 'Restaurants',    'icon' => '🍽️'],
                 ['label' => 'Clinics',        'icon' => '🏥'],
                 ['label' => 'Salons & Spas',  'icon' => '💇'],
@@ -136,7 +140,15 @@
                 ['label' => 'Gyms & Fitness', 'icon' => '🏋️'],
                 ['label' => 'Real Estate',    'icon' => '🏠'],
                 ['label' => '& Many More',    'icon' => '✨'],
-            ]);
+            ];
+
+        $trustElements = ($agency && method_exists($agency, 'getParsedTrustElementsAttribute'))
+            ? $agency->parsed_trust_elements
+            : [
+                ['icon' => 'shield-check', 'title' => 'Secure & Reliable', 'desc' => 'Your data is always safe with us', 'bg' => '#d1fae5', 'color' => '#059669'],
+                ['icon' => 'headphones',   'title' => '24/7 Support',       'desc' => "We're here whenever you need help",  'bg' => '#ede9fe', 'color' => '#7c3aed'],
+                ['icon' => 'heart',        'title' => 'Trusted by 10,000+ Businesses', 'desc' => 'Growing together, every day', 'bg' => '#fee2e2', 'color' => '#dc2626'],
+            ];
 
         /* product icon map */
         $pIconMap = [
@@ -160,6 +172,8 @@
         }
         $pricingSectionTitle    = $agency->pricing_section_title    ?? 'Choose Your Perfect Plan';
         $pricingSectionSubtitle = $agency->pricing_section_subtitle ?? 'Scale seamlessly with zero hidden fees.';
+        $pricingBadgeText       = $agency->pricing_badge_text       ?? 'Flexible Pricing Plans';
+        $pricingYearlyDiscount  = $agency->pricing_yearly_discount  ?? 'Save 20%';
         $pricingTrustBarRaw     = $agency->pricing_trust_bar        ?? '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses';
         $pricingTrustItems      = array_map('trim', explode(',', $pricingTrustBarRaw));
     @endphp
@@ -730,9 +744,7 @@
 {{-- ══ TRUST BAR — Category Pills ════════════════════════ --}}
 <section style="background:#fff;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;padding:36px 0">
     <div style="max-width:1200px;margin:0 auto;padding:0 24px;text-align:center">
-        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:20px">
-            Trusted by 10,000+ Local Businesses Across India
-        </p>
+        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:20px">{{ $agency->trusted_businesses_title ?? 'Trusted by 10,000+ Local Businesses Across India' }}</p>
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
             @foreach($categories as $cat)
                 <div class="cat-pill">
@@ -833,9 +845,7 @@
         <div style="text-align:center; margin-bottom:52px; display:flex; flex-direction:column; align-items:center; gap:12px; position:relative;">
             
             {{-- Badge --}}
-            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 18px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:6px;">
-                👑 Flexible Pricing Plans
-            </span>
+            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 18px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:6px;">👑 {{ $pricingBadgeText }}</span>
 
             {{-- Main Title --}}
             <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,3.8vw,2.8rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.15;">
@@ -855,9 +865,7 @@
                     <button id="toggleMonthlyBtn" style="position:relative; z-index:10; width:90px; padding:8px 0; font-size:12px; font-weight:800; color:#fff; border:none; background:transparent; cursor:pointer;" onclick="setPricing('monthly')">Monthly</button>
                     <button id="toggleYearlyBtn" style="position:relative; z-index:10; width:90px; padding:8px 0; font-size:12px; font-weight:800; color:#64748b; border:none; background:transparent; cursor:pointer;" onclick="setPricing('yearly')">Yearly</button>
                 </div>
-                <div style="font-size:11px; font-weight:800; color:#ea580c; display:flex; align-items:center;">
-                    <i data-lucide="corner-down-left" style="width:14px; height:14px; margin-right:4px;"></i> Save 20%
-                </div>
+                <div style="font-size:11px; font-weight:800; color:#ea580c; display:flex; align-items:center;"><i data-lucide="corner-down-left" style="width:14px; height:14px; margin-right:4px;"></i> {{ $pricingYearlyDiscount }}</div>
             </div>
         </div>
         <script>
@@ -1035,37 +1043,19 @@
             @endforeach
         </div>
 
-        {{-- 3-Column Trust Bar --}}
+        {{-- 3-Column Trust Bar (Dynamic from Agency Dashboard) --}}
         <div class="trust-bar-grid">
+            @foreach($trustElements as $te)
             <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="width:42px; height:42px; border-radius:50%; background:#d1fae5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i data-lucide="shield-check" style="width:22px; height:22px; color:#059669;"></i>
+                <div style="width:42px; height:42px; border-radius:50%; background:{{ $te['bg'] ?? '#d1fae5' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i data-lucide="{{ $te['icon'] ?? 'shield-check' }}" style="width:22px; height:22px; color:{{ $te['color'] ?? '#059669' }};"></i>
                 </div>
                 <div>
-                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">Secure &amp; Reliable</h5>
-                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">Your data is always safe with us</p>
+                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">{{ $te['title'] ?? '' }}</h5>
+                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">{{ $te['desc'] ?? '' }}</p>
                 </div>
             </div>
-
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="width:42px; height:42px; border-radius:50%; background:#ede9fe; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i data-lucide="headphones" style="width:22px; height:22px; color:#7c3aed;"></i>
-                </div>
-                <div>
-                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">24/7 Support</h5>
-                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">We're here whenever you need help</p>
-                </div>
-            </div>
-
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                <div style="width:42px; height:42px; border-radius:50%; background:#fee2e2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i data-lucide="heart" style="width:22px; height:22px; color:#dc2626;"></i>
-                </div>
-                <div>
-                    <h5 style="font-size:13px; font-weight:800; color:#0f172a; margin:0;">Trusted by 10,000+ Businesses</h5>
-                    <p style="font-size:11px; color:#64748b; margin:2px 0 0;">Growing together, every day</p>
-                </div>
-            </div>
+            @endforeach
         </div>
 
     </div>

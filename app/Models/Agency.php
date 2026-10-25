@@ -100,6 +100,13 @@ class Agency extends Model
         'whatsapp_otp_template',
         'whatsapp_credentials_template',
         'whatsapp_invoice_template',
+        'trusted_businesses_title',
+        'categories_data',
+        'pricing_badge_text',
+        'pricing_yearly_discount',
+        'trust_elements_data',
+        'smtp_settings',
+        'recaptcha_settings',
     ];
 
     public function getParsedServicesAttribute()
@@ -523,5 +530,39 @@ class Agency extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function contactSubmissions()
+    {
+        return $this->hasMany(\App\Models\AgencyContactSubmission::class, 'agency_id');
+    }
+
+    public function getParsedCategoriesAttribute()
+    {
+        if (empty($this->categories_data)) {
+            return [
+                ['label' => 'Restaurants',    'icon' => '🍽️'],
+                ['label' => 'Clinics',        'icon' => '🏥'],
+                ['label' => 'Salons & Spas',  'icon' => '💇'],
+                ['label' => 'Retail Shops',   'icon' => '🛍️'],
+                ['label' => 'Hotels',         'icon' => '🏨'],
+                ['label' => 'Gyms & Fitness', 'icon' => '🏋️'],
+                ['label' => 'Real Estate',    'icon' => '🏠'],
+                ['label' => '& Many More',    'icon' => '✨'],
+            ];
+        }
+        return is_array($this->categories_data) ? $this->categories_data : (json_decode($this->categories_data, true) ?: []);
+    }
+
+    public function getParsedTrustElementsAttribute()
+    {
+        if (empty($this->trust_elements_data)) {
+            return [
+                ['icon' => 'shield-check', 'title' => 'Secure & Reliable', 'desc' => 'Your data is always safe with us', 'bg' => '#d1fae5', 'color' => '#059669'],
+                ['icon' => 'headphones',   'title' => '24/7 Support',       'desc' => "We're here whenever you need help",  'bg' => '#ede9fe', 'color' => '#7c3aed'],
+                ['icon' => 'heart',        'title' => 'Trusted by 10,000+ Businesses', 'desc' => 'Growing together, every day', 'bg' => '#fee2e2', 'color' => '#dc2626'],
+            ];
+        }
+        return is_array($this->trust_elements_data) ? $this->trust_elements_data : (json_decode($this->trust_elements_data, true) ?: []);
     }
 }

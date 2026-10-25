@@ -29,8 +29,18 @@
                     <input type="text" name="pricing_section_subtitle" value="{{ $agency->pricing_section_subtitle ?? 'Powerful tools to grow your business. Simple, transparent pricing.' }}"
                            class="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-indigo-500">
                 </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Top Badge Pill Text</label>
+                    <input type="text" name="pricing_badge_text" value="{{ $agency->pricing_badge_text ?? 'Flexible Pricing Plans' }}"
+                           class="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Yearly Discount Tag Text</label>
+                    <input type="text" name="pricing_yearly_discount" value="{{ $agency->pricing_yearly_discount ?? 'Save 20%' }}"
+                           class="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-indigo-500">
+                </div>
                 <div class="col-span-2">
-                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Trust Bar Items (comma-separated, e.g. 🔒 Secure &amp; Reliable, 📞 24/7 Support)</label>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Trust Bar Summary (comma-separated)</label>
                     <input type="text" name="pricing_trust_bar" value="{{ $agency->pricing_trust_bar ?? '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses' }}"
                            class="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-indigo-500">
                 </div>
@@ -222,6 +232,52 @@
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>Add Product Plan Card</span>
             </button>
+        </div>
+
+        {{-- 3 Trust Elements Cards (Secure & Reliable, 24/7 Support, Trusted by 10,000+ Businesses) --}}
+        @php
+            $trustCards = $agency->parsed_trust_elements ?? [
+                ['icon' => 'shield-check', 'title' => 'Secure & Reliable', 'desc' => 'Your data is always safe with us', 'bg' => '#d1fae5', 'color' => '#059669'],
+                ['icon' => 'headphones',   'title' => '24/7 Support',       'desc' => "We're here whenever you need help",  'bg' => '#ede9fe', 'color' => '#7c3aed'],
+                ['icon' => 'heart',        'title' => 'Trusted by 10,000+ Businesses', 'desc' => 'Growing together, every day', 'bg' => '#fee2e2', 'color' => '#dc2626'],
+            ];
+        @endphp
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Secure &amp; Reliable Trust Elements (3 Cards below Pricing)</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls the 3 trust features shown under the pricing cards</span>
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                @foreach($trustCards as $tidx => $tc)
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                        <span class="text-[10px] font-bold text-emerald-700 uppercase">Trust Card #{{ $tidx + 1 }}</span>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-[10px] font-bold text-slate-400">Icon:</span>
+                            <input type="text" name="trust_item_icon[]" value="{{ $tc['icon'] ?? 'shield-check' }}" placeholder="icon" class="w-24 text-[10px] bg-white border border-slate-200 rounded px-2 py-0.5 font-mono">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Card Title</label>
+                        <input type="text" name="trust_item_title[]" value="{{ $tc['title'] ?? '' }}" placeholder="Title" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Subtitle / Note</label>
+                        <input type="text" name="trust_item_desc[]" value="{{ $tc['desc'] ?? '' }}" placeholder="Description" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[11px]">
+                    </div>
+                    <div class="flex items-center space-x-2 pt-1 text-[10px] text-slate-400">
+                        <label>BG Color:</label>
+                        <input type="color" name="trust_item_bg[]" value="{{ $tc['bg'] ?? '#d1fae5' }}" class="h-5 w-8 rounded border border-slate-200 cursor-pointer">
+                        <label class="ml-2">Icon Color:</label>
+                        <input type="color" name="trust_item_color[]" value="{{ $tc['color'] ?? '#059669' }}" class="h-5 w-8 rounded border border-slate-200 cursor-pointer">
+                    </div>
+                </div>
+                @endforeach
+            </div>
         </div>
 
         <div class="flex justify-end">

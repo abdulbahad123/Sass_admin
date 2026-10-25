@@ -103,6 +103,7 @@ Route::get('/about', function (\Illuminate\Http\Request $request) use ($getAgenc
 Route::get('/contact', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
     return view('whitelabel.website.public_legal', ['type' => 'contact', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.contact');
+Route::post('/contact/submit', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'submitContactForm'])->name('agency.contact.submit');
 
 Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
     return view('whitelabel.website.public_legal', ['type' => 'privacy', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
@@ -394,6 +395,11 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
 
         Route::get('/contact', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'contact'])->name('contact');
         Route::post('/contact', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateContact'])->name('contact.update');
+        Route::post('/contact/smtp', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateSmtp'])->name('contact.smtp');
+        Route::post('/contact/smtp/test', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'testSmtp'])->name('contact.smtp.test');
+        Route::post('/contact/recaptcha', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateRecaptcha'])->name('contact.recaptcha');
+        Route::patch('/contact/submissions/{id}/status', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateSubmissionStatus'])->name('contact.submissions.status');
+        Route::delete('/contact/submissions/{id}', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'deleteSubmission'])->name('contact.submissions.delete');
 
         Route::get('/privacy', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'privacy'])->name('privacy');
         Route::post('/privacy', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updatePrivacy'])->name('privacy.update');

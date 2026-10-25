@@ -163,6 +163,25 @@ class WhiteLabelWebsiteController extends Controller
             $validated['how_it_works_steps'] = json_encode($hiwSteps);
         }
 
+                // 5. Trusted Businesses Bar & Category Pills
+        if ($request->has('trusted_businesses_title')) {
+            $validated['trusted_businesses_title'] = $request->input('trusted_businesses_title');
+        }
+        if ($request->has('category_label')) {
+            $catLabels = $request->input('category_label', []);
+            $catIcons  = $request->input('category_icon', []);
+            $categories = [];
+            for ($i = 0; $i < count($catLabels); $i++) {
+                if (!empty(trim($catLabels[$i] ?? ''))) {
+                    $categories[] = [
+                        'label' => trim($catLabels[$i]),
+                        'icon'  => trim($catIcons[$i] ?? '✨'),
+                    ];
+                }
+            }
+            $validated['categories_data'] = json_encode($categories);
+        }
+
         // 4. CTA Banner Features / Checkmarks
         if ($request->has('cta_feature_text')) {
             $ctaTexts = array_filter(array_map('trim', explode(',', $request->input('cta_feature_text', ''))));
@@ -321,12 +340,87 @@ class WhiteLabelWebsiteController extends Controller
         return back()->with('success', 'FAQ section updated successfully!');
     }
 
-    public function contact()
+    public function contact(Request $request)
     {
         $user = Auth::user();
         $agency = $this->getAgency();
         $socialLinks = is_array($agency->social_links) ? $agency->social_links : (json_decode($agency->social_links, true) ?: []);
-        return view('whitelabel.website.contact', compact('user', 'agency', 'socialLinks'));
+
+        // Ensure table exists defensively
+        if (!\Illuminate\Support\Facades\Schema::hasTable('agency_contact_submissions')) {
+            try {
+                \Illuminate\Support\Facades\Schema::create('agency_contact_submissions', function ($table) {
+                    $table->id();
+                    $table->unsignedBigInteger('agency_id')->index();
+                    $table->string('name');
+                    $table->string('email');
+                    $table->string('subject')->nullable();
+                    $table->text('message');
+                    $table->string('ip_address', 45)->nullable();
+                    $table->text('user_agent')->nullable();
+                    $table->string('status')->default('unread');
+                    $table->timestamps();
+                });
+            } catch (\Throwable $e) {}
+        }
+
+        $activeTab = $request->input('tab', 'submitted_data');
+
+        // Submissions Query with filters and pagination
+        $submissionsQuery = \App\Models\AgencyContactSubmission::where('agency_id', $agency->id);
+
+        // Date filter: today, yesterday, custom
+        $filter = $request->input('filter', 'all');
+        if ($filter === 'today') {
+            $submissionsQuery->whereDate('created_at', \Carbon\Carbon::today());
+        } elseif ($filter === 'yesterday') {
+            $submissionsQuery->whereDate('created_at', \Carbon\Carbon::yesterday());
+        } elseif ($filter === 'custom' && $request->filled('start_date') && $request->filled('end_date')) {
+            $submissionsQuery->whereBetween('created_at', [
+                $request->start_date . ' 00:00:00',
+                $request->end_date . ' 23:59:59'
+            ]);
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $submissionsQuery->where('status', $request->status);
+        }
+
+        // Keyword search
+        if ($request->filled('search')) {
+            $s = trim($request->search);
+            $submissionsQuery->where(function ($q) use ($s) {
+                $q->where('name', 'LIKE', "%{$s}%")
+                  ->orWhere('email', 'LIKE', "%{$s}%")
+                  ->orWhere('subject', 'LIKE', "%{$s}%")
+                  ->orWhere('message', 'LIKE', "%{$s}%");
+            });
+        }
+
+        $submissions = $submissionsQuery->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        // Lead metrics
+        $unreadCount = \App\Models\AgencyContactSubmission::where('agency_id', $agency->id)->where('status', 'unread')->count();
+        $todayCount  = \App\Models\AgencyContactSubmission::where('agency_id', $agency->id)->whereDate('created_at', \Carbon\Carbon::today())->count();
+        $totalCount  = \App\Models\AgencyContactSubmission::where('agency_id', $agency->id)->count();
+
+        // Settings arrays
+        $smtpSettings = is_array($agency->smtp_settings) ? $agency->smtp_settings : (json_decode($agency->smtp_settings ?? '[]', true) ?: []);
+        $recaptchaSettings = is_array($agency->recaptcha_settings) ? $agency->recaptcha_settings : (json_decode($agency->recaptcha_settings ?? '[]', true) ?: []);
+
+        return view('whitelabel.website.contact', compact(
+            'user',
+            'agency',
+            'socialLinks',
+            'submissions',
+            'unreadCount',
+            'todayCount',
+            'totalCount',
+            'smtpSettings',
+            'recaptchaSettings',
+            'activeTab'
+        ));
     }
 
     public function updateContact(Request $request)
@@ -352,7 +446,269 @@ class WhiteLabelWebsiteController extends Controller
 
         $agency->update($validated);
 
-        return back()->with('success', 'Contact details & footer updated successfully!');
+        return redirect()->route('whitelabel.website.contact', ['tab' => 'contact_info'])
+            ->with('success', 'Contact details & footer updated successfully!');
+    }
+
+    public function updateSmtp(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $smtp = [
+            'smtp_enabled'      => (bool)$request->input('smtp_enabled', false),
+            'smtp_host'         => trim($request->input('smtp_host', '')),
+            'smtp_port'         => (int)$request->input('smtp_port', 587),
+            'smtp_encryption'   => trim($request->input('smtp_encryption', 'tls')),
+            'smtp_username'     => trim($request->input('smtp_username', '')),
+            'smtp_password'     => $request->input('smtp_password', ''),
+            'smtp_from_address' => trim($request->input('smtp_from_address', '')),
+            'smtp_from_name'    => trim($request->input('smtp_from_name', '')),
+            'smtp_to_email'     => trim($request->input('smtp_to_email', '')),
+        ];
+
+        $agency->update(['smtp_settings' => json_encode($smtp)]);
+
+        return redirect()->route('whitelabel.website.contact', ['tab' => 'smtp'])
+            ->with('success', 'SMTP settings & inquiry email forwarding updated successfully!');
+    }
+
+    public function testSmtp(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $smtp = is_array($agency->smtp_settings) ? $agency->smtp_settings : (json_decode($agency->smtp_settings ?? '[]', true) ?: []);
+        $recipient = $request->input('test_email', $smtp['smtp_to_email'] ?? ($agency->contact_email ?? $agency->email));
+
+        if (empty($recipient)) {
+            return redirect()->route('whitelabel.website.contact', ['tab' => 'smtp'])
+                ->with('error', 'Please provide a valid recipient email address for testing.');
+        }
+
+        try {
+            if (!empty($smtp['smtp_host']) && !empty($smtp['smtp_username'])) {
+                $transport = new \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport(
+                    $smtp['smtp_host'],
+                    (int)($smtp['smtp_port'] ?? 587),
+                    ($smtp['smtp_encryption'] ?? 'tls') === 'ssl'
+                );
+                $transport->setUsername($smtp['smtp_username']);
+                $transport->setPassword($smtp['smtp_password'] ?? '');
+
+                $mailer = new \Symfony\Component\Mailer\Mailer($transport);
+                $fromAddress = !empty($smtp['smtp_from_address']) ? $smtp['smtp_from_address'] : $smtp['smtp_username'];
+                $fromName    = !empty($smtp['smtp_from_name']) ? $smtp['smtp_from_name'] : ($agency->name ?? 'Youverse');
+
+                $email = (new \Symfony\Component\Mime\Email())
+                    ->from(new \Symfony\Component\Mime\Address($fromAddress, $fromName))
+                    ->to(new \Symfony\Component\Mime\Address($recipient))
+                    ->subject("SMTP Test Email from " . ($agency->name ?? 'Youverse'))
+                    ->html("<h3>SMTP Connected Successfully!</h3><p>This is a test email sent from your white-label dashboard at " . date('Y-m-d H:i:s') . ".</p>");
+
+                $mailer->send($email);
+            } else {
+                \Illuminate\Support\Facades\Mail::html(
+                    "<h3>Test Notification</h3><p>This is a default server email notification test from {$agency->name}.</p>",
+                    function ($msg) use ($recipient, $agency) {
+                        $msg->to($recipient)->subject("Test Email from {$agency->name}");
+                    }
+                );
+            }
+
+            return redirect()->route('whitelabel.website.contact', ['tab' => 'smtp'])
+                ->with('success', "Test email sent successfully to {$recipient}!");
+        } catch (\Throwable $e) {
+            return redirect()->route('whitelabel.website.contact', ['tab' => 'smtp'])
+                ->with('error', "SMTP Connection Error: " . $e->getMessage());
+        }
+    }
+
+    public function updateRecaptcha(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $recaptcha = [
+            'recaptcha_enabled'    => (bool)$request->input('recaptcha_enabled', false),
+            'recaptcha_site_key'   => trim($request->input('recaptcha_site_key', '')),
+            'recaptcha_secret_key' => trim($request->input('recaptcha_secret_key', '')),
+            'recaptcha_version'    => trim($request->input('recaptcha_version', 'v2')),
+        ];
+
+        $agency->update(['recaptcha_settings' => json_encode($recaptcha)]);
+
+        return redirect()->route('whitelabel.website.contact', ['tab' => 'recaptcha'])
+            ->with('success', 'Google reCAPTCHA configuration saved successfully!');
+    }
+
+    public function updateSubmissionStatus(Request $request, $id)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return response()->json(['error' => 'Agency not found'], 404);
+
+        $submission = \App\Models\AgencyContactSubmission::where('agency_id', $agency->id)->findOrFail($id);
+        $newStatus = $request->input('status', ($submission->status === 'read' ? 'unread' : 'read'));
+        $submission->update(['status' => $newStatus]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'status' => $newStatus]);
+        }
+        return back()->with('success', 'Status updated successfully.');
+    }
+
+    public function deleteSubmission(Request $request, $id)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        \App\Models\AgencyContactSubmission::where('agency_id', $agency->id)->where('id', $id)->delete();
+
+        return redirect()->route('whitelabel.website.contact', ['tab' => 'submitted_data'])
+            ->with('success', 'Contact submission deleted successfully.');
+    }
+
+    public function submitContactForm(Request $request)
+    {
+        // 1. Identify agency
+        $agency = null;
+        if ($request->filled('agency_id')) {
+            $agency = \App\Models\Agency::find($request->agency_id);
+        }
+        if (!$agency) {
+            $host = $request->getHost();
+            $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
+            $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")
+                ->orWhere('custom_domain', 'LIKE', "%{$host}%")
+                ->orWhere('slug', 'LIKE', "%{$cleanHost}%")
+                ->first()
+                ?? \App\Models\Agency::where('type', 'white_label')->first()
+                ?? \App\Models\Agency::first();
+        }
+
+        if (!$agency) {
+            return response()->json(['success' => false, 'message' => 'Agency not found.'], 404);
+        }
+
+        // 2. Validate input
+        $request->validate([
+            'name'    => 'required|string|max:150',
+            'email'   => 'required|email|max:150',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        // Optional reCAPTCHA verification if enabled
+        $recaptcha = is_array($agency->recaptcha_settings) ? $agency->recaptcha_settings : (json_decode($agency->recaptcha_settings ?? '[]', true) ?: []);
+        if (!empty($recaptcha['recaptcha_enabled']) && !empty($recaptcha['recaptcha_secret_key'])) {
+            $token = $request->input('g-recaptcha-response');
+            if (empty($token)) {
+                return response()->json(['success' => false, 'message' => 'Please complete the reCAPTCHA challenge.'], 422);
+            }
+            try {
+                $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptcha['recaptcha_secret_key']}&response={$token}");
+                $resp = json_decode($verify, true);
+                if (empty($resp['success'])) {
+                    return response()->json(['success' => false, 'message' => 'reCAPTCHA validation failed. Please try again.'], 422);
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        // 3. Store submission in database
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('agency_contact_submissions')) {
+                \Illuminate\Support\Facades\Schema::create('agency_contact_submissions', function ($table) {
+                    $table->id();
+                    $table->unsignedBigInteger('agency_id')->index();
+                    $table->string('name');
+                    $table->string('email');
+                    $table->string('subject')->nullable();
+                    $table->text('message');
+                    $table->string('ip_address', 45)->nullable();
+                    $table->text('user_agent')->nullable();
+                    $table->string('status')->default('unread');
+                    $table->timestamps();
+                });
+            }
+
+            $submission = \App\Models\AgencyContactSubmission::create([
+                'agency_id'  => $agency->id,
+                'name'       => $request->name,
+                'email'      => $request->email,
+                'subject'    => $request->subject ?: 'General Inquiry',
+                'message'    => $request->message,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'status'     => 'unread',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to store contact submission: " . $e->getMessage());
+        }
+
+        // 4. Forward email copy to agency email / SMTP if enabled
+        $smtp = is_array($agency->smtp_settings) ? $agency->smtp_settings : (json_decode($agency->smtp_settings ?? '[]', true) ?: []);
+        $toEmail = !empty($smtp['smtp_to_email']) ? $smtp['smtp_to_email'] : ($agency->contact_email ?? $agency->email);
+        $smtpEnabled = isset($smtp['smtp_enabled']) ? (bool)$smtp['smtp_enabled'] : true;
+
+        if ($smtpEnabled && !empty($toEmail)) {
+            try {
+                $emailSubject = "New Contact Inquiry from {$request->name}: " . ($request->subject ?: 'Contact Form');
+                $htmlBody = "
+                    <div style='font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;'>
+                        <h2 style='color:#0f172a;margin-top:0;'>New Lead Submitted on {$agency->name}</h2>
+                        <p style='color:#64748b;font-size:13px;'>A visitor submitted an inquiry through your website's Contact Us form.</p>
+                        <table style='width:100%;border-collapse:collapse;margin:20px 0;'>
+                            <tr><td style='padding:8px 0;color:#64748b;width:120px;'><strong>Name:</strong></td><td style='padding:8px 0;color:#0f172a;'>{$request->name}</td></tr>
+                            <tr><td style='padding:8px 0;color:#64748b;'><strong>Email:</strong></td><td style='padding:8px 0;color:#0f172a;'><a href='mailto:{$request->email}'>{$request->email}</a></td></tr>
+                            <tr><td style='padding:8px 0;color:#64748b;'><strong>Subject:</strong></td><td style='padding:8px 0;color:#0f172a;'>{$request->subject}</td></tr>
+                            <tr><td style='padding:8px 0;color:#64748b;vertical-align:top;'><strong>Message:</strong></td><td style='padding:8px 0;color:#0f172a;line-height:1.6;white-space:pre-line;'>{$request->message}</td></tr>
+                            <tr><td style='padding:8px 0;color:#64748b;'><strong>IP Address:</strong></td><td style='padding:8px 0;color:#64748b;font-size:12px;'>{$request->ip()}</td></tr>
+                            <tr><td style='padding:8px 0;color:#64748b;'><strong>Date:</strong></td><td style='padding:8px 0;color:#64748b;font-size:12px;'>" . date('F d, Y h:i A') . "</td></tr>
+                        </table>
+                        <div style='margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;text-align:center;'>
+                            <a href='https://{$agency->clean_domain}/whitelabel/website/contact?tab=submitted_data' style='display:inline-block;padding:10px 20px;background:#4f46e5;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px;'>View in Dashboard</a>
+                        </div>
+                    </div>
+                ";
+
+                if (!empty($smtp['smtp_host']) && !empty($smtp['smtp_username'])) {
+                    $transport = new \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport(
+                        $smtp['smtp_host'],
+                        (int)($smtp['smtp_port'] ?? 587),
+                        ($smtp['smtp_encryption'] ?? 'tls') === 'ssl'
+                    );
+                    $transport->setUsername($smtp['smtp_username']);
+                    $transport->setPassword($smtp['smtp_password'] ?? '');
+
+                    $mailer = new \Symfony\Component\Mailer\Mailer($transport);
+                    $fromAddress = !empty($smtp['smtp_from_address']) ? $smtp['smtp_from_address'] : $smtp['smtp_username'];
+                    $fromName    = !empty($smtp['smtp_from_name']) ? $smtp['smtp_from_name'] : ($agency->name ?? 'Youverse Contact');
+
+                    $email = (new \Symfony\Component\Mime\Email())
+                        ->from(new \Symfony\Component\Mime\Address($fromAddress, $fromName))
+                        ->to(new \Symfony\Component\Mime\Address($toEmail))
+                        ->subject($emailSubject)
+                        ->html($htmlBody);
+
+                    $mailer->send($email);
+                } else {
+                    \Illuminate\Support\Facades\Mail::html($htmlBody, function ($msg) use ($toEmail, $emailSubject, $agency) {
+                        $msg->to($toEmail)->subject($emailSubject);
+                    });
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("Contact form email notification error: " . $e->getMessage());
+            }
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Your message has been sent successfully to the ' . ($agency->name ?? 'support') . ' team. We will get back to you shortly.'
+            ]);
+        }
+
+        return back()->with('success', 'Thank you! Your message has been sent successfully.');
     }
 
     public function privacy()
@@ -475,7 +831,28 @@ class WhiteLabelWebsiteController extends Controller
 
         $sectionTitle    = $request->input('pricing_section_title', 'Choose Your Perfect Plan');
         $sectionSubtitle = $request->input('pricing_section_subtitle', 'Scale seamlessly with zero hidden fees.');
+        $badgeText       = $request->input('pricing_badge_text', 'Flexible Pricing Plans');
+        $yearlyDiscount  = $request->input('pricing_yearly_discount', 'Save 20%');
         $trustBar        = $request->input('pricing_trust_bar', '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses');
+
+        // Parse Trust Elements (3 cards below pricing)
+        $trustIcons   = $request->input('trust_item_icon', []);
+        $trustTitles  = $request->input('trust_item_title', []);
+        $trustDescs   = $request->input('trust_item_desc', []);
+        $trustBgs     = $request->input('trust_item_bg', []);
+        $trustColors  = $request->input('trust_item_color', []);
+        $trustElements = [];
+        for ($t = 0; $t < count($trustTitles); $t++) {
+            if (!empty(trim($trustTitles[$t] ?? ''))) {
+                $trustElements[] = [
+                    'icon'  => trim($trustIcons[$t] ?? 'shield-check'),
+                    'title' => trim($trustTitles[$t]),
+                    'desc'  => trim($trustDescs[$t] ?? ''),
+                    'bg'    => trim($trustBgs[$t] ?? '#d1fae5'),
+                    'color' => trim($trustColors[$t] ?? '#059669'),
+                ];
+            }
+        }
 
         // Build per-product plan array from repeater inputs
         $productNames     = $request->input('product_name', []);

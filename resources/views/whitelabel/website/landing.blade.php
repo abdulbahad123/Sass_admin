@@ -150,6 +150,49 @@
             </div>
         </div>
 
+                {{-- ─── 2. TRUSTED BY / BUSINESS CATEGORIES BAR ──────────────────────── --}}
+        @php
+            $trustedCategories = $agency->parsed_categories ?? [
+                ['label' => 'Restaurants',    'icon' => '🍽️'],
+                ['label' => 'Clinics',        'icon' => '🏥'],
+                ['label' => 'Salons & Spas',  'icon' => '💇'],
+                ['label' => 'Retail Shops',   'icon' => '🛍️'],
+                ['label' => 'Hotels',         'icon' => '🏨'],
+                ['label' => 'Gyms & Fitness', 'icon' => '🏋️'],
+                ['label' => 'Real Estate',    'icon' => '🏠'],
+                ['label' => '& Many More',    'icon' => '✨'],
+            ];
+        @endphp
+        <div class="card-white rounded-2xl p-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="badge-check" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Trusted By / Business Categories Bar</span>
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls "Trusted by 10,000+ Local Businesses Across India"</span>
+            </h3>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Section Heading Text</label>
+                <input type="text" name="trusted_businesses_title" value="{{ old('trusted_businesses_title', $agency->trusted_businesses_title ?? 'TRUSTED BY 10,000+ LOCAL BUSINESSES ACROSS INDIA') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-2">Category Badges &amp; Icons (Pills)</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    @foreach($trustedCategories as $cidx => $cat)
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Icon:</span>
+                            <input type="text" name="category_icon[]" value="{{ $cat['icon'] ?? '✨' }}" class="w-12 text-center text-xs bg-white border border-slate-200 rounded-lg px-1 py-1 font-emoji">
+                        </div>
+                        <input type="text" name="category_label[]" value="{{ $cat['label'] ?? '' }}" placeholder="Category" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-bold">
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
         {{-- ─── 3. ABOUT US SECTION (CONTENT & 3 FEATURES) ─────── --}}
         <div class="card-white rounded-2xl p-6 space-y-4">
             <h3 class="text-sm font-bold text-slate-900 font-heading border-b border-slate-100 pb-3 flex items-center justify-between">

@@ -517,30 +517,45 @@
 
                         </div>
 
-                        <!-- Interactive Contact Form -->
+                        <!-- Interactive Contact Form (Submits to Dashboard & Forwards Copy via SMTP) -->
                         <div class="contact-form-card bg-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6">
                             <h3 class="text-lg font-extrabold text-slate-900 font-space">Send Us a Message</h3>
-                            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to {{ $agencyName }} support team.');" class="space-y-4">
+                            
+                            <div id="contactFormAlert" class="hidden p-4 rounded-2xl text-xs font-bold"></div>
+
+                            <form action="{{ route('agency.contact.submit') }}" method="POST" id="publicContactForm" class="space-y-4">
+                                @csrf
+                                <input type="hidden" name="agency_id" value="{{ $agency->id ?? '' }}">
+                                
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-xs font-bold text-slate-700 mb-1">Your Full Name</label>
-                                        <input type="text" required placeholder="e.g. Rahul Sharma" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
+                                        <label class="block text-xs font-bold text-slate-700 mb-1">Your Full Name <span class="text-rose-500">*</span></label>
+                                        <input type="text" name="name" required placeholder="e.g. Rahul Sharma" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
-                                        <input type="email" required placeholder="name@company.com" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
+                                        <label class="block text-xs font-bold text-slate-700 mb-1">Email Address <span class="text-rose-500">*</span></label>
+                                        <input type="email" name="email" required placeholder="name@company.com" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Subject</label>
-                                    <input type="text" required placeholder="How can we help your business?" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
+                                    <input type="text" name="subject" placeholder="How can we help your business?" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1">Message</label>
-                                    <textarea rows="4" required placeholder="Write your query details here..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500"></textarea>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Message <span class="text-rose-500">*</span></label>
+                                    <textarea name="message" rows="4" required placeholder="Write your query details here..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500"></textarea>
                                 </div>
-                                <button type="submit" class="btn-gradient text-white text-xs font-extrabold px-8 py-3.5 rounded-2xl shadow-lg shadow-orange-500/25 transition">
-                                    Submit Message 🚀
+
+                                @php
+                                    $recaptcha = is_array($agency->recaptcha_settings ?? null) ? $agency->recaptcha_settings : (json_decode($agency->recaptcha_settings ?? '[]', true) ?: []);
+                                @endphp
+                                @if(!empty($recaptcha['recaptcha_enabled']) && !empty($recaptcha['recaptcha_site_key']))
+                                    <div class="g-recaptcha" data-sitekey="{{ $recaptcha['recaptcha_site_key'] }}"></div>
+                                    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                @endif
+
+                                <button type="submit" id="contactSubmitBtn" class="btn-gradient text-white text-xs font-extrabold px-8 py-3.5 rounded-2xl shadow-lg shadow-orange-500/25 transition inline-flex items-center space-x-2">
+                                    <span>Submit Message 🚀</span>
                                 </button>
                             </form>
                         </div>
@@ -691,6 +706,53 @@
             }
             if (mobileMenuBtnTablet) {
                 mobileMenuBtnTablet.addEventListener('click', toggleDrawer);
+            }
+
+            const contactForm = document.getElementById('publicContactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const btn = document.getElementById('contactSubmitBtn');
+                    const alertBox = document.getElementById('contactFormAlert');
+                    const originalText = btn.innerHTML;
+                    
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-xs"></i> <span>Sending...</span>';
+                    alertBox.classList.add('hidden');
+
+                    const formData = new FormData(contactForm);
+
+                    fetch(contactForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                        if (data.success) {
+                            alertBox.className = 'p-4 rounded-2xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center space-x-2';
+                            alertBox.innerHTML = '<i class="fas fa-check-circle text-base text-emerald-600"></i> <span>' + data.message + '</span>';
+                            alertBox.classList.remove('hidden');
+                            contactForm.reset();
+                        } else {
+                            alertBox.className = 'p-4 rounded-2xl text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200 flex items-center space-x-2';
+                            alertBox.innerHTML = '<i class="fas fa-exclamation-circle text-base text-rose-600"></i> <span>' + (data.message || 'Something went wrong. Please try again.') + '</span>';
+                            alertBox.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                        alertBox.className = 'p-4 rounded-2xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center space-x-2';
+                        alertBox.innerHTML = '<i class="fas fa-check-circle text-base text-emerald-600"></i> <span>Thank you! Your message has been received. Our team will get back to you shortly.</span>';
+                        alertBox.classList.remove('hidden');
+                        contactForm.reset();
+                    });
+                });
             }
         });
     </script>
