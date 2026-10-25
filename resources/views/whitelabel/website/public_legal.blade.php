@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Immediate dark mode initialization to prevent flash
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     @php
         $titles = [
             'privacy' => 'Privacy Policy',
@@ -32,16 +40,17 @@
     <!-- Fonts matching Landing Page -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN with dark mode support -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -66,6 +75,7 @@
                         heading: ['Space Grotesk', 'sans-serif'],
                         onest: ['Onest', 'sans-serif'],
                         poppins: ['Poppins', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
                     }
                 }
             }
@@ -78,6 +88,7 @@
             background-color: #f8fafc;
             color: #1e293b;
             overflow-x: hidden;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
         .font-space { font-family: 'Space Grotesk', sans-serif; }
         .font-poppins { font-family: 'Poppins', sans-serif; }
@@ -110,17 +121,217 @@
             display: inline-block;
             border: 1px solid #ffe3d1;
         }
+
+        /* ─── RESPONSIVE FOOTER GRID ─── */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 48px;
+            padding-bottom: 44px;
+            border-bottom: 1px solid #0f172a;
+        }
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 32px !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr !important;
+                gap: 32px !important;
+            }
+        }
+
+        /* ─── RESPONSIVE POLICY TABS ─── */
+        .policy-tabs-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .policy-tabs-wrap::-webkit-scrollbar {
+            display: none;
+        }
+        .policy-tabs-wrap a {
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ─── DARK MODE STYLING (Matching Landing Page Atmosphere) ─── */
+        html.dark body { 
+            background: transparent !important; 
+            color: #f8fafc !important; 
+        }
+        html.dark body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at top right, #1e1b4b 0%, #020617 60%, #000000 100%) !important;
+            z-index: -2;
+        }
+
+        html.dark .site-header { 
+            background: rgba(2, 6, 23, 0.75) !important; 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(255,255,255,0.08) !important; 
+        }
+        html.dark .site-header nav a {
+            color: #94a3b8 !important;
+        }
+        html.dark .site-header nav a:hover {
+            color: #ffffff !important;
+        }
+        html.dark .site-header .logo-text {
+            color: #ffffff !important;
+        }
+        html.dark .theme-toggle-btn,
+        html.dark .theme-toggle-btn-mobile {
+            border-color: rgba(255,255,255,0.2) !important;
+            color: #ffffff !important;
+            background: rgba(15, 23, 42, 0.6) !important;
+        }
+        html.dark .theme-toggle-btn:hover,
+        html.dark .theme-toggle-btn-mobile:hover {
+            border-color: #ffffff !important;
+            background: rgba(30, 41, 59, 0.8) !important;
+        }
+        html.dark #mobileMenuBtn,
+        html.dark #mobileMenuBtnTablet {
+            color: #ffffff !important;
+        }
+        html.dark #mobileMenu {
+            background: #0b132b !important;
+            border-top: 1px solid rgba(255,255,255,0.08) !important;
+        }
+        html.dark #mobileMenu a {
+            color: #e2e8f0 !important;
+        }
+        html.dark #mobileMenu a:hover {
+            background: rgba(255,255,255,0.06) !important;
+        }
+
+        /* Glassmorphism Main Document Card */
+        html.dark .legal-card-container {
+            background: rgba(15, 23, 42, 0.65) !important;
+            backdrop-filter: blur(16px);
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45) !important;
+        }
+        html.dark .legal-card-container h1 {
+            color: #ffffff !important;
+        }
+        html.dark .legal-card-container .border-b {
+            border-bottom-color: rgba(255,255,255,0.08) !important;
+        }
+        html.dark .badge-pill {
+            background: rgba(255, 61, 0, 0.15) !important;
+            border-color: rgba(255, 61, 0, 0.3) !important;
+            color: #ff7a18 !important;
+        }
+        html.dark .back-home-btn {
+            background: rgba(79, 70, 229, 0.15) !important;
+            border-color: rgba(99, 102, 241, 0.3) !important;
+            color: #a5b4fc !important;
+        }
+        html.dark .back-home-btn:hover {
+            background: rgba(79, 70, 229, 0.25) !important;
+            color: #c7d2fe !important;
+        }
+
+        /* Policy Navigation Tabs */
+        html.dark .policy-tabs-wrap a:not(.active-tab) {
+            background: rgba(30, 41, 59, 0.7) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: #94a3b8 !important;
+        }
+        html.dark .policy-tabs-wrap a:not(.active-tab):hover {
+            background: rgba(51, 65, 85, 0.8) !important;
+            color: #ffffff !important;
+        }
+
+        /* Prose Content (Privacy, Terms, Shipping, Refund policies) */
+        html.dark .prose {
+            color: #cbd5e1 !important;
+        }
+        html.dark .prose h2,
+        html.dark .prose h3,
+        html.dark .prose h4 {
+            color: #ffffff !important;
+        }
+        html.dark .prose p,
+        html.dark .prose li,
+        html.dark .prose span {
+            color: #cbd5e1 !important;
+        }
+        html.dark .prose strong {
+            color: #ffffff !important;
+        }
+
+        /* Contact Us Cards */
+        html.dark .contact-card-box {
+            background: rgba(15, 23, 42, 0.6) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        html.dark .contact-card-box h4 {
+            color: #ffffff !important;
+        }
+        html.dark .contact-card-box p {
+            color: #94a3b8 !important;
+        }
+        html.dark .contact-card-box .icon-wrap {
+            background: rgba(255, 61, 0, 0.15) !important;
+            color: #ff7a18 !important;
+        }
+
+        /* Contact Form */
+        html.dark .contact-form-card {
+            background: rgba(15, 23, 42, 0.6) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        html.dark .contact-form-card h3 {
+            color: #ffffff !important;
+        }
+        html.dark .contact-form-card label {
+            color: #cbd5e1 !important;
+        }
+        html.dark .contact-form-card input,
+        html.dark .contact-form-card textarea {
+            background: #0b132b !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            color: #ffffff !important;
+        }
+        html.dark .contact-form-card input:focus,
+        html.dark .contact-form-card textarea:focus {
+            border-color: #ff7a18 !important;
+        }
+        html.dark .contact-form-card input::placeholder,
+        html.dark .contact-form-card textarea::placeholder {
+            color: #64748b !important;
+        }
+
+        /* About Stats */
+        html.dark .about-stat-card {
+            background: rgba(15, 23, 42, 0.6) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        html.dark .about-stat-card p {
+            color: #94a3b8 !important;
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-    {{-- ══ EXACT SAME ANNOUNCEMENT BAR AS LANDING PAGE ══ --}}
+    {{-- EXACT SAME ANNOUNCEMENT BAR AS LANDING PAGE --}}
     <div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
-        🎉 Special Offer: Get Started with <strong>{{ $agency->name ?? $agencyName }}</strong> Today &amp; Automate Your Business!
+        ⚡ Special Offer: Get Started with <strong>{{ $agency->name ?? $agencyName }}</strong> Today &amp; Automate Your Business!
     </div>
 
-    {{-- ══ EXACT SAME HEADER AS LANDING PAGE (Screenshot 2 Match) ══ --}}
-    <header class="site-header" style="background:#fff;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:50">
+    {{-- EXACT SAME HEADER AS LANDING PAGE (With Theme Toggle) --}}
+    <header class="site-header" style="background:#fff;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:50;transition:background-color .2s,border-color .2s">
         <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px">
 
             {{-- Logo --}}
@@ -131,7 +342,7 @@
                     <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center">
                         <i class="fas fa-layer-group text-white text-base"></i>
                     </div>
-                    <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name ?? $agencyName }}</span>
+                    <span class="logo-text" style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name ?? $agencyName }}</span>
                 @endif
             </a>
 
@@ -145,16 +356,29 @@
                 <a href="{{ url('/') }}#faq" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">FAQ</a>
             </nav>
 
-            {{-- Desktop CTAs --}}
+            {{-- Desktop CTAs (Includes Light/Dark Mode Switcher) --}}
             <div class="hidden sm:flex items-center space-x-3">
+                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn" style="width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
+                    <i class="fas fa-moon" id="moonIcon" style="font-size:15px"></i>
+                    <i class="fas fa-sun" id="sunIcon" style="font-size:15px;color:#fbbf24;display:none;"></i>
+                </button>
                 <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
                 <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="text-white text-xs font-extrabold px-6 py-2.5 rounded-full shadow-lg transition-all" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
                     {{ $agency->cta_text ?? 'Start Free Today' }}
                 </a>
             </div>
 
-            {{-- Mobile Menu Button --}}
-            <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
+            {{-- Mobile Actions: Toggle + Hamburger --}}
+            <div class="flex items-center space-x-2 sm:hidden">
+                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn-mobile" style="width:36px;height:36px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;" title="Toggle Dark Mode">
+                    <i class="fas fa-moon moonIconMobile" style="font-size:14px"></i>
+                    <i class="fas fa-sun sunIconMobile" style="font-size:14px;color:#fbbf24;display:none;"></i>
+                </button>
+                <button id="mobileMenuBtn" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            <button id="mobileMenuBtnTablet" class="hidden sm:inline-block lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
@@ -167,7 +391,17 @@
             <a href="{{ url('/') }}#how-it-works" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">How It Works</a>
             <a href="{{ url('/') }}#testimonials" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Reviews</a>
             <a href="{{ url('/') }}#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
-            <div class="pt-4 border-t border-slate-100 space-y-2">
+            
+            <div class="pt-2 border-t border-slate-100">
+                <button type="button" onclick="toggleTheme()" class="flex items-center justify-between w-full px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+                    <span>Appearance</span>
+                    <span class="flex items-center gap-2 text-xs font-bold text-slate-500">
+                        <i class="fas fa-moon"></i> / <i class="fas fa-sun text-amber-500"></i> Switch Theme
+                    </span>
+                </button>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 space-y-2">
                 <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">Login</a>
                 <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
                     {{ $agency->cta_text ?? 'Start Free Today' }}
@@ -176,9 +410,9 @@
         </div>
     </header>
 
-    <!-- DYNAMIC CENTER CONTENT CONTAINER (Task 4: Dynamic Policy Content Only) -->
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-1 w-full">
-        <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-12 shadow-xl space-y-8">
+    <!-- DYNAMIC CENTER CONTENT CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 flex-1 w-full">
+        <div class="legal-card-container bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-12 shadow-xl space-y-8">
             
             <!-- Page Header Bar -->
             <div class="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -189,18 +423,18 @@
                     <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-space tracking-tight">{{ $pageTitle }}</h1>
                     <p class="text-xs text-slate-500 mt-1.5 font-medium">Effective Date: {{ date('F d, Y') }} — {{ $agencyName }}</p>
                 </div>
-                <a href="{{ url('/') }}" class="self-start sm:self-auto inline-flex items-center space-x-2 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 px-4 py-2.5 rounded-2xl transition-all">
+                <a href="{{ url('/') }}" class="back-home-btn self-start sm:self-auto inline-flex items-center space-x-2 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 px-4 py-2.5 rounded-2xl transition-all">
                     <i class="fas fa-arrow-left text-xs"></i>
                     <span>Back to Home</span>
                 </a>
             </div>
 
-            <!-- Policy Navigation Tabs -->
-            <div class="flex flex-wrap items-center gap-2 pb-2 border-b border-slate-100 text-xs font-bold">
-                <a href="{{ route('agency.privacy') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'privacy' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Privacy Policy</a>
-                <a href="{{ route('agency.terms') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'terms' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Terms & Conditions</a>
-                <a href="{{ route('agency.refund') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'refund' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Refund Policy</a>
-                <a href="{{ route('agency.shipping') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'shipping' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Shipping Policy</a>
+            <!-- Policy Navigation Tabs (Mobile Horizontally Scrollable & Desktop Wrapped) -->
+            <div class="policy-tabs-wrap border-b border-slate-100 text-xs font-bold">
+                <a href="{{ route('agency.privacy') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'privacy' ? 'active-tab bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Privacy Policy</a>
+                <a href="{{ route('agency.terms') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'terms' ? 'active-tab bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Terms &amp; Conditions</a>
+                <a href="{{ route('agency.refund') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'refund' ? 'active-tab bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Refund Policy</a>
+                <a href="{{ route('agency.shipping') }}" class="px-4 py-2 rounded-xl transition-all {{ $type === 'shipping' ? 'active-tab bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">Shipping Policy</a>
             </div>
 
             <!-- Page Specific Dynamic Body Content -->
@@ -230,19 +464,19 @@
 
                         <!-- 4 Stats Grid -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
+                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
                                 <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">10,000+</h4>
                                 <p class="text-[11px] font-bold text-slate-500">Active Partners</p>
                             </div>
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
+                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
                                 <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">1M+</h4>
                                 <p class="text-[11px] font-bold text-slate-500">End Users Served</p>
                             </div>
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
+                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
                                 <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">500K+</h4>
                                 <p class="text-[11px] font-bold text-slate-500">Subscriptions Managed</p>
                             </div>
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
+                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
                                 <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">99.9%</h4>
                                 <p class="text-[11px] font-bold text-slate-500">Uptime Guarantee</p>
                             </div>
@@ -255,17 +489,17 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             
                             <!-- Card 1: Email -->
-                            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
-                                <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
+                            <div class="contact-card-box bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
+                                <div class="icon-wrap w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
                                     <i class="fas fa-envelope text-lg"></i>
                                 </div>
                                 <h4 class="font-extrabold text-slate-900 text-sm font-space">Email Support</h4>
-                                <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ $agency->contact_email ?? $data['lp_contact_email'] ?? 'support@nooryak.in' }}</p>
+                                <p class="text-xs text-slate-600 leading-relaxed font-medium break-all">{{ $agency->contact_email ?? $data['lp_contact_email'] ?? 'support@' . request()->getHost() }}</p>
                             </div>
 
                             <!-- Card 2: Phone -->
-                            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
-                                <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
+                            <div class="contact-card-box bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
+                                <div class="icon-wrap w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
                                     <i class="fas fa-phone text-lg"></i>
                                 </div>
                                 <h4 class="font-extrabold text-slate-900 text-sm font-space">Phone Number</h4>
@@ -273,8 +507,8 @@
                             </div>
 
                             <!-- Card 3: Address -->
-                            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
-                                <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
+                            <div class="contact-card-box bg-slate-50 border border-slate-200/80 rounded-2xl p-6 space-y-3">
+                                <div class="icon-wrap w-10 h-10 rounded-xl bg-orange-100 text-[#ff3d00] flex items-center justify-center font-bold">
                                     <i class="fas fa-location-dot text-lg"></i>
                                 </div>
                                 <h4 class="font-extrabold text-slate-900 text-sm font-space">Office Address</h4>
@@ -284,7 +518,7 @@
                         </div>
 
                         <!-- Interactive Contact Form -->
-                        <div class="bg-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6">
+                        <div class="contact-form-card bg-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 space-y-6">
                             <h3 class="text-lg font-extrabold text-slate-900 font-space">Send Us a Message</h3>
                             <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to {{ $agencyName }} support team.');" class="space-y-4">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -306,7 +540,7 @@
                                     <textarea rows="4" required placeholder="Write your query details here..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-orange-500"></textarea>
                                 </div>
                                 <button type="submit" class="btn-gradient text-white text-xs font-extrabold px-8 py-3.5 rounded-2xl shadow-lg shadow-orange-500/25 transition">
-                                    Submit Message →
+                                    Submit Message 🚀
                                 </button>
                             </form>
                         </div>
@@ -328,23 +562,27 @@
         </div>
     </main>
 
-    {{-- ══ EXACT SAME DARK NAVY FOOTER AS LANDING PAGE (Screenshot 2 Match) ══ --}}
+    {{-- EXACT SAME DARK NAVY FOOTER AS LANDING PAGE (Fully Responsive) --}}
     @php
-        $footerProds = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? $agency->enabled_products : collect();
-        if ($footerProds->isEmpty()) {
+        try {
+            $footerProds = ($agency && method_exists($agency, 'getEnabledProductsAttribute')) ? ($agency->enabled_products ?? collect()) : collect();
+        } catch (\Throwable $e) {
+            $footerProds = collect();
+        }
+        if (empty($footerProds) || $footerProds->isEmpty()) {
             $footerProds = collect([
-                (object)['name' => 'Ecombuilder', 'slug' => 'launchshop'],
-                (object)['name' => 'Website Builder', 'slug' => 'websitebuilder'],
-                (object)['name' => 'WhatsApp Bulk', 'slug' => 'whatsappbulk'],
+                (object)['name' => 'Ecombuilder'],
+                (object)['name' => 'Website Builder'],
+                (object)['name' => 'WhatsApp Bulk'],
             ]);
         }
     @endphp
-    <footer style="background:#0b132b;padding:60px 0 28px;border-top:1px solid #1e293b;color:#94a3b8">
+    <footer class="site-footer" style="background:#020617;border-top:1px solid #0f172a;padding:56px 0 28px;margin-top:auto">
         <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:40px;padding-bottom:48px;border-bottom:1px solid #1e293b" class="footer-grid">
+            <div class="footer-grid">
 
-                {{-- Col 1: Brand & Tagline & Socials --}}
-                <div style="display:flex;flex-direction:column;gap:16px">
+                {{-- Col 1: Brand & Social --}}
+                <div style="display:flex;flex-direction:column;gap:14px">
                     <div style="display:flex;align-items:center;gap:10px">
                         @if(!empty($agency->logo))
                             <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:50px;width:auto">
@@ -407,20 +645,54 @@
 
             {{-- Bottom bar --}}
             <div style="padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:11px;color:#475569">
-                <p style="margin:0">© {{ date('Y') }} {{ $agency->name ?? $agencyName }}. All rights reserved.</p>
-                <p style="margin:0;display:flex;align-items:center;gap:4px">Made with <span style="color:#f43f5e">❤️</span> in India 🇮🇳</p>
+                <p style="margin:0">&copy; {{ date('Y') }} {{ $agency->name ?? $agencyName }}. All rights reserved.</p>
+                <p style="margin:0;display:flex;align-items:center;gap:4px">Made with <span style="color:#f43f5e">♥</span> in India 🇮🇳</p>
             </div>
         </div>
     </footer>
 
     <script>
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
+        function updateThemeIcons(isDark) {
+            const moonIcons = document.querySelectorAll('#moonIcon, .moonIconMobile');
+            const sunIcons = document.querySelectorAll('#sunIcon, .sunIconMobile');
+            moonIcons.forEach(icon => icon.style.display = isDark ? 'none' : 'inline-block');
+            sunIcons.forEach(icon => icon.style.display = isDark ? 'inline-block' : 'none');
         }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeIcons(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeIcons(true);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateThemeIcons(isDark);
+
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenuBtnTablet = document.getElementById('mobileMenuBtnTablet');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            const toggleDrawer = () => {
+                if (mobileMenu) {
+                    mobileMenu.classList.toggle('hidden');
+                }
+            };
+
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleDrawer);
+            }
+            if (mobileMenuBtnTablet) {
+                mobileMenuBtnTablet.addEventListener('click', toggleDrawer);
+            }
+        });
     </script>
 </body>
 </html>

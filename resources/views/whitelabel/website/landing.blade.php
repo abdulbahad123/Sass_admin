@@ -204,7 +204,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Section Heading</label>
-                    <input type="text" name="why_choose_title" value="{{ old('why_choose_title', $agency->why_choose_title ?? ('Why Choose ' . \$agency->name . '?')) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+                    <input type="text" name="why_choose_title" value="{{ old('why_choose_title', $agency->why_choose_title ?? ('Why Choose ' . $agency->name . '?')) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Section Subtitle</label>
@@ -312,11 +312,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Banner Subtitle</label>
-                    <input type="text" name="cta_section_subtitle" value="{{ old('cta_section_subtitle', $agency->cta_section_subtitle ?? ('Join thousands of growing businesses with ' . \$agency->name . ' today.')) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
+                    <input type="text" name="cta_section_subtitle" value="{{ old('cta_section_subtitle', $agency->cta_section_subtitle ?? ('Join thousands of growing businesses with ' . $agency->name . ' today.')) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-slate-700 mb-1">Trust Bullets (comma-separated, e.g. Quick Setup, No Credit Card Required, 24/7 Support)</label>
-                    <input type="text" name="cta_feature_text" value="{{ old('cta_feature_text', \$ctaCheckmarksRaw) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
+                    <input type="text" name="cta_feature_text" value="{{ old('cta_feature_text', $ctaCheckmarksRaw) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button Text</label>
