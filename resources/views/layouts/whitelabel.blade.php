@@ -452,10 +452,7 @@
 
                 @yield('content')
 
-                <!-- Footer (Matching Reference Image) -->
-                <footer class="pt-8 pb-4 text-center text-xs text-slate-400 font-medium border-t border-slate-200/60 mt-12">
-                    © 2026 Apex Digital Agency. All rights reserved.
-                </footer>
+                
             </main>
         </div>
 
