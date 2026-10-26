@@ -498,65 +498,161 @@ class AgencyController extends Controller
         $emailCount = 0;
         $mobileCount = 0;
 
+        // Configure default SMTP settings dynamically (mirrored from launchshop_dev BasicMailer)
+        $smtpHost = env('MAIL_HOST', 'mail.saasreselling.com');
+        $smtpPort = (int)env('MAIL_PORT', 465);
+        $smtpEncryption = env('MAIL_ENCRYPTION', 'ssl');
+        $smtpUsername = env('MAIL_USERNAME', 'admin@saasreselling.com');
+        $smtpPassword = env('MAIL_PASSWORD', 'Admin@nooryak');
+        $smtpFromAddress = env('MAIL_FROM_ADDRESS', 'admin@saasreselling.com');
+        $smtpFromName = env('MAIL_FROM_NAME', 'SaaS Admin Platform');
+
+        try {
+            \Illuminate\Support\Facades\Config::set('mail.mailers.smtp', [
+                'transport'  => 'smtp',
+                'host'       => $smtpHost,
+                'port'       => $smtpPort,
+                'encryption' => $smtpEncryption,
+                'username'   => $smtpUsername,
+                'password'   => $smtpPassword,
+                'timeout'    => 10,
+                'auth_mode'  => null,
+            ]);
+            \Illuminate\Support\Facades\Config::set('mail.default', 'smtp');
+            \Illuminate\Support\Facades\Config::set('mail.from.address', $smtpFromAddress);
+            \Illuminate\Support\Facades\Config::set('mail.from.name', $smtpFromName);
+            \Illuminate\Support\Facades\Mail::purge('smtp');
+        } catch (\Throwable $cfgEx) {
+            \Illuminate\Support\Facades\Log::warning("Dynamic SMTP config warning: " . $cfgEx->getMessage());
+        }
+
         foreach ($agencies as $agency) {
-            // Send Email Notification
-            if (!empty($request->send_email) && !empty($agency->email)) {
-                try {
-                    $toEmail = $agency->email;
-                    $subject = "Notice: " . $validated['title'];
-                    $noticeType = strtoupper($validated['type']);
-                    $htmlBody = "
-                        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;'>
-                            <div style='padding-bottom: 12px; border-bottom: 2px solid #4f46e5;'>
-                                <span style='display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: bold; border-radius: 6px; background: #4f46e5; color: #ffffff;'>{$noticeType}</span>
-                                <h2 style='color: #1e293b; margin: 10px 0 0 0;'>{$validated['title']}</h2>
-                            </div>
-                            <div style='padding: 20px 0; color: #334155; line-height: 1.6; font-size: 14px;'>
-                                " . nl2br(e($validated['message'])) . "
-                            </div>
-                            <div style='padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;'>
-                                <p>This is an official announcement from Super Admin platform to your White-Label Agency (<strong>{$agency->name}</strong>).</p>
-                            </div>
+            // 1. Resolve registered email (agency email, contact email, or agency owner user)
+            $toEmail = !empty($agency->email) ? trim($agency->email) : (!empty($agency->contact_email) ? trim($agency->contact_email) : null);
+            if (empty($toEmail)) {
+                $ownerUser = \App\Models\User::where('agency_id', $agency->id)->first();
+                $toEmail = $ownerUser ? trim($ownerUser->email) : null;
+            }
+
+            // Send Email Notification via Default SMTP
+            if (!empty($request->send_email) && !empty($toEmail)) {
+                $subject = "Notice: " . $validated['title'];
+                $noticeType = strtoupper($validated['type']);
+                $htmlBody = "
+                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;'>
+                        <div style='padding-bottom: 12px; border-bottom: 2px solid #4f46e5;'>
+                            <span style='display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: bold; border-radius: 6px; background: #4f46e5; color: #ffffff;'>{$noticeType}</span>
+                            <h2 style='color: #1e293b; margin: 10px 0 0 0;'>{$validated['title']}</h2>
                         </div>
-                    ";
-                    \Illuminate\Support\Facades\Mail::html($htmlBody, function ($msg) use ($toEmail, $subject) {
-                        $msg->to($toEmail)->subject($subject);
+                        <div style='padding: 20px 0; color: #334155; line-height: 1.6; font-size: 14px;'>
+                            " . nl2br(e($validated['message'])) . "
+                        </div>
+                        <div style='padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;'>
+                            <p>This is an official announcement from Super Admin platform to your White-Label Agency (<strong>{$agency->name}</strong>).</p>
+                        </div>
+                    </div>
+                ";
+
+                $mailSent = false;
+                try {
+                    \Illuminate\Support\Facades\Mail::html($htmlBody, function ($msg) use ($toEmail, $subject, $smtpFromAddress, $smtpFromName) {
+                        $msg->to($toEmail)
+                            ->from($smtpFromAddress, $smtpFromName)
+                            ->subject($subject);
                     });
+                    $mailSent = true;
                     $emailCount++;
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning("Broadcast email failed for {$agency->email}: " . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::warning("Broadcast SMTP email failed for {$toEmail}: " . $e->getMessage());
+                }
+
+                // Native PHP mail fallback if SMTP failed
+                if (!$mailSent) {
+                    try {
+                        $headers  = "MIME-Version: 1.0\r\n";
+                        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+                        $headers .= "From: {$smtpFromName} <{$smtpFromAddress}>\r\n";
+                        $headers .= "Reply-To: {$smtpFromAddress}\r\n";
+                        $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+                        if (@mail($toEmail, $subject, $htmlBody, $headers)) {
+                            $emailCount++;
+                        }
+                    } catch (\Throwable $mEx) {}
                 }
             }
 
-            // Send Mobile Notification (WhatsApp / SMS)
-            if (!empty($request->send_mobile) && !empty($agency->phone)) {
+            // 2. Resolve registered mobile (agency phone, contact phone, or agency owner user)
+            $rawPhone = !empty($agency->phone) ? trim($agency->phone) : (!empty($agency->contact_phone) ? trim($agency->contact_phone) : null);
+            if (empty($rawPhone)) {
+                $ownerUser = \App\Models\User::where('agency_id', $agency->id)->first();
+                $rawPhone = $ownerUser ? trim($ownerUser->phone ?? $ownerUser->mobile ?? '') : null;
+            }
+
+            // Send Mobile Notification (WhatsApp Gateway)
+            if (!empty($request->send_mobile) && !empty($rawPhone)) {
+                $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+                if (str_starts_with($cleanPhone, '0') && strlen($cleanPhone) === 11) {
+                    $cleanPhone = '91' . substr($cleanPhone, 1);
+                } elseif (strlen($cleanPhone) === 10) {
+                    $cleanPhone = '91' . $cleanPhone;
+                }
+
                 try {
                     $waSettings = \App\Http\Controllers\SuperAdmin\WhatsAppGatewayController::getDefaultSettings();
-                    $endpoint = rtrim($waSettings['whatsapp_gateway_url'] ?? 'http://localhost:8000', '/');
-                    $token = $waSettings['whatsapp_access_token'] ?? '';
-                    $instanceId = $waSettings['whatsapp_instance_id'] ?? '';
-                    $dbName = $waSettings['whatsapp_database'] ?? 'nooryak_whatautomation';
+                    $configuredEndpoint = rtrim($waSettings['whatsapp_gateway_url'] ?? env('WHATSAPP_SERVER_URL', 'http://127.0.0.1:8000'), '/');
+                    $token = $waSettings['whatsapp_access_token'] ?? env('WHATSAPP_ACCESS_TOKEN', '6005c0f6de385fe7');
+                    $instanceId = $waSettings['whatsapp_instance_id'] ?? env('WHATSAPP_INSTANCE_ID', 'E351BB42DC82');
+                    $dbName = $waSettings['whatsapp_database'] ?? env('WHATSAPP_DB', 'nooryak_whatautomation');
 
-                    $waMessage = "ANNOUNCEMENT: " . $validated['title'] . "\n\n" . $validated['message'] . "\n\n– Super Admin Platform";
+                    $waMessage = "📢 *ANNOUNCEMENT: " . $validated['title'] . "*\n\n" . $validated['message'] . "\n\n– *Super Admin Platform*";
 
-                    $sendPath = $endpoint . '/send_message';
-                    $queryUrl = $sendPath . '?' . http_build_query([
-                        'access_token' => $token,
-                        'instance_id' => $instanceId,
-                        'db' => $dbName,
-                    ]);
+                    $endpointCandidates = array_values(array_unique(array_filter([
+                        $configuredEndpoint,
+                        'http://127.0.0.1:8000',
+                        'http://localhost:8000',
+                    ])));
 
-                    \Illuminate\Support\Facades\Http::asForm()->timeout(10)->withoutVerifying()->post($queryUrl, [
-                        'access_token' => $token,
-                        'instance_id' => $instanceId,
-                        'number' => $agency->phone,
-                        'message' => $waMessage,
-                        'caption' => $waMessage,
-                        'db' => $dbName,
-                    ]);
-                    $mobileCount++;
+                    $tokensToTry = array_values(array_unique(array_filter([
+                        $token,
+                        str_starts_with($token, 'token_') ? substr($token, 6) : 'token_' . $token,
+                    ])));
+
+                    $waSent = false;
+                    foreach ($endpointCandidates as $candEndpoint) {
+                        $sendPath = rtrim($candEndpoint, '/') . '/send_message';
+                        foreach ($tokensToTry as $currentToken) {
+                            $queryUrl = $sendPath . '?' . http_build_query([
+                                'access_token' => $currentToken,
+                                'instance_id'  => $instanceId,
+                                'db'           => $dbName,
+                            ]);
+
+                            try {
+                                $response = \Illuminate\Support\Facades\Http::asForm()
+                                    ->timeout(8)
+                                    ->withoutVerifying()
+                                    ->post($queryUrl, [
+                                        'access_token' => $currentToken,
+                                        'instance_id'  => $instanceId,
+                                        'number'       => $cleanPhone,
+                                        'message'      => $waMessage,
+                                        'caption'      => $waMessage,
+                                        'db'           => $dbName,
+                                    ]);
+
+                                if ($response->successful()) {
+                                    $waSent = true;
+                                    break 2;
+                                }
+                            } catch (\Throwable $hEx) {}
+                        }
+                    }
+
+                    if ($waSent) {
+                        $mobileCount++;
+                    }
                 } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning("Broadcast mobile notification failed for {$agency->phone}: " . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::warning("Broadcast mobile notification failed for {$cleanPhone}: " . $e->getMessage());
                 }
             }
         }
