@@ -285,6 +285,76 @@
         <!-- Main Content View Area -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
             
+            {{-- Top Header Broadcast Notice Banner --}}
+            @php
+                $activeAgencyId = auth()->user()->agency_id ?? ($agency->id ?? null);
+                $latestNotice = null;
+                if (\Illuminate\Support\Facades\Schema::hasTable('agency_broadcasts')) {
+                    $latestNotice = \App\Models\AgencyBroadcast::where('is_active', true)
+                        ->where(function($q) use ($activeAgencyId) {
+                            $q->whereNull('target_agency_id');
+                            if ($activeAgencyId) {
+                                $q->orWhere('target_agency_id', $activeAgencyId);
+                            }
+                        })
+                        ->latest()
+                        ->first();
+                }
+            @endphp
+            @if($latestNotice)
+                @php
+                    $bannerStyles = match($latestNotice->type) {
+                        'critical' => 'bg-rose-600 text-white border-rose-700',
+                        'warning'  => 'bg-amber-500 text-slate-950 border-amber-600',
+                        'success'  => 'bg-emerald-600 text-white border-emerald-700',
+                        default    => 'bg-indigo-600 text-white border-indigo-700',
+                    };
+                    $iconName = match($latestNotice->type) {
+                        'critical' => 'alert-octagon',
+                        'warning'  => 'alert-triangle',
+                        'success'  => 'check-circle-2',
+                        default    => 'bell-ring',
+                    };
+                @endphp
+                <div id="agency-top-notice-banner-{{ $latestNotice->id }}" 
+                     class="shrink-0 px-4 py-2.5 sm:px-8 border-b {{ $bannerStyles }} flex items-center justify-between shadow-md transition-all duration-300">
+                    <div class="flex items-center space-x-3 overflow-hidden pr-4">
+                        <span class="p-1 rounded-lg bg-black/10 shrink-0">
+                            <i data-lucide="{{ $iconName }}" class="w-4 h-4"></i>
+                        </span>
+                        <div class="text-xs truncate">
+                            <strong class="font-bold tracking-wide mr-1">{{ $latestNotice->title }}:</strong>
+                            <span class="opacity-95 font-medium">{{ $latestNotice->message }}</span>
+                        </div>
+                    </div>
+                    <button onclick="dismissAgencyNotice({{ $latestNotice->id }})" 
+                            class="p-1 rounded-lg hover:bg-black/10 transition-colors shrink-0 text-current" 
+                            title="Dismiss Notice">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <script>
+                    (function() {
+                        const noticeId = "{{ $latestNotice->id }}";
+                        if (localStorage.getItem('wb_notice_dismissed_' + noticeId) === 'true') {
+                            const b = document.getElementById('agency-top-notice-banner-' + noticeId);
+                            if (b) b.style.display = 'none';
+                        }
+                    })();
+                    function dismissAgencyNotice(id) {
+                        localStorage.setItem('wb_notice_dismissed_' + id, 'true');
+                        const b = document.getElementById('agency-top-notice-banner-' + id);
+                        if (b) {
+                            b.style.transition = 'all 0.3s ease-out';
+                            b.style.opacity = '0';
+                            b.style.maxHeight = '0';
+                            b.style.padding = '0';
+                            setTimeout(() => b.remove(), 300);
+                        }
+                    }
+                </script>
+            @endif
+            
             <!-- Top Navbar -->
             <header class="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between shrink-0 z-10">
                 

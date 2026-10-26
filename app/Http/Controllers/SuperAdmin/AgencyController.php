@@ -445,4 +445,138 @@ class AgencyController extends Controller
 
         return redirect()->route('admin.agencies.index')->with('success', implode(' | ', $successes));
     }
+
+    public function broadcast(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+            'type' => 'required|in:info,warning,critical,success',
+            'target_agency_id' => 'nullable|string',
+            'send_email' => 'nullable|boolean',
+            'send_mobile' => 'nullable|boolean',
+        ]);
+
+        $targetAgencyId = !empty($validated['target_agency_id']) && $validated['target_agency_id'] !== 'all'
+            ? (int) $validated['target_agency_id']
+            : null;
+
+        if (!\Illuminate\Support\Facades\Schema::hasTable('agency_broadcasts')) {
+            try {
+                \Illuminate\Support\Facades\Schema::create('agency_broadcasts', function ($table) {
+                    $table->id();
+                    $table->string('title');
+                    $table->text('message');
+                    $table->string('type')->default('info');
+                    $table->unsignedBigInteger('target_agency_id')->nullable();
+                    $table->boolean('send_email')->default(true);
+                    $table->boolean('send_mobile')->default(true);
+                    $table->boolean('is_active')->default(true);
+                    $table->unsignedBigInteger('created_by')->nullable();
+                    $table->timestamps();
+                });
+            } catch (\Throwable $e) {}
+        }
+
+        $broadcast = \App\Models\AgencyBroadcast::create([
+            'title' => $validated['title'],
+            'message' => $validated['message'],
+            'type' => $validated['type'],
+            'target_agency_id' => $targetAgencyId,
+            'send_email' => !empty($request->send_email),
+            'send_mobile' => !empty($request->send_mobile),
+            'is_active' => true,
+            'created_by' => auth()->id(),
+        ]);
+
+        $query = Agency::where('status', 'active');
+        if ($targetAgencyId) {
+            $query->where('id', $targetAgencyId);
+        }
+        $agencies = $query->get();
+
+        $emailCount = 0;
+        $mobileCount = 0;
+
+        foreach ($agencies as $agency) {
+            // Send Email Notification
+            if (!empty($request->send_email) && !empty($agency->email)) {
+                try {
+                    $toEmail = $agency->email;
+                    $subject = "Notice: " . $validated['title'];
+                    $noticeType = strtoupper($validated['type']);
+                    $htmlBody = "
+                        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;'>
+                            <div style='padding-bottom: 12px; border-bottom: 2px solid #4f46e5;'>
+                                <span style='display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: bold; border-radius: 6px; background: #4f46e5; color: #ffffff;'>{$noticeType}</span>
+                                <h2 style='color: #1e293b; margin: 10px 0 0 0;'>{$validated['title']}</h2>
+                            </div>
+                            <div style='padding: 20px 0; color: #334155; line-height: 1.6; font-size: 14px;'>
+                                " . nl2br(e($validated['message'])) . "
+                            </div>
+                            <div style='padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;'>
+                                <p>This is an official announcement from Super Admin platform to your White-Label Agency (<strong>{$agency->name}</strong>).</p>
+                            </div>
+                        </div>
+                    ";
+                    \Illuminate\Support\Facades\Mail::html($htmlBody, function ($msg) use ($toEmail, $subject) {
+                        $msg->to($toEmail)->subject($subject);
+                    });
+                    $emailCount++;
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Broadcast email failed for {$agency->email}: " . $e->getMessage());
+                }
+            }
+
+            // Send Mobile Notification (WhatsApp / SMS)
+            if (!empty($request->send_mobile) && !empty($agency->phone)) {
+                try {
+                    $waSettings = \App\Http\Controllers\SuperAdmin\WhatsAppGatewayController::getDefaultSettings();
+                    $endpoint = rtrim($waSettings['whatsapp_gateway_url'] ?? 'http://localhost:8000', '/');
+                    $token = $waSettings['whatsapp_access_token'] ?? '';
+                    $instanceId = $waSettings['whatsapp_instance_id'] ?? '';
+                    $dbName = $waSettings['whatsapp_database'] ?? 'nooryak_whatautomation';
+
+                    $waMessage = "ANNOUNCEMENT: " . $validated['title'] . "\n\n" . $validated['message'] . "\n\n– Super Admin Platform";
+
+                    $sendPath = $endpoint . '/send_message';
+                    $queryUrl = $sendPath . '?' . http_build_query([
+                        'access_token' => $token,
+                        'instance_id' => $instanceId,
+                        'db' => $dbName,
+                    ]);
+
+                    \Illuminate\Support\Facades\Http::asForm()->timeout(10)->withoutVerifying()->post($queryUrl, [
+                        'access_token' => $token,
+                        'instance_id' => $instanceId,
+                        'number' => $agency->phone,
+                        'message' => $waMessage,
+                        'caption' => $waMessage,
+                        'db' => $dbName,
+                    ]);
+                    $mobileCount++;
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Broadcast mobile notification failed for {$agency->phone}: " . $e->getMessage());
+                }
+            }
+        }
+
+        AuditLog::create([
+            'user_id' => auth()->id() ?? 1,
+            'user_name' => auth()->user()->name ?? 'Super Admin',
+            'action' => "Broadcast Notice Sent: {$validated['title']}",
+            'ip_address' => $request->ip(),
+            'details' => [
+                'broadcast_id' => $broadcast->id,
+                'target_agency' => $targetAgencyId ?: 'All',
+                'emails_sent' => $emailCount,
+                'mobiles_sent' => $mobileCount
+            ],
+        ]);
+
+        return redirect()->route('admin.agencies.index')->with(
+            'success',
+            "Broadcast notice published successfully! (Header banner active on Whitelabel Dashboard, {$emailCount} emails sent, {$mobileCount} mobile alerts sent)."
+        );
+    }
 }

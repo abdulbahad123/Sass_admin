@@ -210,6 +210,7 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     // Agencies & Master Plan Agencies Management
     Route::get('/agencies', [AgencyController::class, 'index'])->name('agencies.index');
     Route::post('/agencies', [AgencyController::class, 'store'])->name('agencies.store');
+    Route::post('/agencies/broadcast', [AgencyController::class, 'broadcast'])->name('agencies.broadcast');
     Route::put('/agencies/{agency}', [AgencyController::class, 'update'])->name('agencies.update');
     Route::patch('/agencies/{agency}/products/{product}', [AgencyController::class, 'toggleProductAccess'])->name('agencies.toggle-product');
     Route::post('/agencies/{agency}/reprovision-db', [AgencyController::class, 'reprovisionDatabase'])->name('agencies.reprovision-db');

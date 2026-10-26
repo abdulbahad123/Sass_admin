@@ -4,6 +4,11 @@
 @section('page_title', 'Master Agencies & White-Label Agencies Management')
 
 @section('header_actions')
+<div class="flex items-center space-x-2">
+<button onclick="document.getElementById('broadcastModal').classList.remove('hidden')" class="px-2.5 py-1.5 sm:px-4 sm:py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-amber-500/25 flex items-center space-x-1.5 sm:space-x-2 transition-all whitespace-nowrap">
+    <i data-lucide="megaphone" class="w-4 h-4"></i>
+    <span>Broadcast Notice</span>
+</button>
 @if(auth()->user()->hasPermission('create-agencies'))
 <button onclick="document.getElementById('createAgencyModal').classList.remove('hidden')" 
         class="px-2.5 py-1.5 sm:px-4 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-1.5 sm:space-x-2 transition-all whitespace-nowrap">
@@ -11,6 +16,7 @@
     <span>Onboard Agency</span>
 </button>
 @endif
+</div>
 @endsection
 
 @section('content')
@@ -246,7 +252,7 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Owner Full Name</label>
                     <input type="text" name="owner_name" placeholder="John Doe" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
@@ -254,6 +260,10 @@
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Owner Email</label>
                     <input type="email" name="email" placeholder="owner@agency.com" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Owner Mobile Number</label>
+                    <input type="text" name="phone" placeholder="+91 9876543210" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
                 </div>
             </div>
 
@@ -344,10 +354,14 @@
                 </select>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Owner Full Name</label>
                     <input type="text" id="ea_owner_name" name="owner_name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Owner Mobile Number</label>
+                    <input type="text" id="ea_phone" name="phone" placeholder="+91 9876543210" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Account Status</label>
@@ -394,6 +408,86 @@
         </form>
     </div>
 </div>
+
+<!-- Broadcast Notice Modal -->
+<div id="broadcastModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                    <i data-lucide="megaphone" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-heading">Broadcast Notice & Push Alert</h3>
+                    <p class="text-xs text-slate-500">Send announcements to White-Label Agencies across all channels</p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('broadcastModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('admin.agencies.broadcast') }}" method="POST" class="space-y-4">
+            @csrf
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Target Recipients</label>
+                    <select name="target_agency_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-semibold">
+                        <option value="all">📢 All Active White-Label Agencies</option>
+                        @foreach($agencies as $ag)
+                            <option value="{{ $ag->id }}">{{ $ag->name }} ({{ $ag->owner_name }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Notice Priority / Type</label>
+                    <select name="type" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-semibold">
+                        <option value="info">🔵 General Info / Update</option>
+                        <option value="warning" selected>🟡 High Priority Announcement</option>
+                        <option value="critical">🔴 Critical Alert / Maintenance</option>
+                        <option value="success">🟢 Feature Launch / Success</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Notice Title / Subject <span class="text-rose-500">*</span></label>
+                <input type="text" name="title" placeholder="e.g. Scheduled System Maintenance / New AI Engine Update" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-medium">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Announcement Message <span class="text-rose-500">*</span></label>
+                <textarea name="message" rows="4" placeholder="Type your broadcast announcement message here..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900"></textarea>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <p class="text-xs font-bold text-slate-800">Dispatch Channels:</p>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" checked disabled class="rounded bg-slate-200 border-slate-300 text-indigo-600">
+                    <span class="font-semibold text-slate-900">📌 Top Header Notice Banner on Whitelabel Dashboard</span>
+                    <span class="text-[10px] text-slate-400">(Agency can dismiss with close button)</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="send_email" value="1" checked class="rounded bg-slate-100 border-slate-300 text-indigo-600">
+                    <span>✉️ Send Email to Agency Owner Registered Email</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="send_mobile" value="1" checked class="rounded bg-slate-100 border-slate-300 text-indigo-600">
+                    <span>📱 Send WhatsApp / SMS Alert to Agency Owner Registered Mobile</span>
+                </label>
+            </div>
+
+            <div class="pt-4 flex items-center justify-end space-x-3">
+                <button type="button" onclick="document.getElementById('broadcastModal').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-amber-500/25 flex items-center space-x-2">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Send Broadcast Notice</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endpush
 
 @push('scripts')
@@ -404,6 +498,7 @@
         document.getElementById('ea_type').value = agency.type || 'white_label';
         document.getElementById('ea_parent_id').value = agency.parent_id || '';
         document.getElementById('ea_owner_name').value = agency.owner_name || '';
+        document.getElementById('ea_phone').value = agency.phone || '';
         document.getElementById('ea_status').value = agency.status || 'active';
         document.getElementById('ea_custom_domain').value = agency.custom_domain || '';
         document.getElementById('ea_max_clients').value = agency.max_clients || 100;
@@ -413,5 +508,85 @@
         document.getElementById('editAgencyModal').classList.remove('hidden');
     }
 </script>
+
+<!-- Broadcast Notice Modal -->
+<div id="broadcastModal" class="fixed inset-0 z-[100] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                    <i data-lucide="megaphone" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 font-heading">Broadcast Notice & Push Alert</h3>
+                    <p class="text-xs text-slate-500">Send announcements to White-Label Agencies across all channels</p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('broadcastModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('admin.agencies.broadcast') }}" method="POST" class="space-y-4">
+            @csrf
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Target Recipients</label>
+                    <select name="target_agency_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-semibold">
+                        <option value="all">📢 All Active White-Label Agencies</option>
+                        @foreach($agencies as $ag)
+                            <option value="{{ $ag->id }}">{{ $ag->name }} ({{ $ag->owner_name }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Notice Priority / Type</label>
+                    <select name="type" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-semibold">
+                        <option value="info">🔵 General Info / Update</option>
+                        <option value="warning" selected>🟡 High Priority Announcement</option>
+                        <option value="critical">🔴 Critical Alert / Maintenance</option>
+                        <option value="success">🟢 Feature Launch / Success</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Notice Title / Subject <span class="text-rose-500">*</span></label>
+                <input type="text" name="title" placeholder="e.g. Scheduled System Maintenance / New AI Engine Update" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-medium">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Announcement Message <span class="text-rose-500">*</span></label>
+                <textarea name="message" rows="4" placeholder="Type your broadcast announcement message here..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900"></textarea>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <p class="text-xs font-bold text-slate-800">Dispatch Channels:</p>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" checked disabled class="rounded bg-slate-200 border-slate-300 text-indigo-600">
+                    <span class="font-semibold text-slate-900">📌 Top Header Notice Banner on Whitelabel Dashboard</span>
+                    <span class="text-[10px] text-slate-400">(Agency can dismiss with close button)</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="send_email" value="1" checked class="rounded bg-slate-100 border-slate-300 text-indigo-600">
+                    <span>✉️ Send Email to Agency Owner Registered Email</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="send_mobile" value="1" checked class="rounded bg-slate-100 border-slate-300 text-indigo-600">
+                    <span>📱 Send WhatsApp / SMS Alert to Agency Owner Registered Mobile</span>
+                </label>
+            </div>
+
+            <div class="pt-4 flex items-center justify-end space-x-3">
+                <button type="button" onclick="document.getElementById('broadcastModal').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-amber-500/25 flex items-center space-x-2">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Send Broadcast Notice</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endpush
 @endsection
