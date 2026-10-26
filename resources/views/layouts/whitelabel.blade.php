@@ -303,35 +303,57 @@
             @endphp
             @if($latestNotice)
                 @php
-                    $bannerStyles = match($latestNotice->type) {
-                        'critical' => 'bg-rose-600 text-white border-rose-700',
-                        'warning'  => 'bg-amber-500 text-slate-950 border-amber-600',
-                        'success'  => 'bg-emerald-600 text-white border-emerald-700',
-                        default    => 'bg-indigo-600 text-white border-indigo-700',
-                    };
-                    $iconName = match($latestNotice->type) {
-                        'critical' => 'alert-octagon',
-                        'warning'  => 'alert-triangle',
-                        'success'  => 'check-circle-2',
-                        default    => 'bell-ring',
+                    $themeConfig = match($latestNotice->type) {
+                        'critical' => [
+                            'bar' => 'bg-gradient-to-r from-rose-950 via-slate-900 to-rose-950 border-b border-rose-500/40 text-rose-50 shadow-lg shadow-rose-950/20',
+                            'badge' => 'bg-rose-500/20 text-rose-300 border border-rose-500/40',
+                            'dot' => 'bg-rose-400',
+                            'icon' => 'alert-octagon',
+                            'label' => 'Critical Alert'
+                        ],
+                        'warning' => [
+                            'bar' => 'bg-gradient-to-r from-amber-950 via-slate-900 to-amber-950 border-b border-amber-500/40 text-amber-50 shadow-lg shadow-amber-950/20',
+                            'badge' => 'bg-amber-500/20 text-amber-300 border border-amber-500/40',
+                            'dot' => 'bg-amber-400',
+                            'icon' => 'alert-triangle',
+                            'label' => 'Announcement'
+                        ],
+                        'success' => [
+                            'bar' => 'bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 border-b border-emerald-500/40 text-emerald-50 shadow-lg shadow-emerald-950/20',
+                            'badge' => 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40',
+                            'dot' => 'bg-emerald-400',
+                            'icon' => 'check-circle-2',
+                            'label' => 'New Update'
+                        ],
+                        default => [
+                            'bar' => 'bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 border-b border-indigo-500/40 text-indigo-50 shadow-lg shadow-indigo-950/20',
+                            'badge' => 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40',
+                            'dot' => 'bg-indigo-400',
+                            'icon' => 'bell-ring',
+                            'label' => 'Platform Notice'
+                        ],
                     };
                 @endphp
                 <div id="agency-top-notice-banner-{{ $latestNotice->id }}" 
-                     class="shrink-0 px-4 py-2.5 sm:px-8 border-b {{ $bannerStyles }} flex items-center justify-between shadow-md transition-all duration-300">
-                    <div class="flex items-center space-x-3 overflow-hidden pr-4">
-                        <span class="p-1 rounded-lg bg-black/10 shrink-0">
-                            <i data-lucide="{{ $iconName }}" class="w-4 h-4"></i>
-                        </span>
-                        <div class="text-xs truncate">
-                            <strong class="font-bold tracking-wide mr-1">{{ $latestNotice->title }}:</strong>
-                            <span class="opacity-95 font-medium">{{ $latestNotice->message }}</span>
+                     class="shrink-0 relative overflow-hidden px-4 py-2.5 sm:px-8 {{ $themeConfig['bar'] }} transition-all duration-300 z-20">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 max-w-7xl mx-auto">
+                        <div class="flex items-start sm:items-center space-x-3 overflow-hidden min-w-0 pr-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider {{ $themeConfig['badge'] }} shrink-0 mt-0.5 sm:mt-0">
+                                <span class="w-1.5 h-1.5 rounded-full {{ $themeConfig['dot'] }} animate-pulse mr-1.5"></span>
+                                <i data-lucide="{{ $themeConfig['icon'] }}" class="w-3 h-3 mr-1"></i>
+                                {{ $themeConfig['label'] }}
+                            </span>
+                            <div class="text-xs text-slate-100 min-w-0 flex-1 leading-snug">
+                                <span class="font-bold text-white mr-1.5">{{ $latestNotice->title }}:</span>
+                                <span class="text-slate-200 font-medium break-words">{{ $latestNotice->message }}</span>
+                            </div>
                         </div>
+                        <button onclick="dismissAgencyNotice({{ $latestNotice->id }})" 
+                                class="self-end sm:self-center p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-all shrink-0 focus:outline-none" 
+                                title="Dismiss notice">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <button onclick="dismissAgencyNotice({{ $latestNotice->id }})" 
-                            class="p-1 rounded-lg hover:bg-black/10 transition-colors shrink-0 text-current" 
-                            title="Dismiss Notice">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </button>
                 </div>
                 <script>
                     (function() {
@@ -354,7 +376,6 @@
                     }
                 </script>
             @endif
-            
             <!-- Top Navbar -->
             <header class="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between shrink-0 z-10">
                 

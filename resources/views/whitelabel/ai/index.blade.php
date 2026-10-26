@@ -71,8 +71,8 @@
                 <div class="flex items-center space-x-2">
                     <label class="text-xs font-semibold text-slate-600">Engine Status:</label>
                     <select name="is_gemini_active" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 focus:outline-none">
-                        <option value="1" {{ ($isGeminiActive ?? 1) == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ ($isGeminiActive ?? 1) == 0 ? 'selected' : '' }}>Deactive</option>
+                        <option value="1" {{ (!empty($geminiApiKey) && ($isGeminiActive ?? 0) == 1) ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ (empty($geminiApiKey) || ($isGeminiActive ?? 0) == 0) ? 'selected' : '' }}>Deactive</option>
                     </select>
                 </div>
             </div>
@@ -104,8 +104,8 @@
                 <div class="flex items-center space-x-2">
                     <label class="text-xs font-semibold text-slate-600">Engine Status:</label>
                     <select name="is_openai_active" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 focus:outline-none">
-                        <option value="1" {{ ($isOpenaiActive ?? 1) == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ ($isOpenaiActive ?? 1) == 0 ? 'selected' : '' }}>Deactive</option>
+                        <option value="1" {{ (!empty($openaiApiKey) && ($isOpenaiActive ?? 0) == 1) ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ (empty($openaiApiKey) || ($isOpenaiActive ?? 0) == 0) ? 'selected' : '' }}>Deactive</option>
                     </select>
                 </div>
             </div>

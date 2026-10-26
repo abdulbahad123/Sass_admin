@@ -95,10 +95,10 @@ class WhiteLabelGeneralController extends Controller
             $updateData['openai_api_key'] = $request->input('openai_api_key');
         }
         if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
-            $updateData['is_gemini_active'] = $request->has('is_gemini_active') ? (int)$request->input('is_gemini_active') : 1;
+            $updateData['is_gemini_active'] = !empty($request->input('gemini_api_key')) ? (int)$request->input('is_gemini_active', 1) : 0;
         }
         if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_openai_active')) {
-            $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : 1;
+            $updateData['is_openai_active'] = !empty($request->input('openai_api_key')) ? (int)$request->input('is_openai_active', 1) : 0;
         }
 
         $agency->update($updateData);
@@ -219,17 +219,17 @@ class WhiteLabelGeneralController extends Controller
                         ->where('user_id', $selectedClient['id'])
                         ->first();
                     if ($bs) {
-                        $isGeminiActive = $bs->is_gemini ?? 1;
+                        $isGeminiActive = !empty($bs->gemini_api_key) ? ($bs->is_gemini ?? 0) : 0;
                         $geminiApiKey = $bs->gemini_api_key ?? '';
-                        $isOpenaiActive = $bs->is_openai ?? 1;
+                        $isOpenaiActive = !empty($bs->openai_api_key) ? ($bs->is_openai ?? 0) : 0;
                         $openaiApiKey = $bs->openai_api_key ?? '';
                     }
                 } catch (\Throwable $e) {}
             }
         } else {
-            $isGeminiActive = $agency->is_gemini_active ?? 1;
+            $isGeminiActive = !empty($agency->gemini_api_key) ? ($agency->is_gemini_active ?? 0) : 0;
             $geminiApiKey = $agency->gemini_api_key ?? '';
-            $isOpenaiActive = $agency->is_openai_active ?? 1;
+            $isOpenaiActive = !empty($agency->openai_api_key) ? ($agency->is_openai_active ?? 0) : 0;
             $openaiApiKey = $agency->openai_api_key ?? '';
         }
 
@@ -319,10 +319,10 @@ class WhiteLabelGeneralController extends Controller
             $updateData['openai_api_key'] = $request->input('openai_api_key');
         }
         if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
-            $updateData['is_gemini_active'] = $request->has('is_gemini_active') ? (int)$request->input('is_gemini_active') : 1;
+            $updateData['is_gemini_active'] = !empty($request->input('gemini_api_key')) ? (int)$request->input('is_gemini_active', 1) : 0;
         }
         if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_openai_active')) {
-            $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : 1;
+            $updateData['is_openai_active'] = !empty($request->input('openai_api_key')) ? (int)$request->input('is_openai_active', 1) : 0;
         }
 
         $agency->update($updateData);
