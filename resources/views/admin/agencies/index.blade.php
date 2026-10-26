@@ -34,10 +34,6 @@
                class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all {{ !$type ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200' }}">
                 All Agencies
             </a>
-            <a href="{{ route('admin.agencies.index', ['type' => 'master']) }}" 
-               class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all {{ $type === 'master' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200' }}">
-                Master Agencies
-            </a>
             <a href="{{ route('admin.agencies.index', ['type' => 'white_label']) }}" 
                class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all {{ $type === 'white_label' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200' }}">
                 White Label Resellers

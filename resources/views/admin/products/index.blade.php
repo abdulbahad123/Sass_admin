@@ -3,14 +3,6 @@
 @section('title', 'SaaS Products Catalog')
 @section('page_title', 'SaaS Products Directory & Ecombuilder')
 
-@section('header_actions')
-<button onclick="document.getElementById('createProductModal').classList.remove('hidden')" 
-        class="px-2.5 py-1.5 sm:px-4 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center space-x-1.5 sm:space-x-2 transition-all whitespace-nowrap">
-    <i data-lucide="plus" class="w-4 h-4"></i>
-    <span>Add Product</span>
-</button>
-@endsection
-
 @section('content')
 <div class="space-y-8" x-data="{ editingProduct: null }">
 
