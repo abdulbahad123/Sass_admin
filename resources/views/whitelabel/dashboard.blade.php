@@ -93,14 +93,6 @@
                 <p class="text-xs text-slate-500">Live breakdown of onboarded end-clients per agency product database</p>
             </div>
             <div class="flex items-center space-x-2">
-                <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
                 <span class="px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {{ count($productCards ?? []) }} Products Registered
                 </span>
@@ -155,21 +147,23 @@
         <!-- Revenue Overview Line Chart (5 Cols) -->
         <div class="lg:col-span-5 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center justify-between mb-2">
                     <h3 class="text-base font-bold text-slate-900 font-heading">Revenue Overview</h3>
-                    <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
+                    <select id="revenuePeriodSelect" onchange="setRevenueFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                        <option value="all" {{ ($revenuePeriod ?? "all") == "all" ? "selected" : "" }}>All Time</option>
+                        <option value="today" {{ ($revenuePeriod ?? "") == "today" ? "selected" : "" }}>Today</option>
+                        <option value="yesterday" {{ ($revenuePeriod ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
+                        <option value="week" {{ ($revenuePeriod ?? "") == "week" ? "selected" : "" }}>This Week</option>
+                        <option value="month" {{ ($revenuePeriod ?? "") == "month" ? "selected" : "" }}>This Month</option>
+                        <option value="custom" {{ ($revenuePeriod ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
                     </select>
                 </div>
                 <div class="flex items-baseline space-x-2">
-                    <span class="text-2xl font-extrabold text-slate-900 font-heading">₹{{ number_format($mrr) }}</span>
-                    <span class="text-xs font-bold text-emerald-600 flex items-center">
-                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ 24.6% <span class="text-slate-400 font-normal ml-1">vs last month</span>
+                    <span id="revenueOverviewAmount" class="text-2xl font-extrabold text-slate-900 font-heading">₹{{ number_format($revenueOverviewAmount ?? $mrr) }}</span>
+                    <span id="revenueOverviewBadge" class="text-xs font-bold {{ ($revChangeDirection ?? 'up') === 'down' ? 'text-rose-600' : 'text-emerald-600' }} flex items-center">
+                        <i data-lucide="{{ ($revChangeDirection ?? 'up') === 'down' ? 'arrow-down-right' : 'arrow-up-right' }}" class="w-3.5 h-3.5 mr-0.5"></i> 
+                        {{ ($revChangeDirection ?? 'up') === 'down' ? '↓' : '↑' }} {{ $revChangePct ?? '0' }}% 
+                        <span class="text-slate-400 font-normal ml-1">vs last month</span>
                     </span>
                 </div>
             </div>
@@ -184,14 +178,6 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Product Usage</h3>
-                <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
             </div>
             
             <div class="h-44 relative flex items-center justify-center">
@@ -220,14 +206,6 @@
         <div class="lg:col-span-3 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Top Performing Products</h3>
-                <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
             </div>
 
             <div class="space-y-4">
@@ -243,10 +221,10 @@
                                     <span class="text-[10px] text-slate-400">{{ $pu['clients'] }} Clients</span>
                                 </div>
                             </div>
-                            <span class="font-bold text-slate-900 text-xs">{{ $pu['progress'] }}%</span>
+                            <span class="font-bold text-slate-900 text-xs">{{ $pu['percentage'] }}%</span>
                         </div>
                         <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                            <div class="h-full rounded-full" style="width: {{ $pu['progress'] }}%; background-color: {{ $pu['color'] }};"></div>
+                            <div class="h-full rounded-full" style="width: {{ $pu['percentage'] }}%; background-color: {{ $pu['color'] }};"></div>
                         </div>
                     </div>
                 @endforeach
@@ -262,19 +240,9 @@
         <div class="lg:col-span-7 card-white rounded-2xl p-6">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Recent Clients</h3>
-                <div class="flex items-center space-x-2">
-                    <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
-                    <a href="{{ route('whitelabel.clients.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition">
+                <a href="{{ route('whitelabel.clients.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition">
                         View All Clients
                     </a>
-                </div>
             </div>
 
             <div class="overflow-x-auto">
@@ -338,19 +306,9 @@
         <div class="lg:col-span-5 card-white rounded-2xl p-6">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Recent Activity</h3>
-                <div class="flex items-center space-x-2">
-                    <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
-                    <a href="{{ route('whitelabel.activity-logs.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition">
+                <a href="{{ route('whitelabel.activity-logs.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition">
                         View All Activity
                     </a>
-                </div>
             </div>
 
             <div class="space-y-4">
@@ -386,14 +344,6 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Subscription Status</h3>
-                <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -404,7 +354,7 @@
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Active</span>
                     <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['active'] }}</span>
-                    <span class="inline-block text-[10px] font-bold text-emerald-600 mt-1">↑ {{ $subscriptionStatus['active_change'] }}</span>
+                    
                 </div>
 
                 <!-- Expiring Soon -->
@@ -414,7 +364,7 @@
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Expiring Soon</span>
                     <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['expiring'] }}</span>
-                    <span class="inline-block text-[10px] font-bold text-rose-600 mt-1">↓ {{ $subscriptionStatus['expiring_change'] }}</span>
+                    
                 </div>
 
                 <!-- Cancelled -->
@@ -424,7 +374,7 @@
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Cancelled</span>
                     <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['cancelled'] }}</span>
-                    <span class="inline-block text-[10px] font-bold text-rose-600 mt-1">↓ {{ $subscriptionStatus['cancelled_change'] }}</span>
+                    
                 </div>
 
                 <!-- Trial -->
@@ -434,7 +384,7 @@
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Trial</span>
                     <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['trial'] }}</span>
-                    <span class="inline-block text-[10px] font-bold text-emerald-600 mt-1">↑ {{ $subscriptionStatus['trial_change'] }}</span>
+                    
                 </div>
             </div>
         </div>
@@ -443,14 +393,6 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Client Distribution</h3>
-                <select onchange="setDashboardFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
-                        <option value="all" {{ ($period ?? "all") == "all" ? "selected" : "" }}>All Time</option>
-                        <option value="today" {{ ($period ?? "") == "today" ? "selected" : "" }}>Today</option>
-                        <option value="yesterday" {{ ($period ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
-                        <option value="week" {{ ($period ?? "") == "week" ? "selected" : "" }}>This Week</option>
-                        <option value="month" {{ ($period ?? "") == "month" ? "selected" : "" }}>This Month</option>
-                        <option value="custom" {{ ($period ?? "") == "custom" ? "selected" : "" }}>Custom Dates...</option>
-                    </select>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
@@ -570,16 +512,44 @@
     </div>
 
     <script>
-    function setDashboardFilter(val) {
+    function setRevenueFilter(val) {
         if (val === "custom") {
             document.getElementById("customDateModal").classList.remove("hidden");
             return;
         }
         const url = new URL(window.location.href);
-        url.searchParams.set("period", val);
+        url.searchParams.set("revenue_period", val);
+        url.searchParams.delete("period");
         url.searchParams.delete("start_date");
         url.searchParams.delete("end_date");
-        window.location.href = url.toString();
+
+        fetch(url.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const amtEl = document.getElementById('revenueOverviewAmount');
+            if (amtEl) amtEl.innerText = data.amount;
+
+            const badgeEl = document.getElementById('revenueOverviewBadge');
+            if (badgeEl) {
+                const isDown = data.revChangeDirection === 'down';
+                badgeEl.className = 'text-xs font-bold ' + (isDown ? 'text-rose-600' : 'text-emerald-600') + ' flex items-center';
+                badgeEl.innerHTML = `<i data-lucide="${isDown ? 'arrow-down-right' : 'arrow-up-right'}" class="w-3.5 h-3.5 mr-0.5"></i> ${isDown ? '↓' : '↑'} ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
+            if (window.revenueChartInstance) {
+                window.revenueChartInstance.data.labels = data.revenueChartLabels;
+                window.revenueChartInstance.data.datasets[0].data = data.revenueChartData;
+                window.revenueChartInstance.update();
+            }
+
+            window.history.replaceState({}, '', url.toString());
+        })
+        .catch(() => {
+            window.location.href = url.toString();
+        });
     }
 
     function applyCustomDate(e) {
@@ -587,11 +557,41 @@
         const start = document.getElementById("custStartDate").value;
         const end = document.getElementById("custEndDate").value;
         if (!start || !end) return;
+        document.getElementById("customDateModal").classList.add("hidden");
+
         const url = new URL(window.location.href);
-        url.searchParams.set("period", "custom");
+        url.searchParams.set("revenue_period", "custom");
+        url.searchParams.delete("period");
         url.searchParams.set("start_date", start);
         url.searchParams.set("end_date", end);
-        window.location.href = url.toString();
+
+        fetch(url.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const amtEl = document.getElementById('revenueOverviewAmount');
+            if (amtEl) amtEl.innerText = data.amount;
+
+            const badgeEl = document.getElementById('revenueOverviewBadge');
+            if (badgeEl) {
+                const isDown = data.revChangeDirection === 'down';
+                badgeEl.className = 'text-xs font-bold ' + (isDown ? 'text-rose-600' : 'text-emerald-600') + ' flex items-center';
+                badgeEl.innerHTML = `<i data-lucide="${isDown ? 'arrow-down-right' : 'arrow-up-right'}" class="w-3.5 h-3.5 mr-0.5"></i> ${isDown ? '↓' : '↑'} ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
+            if (window.revenueChartInstance) {
+                window.revenueChartInstance.data.labels = data.revenueChartLabels;
+                window.revenueChartInstance.data.datasets[0].data = data.revenueChartData;
+                window.revenueChartInstance.update();
+            }
+
+            window.history.replaceState({}, '', url.toString());
+        })
+        .catch(() => {
+            window.location.href = url.toString();
+        });
     }
     </script>
 
@@ -602,7 +602,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         // Revenue Line Chart matching reference image
         const ctxRev = document.getElementById('wlRevenueChart').getContext('2d');
-        new Chart(ctxRev, {
+        window.revenueChartInstance = new Chart(ctxRev, {
             type: 'line',
             data: {
                 labels: @json($revenueChartLabels),
