@@ -439,18 +439,86 @@
             </div>
         </div>
 
-        <!-- TAB 8: TESTIMONIALS & FAQS -->
-        <div x-show="activeTab === 'faqs'" class="card-white p-6 rounded-2xl space-y-6">
-            <h3 class="font-bold text-slate-900 text-base border-b pb-3">Testimonials & FAQ Accordions</h3>
+        <!-- TAB 8: TESTIMONIALS & FAQS (Task 2: Manage White Label Partners & Clickable Domains) -->
+        <div x-show="activeTab === 'faqs'" class="card-white p-6 rounded-2xl space-y-8">
+            <div>
+                <h3 class="font-extrabold text-slate-900 text-base border-b pb-3 font-heading">White Label Partner Testimonials</h3>
+                <p class="text-xs text-slate-500 mt-1">Manage partner reviews, live domains (youverse.in, nooryak.in, cockroach.in, bullionxacademy.com), and locations.</p>
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">FAQ Tag</label>
-                    <input type="text" name="lp_faqs_tag" value="{{ $data['lp_faqs_tag'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Section Title</label>
+                    <input type="text" name="lp_testimonials_title" value="{{ $data['lp_testimonials_title'] ?? 'WHAT OUR WHITE LABEL PARTNERS SAY' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">FAQ Heading</label>
-                    <input type="text" name="lp_faqs_title" value="{{ $data['lp_faqs_title'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Section Subtitle</label>
+                    <input type="text" name="lp_testimonials_subtitle" value="{{ $data['lp_testimonials_subtitle'] ?? 'Real stories from active agencies and resellers running on our platform.' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                </div>
+            </div>
+
+            <!-- Partner Cards Repeater -->
+            <div class="space-y-4 pt-2">
+                <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider">Partner Testimonial Cards (With Live Clickable Domains)</label>
+                
+                @if(is_array($data['lp_testimonials_items']))
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    @foreach($data['lp_testimonials_items'] as $pIdx => $partner)
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3.5">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                            <span class="text-xs font-extrabold text-indigo-600">Partner #{{ $pIdx + 1 }}</span>
+                            <span class="text-[11px] text-slate-400 font-mono">{{ $partner['domain'] ?? '' }}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Brand / Agency Name</label>
+                                <input type="text" name="lp_testimonials_items[{{ $pIdx }}][name]" value="{{ $partner['name'] ?? '' }}" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Live Domain (e.g. youverse.in)</label>
+                                <input type="text" name="lp_testimonials_items[{{ $pIdx }}][domain]" value="{{ $partner['domain'] ?? '' }}" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-mono">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Live Website URL</label>
+                                <input type="text" name="lp_testimonials_items[{{ $pIdx }}][url]" value="{{ $partner['url'] ?? '' }}" placeholder="https://..." class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Role / Niche</label>
+                                <input type="text" name="lp_testimonials_items[{{ $pIdx }}][role]" value="{{ $partner['role'] ?? '' }}" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">City / Location</label>
+                            <input type="text" name="lp_testimonials_items[{{ $pIdx }}][location]" value="{{ $partner['location'] ?? '' }}" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Review Quote</label>
+                            <textarea name="lp_testimonials_items[{{ $pIdx }}][quote]" rows="3" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs leading-relaxed">{{ $partner['quote'] ?? '' }}</textarea>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+
+            <!-- FAQ Section Header -->
+            <div class="pt-6 border-t border-slate-200">
+                <h4 class="font-extrabold text-slate-900 text-sm font-heading mb-4">FAQ Section Settings</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">FAQ Tag</label>
+                        <input type="text" name="lp_faqs_tag" value="{{ $data['lp_faqs_tag'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">FAQ Heading</label>
+                        <input type="text" name="lp_faqs_title" value="{{ $data['lp_faqs_title'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                    </div>
                 </div>
             </div>
         </div>

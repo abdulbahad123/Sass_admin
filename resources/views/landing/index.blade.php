@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $data['lp_meta_title'] }}</title>
-    <meta name="description" content="{{ $data['lp_meta_description'] }}">
+    <title>{{ $data['lp_meta_title'] ?? 'SaaSReselling - Launch Your Own SaaS Business Under Your Brand' }}</title>
+    <meta name="description" content="{{ $data['lp_meta_description'] ?? 'SaaSReselling is an All-In-One White Label SaaS Platform that helps agencies, freelancers, and entrepreneurs launch their own SaaS business.' }}">
     <link rel="icon" href="{{ $data['lp_header_logo'] ?? '/assets/images/common/Logo-blue.png' }}" type="image/png">
 
     <!-- Fonts from D:\nooryak\nooryakwebsite -->
@@ -1325,6 +1325,59 @@
         </div>
     </section>
 
+    <!-- SECTION 8.5: VALUE HIGHLIGHT STRIP (Task 3: Screenshot 3 Elements & Full Mobile Responsiveness) -->
+    <section class="py-10 sm:py-14 bg-gradient-to-b from-slate-50 to-white dark:from-[#0B0F19] dark:to-[#11192e] border-t border-slate-200/90 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <!-- Card 1: Launch Faster -->
+                <div class="bg-white dark:bg-[#151c2c] rounded-2xl p-5 sm:p-6 border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center space-x-4 group">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 flex items-center justify-center text-xl flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">Launch Faster</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">Start your SaaS business in 24 hours.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Build Recurring Revenue -->
+                <div class="bg-white dark:bg-[#151c2c] rounded-2xl p-5 sm:p-6 border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:border-emerald-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center space-x-4 group">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center text-xl flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">Build Recurring Revenue</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">Monthly income, long-term growth.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Scale Without Limits -->
+                <div class="bg-white dark:bg-[#151c2c] rounded-2xl p-5 sm:p-6 border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center space-x-4 group">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-900/50 flex items-center justify-center text-xl flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">Scale Without Limits</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">More possibilities. Bigger future.</p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Trusted by Professionals -->
+                <div class="bg-white dark:bg-[#151c2c] rounded-2xl p-5 sm:p-6 border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center space-x-4 group">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50 flex items-center justify-center text-xl flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">Trusted by Professionals</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">Built for agencies, freelancers and resellers.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- SECTION 9: YOUR GROWTH PATH & TESTIMONIALS -->
     <section class="py-14 lg:py-20 bg-white dark:bg-[#0B0F19] border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
@@ -1426,47 +1479,135 @@
                 </div>
             </div>
 
-            <!-- Testimonials (Task 3: Full Width Cards on Mobile - No text truncation) -->
-            <div>
-                <div class="text-center mb-10">
-                    <span class="badge-pill mx-auto">{{ $data['lp_testimonials_tag'] }}</span>
-                    <h2 class="font-space font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tight mt-3">
-                        {{ $data['lp_testimonials_title'] }}
+            <!-- Testimonials (Task 2: Screenshot 2 Style with Clickable Live Partner Domains) -->
+            <div id="testimonials" class="pt-6">
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+                    <span class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-orange-200/80 dark:border-orange-900/60 shadow-sm mx-auto mb-3">
+                        <i class="fas fa-comments text-xs"></i>
+                        <span>{{ $data['lp_testimonials_tag'] ?? 'TESTIMONIALS' }}</span>
+                    </span>
+                    <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] text-slate-900 dark:text-white tracking-tight uppercase mt-2 leading-tight">
+                        {{ $data['lp_testimonials_title'] ?? 'WHAT OUR WHITE LABEL PARTNERS SAY' }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">{{ $data['lp_testimonials_subtitle'] }}</p>
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-3 font-medium">
+                        {{ $data['lp_testimonials_subtitle'] ?? 'Real stories from active agencies and resellers running on our platform.' }}
+                    </p>
                 </div>
 
-                <!-- Testimonials Mobile Horizontal Auto-Slider & Desktop Grid -->
-                <div class="relative max-w-full overflow-hidden">
-                    <div id="testimonialSlider" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth md:grid md:grid-cols-3 gap-6 pb-4 md:pb-0 no-scrollbar">
-                        @if(is_array($data['lp_testimonials_items']))
-                            @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
-                            <div class="testimonial-card w-full min-w-full md:min-w-0 snap-center flex-shrink-0 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-700/90 shadow-sm flex flex-col justify-between space-y-4">
-                                <div class="space-y-3">
-                                    <div class="flex items-center space-x-1 text-amber-400 text-xs">
-                                        @for($r = 0; $r < ($testi['rating'] ?? 5); $r++)
-                                            <i class="fas fa-star"></i>
-                                        @endfor
-                                    </div>
-                                    <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium break-words">"{{ $testi['quote'] ?? '' }}"</p>
+                <!-- 6 Dark Partner Cards Grid (Screenshot 2 Pixel-Perfect) -->
+                @php
+                    $partnersList = (isset($data['lp_testimonials_items']) && is_array($data['lp_testimonials_items']) && count($data['lp_testimonials_items']) >= 4)
+                        ? $data['lp_testimonials_items']
+                        : [
+                            [
+                                'name' => '1tap World',
+                                'domain' => '1tapworld.com',
+                                'url' => 'https://youverse.in',
+                                'role' => 'Digital Marketing Agency',
+                                'location' => 'Mumbai',
+                                'icon' => 'fas fa-fingerprint',
+                                'color' => '#f59e0b',
+                                'quote' => 'I was already offering digital marketing services, but I wanted something that clients would keep paying for every month. SaaSReselling gave me a much easier way to add software to my existing services without building anything from scratch. It has made my agency offering feel much more complete.'
+                            ],
+                            [
+                                'name' => 'Youverse Tech',
+                                'domain' => 'youverse.in',
+                                'url' => 'https://youverse.in',
+                                'role' => 'Digital Marketing / IT',
+                                'location' => 'Chennai',
+                                'icon' => 'fas fa-globe',
+                                'color' => '#3b82f6',
+                                'quote' => 'I was initially confused about how the whole white label SaaS model worked. After seeing the demo, everything became much clearer. I liked that I could put my own branding on the platform and offer software along with my existing services. It opened up a completely new service category for us.'
+                            ],
+                            [
+                                'name' => 'Cockroach Studio',
+                                'domain' => 'cockroach.in',
+                                'url' => 'https://cockroach.in',
+                                'role' => 'Digital Services Company',
+                                'location' => 'Delhi',
+                                'icon' => 'fas fa-bug',
+                                'color' => '#ef4444',
+                                'quote' => 'We were already helping businesses with digital solutions, so adding SaaS products to our offering made a lot of sense. What I liked about SaaSReselling was that we didn\'t have to spend months developing the software ourselves. We could focus more on our clients and sales instead of worrying about the technology.'
+                            ],
+                            [
+                                'name' => 'BullionX Academy',
+                                'domain' => 'bullionxacademy.com',
+                                'url' => 'https://bullionxacademy.com',
+                                'role' => 'Technology & Business Solutions',
+                                'location' => 'Hyderabad',
+                                'icon' => 'fas fa-coins',
+                                'color' => '#8b5cf6',
+                                'quote' => 'Being in the business & training space, I wanted to offer something beyond the usual services. Having software under our own brand gives us another way to serve our clients and build a stronger business model. The process was much simpler than I expected, and the team helped us understand everything clearly.'
+                            ],
+                            [
+                                'name' => 'TapNow India',
+                                'domain' => 'tapnow.in',
+                                'url' => 'https://nooryak.in',
+                                'role' => 'Digital Solutions / SaaS Reseller',
+                                'location' => 'Chandigarh',
+                                'icon' => 'fas fa-mobile-screen',
+                                'color' => '#06b6d4',
+                                'quote' => 'We had been looking for a way to enter the SaaS space without taking on the cost and complexity of developing software ourselves. The white label model made much more sense for us. Now we can offer multiple software solutions under our own brand while focusing our efforts on marketing and customer acquisition.'
+                            ],
+                            [
+                                'name' => 'Nooryak Media',
+                                'domain' => 'nooryak.in',
+                                'url' => 'https://nooryak.in',
+                                'role' => 'Digital Marketing & Coaching',
+                                'location' => 'Bangalore',
+                                'icon' => 'fas fa-layer-group',
+                                'color' => '#10b981',
+                                'quote' => 'SaaS is the future, and there\'s no better platform than SaaSReselling to simplify the entire process of building a scalable business. Our clients love the software and our recurring income has grown month over month.'
+                            ]
+                        ];
+                @endphp
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+                    @foreach($partnersList as $partner)
+                    <div class="rounded-3xl p-6 sm:p-8 bg-[#090E23] border border-slate-800 hover:border-orange-500/50 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                        
+                        <!-- Partner Review Quote -->
+                        <div>
+                            <div class="text-orange-500/40 text-2xl font-serif leading-none mb-3">“</div>
+                            <p class="text-xs sm:text-[13px] text-slate-300 leading-relaxed font-normal mb-6">
+                                "{{ $partner['quote'] ?? '' }}"
+                            </p>
+                        </div>
+
+                        <!-- Bottom Partner Identity Bar -->
+                        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <!-- Logo Icon -->
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-base shadow-md flex-shrink-0" style="background: {{ $partner['color'] ?? '#ff3d00' }};">
+                                    <i class="{{ $partner['icon'] ?? 'fas fa-globe' }}"></i>
                                 </div>
-                                <div class="pt-4 border-t border-slate-200 dark:border-slate-700/70 flex items-center justify-between text-xs sm:text-sm">
-                                    <span class="font-bold text-slate-900 dark:text-white">{{ $testi['name'] ?? '' }}</span>
-                                    <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">{{ $testi['role'] ?? '' }}</span>
+                                <div class="min-w-0">
+                                    <div class="flex items-center space-x-1.5">
+                                        <h5 class="font-heading font-extrabold text-sm text-white truncate">{{ $partner['name'] ?? '' }}</h5>
+                                        @if(!empty($partner['url']))
+                                        <a href="{{ $partner['url'] }}" target="_blank" rel="noopener noreferrer" class="text-orange-400 hover:text-orange-300 text-xs inline-flex items-center transition-colors" title="Visit {{ $partner['domain'] ?? 'website' }}">
+                                            <i class="fas fa-external-link-alt text-[10px]"></i>
+                                        </a>
+                                        @endif
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 truncate mt-0.5">
+                                        {{ $partner['role'] ?? 'Partner' }} • <span class="text-slate-300">{{ $partner['location'] ?? 'India' }}</span>
+                                    </p>
                                 </div>
                             </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
 
-                <!-- Mobile Slider Navigation Dots -->
-                <div id="testimonialDots" class="flex md:hidden justify-center items-center space-x-2 mt-6">
-                    @if(is_array($data['lp_testimonials_items']))
-                        @foreach($data['lp_testimonials_items'] as $tIdx => $testi)
-                        <button class="t-dot h-2.5 rounded-full transition-all duration-300 {{ $tIdx === 0 ? 'bg-[#ff3d00] w-6' : 'bg-slate-300 w-2.5' }}" data-index="{{ $tIdx }}"></button>
-                        @endforeach
-                    @endif
+                            <!-- Clickable Live Domain Pill -->
+                            @if(!empty($partner['domain']))
+                            <a href="{{ $partner['url'] ?? '#' }}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-full bg-slate-800/90 hover:bg-orange-500/20 text-orange-400 hover:text-orange-300 border border-slate-700/80 hover:border-orange-500/50 text-[10px] font-bold font-mono transition-all flex items-center space-x-1 flex-shrink-0 shadow-sm" title="Open live site">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span>{{ $partner['domain'] }}</span>
+                            </a>
+                            @endif
+                        </div>
+
+                    </div>
+                    @endforeach
                 </div>
             </div>
 

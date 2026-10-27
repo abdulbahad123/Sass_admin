@@ -342,7 +342,82 @@ class LandingPageController extends Controller
                 $curFaqs = str_ireplace('Nooryak', 'SaaSReselling', $curFaqs);
                 Setting::set('lp_faqs_items', $curFaqs);
             }
+            $curTestTitle = Setting::get('lp_testimonials_title');
+            if (empty($curTestTitle) || $curTestTitle === 'What Our Partners Say') {
+                Setting::set('lp_testimonials_title', 'WHAT OUR WHITE LABEL PARTNERS SAY');
+            }
             $curTestimonials = Setting::get('lp_testimonials_items');
+            if (empty($curTestimonials) || stripos($curTestimonials, 'youverse.in') === false || stripos($curTestimonials, 'Rohit Sharma') !== false) {
+                $genuinePartners = [
+                    [
+                        'name' => '1tap World',
+                        'domain' => '1tapworld.com',
+                        'url' => 'https://youverse.in',
+                        'role' => 'Digital Marketing Agency',
+                        'location' => 'Mumbai',
+                        'badge' => 'Verified Partner',
+                        'icon' => 'fas fa-fingerprint',
+                        'color' => '#f59e0b',
+                        'quote' => 'I was already offering digital marketing services, but I wanted something that clients would keep paying for every month. SaaSReselling gave me a much easier way to add software to my existing services without building anything from scratch. It has made my agency offering feel much more complete.'
+                    ],
+                    [
+                        'name' => 'Youverse Tech',
+                        'domain' => 'youverse.in',
+                        'url' => 'https://youverse.in',
+                        'role' => 'Digital Marketing / IT',
+                        'location' => 'Chennai',
+                        'badge' => 'Active SaaS Reseller',
+                        'icon' => 'fas fa-globe',
+                        'color' => '#3b82f6',
+                        'quote' => 'I was initially confused about how the whole white label SaaS model worked. After seeing the demo, everything became much clearer. I liked that I could put my own branding on the platform and offer software along with my existing services. It opened up a completely new service category for us.'
+                    ],
+                    [
+                        'name' => 'Cockroach Studio',
+                        'domain' => 'cockroach.in',
+                        'url' => 'https://cockroach.in',
+                        'role' => 'Digital Services Company',
+                        'location' => 'Delhi',
+                        'badge' => 'White Label Client',
+                        'icon' => 'fas fa-bug',
+                        'color' => '#ef4444',
+                        'quote' => 'We were already helping businesses with digital solutions, so adding SaaS products to our offering made a lot of sense. What I liked about SaaSReselling was that we didn\'t have to spend months developing the software ourselves. We could focus more on our clients and sales instead of worrying about the technology.'
+                    ],
+                    [
+                        'name' => 'BullionX Academy',
+                        'domain' => 'bullionxacademy.com',
+                        'url' => 'https://bullionxacademy.com',
+                        'role' => 'Technology & Business Solutions',
+                        'location' => 'Hyderabad',
+                        'badge' => 'FinTech & EduTech',
+                        'icon' => 'fas fa-coins',
+                        'color' => '#8b5cf6',
+                        'quote' => 'Being in the digital marketing space, I wanted to offer something beyond the usual services. Having software under our own brand gives us another way to serve our clients and build a stronger business model. The process was much simpler than I expected, and the team helped us understand everything clearly.'
+                    ],
+                    [
+                        'name' => 'TapNow India',
+                        'domain' => 'tapnow.in',
+                        'url' => 'https://nooryak.in',
+                        'role' => 'Digital Solutions / SaaS Reseller',
+                        'location' => 'Chandigarh',
+                        'badge' => 'Active Agency',
+                        'icon' => 'fas fa-mobile-screen',
+                        'color' => '#06b6d4',
+                        'quote' => 'We had been looking for a way to enter the SaaS space without taking on the cost and complexity of developing software ourselves. The white label model made much more sense for us. Now we can offer multiple software solutions under our own brand while focusing our efforts on marketing and customer acquisition.'
+                    ],
+                    [
+                        'name' => 'Nooryak Media',
+                        'domain' => 'nooryak.in',
+                        'url' => 'https://nooryak.in',
+                        'role' => 'Digital Marketing & Coaching',
+                        'location' => 'Bangalore',
+                        'badge' => 'Master Panel Partner',
+                        'icon' => 'fas fa-layer-group',
+                        'color' => '#10b981',
+                        'quote' => 'SaaS is the future, and there\'s no better platform than SaaSReselling to simplify the entire process of building a scalable business. Our clients love the software and our recurring income has grown month over month.'
+                    ]
+                ];
+                Setting::set('lp_testimonials_items', json_encode($genuinePartners));
+            }
             if (!empty($curTestimonials) && stripos($curTestimonials, 'Nooryak') !== false) {
                 $curTestimonials = str_ireplace('Nooryak.in', 'saasreselling.com', $curTestimonials);
                 $curTestimonials = str_ireplace('Nooryak', 'SaaSReselling', $curTestimonials);
@@ -578,7 +653,7 @@ class LandingPageController extends Controller
 
             // Testimonials
             'lp_testimonials_tag' => Setting::get('lp_testimonials_tag', 'TRUSTED BY GROWING AGENCIES'),
-            'lp_testimonials_title' => Setting::get('lp_testimonials_title', 'What Our Partners Say'),
+            'lp_testimonials_title' => Setting::get('lp_testimonials_title', 'WHAT OUR WHITE LABEL PARTNERS SAY'),
             'lp_testimonials_subtitle' => Setting::get('lp_testimonials_subtitle', 'Real success stories from real entrepreneurs.'),
             'lp_testimonials_items' => json_decode(Setting::get('lp_testimonials_items', json_encode([
                 [
@@ -618,29 +693,26 @@ class LandingPageController extends Controller
 
             // CTA Banner & Footer
             'lp_cta_banner_title' => Setting::get('lp_cta_banner_title', 'Ready to Launch Your SaaS Business?'),
-            'lp_cta_banner_subtitle' => Setting::get('lp_cta_banner_subtitle', 'Join hundreds of partners who are already building their success with Nooryak.'),
-            'lp_cta_banner_button1_text' => Setting::get('lp_cta_banner_button1_text', 'Start Your SaaS Business'),
-            'lp_cta_banner_button1_url' => Setting::get('lp_cta_banner_button1_url', '/login'),
-            'lp_cta_banner_button2_text' => Setting::get('lp_cta_banner_button2_text', 'Book a Demo'),
-            'lp_cta_banner_button2_url' => Setting::get('lp_cta_banner_button2_url', '#book-demo'),
-            'lp_cta_banner_bg', 'lp_pricing_image' => Setting::get('lp_cta_banner_bg', 'lp_pricing_image', '/assets/images/cta_background.png'),
-            'lp_footer_desc' => Setting::get('lp_footer_desc', 'Your technology partner in building profitable SaaS businesses.'),
-            'lp_contact_email' => Setting::get('lp_contact_email', 'support@nooryak.in'),
-            'lp_contact_phone' => Setting::get('lp_contact_phone', '+91 98765 43210'),
-            'lp_copyright_text' => Setting::get('lp_copyright_text', '© 2026 Nooryak Technologies. All rights reserved.'),
+            'lp_cta_banner_subtitle' => Setting::get('lp_cta_banner_subtitle', 'Join hundreds of partners who are already building recurring revenue with SaaSReselling.'),
+            'lp_cta_banner_button1_text' => Setting::get('lp_cta_banner_button1_text', 'Book Free 1:1 Live Demo'),
+            'lp_cta_banner_button1_url' => Setting::get('lp_cta_banner_button1_url', '#book-demo'),
+            'lp_cta_banner_button2_text' => Setting::get('lp_cta_banner_button2_text', 'See How It Works'),
+            'lp_cta_banner_button2_url' => Setting::get('lp_cta_banner_button2_url', '#how-it-works'),
+            'lp_cta_banner_bg' => Setting::get('lp_cta_banner_bg', '/images/revenue_calculator.png'),
+            'lp_footer_desc' => Setting::get('lp_footer_desc', 'Your technology partner in building profitable white-label SaaS businesses.'),
+            'lp_contact_email' => Setting::get('lp_contact_email', 'support@saasreselling.com'),
+            'lp_contact_phone' => Setting::get('lp_contact_phone', '+91 63749 13298'),
+            'lp_copyright_text' => Setting::get('lp_copyright_text', '© 2026 SaaSReselling. All rights reserved.'),
             'lp_fb_url' => Setting::get('lp_fb_url', '#'),
             'lp_ig_url' => Setting::get('lp_ig_url', '#'),
             'lp_yt_url' => Setting::get('lp_yt_url', '#'),
             'lp_li_url' => Setting::get('lp_li_url', '#'),
             'lp_tw_url' => Setting::get('lp_tw_url', '#'),
-            'lp_meta_title' => Setting::get('lp_meta_title', 'Nooryak - Launch Your Own SaaS Business Under Your Brand'),
-            'lp_meta_description',
-            'hero_video_url',
-            'recaptcha_site_key',
-            'recaptcha_secret_key' => Setting::get('lp_meta_description',
-            'hero_video_url',
-            'recaptcha_site_key',
-            'recaptcha_secret_key', 'Nooryak is an All-In-One White Label SaaS Platform that helps agencies, freelancers, IT companies and entrepreneurs launch their own SaaS business.')
+            'lp_meta_title' => Setting::get('lp_meta_title', 'SaaSReselling - Launch Your Own SaaS Business Under Your Brand'),
+            'lp_meta_description' => Setting::get('lp_meta_description', 'SaaSReselling is an All-In-One White Label SaaS Platform that helps agencies, freelancers, and entrepreneurs launch their own SaaS business.'),
+            'hero_video_url' => Setting::get('hero_video_url', 'https://www.youtube.com/embed/dQw4w9WgXcQ'),
+            'recaptcha_site_key' => Setting::get('recaptcha_site_key', ''),
+            'recaptcha_secret_key' => Setting::get('recaptcha_secret_key', '')
         ];
     }
 }
