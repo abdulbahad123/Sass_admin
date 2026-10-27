@@ -238,8 +238,23 @@ class LandingPageController extends Controller
             }
 
             $curBadge = Setting::get('lp_hero_announcement_badge');
-            if (empty($curBadge) || stripos($curBadge, 'FOR AGENCIES') !== false && stripos($curBadge, 'BUILT FOR') === false) {
-                Setting::set('lp_hero_announcement_badge', 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS');
+            if (empty($curBadge) || strpos($curBadge, '·') !== false || stripos($curBadge, 'FOR AGENCIES') !== false && strpos($curBadge, '|') === false) {
+                Setting::set('lp_hero_announcement_badge', 'BUILT FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS');
+            }
+
+            $curAboutTag = Setting::get('lp_about_tag');
+            if (empty($curAboutTag) || stripos($curAboutTag, 'NOORYAK') !== false) {
+                Setting::set('lp_about_tag', 'ABOUT SAASRESELLING');
+            }
+
+            $curAboutTitle = Setting::get('lp_about_title');
+            if (empty($curAboutTitle) || stripos($curAboutTitle, 'SaaS Success') !== false) {
+                Setting::set('lp_about_title', 'Your Partner in <br><span class="text-[#ff3d00]">SaaS Growth</span>');
+            }
+
+            $curAboutDesc = Setting::get('lp_about_desc');
+            if (empty($curAboutDesc) || stripos($curAboutDesc, 'Nooryak is an All-In-One') !== false) {
+                Setting::set('lp_about_desc', 'SaaSReselling helps agencies, freelancers, and entrepreneurs launch their own software brand with 3 ready-to-sell white-label solutions. Manage your offerings through one unified platform, with your own branding and customer experience—without the complexity of building or maintaining the technology yourself.');
             }
         } catch (\Exception $e) {
             // Safe fallback if DB is temporarily unreachable
@@ -256,7 +271,7 @@ class LandingPageController extends Controller
             'lp_cta_button_url' => Setting::get('lp_cta_button_url', '/login'),
 
             // Hero
-            'lp_hero_announcement_badge' => Setting::get('lp_hero_announcement_badge', 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS'),
+            'lp_hero_announcement_badge' => Setting::get('lp_hero_announcement_badge', 'BUILT FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS'),
             'lp_hero_title' => Setting::get('lp_hero_title', 'Turn Your Agency Into a <br><span class="text-[#ff3d00]">SaaS Software Brand</span>'),
             'lp_hero_subtitle' => Setting::get('lp_hero_subtitle', 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.'),
             'lp_hero_cta1_text' => Setting::get('lp_hero_cta1_text', 'Start Your SaaS Business'),
@@ -279,10 +294,11 @@ class LandingPageController extends Controller
                 ['count' => '24/7', 'label' => 'EXPERT SUPPORT', 'icon' => 'fas fa-headset']
             ])), true),
 
-            // About
-            'lp_about_tag' => Setting::get('lp_about_tag', 'ABOUT NOORYAK'),
-            'lp_about_title' => Setting::get('lp_about_title', 'Your Partner in SaaS Success'),
-            'lp_about_desc' => Setting::get('lp_about_desc', 'Nooryak is an All-In-One White Label SaaS Platform built for agencies, freelancers, IT companies and entrepreneurs who want to launch their own SaaS business under their own brand. With 5 powerful White Label SaaS products, a unified dashboard, custom branding and complete white-label control, we provide everything you need to build a scalable business and generate recurring revenue.'),
+            // About (Task 3: Reference Image Design)
+            'lp_about_tag' => Setting::get('lp_about_tag', 'ABOUT SAASRESELLING'),
+            'lp_about_title' => Setting::get('lp_about_title', 'Your Partner in <br><span class="text-[#ff3d00]">SaaS Growth</span>'),
+            'lp_about_desc' => Setting::get('lp_about_desc', 'SaaSReselling helps agencies, freelancers, and entrepreneurs launch their own software brand with 3 ready-to-sell white-label solutions. Manage your offerings through one unified platform, with your own branding and customer experience—without the complexity of building or maintaining the technology yourself.'),
+            'lp_about_tagline' => Setting::get('lp_about_tagline', 'Your Brand. Our Technology. Built for Recurring Revenue.'),
             'lp_about_image' => Setting::get('lp_about_image', '/assets/images/about_right.png'),
             'lp_about_features' => json_decode(Setting::get('lp_about_features', json_encode([
                 ['title' => 'Trusted Technology', 'icon' => 'fas fa-shield-halved'],
@@ -304,7 +320,7 @@ class LandingPageController extends Controller
                     'features' => [
                         'Launch Your Own SaaS Brand',
                         'Sell Unlimited Subscriptions',
-                        'SaaS Products Included',
+                        '3 SaaS Products Included',
                         'Manage Your Customers & Business',
                         'Custom Domain & Branding',
                         'Build Recurring Revenue'

@@ -149,7 +149,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-2">Hero Top Audience Badge</label>
-                    <input type="text" name="lp_hero_announcement_badge" value="{{ $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 font-medium">
+                    <input type="text" name="lp_hero_announcement_badge" value="{{ $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 font-medium">
                 </div>
 
                 <div>
@@ -264,7 +264,7 @@
                         @php
                             $featuresText = (isset($mCard['features']) && is_array($mCard['features']) && count($mCard['features']) > 0)
                                 ? implode("\n", $mCard['features'])
-                                : "Launch Your Own SaaS Brand\nSell Unlimited Subscriptions\nSaaS Products Included\nManage Your Customers & Business\nCustom Domain & Branding\nBuild Recurring Revenue";
+                                : "Launch Your Own SaaS Brand\nSell Unlimited Subscriptions\n3 SaaS Products Included\nManage Your Customers & Business\nCustom Domain & Branding\nBuild Recurring Revenue";
                         @endphp
                         <textarea name="lp_model_cards[{{ $mIndex }}][features_raw]" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs font-mono">{{ $featuresText }}</textarea>
                     </div>
