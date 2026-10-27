@@ -179,7 +179,7 @@
                             <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
                                 <i class="fas fa-layer-group text-xl sm:text-2xl"></i>
                             </div>
-                            <span class="font-heading font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">Nooryak</span>
+                            <span class="font-heading font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">SaaSReselling</span>
                         </div>
                     @endif
                 </a>
@@ -390,7 +390,7 @@
                 <!-- Right Hero Image Graphic (Enlarged by ~20%, Contained Within 6-Col Right Area) -->
                 <div class="lg:col-span-6 min-w-0 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
                     <div class="relative z-10 w-full min-w-0 flex items-center justify-center lg:justify-end">
-                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="Nooryak SaaS Platform" class="w-full h-auto max-h-[600px] sm:max-h-[720px] lg:max-h-[820px] xl:max-h-[900px] object-contain object-center lg:object-right transition-transform duration-500 lg:scale-125">
+                        <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="SaaSReselling Platform" class="w-full h-auto max-h-[600px] sm:max-h-[720px] lg:max-h-[820px] xl:max-h-[900px] object-contain object-center lg:object-right transition-transform duration-500 lg:scale-125">
                     </div>
                 </div>
 
@@ -406,12 +406,23 @@
                     $stats = (!empty($data['lp_stats_bar']) && is_array($data['lp_stats_bar']) && count($data['lp_stats_bar']) > 0) 
                         ? $data['lp_stats_bar'] 
                         : [
-                            ['count' => '500+', 'label' => 'ACTIVE PARTNERS', 'icon' => 'fas fa-users'],
+                            ['count' => '100%', 'label' => 'WHITE-LABEL SOLUTION', 'icon' => 'fas fa-shield-alt'],
                             ['count' => '50K+', 'label' => 'BUSINESSES SERVED', 'icon' => 'fas fa-building'],
-                            ['count' => '5', 'label' => 'POWERFUL SAAS PRODUCTS', 'icon' => 'fas fa-cube'],
+                            ['count' => '3', 'label' => 'POWERFUL SAAS PRODUCTS', 'icon' => 'fas fa-cube'],
                             ['count' => '99.9%', 'label' => 'UPTIME GUARANTEE', 'icon' => 'fas fa-shield-alt'],
                             ['count' => '24/7', 'label' => 'EXPERT SUPPORT', 'icon' => 'fas fa-headset']
                         ];
+                    // Task 3: Guarantee 100% WHITE-LABEL SOLUTION and 3 POWERFUL SAAS PRODUCTS
+                    foreach ($stats as &$stItem) {
+                        if (isset($stItem['label']) && (stripos($stItem['label'], 'ACTIVE PARTNERS') !== false || stripos($stItem['label'], 'PARTNERS') !== false)) {
+                            $stItem['count'] = '100%';
+                            $stItem['label'] = 'WHITE-LABEL SOLUTION';
+                            $stItem['icon'] = 'fas fa-shield-alt';
+                        }
+                        if (isset($stItem['label']) && stripos($stItem['label'], 'POWERFUL SAAS PRODUCTS') !== false) {
+                            $stItem['count'] = '3';
+                        }
+                    }
                 @endphp
                 @foreach($stats as $stat)
                 <div class="flex items-center space-x-3 p-2 sm:p-2.5 rounded-xl">
@@ -496,7 +507,7 @@
                 <!-- Right Graphic matching Reference Image 4 -->
                 <div class="lg:col-span-6 flex items-center justify-center">
                     <div class="relative w-full">
-                        <img src="{{ asset($data['lp_about_image'] ?? '/assets/images/about_right.png') }}" alt="About SaaSReselling" class="w-full h-auto rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 object-contain">
+                        <img src="{{ asset($data['lp_about_image'] ?? '/assets/images/about_right.png') }}" alt="About SaaSReselling" class="w-full h-auto rounded-3xl border border-slate-100 dark:border-slate-800 object-contain">
                     </div>
                 </div>
 
@@ -504,27 +515,41 @@
         </div>
     </section>
 
-    <!-- SECTION 4: WHITE LABEL SAAS PARTNER & MASTER PANEL CARDS (Task 2: Increased Typography, Reduced Whitespace & "3 SaaS Products Included") -->
-    <section class="py-8 lg:py-12 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
+    <!-- SECTION 4: WHITE LABEL SAAS PARTNER (Task 1: Detailed Left Explanation & Mobile Responsive) -->
+    <section class="py-10 sm:py-12 lg:py-16 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Card 1: White Label SaaS Partner Card (Active) -->
             @php $model = $data['lp_model_cards'][0] ?? null; @endphp
             @if($model)
-            <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-7 sm:p-10 lg:p-12 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
+            <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-9 lg:p-12 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
                 <div class="text-left">
-                    <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-4 bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200/80 dark:border-indigo-700/50">
+                    <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-3.5 bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200/80 dark:border-indigo-700/50">
                         {{ $model['badge'] ?? 'White Label SaaS' }}
                     </span>
-                    <h3 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[42px] text-slate-900 dark:text-white mb-3 tracking-tight text-left">
+                    <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[40px] text-slate-900 dark:text-white mb-3 tracking-tight text-left leading-[1.18]">
                         {{ $model['title'] ?? 'White Label SaaS Partner' }}
                     </h3>
-                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-8 leading-relaxed text-left max-w-2xl">
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-left max-w-2xl font-normal">
                         {{ $model['desc'] ?? 'Launch your own branded SaaS platform and sell subscriptions directly to business owners.' }}
                     </p>
 
-                    <!-- Feature List (Left) & Screen Preview (Right - Dynamic from User Dashboard) -->
+                    <!-- Feature List & Explanation (Left) & Screen Preview (Right - Dynamic from User Dashboard) -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-8 text-left">
-                        <div class="lg:col-span-5 space-y-3.5 text-left">
+                        
+                        <!-- Left Column: Explanation Box & Feature Checklist (Task 1) -->
+                        <div class="lg:col-span-6 space-y-4 text-left">
+                            
+                            <!-- Left-Side Explanation Callout Box -->
+                            <div class="p-4 sm:p-5 rounded-2xl bg-orange-50/80 dark:bg-orange-950/20 border border-orange-200/80 dark:border-orange-900/40 text-left">
+                                <div class="flex items-center space-x-2 text-[#ff3d00] font-bold text-xs uppercase tracking-wider mb-1.5">
+                                    <i class="fas fa-sparkles"></i>
+                                    <span>Turnkey SaaS Partner Model</span>
+                                </div>
+                                <p class="text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                                    Our White Label Partner program gives you a complete, ready-to-sell software business under your custom brand. Onboard unlimited clients, set your own pricing, collect 100% of subscription revenue, and manage everything from a unified admin dashboard—with zero coding or server infrastructure required.
+                                </p>
+                            </div>
+
                             @php
                                 $cardFeatures = (isset($model['features']) && is_array($model['features']) && count($model['features']) > 0) 
                                     ? $model['features'] 
@@ -542,24 +567,39 @@
                                     }
                                 }
                             @endphp
-                            @foreach($cardFeatures as $f)
-                            <div class="flex items-center space-x-3 text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200 text-left">
-                                <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm">
-                                    <i class="fas fa-check"></i>
+
+                            <!-- Checklist -->
+                            <div class="space-y-2.5 sm:space-y-3 pt-1">
+                                @foreach($cardFeatures as $f)
+                                <div class="flex items-center space-x-3 text-xs sm:text-[14px] font-semibold text-slate-800 dark:text-slate-200 text-left">
+                                    <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span>{{ $f }}</span>
                                 </div>
-                                <span>{{ $f }}</span>
+                                @endforeach
                             </div>
-                            @endforeach
+
+                            <!-- Trust Pills for Mobile/Desktop -->
+                            <div class="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                                <span class="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full"><i class="fas fa-check-circle text-green-500"></i> No Coding Needed</span>
+                                <span class="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full"><i class="fas fa-check-circle text-green-500"></i> 100% Recurring Profits</span>
+                                <span class="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full"><i class="fas fa-check-circle text-green-500"></i> 24/7 Tech Infrastructure</span>
+                            </div>
                         </div>
-                        <div class="lg:col-span-7 mt-4 lg:mt-0 flex items-center justify-center">
-                            <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="User Dashboard Preview" class="w-full h-auto rounded-2xl shadow-xl border border-slate-200/90 dark:border-slate-700 object-contain">
+
+                        <!-- Right Column: Dashboard Mockup -->
+                        <div class="lg:col-span-6 mt-4 lg:mt-0 flex items-center justify-center">
+                            <div class="w-full relative rounded-2xl overflow-hidden shadow-xl border border-slate-200/90 dark:border-slate-700">
+                                <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="User Dashboard Preview" class="w-full h-auto object-contain">
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- CTA Button -->
                 <div class="pt-6 border-t border-slate-100 dark:border-slate-800 text-left mt-auto">
-                    <a href="{{ $model['cta_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="btn-gradient inline-flex items-center justify-center sm:justify-between w-full px-8 py-4 rounded-2xl font-bold text-sm sm:text-base text-white transition-all shadow-lg shadow-orange-500/25 group">
+                    <a href="{{ $model['cta_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="btn-gradient inline-flex items-center justify-center sm:justify-between w-full px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-xs sm:text-base text-white transition-all shadow-lg shadow-orange-500/25 group">
                         <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
                         <i class="fas fa-arrow-right ml-3 text-sm transition-transform group-hover:translate-x-1"></i>
                     </a>
@@ -637,21 +677,32 @@
         </div>
     </section>
 
-    <!-- SECTION 5: OUR PRODUCTS (First Reference Layout for Products + Glassmorphism Coming Soon Cards) -->
-    <section id="products" class="py-12 lg:py-16 bg-white dark:bg-[#0B0F19] reveal">
+    <!-- SECTION 5: OUR ADVANCED SAAS PRODUCTS (Task 5: Overhauled Heading, Text Gradient, Enhanced Readability & Ecommerce Brands) -->
+    <section id="products" class="py-12 lg:py-18 bg-white dark:bg-[#0B0F19] reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-                <span class="badge-pill mx-auto">{{ $data['lp_products_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mt-3">
-                    {{ $data['lp_products_title'] }}
+                <!-- Top Badge (Task 5: Our Advanced SAAS Products) -->
+                <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide bg-[#fff2ec] dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-[#fed7aa]/60 mx-auto">
+                    {{ (!empty($data['lp_products_tag']) && $data['lp_products_tag'] !== 'OUR PRODUCTS') ? $data['lp_products_tag'] : 'Our Advanced SAAS Products' }}
+                </span>
+                
+                <!-- Main Heading (Task 5: Increased Size & Modern Text Gradient) -->
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[46px] xl:text-[50px] tracking-tight mt-3.5 leading-[1.14]">
+                    <span class="bg-gradient-to-r from-slate-900 via-[#ff3d00] to-orange-500 dark:from-white dark:via-orange-400 dark:to-[#ff3d00] bg-clip-text text-transparent">
+                        {{ $data['lp_products_title'] ?? 'Everything You Need to Build & Scale Your SaaS Business' }}
+                    </span>
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
-                    {{ $data['lp_products_desc'] }}
+                
+                <!-- Description (Task 5: Replaced Nooryak with SaaSReselling, 5 with 3) -->
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-3.5 max-w-2xl mx-auto leading-relaxed font-normal">
+                    {{ (!empty($data['lp_products_desc']) && stripos($data['lp_products_desc'], 'Nooryak') === false && stripos($data['lp_products_desc'], '5 powerful') === false)
+                        ? $data['lp_products_desc']
+                        : 'SaaSReselling combines 3 powerful White Label SaaS products, a unified dashboard, Single Sign-On (SSO), custom branding, and enterprise-grade management tools into one complete platform.' }}
                 </p>
             </div>
 
-            <!-- Products Grid: 3-Column Per Row Layout (2 Active Products + 1 Coming Soon WhatsApp Automation Card) -->
+            <!-- Products Grid: 3-Column Per Row Layout -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
 
                 <!-- CARD 1: LAUNCHSHOP ECOM BUILDER -->
@@ -663,46 +714,53 @@
                             <span class="text-[11px] font-extrabold tracking-widest text-[#ff3d00] uppercase bg-orange-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-orange-200/60 dark:border-slate-700">STORE BUILDER</span>
                         </div>
 
-                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">Complete E-Commerce Solution</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Launch your online store, manage products, payments, and customers — all in one place.</p>
+                        <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2.5 leading-tight">Complete E-Commerce Solution</h3>
+                        
+                        <!-- Product Description (Task 5: Increased font size and readability) -->
+                        <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-1">
+                            Launch your online store, manage products, payments, and customers — all in one place.
+                        </p>
                         
                         <!-- Product Image Mockup -->
                         <div class="my-5 relative overflow-hidden rounded-2xl">
-                            <img src="{{ asset('/assets/landing_page/ecombuilder_image.png') }}" alt="Launchshop E-Commerce Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-orange-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
+                            <img src="{{ asset('/assets/landing_page/ecombuilder_image.png') }}" alt="Launchshop E-Commerce Solution" class="w-full h-48 sm:h-52 object-cover object-top rounded-2xl shadow-md border border-orange-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
                         </div>
 
-                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
+                        <!-- Included Features Header (Task 5: Increased readability) -->
+                        <p class="text-xs sm:text-[13px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3.5">INCLUDED FEATURES:</p>
 
-                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-200 font-medium">
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                        <!-- Feature List (Task 5: Increased content size & readability) -->
+                        <ul class="space-y-3 mb-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-semibold">
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>1 Online Store (Product Module)</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Up to 1,000 Orders / Customers</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Inventory & Order Management</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Basic Analytics & Reports</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Custom Domain Setup</span>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <a href="https://launchshop.saasreselling.com" target="_blank" class="btn-gradient w-full py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                        <a href="https://launchshop.saasreselling.com" target="_blank" class="btn-gradient w-full py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                             <span>Explore Launchshop</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
-                        <p class="text-center text-[11px] text-slate-400 font-medium mt-3">Trusted by 10,000+ Sellers</p>
+                        <!-- Task 5: Trusted by Ecommerce Brands -->
+                        <p class="text-center text-xs text-slate-400 font-medium mt-3">Trusted by Ecommerce Brands</p>
                     </div>
                 </div>
 
@@ -715,46 +773,52 @@
                             <span class="text-[11px] font-extrabold tracking-widest text-blue-600 uppercase bg-blue-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-blue-200/60 dark:border-slate-700">WEBSITE BUILDER</span>
                         </div>
 
-                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">Professional Website Solution</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Create stunning websites with ease using our drag-and-drop website builder with zero coding required.</p>
+                        <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2.5 leading-tight">Professional Website Solution</h3>
+                        
+                        <!-- Product Description (Task 5: Increased font size and readability) -->
+                        <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-1">
+                            Create stunning websites with ease using our drag-and-drop website builder with zero coding required.
+                        </p>
                         
                         <!-- Product Image Mockup -->
                         <div class="my-5 relative overflow-hidden rounded-2xl">
-                            <img src="{{ asset('/assets/landing_page/websitebuilder_image.png') }}" alt="Website Builder Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-blue-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
+                            <img src="{{ asset('/assets/landing_page/websitebuilder_image.png') }}" alt="Website Builder Solution" class="w-full h-48 sm:h-52 object-cover object-top rounded-2xl shadow-md border border-blue-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
                         </div>
 
-                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
+                        <!-- Included Features Header -->
+                        <p class="text-xs sm:text-[13px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3.5">INCLUDED FEATURES:</p>
 
-                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-200 font-medium">
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                        <!-- Feature List (Task 5: Increased readability & size) -->
+                        <ul class="space-y-3 mb-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-semibold">
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Unlimited Pages & Custom Designs</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Drag & Drop Visual Builder</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Custom Domain & Free SSL</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>SEO Tools & Analytics Integration</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>AI Templates & Interactive Widgets</span>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <a href="https://websitebuilder.saasreselling.com" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                        <a href="https://websitebuilder.saasreselling.com" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                             <span>Explore Website Builder</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
-                        <p class="text-center text-[11px] text-slate-400 font-medium mt-3">Trusted by 50,000+ Creators</p>
+                        <p class="text-center text-xs text-slate-400 font-medium mt-3">Trusted by Agencies & Creators</p>
                     </div>
                 </div>
 
@@ -769,46 +833,52 @@
                             <span class="text-[11px] font-extrabold tracking-widest text-emerald-600 uppercase bg-emerald-50 dark:bg-[#1e293b] px-2.5 py-1 rounded-lg border border-emerald-200/60 dark:border-slate-700">WHATSAPPBULK</span>
                         </div>
 
-                        <h3 class="font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 leading-tight">Whatsappbulk Marketing & Automation</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">Automate bulk messaging campaigns, AI auto-replies, catalog sharing, and customer engagement directly on WhatsApp.</p>
+                        <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2.5 leading-tight">Whatsappbulk Marketing & Automation</h3>
+                        
+                        <!-- Product Description (Task 5: Increased font size and readability) -->
+                        <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-1">
+                            Automate bulk messaging campaigns, AI auto-replies, catalog sharing, and customer engagement directly on WhatsApp.
+                        </p>
                         
                         <!-- Product Image Mockup -->
                         <div class="my-5 relative overflow-hidden rounded-2xl">
-                            <img src="{{ asset('/assets/landing_page/whatsapp_image.png') }}" alt="WhatsApp Automation Solution" class="w-full h-48 object-cover object-top rounded-2xl shadow-md border border-emerald-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
+                            <img src="{{ asset('/assets/landing_page/whatsapp_image.png') }}" alt="WhatsApp Automation Solution" class="w-full h-48 sm:h-52 object-cover object-top rounded-2xl shadow-md border border-emerald-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
                         </div>
 
-                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-3">INCLUDED FEATURES:</p>
+                        <!-- Included Features Header -->
+                        <p class="text-xs sm:text-[13px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3.5">INCLUDED FEATURES:</p>
 
-                        <ul class="space-y-2.5 mb-6 text-xs text-slate-700 dark:text-slate-200 font-medium">
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                        <!-- Feature List (Task 5: Increased readability & size) -->
+                        <ul class="space-y-3 mb-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-semibold">
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Bulk WhatsApp Campaigns & Broadcasts</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>AI Smart Auto-Reply & Keyword Rules</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Multi-Device & QR Code Connection</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Contact Manager & Group Export</span>
                             </li>
-                            <li class="flex items-center space-x-2.5">
-                                <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] flex-shrink-0"><i class="fas fa-check"></i></div>
+                            <li class="flex items-center space-x-3">
+                                <div class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
                                 <span>Real-Time Analytics & Delivery Reports</span>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                        <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                             <span>Explore Whatsappbulk</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
-                        <p class="text-center text-[11px] text-slate-400 font-medium mt-3">Trusted by 5,000+ Businesses</p>
+                        <p class="text-center text-xs text-slate-400 font-medium mt-3">Trusted by Modern Businesses</p>
                     </div>
                 </div>
 
@@ -1328,7 +1398,7 @@
                             <div class="w-11 h-11 rounded-xl btn-gradient flex items-center justify-center text-white text-base font-bold shadow-sm">
                                 <i class="fas fa-layer-group"></i>
                             </div>
-                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Nooryak</span>
+                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">SaaSReselling</span>
                         @endif
                     </a>
                     <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
@@ -1604,39 +1674,39 @@
             }
         });
     </script>
-    <!-- Exit Intent / Delayed Popup Modal (Task 4: Reference Image 5 Pixel-by-Pixel without Message Preview) -->
-    <div id="promoModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md opacity-0 invisible transition-all duration-500 overflow-y-auto p-4 sm:p-6">
+    <!-- Exit Intent / Delayed Popup Modal (Task 2: Polished, Animated Pulse, Enlarged Timer, Highly Responsive Mobile View) -->
+    <div id="promoModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/85 backdrop-blur-lg opacity-0 invisible transition-all duration-500 overflow-y-auto p-3 sm:p-6">
         
-        <!-- Modal Container -->
-        <div class="relative w-full max-w-4xl mx-auto flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-500 border border-slate-200 dark:border-slate-800" id="promoModalContent">
+        <!-- Modal Container with subtle gradient border -->
+        <div class="relative w-full max-w-4xl mx-auto flex flex-col md:flex-row bg-white rounded-2xl sm:rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.55)] overflow-hidden transform scale-95 opacity-0 transition-all duration-500 border border-orange-500/20 max-h-[92vh] overflow-y-auto" id="promoModalContent">
             
-            <!-- Close Button (Top Right) -->
-            <button onclick="closePromoModal()" aria-label="Close modal" class="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 hover:bg-slate-700 text-white transition-colors focus:outline-none shadow-md">
-                <i class="fas fa-times text-sm"></i>
+            <!-- Close Button (Always accessible top right) -->
+            <button onclick="closePromoModal()" aria-label="Close modal" class="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-50 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-slate-900/80 hover:bg-slate-800 text-white transition-colors focus:outline-none shadow-lg border border-slate-700/60 active:scale-95">
+                <i class="fas fa-times text-xs sm:text-sm"></i>
             </button>
             
-            <!-- Left Side (White Background) -->
-            <div class="w-full md:w-1/2 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white text-left">
+            <!-- Left Side (Clean White Panel) -->
+            <div class="w-full md:w-1/2 p-5 sm:p-8 lg:p-10 flex flex-col justify-between bg-white text-left">
                 <div>
                     <!-- Top Tag -->
-                    <span class="block text-[10px] font-extrabold uppercase tracking-wider text-[#ff3d00] mb-2 font-heading">
+                    <span class="inline-block text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#ff3d00] mb-2 font-heading bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200/60">
                         SAASRESELLING · WHITE-LABEL PLATFORM
                     </span>
                     
                     <!-- Headline -->
-                    <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[34px] text-slate-900 leading-[1.12] tracking-tight">
+                    <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[34px] text-slate-900 leading-[1.12] tracking-tight mt-1">
                         All-in-One <br>
                         <span class="text-[#ff3d00]">White-Label</span> <br>
                         SaaS Panel
                     </h3>
                     
                     <!-- Description -->
-                    <p class="text-xs sm:text-sm text-slate-500 mt-2.5 leading-relaxed font-normal">
+                    <p class="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Launch your own software brand with 3 integrated SaaS solutions—managed from one unified dashboard, under your brand.
                     </p>
                     
                     <!-- 4 Feature Bullets -->
-                    <div class="space-y-3 mt-5">
+                    <div class="space-y-2.5 sm:space-y-3 mt-4 sm:mt-5">
                         <div class="flex items-center space-x-3 text-xs sm:text-[13px] font-bold text-slate-800">
                             <div class="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-[#ff3d00] flex items-center justify-center text-xs flex-shrink-0 shadow-sm">
                                 <i class="fas fa-chart-line"></i>
@@ -1664,31 +1734,31 @@
                     </div>
                 </div>
                 
-                <!-- Bottom 3 Product Cards -->
-                <div class="grid grid-cols-3 gap-2.5 pt-6 mt-4 border-t border-slate-100">
-                    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center space-y-1">
-                        <i class="far fa-window-maximize text-[#ff3d00] text-base"></i>
-                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Website Builder</span>
+                <!-- Bottom 3 Product Cards with interactive hover -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-2.5 pt-5 sm:pt-6 mt-4 border-t border-slate-100">
+                    <div class="bg-slate-50 hover:bg-orange-50/50 border border-slate-200/80 hover:border-orange-300 rounded-xl p-2 sm:p-2.5 text-center flex flex-col items-center justify-center space-y-1 transition-all">
+                        <i class="far fa-window-maximize text-[#ff3d00] text-sm sm:text-base"></i>
+                        <span class="text-[9px] sm:text-[11px] font-bold text-slate-800 leading-tight">Website Builder</span>
                     </div>
-                    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center space-y-1">
-                        <i class="fas fa-shopping-cart text-[#ff3d00] text-base"></i>
-                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">E-commerce Builder</span>
+                    <div class="bg-slate-50 hover:bg-orange-50/50 border border-slate-200/80 hover:border-orange-300 rounded-xl p-2 sm:p-2.5 text-center flex flex-col items-center justify-center space-y-1 transition-all">
+                        <i class="fas fa-shopping-cart text-[#ff3d00] text-sm sm:text-base"></i>
+                        <span class="text-[9px] sm:text-[11px] font-bold text-slate-800 leading-tight">E-commerce Builder</span>
                     </div>
-                    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 text-center flex flex-col items-center justify-center space-y-1">
-                        <i class="fab fa-whatsapp text-[#ff3d00] text-base"></i>
-                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">WhatsApp Automation</span>
+                    <div class="bg-slate-50 hover:bg-orange-50/50 border border-slate-200/80 hover:border-orange-300 rounded-xl p-2 sm:p-2.5 text-center flex flex-col items-center justify-center space-y-1 transition-all">
+                        <i class="fab fa-whatsapp text-[#ff3d00] text-sm sm:text-base"></i>
+                        <span class="text-[9px] sm:text-[11px] font-bold text-slate-800 leading-tight">WhatsApp Automation</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Right Side (Deep Dark Navy Background) -->
-            <div class="w-full md:w-1/2 bg-[#080E24] p-6 sm:p-8 lg:p-10 flex flex-col justify-between text-left relative overflow-hidden">
+            <!-- Right Side (Deep Navy with Subtle Animated Glow & Big Timer) -->
+            <div class="w-full md:w-1/2 bg-[#080E24] p-5 sm:p-8 lg:p-10 flex flex-col justify-between text-left relative overflow-hidden">
                 <!-- Background subtle glow -->
-                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-transparent to-orange-500/10 pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/15 via-transparent to-orange-500/15 pointer-events-none"></div>
                 
-                <div class="relative z-10 w-full space-y-4">
+                <div class="relative z-10 w-full space-y-3.5 sm:space-y-4">
                     <!-- Top Pill Tag -->
-                    <span class="inline-block px-3.5 py-1 rounded-full border border-orange-500/70 text-orange-400 text-[10px] font-bold uppercase tracking-wider">
+                    <span class="inline-block px-3.5 py-1 rounded-full border border-orange-500/70 text-orange-400 text-[10px] font-bold uppercase tracking-wider bg-orange-950/30">
                         YOUR SAAS BUSINESS STARTS HERE
                     </span>
                     
@@ -1703,39 +1773,39 @@
                         Speak with our team about the All-in-One White-Label SaaS Panel.
                     </p>
                     
-                    <!-- Timer Box -->
-                    <div class="bg-[#0e173a] border border-slate-800 rounded-2xl p-3.5 text-center">
-                        <div class="flex items-center justify-center space-x-1.5 text-orange-400 text-[10px] font-bold uppercase tracking-wider mb-2">
-                            <i class="far fa-clock"></i>
+                    <!-- Enhanced Timer Box with Larger Fonts (Task 2) -->
+                    <div class="bg-gradient-to-b from-[#11193d] to-[#090f28] border border-orange-500/40 rounded-2xl p-4 sm:p-5 text-center shadow-[0_0_25px_rgba(255,87,34,0.12)]">
+                        <div class="flex items-center justify-center space-x-1.5 text-orange-400 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest mb-2.5">
+                            <i class="far fa-clock animate-spin" style="animation-duration: 6s;"></i>
                             <span>OFFER WINDOW</span>
                         </div>
-                        <div class="flex items-center justify-center space-x-3">
-                            <div class="text-center min-w-[50px]">
-                                <span class="font-heading font-black text-3xl sm:text-4xl text-white" id="promoMins">09</span>
-                                <span class="block text-[9px] font-bold text-slate-400 uppercase mt-0.5">MIN</span>
+                        <div class="flex items-center justify-center space-x-3 sm:space-x-4">
+                            <div class="text-center min-w-[65px] sm:min-w-[80px]">
+                                <span class="font-heading font-black text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-none block" id="promoMins">09</span>
+                                <span class="block text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">MINUTES</span>
                             </div>
-                            <span class="text-2xl text-slate-500 font-bold -mt-3">:</span>
-                            <div class="text-center min-w-[50px]">
-                                <span class="font-heading font-black text-3xl sm:text-4xl text-white" id="promoSecs">59</span>
-                                <span class="block text-[9px] font-bold text-slate-400 uppercase mt-0.5">SEC</span>
+                            <span class="text-3xl sm:text-4xl text-orange-400 font-extrabold pb-2 sm:pb-3">:</span>
+                            <div class="text-center min-w-[65px] sm:min-w-[80px]">
+                                <span class="font-heading font-black text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-none block" id="promoSecs">59</span>
+                                <span class="block text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">SECONDS</span>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- 15% OFF Badge Callout -->
-                    <div class="flex items-center space-x-3 bg-gradient-to-r from-orange-500/15 to-transparent p-3 rounded-xl border border-orange-500/30">
-                        <span class="px-3 py-1 rounded-full bg-[#ff5722] text-white font-extrabold text-xs flex-shrink-0 shadow-md">
+                    <!-- 15% OFF Badge Callout with subtle pulse glow -->
+                    <div class="flex items-center space-x-3 bg-gradient-to-r from-orange-500/20 via-orange-500/10 to-transparent p-3 sm:p-3.5 rounded-xl border border-orange-500/40 shadow-sm">
+                        <span class="px-3 py-1 rounded-full bg-[#ff5722] text-white font-extrabold text-xs sm:text-[13px] flex-shrink-0 shadow-lg shadow-orange-500/40 animate-pulse">
                             15% OFF
                         </span>
                         <div>
                             <span class="block text-white font-bold text-xs sm:text-sm leading-tight">On the 2-Year Plan</span>
-                            <span class="block text-[10px] text-slate-400 mt-0.5">Mention this offer when you message us.</span>
+                            <span class="block text-[10px] sm:text-[11px] text-slate-300 mt-0.5 font-normal">Mention this offer when you message us.</span>
                         </div>
                     </div>
                     
                     <!-- Big WhatsApp Action Button (NO preview message below) -->
-                    <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20All-in-One%20White-Label%20SaaS%20Panel.%20Please%20share%20details%20about%20the%2015%25%20offer%20on%20the%202-year%20plan,%20setup,%20branding,%20and%20the%203%20SaaS%20solutions." target="_blank" class="w-full py-3.5 px-5 rounded-2xl bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold text-xs sm:text-sm shadow-xl shadow-green-500/30 flex items-center justify-center space-x-2.5 transition-all text-center">
-                        <i class="fab fa-whatsapp text-lg"></i>
+                    <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20All-in-One%20White-Label%20SaaS%20Panel.%20Please%20share%20details%20about%20the%2015%25%20offer%20on%20the%202-year%20plan,%20setup,%20branding,%20and%20the%203%20SaaS%20solutions." target="_blank" class="w-full py-3.5 sm:py-4 px-5 rounded-2xl bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold text-xs sm:text-sm shadow-xl shadow-green-500/30 flex items-center justify-center space-x-2.5 transition-all text-center hover:scale-[1.02] active:scale-[0.99]">
+                        <i class="fab fa-whatsapp text-lg sm:text-xl"></i>
                         <span>Claim 15% Offer on WhatsApp</span>
                     </a>
                 </div>

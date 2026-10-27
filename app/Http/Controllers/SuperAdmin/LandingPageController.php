@@ -238,8 +238,32 @@ class LandingPageController extends Controller
             }
 
             $curBadge = Setting::get('lp_hero_announcement_badge');
-            if (empty($curBadge) || strpos($curBadge, '·') !== false || stripos($curBadge, 'FOR AGENCIES') !== false && strpos($curBadge, '|') === false) {
+            if (empty($curBadge) || strpos($curBadge, '·') !== false || (stripos($curBadge, 'FOR AGENCIES') !== false && strpos($curBadge, '|') === false)) {
                 Setting::set('lp_hero_announcement_badge', 'BUILT FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS');
+            }
+
+            // Stats Bar auto-upgrade (Task 3: 100% WHITE-LABEL SOLUTION & 3 POWERFUL SAAS PRODUCTS)
+            $curStats = Setting::get('lp_stats_bar');
+            if (!empty($curStats)) {
+                $statsArr = json_decode($curStats, true);
+                if (is_array($statsArr)) {
+                    $stUpdated = false;
+                    foreach ($statsArr as &$st) {
+                        if (isset($st['label']) && (stripos($st['label'], 'ACTIVE PARTNERS') !== false || stripos($st['label'], 'PARTNERS') !== false)) {
+                            $st['count'] = '100%';
+                            $st['label'] = 'WHITE-LABEL SOLUTION';
+                            $st['icon'] = 'fas fa-shield-alt';
+                            $stUpdated = true;
+                        }
+                        if (isset($st['label']) && stripos($st['label'], 'POWERFUL SAAS PRODUCTS') !== false) {
+                            $st['count'] = '3';
+                            $stUpdated = true;
+                        }
+                    }
+                    if ($stUpdated) {
+                        Setting::set('lp_stats_bar', json_encode($statsArr));
+                    }
+                }
             }
 
             $curAboutTag = Setting::get('lp_about_tag');
@@ -255,6 +279,27 @@ class LandingPageController extends Controller
             $curAboutDesc = Setting::get('lp_about_desc');
             if (empty($curAboutDesc) || stripos($curAboutDesc, 'Nooryak is an All-In-One') !== false) {
                 Setting::set('lp_about_desc', 'SaaSReselling helps agencies, freelancers, and entrepreneurs launch their own software brand with 3 ready-to-sell white-label solutions. Manage your offerings through one unified platform, with your own branding and customer experience—without the complexity of building or maintaining the technology yourself.');
+            }
+
+            // Products tag & description auto-upgrade (Task 5)
+            $curProdTag = Setting::get('lp_products_tag');
+            if (empty($curProdTag) || $curProdTag === 'OUR PRODUCTS') {
+                Setting::set('lp_products_tag', 'Our Advanced SAAS Products');
+            }
+
+            $curProdDesc = Setting::get('lp_products_desc');
+            if (empty($curProdDesc) || stripos($curProdDesc, 'Nooryak') !== false || stripos($curProdDesc, '5 powerful') !== false) {
+                Setting::set('lp_products_desc', 'SaaSReselling combines 3 powerful White Label SaaS products, a unified dashboard, Single Sign-On (SSO), custom branding, and enterprise-grade management tools into one complete platform.');
+            }
+
+            // Clean up other legacy Nooryak defaults in settings
+            $curHowTag = Setting::get('lp_how_works_tag');
+            if ($curHowTag === 'HOW NOORYAK WORKS') {
+                Setting::set('lp_how_works_tag', 'HOW SAASRESELLING WORKS');
+            }
+            $curWhyTag = Setting::get('lp_why_choose_tag');
+            if ($curWhyTag === 'WHY CHOOSE NOORYAK?') {
+                Setting::set('lp_why_choose_tag', 'WHY CHOOSE SAASRESELLING?');
             }
         } catch (\Exception $e) {
             // Safe fallback if DB is temporarily unreachable
@@ -287,9 +332,9 @@ class LandingPageController extends Controller
 
             // Stats Bar
             'lp_stats_bar' => json_decode(Setting::get('lp_stats_bar', json_encode([
-                ['count' => '500+', 'label' => 'ACTIVE PARTNERS', 'icon' => 'fas fa-users'],
+                ['count' => '100%', 'label' => 'WHITE-LABEL SOLUTION', 'icon' => 'fas fa-shield-alt'],
                 ['count' => '50K+', 'label' => 'BUSINESSES SERVED', 'icon' => 'fas fa-building'],
-                ['count' => '5', 'label' => 'POWERFUL SAAS PRODUCTS', 'icon' => 'fas fa-cube'],
+                ['count' => '3', 'label' => 'POWERFUL SAAS PRODUCTS', 'icon' => 'fas fa-cube'],
                 ['count' => '99.9%', 'label' => 'UPTIME GUARANTEE', 'icon' => 'fas fa-shield-alt'],
                 ['count' => '24/7', 'label' => 'EXPERT SUPPORT', 'icon' => 'fas fa-headset']
             ])), true),
@@ -331,9 +376,9 @@ class LandingPageController extends Controller
             ])), true),
 
             // Products Grid
-            'lp_products_tag' => Setting::get('lp_products_tag', 'OUR PRODUCTS'),
+            'lp_products_tag' => Setting::get('lp_products_tag', 'Our Advanced SAAS Products'),
             'lp_products_title' => Setting::get('lp_products_title', 'Everything You Need to Build & Scale Your SaaS Business'),
-            'lp_products_desc' => Setting::get('lp_products_desc', 'Nooryak combines 5 powerful White Label SaaS products, a unified dashboard, Single Sign-On (SSO), custom branding, and enterprise-grade management tools into one complete platform.'),
+            'lp_products_desc' => Setting::get('lp_products_desc', 'SaaSReselling combines 3 powerful White Label SaaS products, a unified dashboard, Single Sign-On (SSO), custom branding, and enterprise-grade management tools into one complete platform.'),
             'lp_products_grid' => json_decode(Setting::get('lp_products_grid', json_encode([
                 [
                     'title' => 'AI Reviews & GMB Automation',
@@ -385,7 +430,7 @@ class LandingPageController extends Controller
             ])), true),
 
             // How It Works
-            'lp_how_works_tag' => Setting::get('lp_how_works_tag', 'HOW NOORYAK WORKS'),
+            'lp_how_works_tag' => Setting::get('lp_how_works_tag', 'HOW SAASRESELLING WORKS'),
             'lp_how_works_title' => Setting::get('lp_how_works_title', 'Launch, Brand, Sell, Earn, Repeat.'),
             'lp_how_works_steps' => json_decode(Setting::get('lp_how_works_steps', json_encode([
                 ['step' => '1', 'title' => 'Choose Your Model', 'desc' => 'Pick White Label SaaS or Master Panel and get started.', 'icon' => 'fas fa-mouse-pointer'],
@@ -395,7 +440,7 @@ class LandingPageController extends Controller
             ])), true),
 
             // Why Choose Nooryak
-            'lp_why_choose_tag' => Setting::get('lp_why_choose_tag', 'WHY CHOOSE NOORYAK?'),
+            'lp_why_choose_tag' => Setting::get('lp_why_choose_tag', 'WHY CHOOSE SAASRESELLING?'),
             'lp_why_choose_title' => Setting::get('lp_why_choose_title', 'Built for Ambitious Entrepreneurs'),
             'lp_why_choose_items' => json_decode(Setting::get('lp_why_choose_items', json_encode([
                 ['title' => '100% White Label', 'desc' => 'Your brand, your identity. We stay behind the scenes.', 'icon' => 'fas fa-user-shield'],
@@ -419,7 +464,7 @@ class LandingPageController extends Controller
                     'desc' => 'Perfect for agencies, freelancers and entrepreneurs',
                     'features' => [
                         '1 Platform',
-                        '5 SaaS Products',
+                        '3 SaaS Products',
                         'Custom Branding',
                         'Unlimited Customers',
                         'Full Dashboard Access'
@@ -435,7 +480,7 @@ class LandingPageController extends Controller
                     'desc' => 'Ideal for businesses who want to create SaaS partners',
                     'features' => [
                         'Unlimited White Label Panels',
-                        '5 SaaS Products',
+                        '3 SaaS Products',
                         'Partner Management',
                         'Centralized Dashboard',
                         'Complete Control'

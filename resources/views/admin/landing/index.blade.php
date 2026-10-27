@@ -297,9 +297,9 @@
             </div>
         </div>
 
-        <!-- TAB 6: HOW IT WORKS & WHY CHOOSE NOORYAK -->
+        <!-- TAB 6: HOW IT WORKS & WHY CHOOSE SAASRESELLING -->
         <div x-show="activeTab === 'workflow'" class="card-white p-6 rounded-2xl space-y-6">
-            <h3 class="font-bold text-slate-900 text-base border-b pb-3">How Nooryak Works Section</h3>
+            <h3 class="font-bold text-slate-900 text-base border-b pb-3">How SaaSReselling Works Section</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
