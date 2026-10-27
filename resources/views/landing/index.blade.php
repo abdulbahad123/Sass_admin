@@ -2220,9 +2220,9 @@
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class=\"fas fa-spinner fa-spin mr-2\"></i> Submitting...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting...';
 
-            fetch('{{ route(\"demo.submit\") }}', {
+            fetch('{{ route('demo.submit') }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2240,7 +2240,7 @@
             .then(res => res.json())
             .then(data => {
                 btn.disabled = false;
-                btn.innerHTML = '<span>Book Your Free Demo</span><i class=\"fas fa-arrow-right text-xs ml-2\"></i>';
+                btn.innerHTML = '<span>Book Your Free Demo</span><i class="fas fa-arrow-right text-xs ml-2"></i>';
                 if (data.success) {
                     msg.className = 'text-xs font-bold p-3 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
                     msg.textContent = data.message;
@@ -2258,7 +2258,7 @@
             })
             .catch(() => {
                 btn.disabled = false;
-                btn.innerHTML = '<span>Book Your Free Demo</span><i class=\"fas fa-arrow-right text-xs ml-2\"></i>';
+                btn.innerHTML = '<span>Book Your Free Demo</span><i class="fas fa-arrow-right text-xs ml-2"></i>';
                 msg.className = 'text-xs font-bold p-2.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40';
                 msg.textContent = 'Unable to submit request. Please try contacting on WhatsApp directly.';
                 msg.classList.remove('hidden');
