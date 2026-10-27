@@ -101,7 +101,8 @@ class LandingPageController extends Controller
             'lp_meta_description',
             'hero_video_url',
             'recaptcha_site_key',
-            'recaptcha_secret_key'
+            'recaptcha_secret_key',
+            'enable_recaptcha'
         ];
 
         foreach ($textKeys as $key) {
@@ -435,8 +436,10 @@ class LandingPageController extends Controller
 
         return [
             // Security & Integration
-            'recaptcha_site_key' => Setting::get('recaptcha_site_key', ''),
-            'recaptcha_secret_key' => Setting::get('recaptcha_secret_key', ''),
+            'recaptcha_site_key' => Setting::get('recaptcha_site_key') ?: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+            'recaptcha_secret_key',
+            'enable_recaptcha' => Setting::get('recaptcha_secret_key',
+            'enable_recaptcha', ''),
             'hero_video_url' => Setting::get('hero_video_url', 'https://www.youtube.com/embed/dQw4w9WgXcQ'),
             'has_custom_pricing_image' => (!empty($rawPImg) && !str_contains($rawPImg, 'user_dashboard.png')),
             'lp_pricing_image' => $cleanPImg,
@@ -711,8 +714,10 @@ class LandingPageController extends Controller
             'lp_meta_title' => Setting::get('lp_meta_title', 'SaaSReselling - Launch Your Own SaaS Business Under Your Brand'),
             'lp_meta_description' => Setting::get('lp_meta_description', 'SaaSReselling is an All-In-One White Label SaaS Platform that helps agencies, freelancers, and entrepreneurs launch their own SaaS business.'),
             'hero_video_url' => Setting::get('hero_video_url', 'https://www.youtube.com/embed/dQw4w9WgXcQ'),
-            'recaptcha_site_key' => Setting::get('recaptcha_site_key', ''),
-            'recaptcha_secret_key' => Setting::get('recaptcha_secret_key', '')
+            'recaptcha_site_key' => Setting::get('recaptcha_site_key') ?: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+            'recaptcha_secret_key',
+            'enable_recaptcha' => Setting::get('recaptcha_secret_key',
+            'enable_recaptcha', '')
         ];
     }
 }

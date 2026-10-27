@@ -520,6 +520,168 @@
         </div>
     </section>
 
+    
+    <!-- SECTION 3.5: DEMO WHITELABEL GALLERY SLIDER (Task 3: Explore Demo Whitelabel Platform) -->
+    <section id="demo-whitelabel" class="py-14 sm:py-20 bg-slate-900 text-white relative overflow-hidden border-t border-b border-slate-800">
+        <!-- Ambient Background Lights -->
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest bg-orange-500/15 text-[#ff3d00] border border-orange-500/30 mb-3">
+                    <i class="fas fa-desktop mr-2 text-xs"></i> DEMO WHITELABEL
+                </span>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
+                    Explore Demo Whitelabel Dashboard & Platform
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400 mt-2 sm:mt-3 leading-relaxed">
+                    Interactive live walkthrough of our white-label reseller command center, tenant application portals, and turnkey client management suite.
+                </p>
+            </div>
+
+            <!-- Gallery Slider Container -->
+            <div class="relative max-w-5xl mx-auto" x-data="{
+                activeSlide: 0,
+                slides: [
+                    {
+                        src: '{{ asset('assets/images/demoscreenshot/demo1.png') }}',
+                        title: 'Reseller Admin Command Center',
+                        desc: 'Full control over client onboarding, monthly recurring billing, automated provisioning, and product entitlements.'
+                    },
+                    {
+                        src: '{{ asset('assets/images/demoscreenshot/demo2.png') }}',
+                        title: 'White-Label Branding & Custom Domains',
+                        desc: 'Attach your own agency domain (e.g. youragency.in) with automated SSL, custom logos, colors, and email branding.'
+                    },
+                    {
+                        src: '{{ asset('assets/images/demoscreenshot/demo3.png') }}',
+                        title: 'Client Management & Subscription Portals',
+                        desc: 'Individual customer access portals where clients manage their stores, pages, and campaigns under your brand.'
+                    },
+                    {
+                        src: '{{ asset('assets/images/demoscreenshot/demo4.png') }}',
+                        title: 'Multi-Product SaaS App Architecture',
+                        desc: 'One single login gives your agency instant access to Ecombuilder, Website Builder, and WhatsApp Automation engines.'
+                    }
+                ],
+                zoomModal: false,
+                zoomImg: '',
+                zoomTitle: '',
+                next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },
+                prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length },
+                openZoom(img, title) { this.zoomImg = img; this.zoomTitle = title; this.zoomModal = true; },
+                closeZoom() { this.zoomModal = false; }
+            }">
+
+                <!-- Main Active Image Display Card with Glow Frame -->
+                <div class="relative rounded-3xl bg-[#080E24] border border-slate-700/80 p-2 sm:p-4 shadow-2xl shadow-indigo-950/50 overflow-hidden group">
+                    <div class="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center">
+                        <template x-for="(slide, index) in slides" :key="index">
+                            <div x-show="activeSlide === index" 
+                                 x-transition:enter="transition ease-out duration-300"
+                                 x-transition:enter-start="opacity-0 transform scale-98"
+                                 x-transition:enter-end="opacity-100 transform scale-100"
+                                 class="absolute inset-0 flex flex-col justify-between">
+                                <img :src="slide.src" 
+                                     :alt="slide.title" 
+                                     class="w-full h-full object-contain object-center cursor-pointer select-none"
+                                     @click="openZoom(slide.src, slide.title)">
+                            </div>
+                        </template>
+
+                        <!-- Zoom Hint Overlay Button -->
+                        <button type="button" 
+                                @click="openZoom(slides[activeSlide].src, slides[activeSlide].title)" 
+                                class="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white text-xs font-semibold backdrop-blur-md border border-slate-700 shadow-lg flex items-center gap-1.5 transition-all">
+                            <i class="fas fa-search-plus text-[11px] text-orange-400"></i>
+                            <span class="hidden sm:inline">Click to Zoom</span>
+                        </button>
+                    </div>
+
+                    <!-- Slide Caption Bar -->
+                    <div class="mt-3 sm:mt-4 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h4 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span x-text="slides[activeSlide].title"></span>
+                            </h4>
+                            <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none" x-text="slides[activeSlide].desc"></p>
+                        </div>
+                        <div class="flex items-center space-x-1.5 text-xs text-slate-400 font-mono self-end sm:self-auto">
+                            <span class="font-bold text-orange-400" x-text="'0' + (activeSlide + 1)"></span>
+                            <span>/</span>
+                            <span x-text="'0' + slides.length"></span>
+                        </div>
+                    </div>
+
+                    <!-- Left / Right Nav Arrows -->
+                    <button type="button" 
+                            @click="prev()" 
+                            aria-label="Previous Slide" 
+                            class="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/90 hover:bg-orange-600 text-white flex items-center justify-center backdrop-blur-md border border-slate-700 shadow-xl transition-all hover:scale-110 focus:outline-none">
+                        <i class="fas fa-chevron-left text-xs sm:text-sm"></i>
+                    </button>
+                    <button type="button" 
+                            @click="next()" 
+                            aria-label="Next Slide" 
+                            class="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/90 hover:bg-orange-600 text-white flex items-center justify-center backdrop-blur-md border border-slate-700 shadow-xl transition-all hover:scale-110 focus:outline-none">
+                        <i class="fas fa-chevron-right text-xs sm:text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- Thumbnails Strip Selector (Responsive 4 Columns) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-6">
+                    <template x-for="(slide, index) in slides" :key="'thumb-' + index">
+                        <button type="button" 
+                                @click="activeSlide = index"
+                                :class="activeSlide === index ? 'border-orange-500 ring-2 ring-orange-500/40 bg-slate-800' : 'border-slate-800 hover:border-slate-700 bg-slate-950/60 opacity-60 hover:opacity-100'"
+                                class="p-1.5 rounded-2xl border transition-all text-left group overflow-hidden focus:outline-none">
+                            <div class="aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900 mb-1.5">
+                                <img :src="slide.src" :alt="slide.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                            </div>
+                            <span class="block text-[11px] sm:text-xs font-bold text-slate-300 truncate" x-text="slide.title"></span>
+                        </button>
+                    </template>
+                </div>
+
+                <!-- Lightbox / High-Res Zoom Modal -->
+                <div x-show="zoomModal" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     @click.self="closeZoom()" 
+                     class="fixed inset-0 z-[120] bg-slate-950/95 backdrop-blur-lg flex flex-col items-center justify-center p-3 sm:p-6"
+                     style="display: none;">
+                    
+                    <div class="w-full max-w-6xl flex items-center justify-between mb-3 text-white">
+                        <h4 class="text-sm sm:text-base font-bold font-heading truncate" x-text="zoomTitle"></h4>
+                        <button @click="closeZoom()" class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white transition-colors focus:outline-none">
+                            <i class="fas fa-times text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="relative w-full max-w-6xl max-h-[85vh] rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-slate-800 shadow-2xl">
+                        <img :src="zoomImg" :alt="zoomTitle" class="max-w-full max-h-[82vh] object-contain">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom CTA Link -->
+            <div class="text-center mt-10">
+                <button onclick="window.openDemoModal()" class="inline-flex items-center space-x-2 px-6 py-3 rounded-full btn-gradient text-white text-xs sm:text-sm font-bold shadow-lg shadow-orange-500/25 hover:scale-105 transition-all">
+                    <span>Schedule a 1:1 Live Interactive Demo</span>
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- SECTION 4: WHITE LABEL SAAS PARTNER (Task 1: Reduced Width Container on Left & Explanation Outside on Right) -->
     <section class="py-12 sm:py-16 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1763,19 +1925,7 @@
                     </ul>
                 </div>
 
-                <!-- Col 4: Support & Legal Policies (Col 1 on mobile, 2 Cols on lg) -->
-                <div class="col-span-1 lg:col-span-2 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Support</h5>
-                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
-                        <li><a href="#faq" class="hover:text-[#ff3d00] transition-colors">Help Center</a></li>
-                        <li><a href="mailto:{{ $data['lp_contact_email'] }}" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
-                        <li><a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="hover:text-[#ff3d00] transition-colors">Book a Demo</a></li>
-                        <li><a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
-                        <li><a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a></li>
-                        <li><a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
-                        <li><a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a></li>
-                    </ul>
-                </div>
+
 
                 <!-- Col 5: Newsletter Subscription (Span 2 on mobile, 3 Cols on lg) -->
                 <div class="col-span-2 lg:col-span-3 space-y-3">
@@ -1793,15 +1943,15 @@
 
             <!-- Bottom Copyright & Legal Links (Task 6: Legal Policy Links) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium gap-3">
-                <p>{{ $data['lp_copyright_text'] }}</p>
+                <p>{{ str_ireplace('Nooryak Technologies', 'SaaSReselling', $data['lp_copyright_text'] ?? '© ' . date('Y') . ' SaaSReselling. All rights reserved.') }}</p>
                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-                    <a href="{{ route('agency.privacy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
+                    <a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
                     <span>|</span>
-                    <a href="{{ route('agency.terms') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a>
+                    <a href="{{ url('/terms-conditions') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a>
                     <span>|</span>
-                    <a href="{{ route('agency.refund') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a>
+                    <a href="{{ url('/refund-policy') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a>
                     <span>|</span>
-                    <a href="{{ route('agency.shipping') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a>
+                    <a href="{{ url('/shipping-policy') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a>
                 </div>
             </div>
 
@@ -2265,12 +2415,11 @@
                         </select>
                     </div>
 
-                    @if(!empty($data['recaptcha_site_key']))
-                    <!-- Google reCAPTCHA v2 (Task 5) -->
-                    <div class="my-3 flex justify-center">
-                        <div class="g-recaptcha" data-sitekey="{{ $data['recaptcha_site_key'] }}"></div>
+                    <!-- Google reCAPTCHA v2 Verification -->
+                    <div class="my-3 flex flex-col items-center justify-center">
+                        <div class="g-recaptcha" data-sitekey="{{ !empty($data['recaptcha_site_key']) ? $data['recaptcha_site_key'] : '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' }}" data-theme="dark"></div>
+                        <span class="text-[10px] text-slate-400 mt-1">Please check the box above to verify you are human</span>
                     </div>
-                    @endif
 
                     <div id="demoFormMsg" class="hidden text-xs font-bold p-2.5 rounded-xl"></div>
 
@@ -2330,7 +2479,6 @@
 
         // Live Demo Modal Controls
         window.openDemoModal = function() {
-            
             const modal = document.getElementById('demoModal');
             const card = document.getElementById('demoModalCard');
             if (modal && card) {
@@ -2339,6 +2487,9 @@
                 card.classList.remove('scale-95', 'opacity-0');
                 card.classList.add('scale-100', 'opacity-100');
                 document.body.style.overflow = 'hidden';
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+                    try { grecaptcha.reset(); } catch(e) {}
+                }
             }
         };
 
@@ -2437,7 +2588,8 @@
                     whatsapp: w,
                     email: em,
                     profession: p,
-                    g_recaptcha_response: recaptchaToken
+                    g_recaptcha_response: recaptchaToken,
+                    'g-recaptcha-response': recaptchaToken
                 })
             })
             .then(res => res.json())

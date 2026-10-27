@@ -202,6 +202,7 @@
         @endforeach
     </div>
 </div>
+@endsection
 
 @push('modals')
 <!-- Onboard Agency Modal -->

@@ -26,7 +26,7 @@ class DemoRequestController extends Controller
         // Google reCAPTCHA Verification (Configured from Super Admin)
         $secretKey = \App\Models\Setting::get('recaptcha_secret_key');
         if (!empty($secretKey)) {
-            $recaptchaResponse = $request->input('g_recaptcha_response');
+            $recaptchaResponse = $request->input('g_recaptcha_response') ?? $request->input('g-recaptcha-response');
             if (empty($recaptchaResponse)) {
                 return response()->json([
                     'success' => false,

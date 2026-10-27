@@ -523,6 +523,63 @@
             </div>
         </div>
 
+                <!-- TAB: SECURITY & RECAPTCHA -->
+        <div x-show="activeTab === 'security'" class="card-white p-6 rounded-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="font-bold text-slate-900 text-base font-heading">Google reCAPTCHA v2 Security Settings</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Protect the "Book Free 1:1 Live Demo" modal popup and lead forms from automated bots.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold {{ !empty($data['recaptcha_site_key']) ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
+                        {{ !empty($data['recaptcha_site_key']) ? 'Configured' : 'Keys Missing' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="space-y-5">
+                <!-- Guidance Box -->
+                <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100 text-xs text-slate-700 space-y-2">
+                    <p class="font-bold text-indigo-900 flex items-center gap-1.5">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600"></i>
+                        <span>How to get your free Google reCAPTCHA v2 keys:</span>
+                    </p>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-600 pl-1">
+                        <li>Visit the <a href="https://www.google.com/recaptcha/admin/create" target="_blank" class="text-indigo-600 font-bold underline hover:text-indigo-700">Google reCAPTCHA Admin Console</a>.</li>
+                        <li>Choose <strong>reCAPTCHA v2</strong> &rarr; <strong>"I'm not a robot" Checkbox</strong>.</li>
+                        <li>Add your authorized domain (e.g. <code>saasreselling.com</code> or <code>localhost</code>) and submit.</li>
+                        <li>Copy the generated <strong>Site Key</strong> and <strong>Secret Key</strong> and paste them in the fields below.</li>
+                    </ol>
+                </div>
+
+                <!-- Toggle Verification -->
+                <div class="flex items-center space-x-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                    <input type="checkbox" id="enable_recaptcha" name="enable_recaptcha" value="1" {{ (!empty($data['enable_recaptcha']) && $data['enable_recaptcha'] == '1') ? 'checked' : '' }} class="w-4 h-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500">
+                    <div>
+                        <label for="enable_recaptcha" class="text-xs font-bold text-slate-800 cursor-pointer block">
+                            Enable Google reCAPTCHA Verification on Demo Popup Modal
+                        </label>
+                        <span class="text-[11px] text-slate-500 block">When checked, visitors must solve the checkbox before submitting a demo request.</span>
+                    </div>
+                </div>
+
+                <!-- Input Fields -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Google reCAPTCHA Site Key (Public Key)</label>
+                        <input type="text" name="recaptcha_site_key" value="{{ $data['recaptcha_site_key'] ?? '' }}" placeholder="e.g. 6Ldxxxxxxxxxx-xxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:ring-2 focus:ring-indigo-500">
+                        <span class="text-[11px] text-slate-400 mt-1 block">Renders the frontend checkbox inside the modal popup.</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Google reCAPTCHA Secret Key (Private Key)</label>
+                        <input type="password" name="recaptcha_secret_key" value="{{ $data['recaptcha_secret_key'] ?? '' }}" placeholder="e.g. 6Ldxxxxxxxxxx-xxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:ring-2 focus:ring-indigo-500">
+                        <span class="text-[11px] text-slate-400 mt-1 block">Used securely by the server to verify tokens with Google.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- TAB 9: CTA BANNER & FOOTER -->
         <div x-show="activeTab === 'footer'" class="card-white p-6 rounded-2xl space-y-6">
             <h3 class="font-bold text-slate-900 text-base border-b pb-3">CTA Banner, Footer & Social Links</h3>

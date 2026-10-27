@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#F8FAFC] text-slate-800">
+<html lang="en" dir="ltr" class="h-full bg-[#F8FAFC] text-slate-800">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +52,7 @@
         }
     </style>
 </head>
-<body class="h-full flex overflow-hidden text-slate-800" x-data="{ mobileMenuOpen: false }">
+<body class="h-full flex flex-row overflow-hidden text-slate-800" dir="ltr" x-data="{ mobileMenuOpen: false }">
 
     <!-- Mobile Drawer Overlay Backdrop -->
     <div x-show="mobileMenuOpen" 
@@ -67,8 +67,7 @@
          style="display: none;"></div>
 
     <!-- Left Dark Sidebar Navigation -->
-    <aside :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-           class="fixed lg:static inset-y-0 left-0 w-64 sidebar-dark text-slate-300 flex flex-col flex-shrink-0 z-50 transition-transform duration-300 ease-in-out border-r border-slate-800">
+    <aside :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" class="fixed lg:static inset-y-0 left-0 order-first w-64 sidebar-dark text-slate-300 flex flex-col flex-shrink-0 z-50 transition-transform duration-300 ease-in-out border-r border-slate-800">
         
         <!-- Logo Header -->
         <div class="h-20 px-6 flex items-center justify-between border-b border-slate-800/80">
@@ -212,7 +211,7 @@
     </aside>
 
     <!-- Main Workspace -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F8FAFC]">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F8FAFC] order-last">
         <!-- Top Navbar Header (Responsive Mobile Fix) -->
         <header class="min-h-[4.5rem] bg-white border-b border-slate-200/80 px-4 sm:px-8 py-3 flex items-center justify-between gap-3 z-20">
             
