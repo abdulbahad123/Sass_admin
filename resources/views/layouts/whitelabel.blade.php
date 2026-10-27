@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,8 +24,9 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        h1, h2, h3, h4, .font-heading {
-            font-family: 'Outfit', sans-serif;
+        h1, h2, h3, h4, h5, h6, .font-heading {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            letter-spacing: -0.025em;
         }
         .card-white {
             background: #ffffff;

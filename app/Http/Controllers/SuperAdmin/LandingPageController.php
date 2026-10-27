@@ -135,6 +135,7 @@ class LandingPageController extends Controller
         // 3. Image File Uploads
         $imageKeys = [
             'lp_header_logo',
+            'lp_header_logo_dark',
             'lp_hero_image',
             'lp_about_image',
             'lp_cta_banner_bg'
@@ -228,6 +229,7 @@ class LandingPageController extends Controller
             'lp_announcement_text' => Setting::get('lp_announcement_text', 'YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.'),
             'lp_announcement_badge' => Setting::get('lp_announcement_badge', 'NEW'),
             'lp_header_logo' => Setting::get('lp_header_logo', '/assets/images/Logo2.png'),
+            'lp_header_logo_dark' => Setting::get('lp_header_logo_dark', null),
             'lp_book_demo_url' => Setting::get('lp_book_demo_url', '#book-demo'),
             'lp_cta_button_text' => Setting::get('lp_cta_button_text', 'Start Your SaaS Business'),
             'lp_cta_button_url' => Setting::get('lp_cta_button_url', '/login'),

@@ -74,15 +74,55 @@
                     <input type="text" name="lp_announcement_text" value="{{ $data['lp_announcement_text'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500">
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">Navbar Logo Image</label>
-                    @if($data['lp_header_logo'])
-                        <div class="mb-3 flex items-center space-x-3">
-                            <img src="{{ asset($data['lp_header_logo']) }}" class="h-10 w-auto rounded border p-1 bg-white">
-                            <button type="button" onclick="deleteLandingImage('lp_header_logo')" class="px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold border border-rose-200">Delete Image</button>
+                <div class="col-span-1 md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-800 mb-3">Navbar Logos (White Mode & Dark Mode)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-4 rounded-2xl bg-slate-50 border border-slate-200/90">
+                        <!-- White Mode (Light) Logo -->
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                    <i data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
+                                    <span>White Mode Logo (Light Theme)</span>
+                                </label>
+                                <span class="text-[10px] text-slate-400 font-medium">For Light Backgrounds</span>
+                            </div>
+                            @if(!empty($data['lp_header_logo']))
+                                <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between shadow-sm">
+                                    <img src="{{ asset($data['lp_header_logo']) }}" class="h-10 w-auto object-contain p-1">
+                                    <button type="button" onclick="deleteLandingImage('lp_header_logo')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold border border-rose-200 transition-colors flex items-center gap-1">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        <span>Delete Image</span>
+                                    </button>
+                                </div>
+                            @endif
+                            <input type="file" name="lp_header_logo" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white file:text-indigo-700 hover:file:bg-indigo-50 border border-slate-200 rounded-xl bg-white">
                         </div>
-                    @endif
-                    <input type="file" name="lp_header_logo" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+
+                        <!-- Dark Mode Logo -->
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                    <i data-lucide="moon" class="w-4 h-4 text-indigo-500"></i>
+                                    <span>Dark Mode Logo (Dark Theme)</span>
+                                </label>
+                                <span class="text-[10px] text-slate-400 font-medium">For Dark Mode Toggle</span>
+                            </div>
+                            @if(!empty($data['lp_header_logo_dark']))
+                                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between shadow-sm">
+                                    <img src="{{ asset($data['lp_header_logo_dark']) }}" class="h-10 w-auto object-contain p-1">
+                                    <button type="button" onclick="deleteLandingImage('lp_header_logo_dark')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold border border-rose-200 transition-colors flex items-center gap-1">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        <span>Delete Image</span>
+                                    </button>
+                                </div>
+                            @else
+                                <div class="p-3 bg-slate-900/5 border border-dashed border-slate-300 rounded-xl text-center text-xs text-slate-400">
+                                    No Dark Mode Logo uploaded (Will fallback to White Mode Logo)
+                                </div>
+                            @endif
+                            <input type="file" name="lp_header_logo_dark" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-indigo-300 hover:file:bg-slate-800 border border-slate-200 rounded-xl bg-white">
+                        </div>
+                    </div>
                 </div>
 
                 <div>

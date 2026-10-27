@@ -13,7 +13,7 @@
     <!-- Fonts from D:\nooryak\nooryakwebsite -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=Inter:wght@300;400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- FontAwesome & Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -44,8 +44,9 @@
                         dark: '#0f172a'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Space Grotesk', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
                         onest: ['Onest', 'sans-serif'],
                         poppins: ['Poppins', 'sans-serif'],
                     }
@@ -57,12 +58,15 @@
     <!-- Custom CSS matching Nooryak branding -->
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f8fafc;
             color: #1e293b;
             overflow-x: hidden;
         }
-        .font-space { font-family: 'Space Grotesk', sans-serif; }
+        .font-space, .font-heading, h1, h2, h3, h4, h5, h6 {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            letter-spacing: -0.025em;
+        }
         .font-poppins { font-family: 'Poppins', sans-serif; }
         .font-onest { font-family: 'Onest', sans-serif; }
         
@@ -156,17 +160,26 @@
     <!-- STICKY NAVBAR -->
     <header class="sticky top-0 z-50 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700/80 transition-all duration-300">
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
-                <a href="{{ url('/') }}" class="flex items-center space-x-3">
-                    @if($data['lp_header_logo'])
-                        <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak Logo" class="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all">
+            <div class="flex items-center justify-between h-20 sm:h-24">
+                <!-- Logo (Increased Size & Dual Dark/White Mode Support) -->
+                @php
+                    $lightLogo = !empty($data['lp_header_logo']) ? $data['lp_header_logo'] : null;
+                    $darkLogo  = !empty($data['lp_header_logo_dark']) ? $data['lp_header_logo_dark'] : $lightLogo;
+                @endphp
+                <a href="{{ url('/') }}" class="flex items-center space-x-3 py-1">
+                    @if($lightLogo || $darkLogo)
+                        @if($lightLogo)
+                            <img src="{{ asset($lightLogo) }}" alt="Logo" class="h-14 sm:h-16 lg:h-20 max-h-[72px] w-auto object-contain transition-all {{ $darkLogo ? 'dark:hidden' : '' }}">
+                        @endif
+                        @if($darkLogo)
+                            <img src="{{ asset($darkLogo) }}" alt="Logo Dark" class="h-14 sm:h-16 lg:h-20 max-h-[72px] w-auto object-contain transition-all hidden dark:block">
+                        @endif
                     @else
                         <div class="flex items-center space-x-2.5">
-                            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
-                                <i class="fas fa-layer-group text-lg sm:text-xl"></i>
+                            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl btn-gradient flex items-center justify-center text-white font-bold text-2xl shadow-md shadow-orange-500/20">
+                                <i class="fas fa-layer-group text-xl sm:text-2xl"></i>
                             </div>
-                            <span class="font-space font-bold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">Nooryak</span>
+                            <span class="font-heading font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">Nooryak</span>
                         </div>
                     @endif
                 </a>
@@ -497,6 +510,74 @@
                     </div>
                 </div>
                 @endif</div>
+        </div>
+    </section>
+
+    <!-- SECTION 4.5: KEY PILLARS FEATURE TICKER STRIP (Task 2: Below White Label SaaS Partner) -->
+    <section class="py-5 sm:py-6 bg-[#070B19] border-y border-slate-800/80 relative overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex items-center justify-between gap-3 sm:gap-4">
+                
+                <!-- Left Nav Arrow Button -->
+                <button type="button" id="featureStripPrev" aria-label="Previous feature" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 flex items-center justify-center flex-shrink-0 transition-all shadow-md active:scale-95 focus:outline-none">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+
+                <!-- 4 Feature Items Container -->
+                <div id="featureStripContainer" class="flex-1 flex items-center justify-between gap-4 sm:gap-6 overflow-x-auto scroll-smooth scrollbar-none py-1">
+                    
+                    <!-- Item 1: Launch in 24 Hours -->
+                    <div class="flex-shrink-0 lg:flex-1 flex items-center space-x-3.5 min-w-[240px] px-2">
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.15)] flex-shrink-0">
+                            <i class="fas fa-bolt text-base sm:text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-white font-bold text-sm sm:text-[15px] font-heading tracking-tight leading-tight">Launch in 24 Hours</h4>
+                            <p class="text-slate-400 text-xs sm:text-[13px] mt-0.5 font-medium leading-snug">Start your software business, faster.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: 100% White-Label -->
+                    <div class="flex-shrink-0 lg:flex-1 flex items-center space-x-3.5 min-w-[250px] px-2">
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-purple-950/80 border border-purple-500/30 flex items-center justify-center text-purple-400 shadow-[0_0_15px_rgba(192,132,252,0.15)] flex-shrink-0">
+                            <i class="fas fa-shield-halved text-base sm:text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-white font-bold text-sm sm:text-[15px] font-heading tracking-tight leading-tight">100% White-Label</h4>
+                            <p class="text-slate-400 text-xs sm:text-[13px] mt-0.5 font-medium leading-snug">Your brand. Your domain. Your business.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Dedicated Support -->
+                    <div class="flex-shrink-0 lg:flex-1 flex items-center space-x-3.5 min-w-[240px] px-2">
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.15)] flex-shrink-0">
+                            <i class="fas fa-life-ring text-base sm:text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-white font-bold text-sm sm:text-[15px] font-heading tracking-tight leading-tight">Dedicated Support</h4>
+                            <p class="text-slate-400 text-xs sm:text-[13px] mt-0.5 font-medium leading-snug">We're with you at every step.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 4: Scalable Technology -->
+                    <div class="flex-shrink-0 lg:flex-1 flex items-center space-x-3.5 min-w-[240px] px-2">
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-indigo-950/80 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-[0_0_15px_rgba(129,140,248,0.15)] flex-shrink-0">
+                            <i class="fas fa-chart-line text-base sm:text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="text-white font-bold text-sm sm:text-[15px] font-heading tracking-tight leading-tight">Scalable Technology</h4>
+                            <p class="text-slate-400 text-xs sm:text-[13px] mt-0.5 font-medium leading-snug">Built for long-term growth.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Nav Arrow Button -->
+                <button type="button" id="featureStripNext" aria-label="Next feature" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 flex items-center justify-center flex-shrink-0 transition-all shadow-md active:scale-95 focus:outline-none">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+
+            </div>
         </div>
     </section>
 
@@ -1177,16 +1258,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200 dark:border-slate-700/80">
                 
-                <!-- Col 1: Logo & Socials (Span 2 on mobile, 3 Cols on lg) -->
+                <!-- Col 1: Logo & Socials (Increased Size & Dual Dark/White Mode Support) -->
                 <div class="col-span-2 lg:col-span-3 space-y-4">
-                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 dark:text-white font-space font-bold text-xl">
-                        @if($data['lp_header_logo'])
-                            <img src="{{ asset($data['lp_header_logo']) }}" alt="Nooryak" class="h-9 w-auto object-contain">
+                    <a href="{{ url('/') }}" class="flex items-center space-x-2.5 text-slate-900 dark:text-white font-heading font-bold text-xl">
+                        @if($lightLogo || $darkLogo)
+                            @if($lightLogo)
+                                <img src="{{ asset($lightLogo) }}" alt="Logo" class="h-12 sm:h-14 lg:h-16 max-h-[60px] w-auto object-contain transition-all {{ $darkLogo ? 'dark:hidden' : '' }}">
+                            @endif
+                            @if($darkLogo)
+                                <img src="{{ asset($darkLogo) }}" alt="Logo Dark" class="h-12 sm:h-14 lg:h-16 max-h-[60px] w-auto object-contain transition-all hidden dark:block">
+                            @endif
                         @else
-                            <div class="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                            <div class="w-11 h-11 rounded-xl btn-gradient flex items-center justify-center text-white text-base font-bold shadow-sm">
                                 <i class="fas fa-layer-group"></i>
                             </div>
-                            <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Nooryak</span>
+                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Nooryak</span>
                         @endif
                     </a>
                     <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
@@ -1278,6 +1364,19 @@
 
     <!-- Interactive Scripts -->
     <script>
+        // Feature Strip Ticker Navigation
+        const fContainer = document.getElementById('featureStripContainer');
+        const fPrev = document.getElementById('featureStripPrev');
+        const fNext = document.getElementById('featureStripNext');
+        if (fContainer && fPrev && fNext) {
+            fPrev.addEventListener('click', () => {
+                fContainer.scrollBy({ left: -260, behavior: 'smooth' });
+            });
+            fNext.addEventListener('click', () => {
+                fContainer.scrollBy({ left: 260, behavior: 'smooth' });
+            });
+        }
+        
         // Mobile Drawer Navigation Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
