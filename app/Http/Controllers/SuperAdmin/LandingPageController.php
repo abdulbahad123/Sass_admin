@@ -333,6 +333,10 @@ class LandingPageController extends Controller
             if (empty($curDefaultCust) || $curDefaultCust == 100 || $curDefaultCust == 10) {
                 Setting::set('lp_rev_calc_default_customers', 1);
             }
+            $curCtaSub = Setting::get('lp_cta_banner_subtitle');
+            if (!empty($curCtaSub) && stripos($curCtaSub, 'Nooryak') !== false) {
+                Setting::set('lp_cta_banner_subtitle', str_ireplace('Nooryak', 'SaaSReselling', $curCtaSub));
+            }
             $curWhyTag = Setting::get('lp_why_choose_tag');
             if ($curWhyTag === 'WHY CHOOSE NOORYAK?') {
                 Setting::set('lp_why_choose_tag', 'WHY CHOOSE SAASRESELLING?');
@@ -696,7 +700,7 @@ class LandingPageController extends Controller
 
             // CTA Banner & Footer
             'lp_cta_banner_title' => Setting::get('lp_cta_banner_title', 'Ready to Launch Your SaaS Business?'),
-            'lp_cta_banner_subtitle' => Setting::get('lp_cta_banner_subtitle', 'Join hundreds of partners who are already building recurring revenue with SaaSReselling.'),
+            'lp_cta_banner_subtitle' => str_ireplace(['Nooryak.in', 'nooryak.in', 'Nooryak', 'nooryak'], ['saasreselling.com', 'saasreselling.com', 'SaaSReselling', 'SaaSReselling'], Setting::get('lp_cta_banner_subtitle', 'Join hundreds of partners who are already building recurring revenue with SaaSReselling.')),
             'lp_cta_banner_button1_text' => Setting::get('lp_cta_banner_button1_text', 'Book Free 1:1 Live Demo'),
             'lp_cta_banner_button1_url' => Setting::get('lp_cta_banner_button1_url', '#book-demo'),
             'lp_cta_banner_button2_text' => Setting::get('lp_cta_banner_button2_text', 'See How It Works'),
