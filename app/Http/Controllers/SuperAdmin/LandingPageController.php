@@ -297,6 +297,10 @@ class LandingPageController extends Controller
             }
 
             $curAboutDesc = Setting::get('lp_about_desc');
+            $curGrowthSub = Setting::get('lp_growth_subtitle');
+            if (empty($curGrowthSub) || stripos($curGrowthSub, 'Nooryak') !== false) {
+                Setting::set('lp_growth_subtitle', 'Start small, dream big. SaaSReselling grows with you at every stage.');
+            }
             if (empty($curAboutDesc) || stripos($curAboutDesc, 'Nooryak is an All-In-One') !== false) {
                 Setting::set('lp_about_desc', 'SaaSReselling helps agencies, freelancers, and entrepreneurs launch their own software brand with 3 ready-to-sell white-label solutions. Manage your offerings through one unified platform, with your own branding and customer experience—without the complexity of building or maintaining the technology yourself.');
             }
@@ -479,64 +483,70 @@ class LandingPageController extends Controller
                 ['title' => 'Dedicated Support', 'desc' => 'With your technology partner, always.', 'icon' => 'fas fa-headset']
             ])), true),
 
-            // Pricing
+            // Pricing (Task 3: Reference Image 3 Design with Admin Controls)
             'lp_pricing_tag' => Setting::get('lp_pricing_tag', 'PRICING'),
-            'lp_pricing_title' => Setting::get('lp_pricing_title',
-            'lp_pricing_badge',
-            'lp_pricing_name',
-            'lp_pricing_subtitle',
-            'lp_pricing_monthly',
-            'lp_pricing_yearly',
-            'lp_pricing_cta_text',
-            'lp_pricing_cta_url',
-            'lp_pricing_mockup_badge',
-            'lp_pricing_trophy_title',
-            'lp_pricing_trophy_desc', 'Transparent Pricing for Every Stage'),
-            'lp_pricing_desc' => Setting::get('lp_pricing_desc', 'Choose the path that fits your SaaS business.'),
-            'lp_pricing_plans' => json_decode(Setting::get('lp_pricing_plans', json_encode([
-                [
-                    'name' => 'White-Label Panel',
-                    'badge' => 'Most Popular',
-                    'price' => '999',
-                    'period' => '/month',
-                    'desc' => 'Perfect for agencies, freelancers and entrepreneurs',
-                    'features' => [
-                        '1 Platform',
-                        '3 SaaS Products',
-                        'Custom Branding',
-                        'Unlimited Customers',
-                        'Full Dashboard Access'
-                    ],
-                    'cta_text' => 'Get Started',
-                    'cta_url' => '/login'
-                ],
-                [
-                    'name' => 'White-Label Master Panel',
-                    'badge' => 'Ideal for business network builders',
-                    'price' => '2,499',
-                    'period' => '/month',
-                    'desc' => 'Ideal for businesses who want to create SaaS partners',
-                    'features' => [
-                        'Unlimited White Label Panels',
-                        '3 SaaS Products',
-                        'Partner Management',
-                        'Centralized Dashboard',
-                        'Complete Control'
-                    ],
-                    'cta_text' => 'Get Started',
-                    'cta_url' => '/login'
-                ]
+            'lp_pricing_title' => Setting::get('lp_pricing_title', 'Transparent Pricing for Every Stage'),
+            'lp_pricing_badge' => Setting::get('lp_pricing_badge', 'FOR AGENCIES & FREELANCERS'),
+            'lp_pricing_name' => Setting::get('lp_pricing_name', 'White-Label Panel'),
+            'lp_pricing_subtitle' => Setting::get('lp_pricing_subtitle', 'One platform. Your brand. Unlimited growth.'),
+            'lp_pricing_desc' => Setting::get('lp_pricing_desc', 'Get 3 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.'),
+            'lp_pricing_monthly' => Setting::get('lp_pricing_monthly', '999'),
+            'lp_pricing_yearly' => Setting::get('lp_pricing_yearly', '799'),
+            'lp_pricing_cta_text' => Setting::get('lp_pricing_cta_text', 'Get Started'),
+            'lp_pricing_cta_url' => Setting::get('lp_pricing_cta_url', 'https://wa.me/916374913298?text=I%20am%20interested%20in%20White-Label%20Panel'),
+            'lp_pricing_mockup_badge' => Setting::get('lp_pricing_mockup_badge', '3 Powerful Products / One Dashboard / Your Brand'),
+            'lp_pricing_image' => Setting::get('lp_pricing_image', 'assets/images/user_dashboard.png'),
+            'lp_pricing_trophy_title' => Setting::get('lp_pricing_trophy_title', 'Most Popular Choice'),
+            'lp_pricing_trophy_desc' => Setting::get('lp_pricing_trophy_desc', 'Perfect for getting started and building your customer base.'),
+            'lp_pricing_features' => json_decode(Setting::get('lp_pricing_features', json_encode([
+                '1 White-Label Platform',
+                'Unlimited End-Customers',
+                '3 White-Label SaaS Products Included',
+                'Full Partner Dashboard Access',
+                'Custom Domain & Logo',
+                'Lifetime Updates & Support'
+            ])), true),
+            'lp_pricing_trust_badges' => json_decode(Setting::get('lp_pricing_trust_badges', json_encode([
+                '1:1 Demo on Google Meet',
+                'No Credit Card',
+                '100% Free Demo'
             ])), true),
 
-            // Growth Path
+            // Growth Path (Task 3: High-Converting Timeline UI & Increased Typography)
             'lp_growth_tag' => Setting::get('lp_growth_tag', 'YOUR GROWTH PATH'),
             'lp_growth_title' => Setting::get('lp_growth_title', 'From One Business to a Global Brand'),
-            'lp_growth_subtitle' => Setting::get('lp_growth_subtitle', 'Start small, dream big, Nooryak grows with you at every stage.'),
+            'lp_growth_subtitle' => (stripos(Setting::get('lp_growth_subtitle', ''), 'Nooryak') !== false || empty(Setting::get('lp_growth_subtitle')))
+                ? 'Start small, dream big. SaaSReselling grows with you at every stage.'
+                : Setting::get('lp_growth_subtitle'),
             'lp_growth_steps' => json_decode(Setting::get('lp_growth_steps', json_encode([
-                ['step' => 'Start', 'title' => 'Launch your own SaaS business', 'icon' => 'fas fa-flag-checkered'],
-                ['step' => 'Grow', 'title' => 'Add more customers & scale revenue', 'icon' => 'fas fa-chart-line'],
-                ['step' => 'Expand', 'title' => 'Become a Master Panel & create reseller partners', 'icon' => 'fas fa-users-gear'],
-                ['step' => 'Global', 'title' => 'Build your SaaS network and reach new markets worldwide', 'icon' => 'fas fa-globe']
+                [
+                    'step' => '01 • START',
+                    'title' => 'Launch Your Own SaaS',
+                    'desc' => 'Get your white-label portal ready in 24 hours with 3 high-converting SaaS products.',
+                    'icon' => 'fas fa-rocket',
+                    'badge' => 'Day 1'
+                ],
+                [
+                    'step' => '02 • GROW',
+                    'title' => 'Add Paying Customers',
+                    'desc' => 'Onboard local business clients, charge your own prices, and keep 100% of subscription revenue.',
+                    'icon' => 'fas fa-chart-line',
+                    'badge' => 'Scale Up'
+                ],
+                [
+                    'step' => '03 • EXPAND',
+                    'title' => 'Build Reseller Network',
+                    'desc' => 'Upgrade to Master Panel to create sub-agency partners and unlock passive recurring overrides.',
+                    'icon' => 'fas fa-users-gear',
+                    'badge' => 'Agency Network'
+                ],
+                [
+                    'step' => '04 • GLOBAL',
+                    'title' => 'Scale to a Global Brand',
+                    'desc' => 'Automate your software distribution and dominate new regional & international markets.',
+                    'icon' => 'fas fa-globe',
+                    'badge' => 'Global Leader'
+                ]
             ])), true),
 
             // Testimonials

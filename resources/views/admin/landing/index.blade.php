@@ -385,8 +385,8 @@
                         <span class="block text-[10px] text-slate-400 mb-1.5">Displayed in 2 columns under "Everything You Get"</span>
                         @php
                             $featuresText = (isset($data['lp_pricing_features']) && is_array($data['lp_pricing_features']))
-                                ? implode(\"\n\", $data['lp_pricing_features'])
-                                : \"1 White-Label Platform\nUnlimited End-Customers\n3 White-Label SaaS Products Included\nFull Partner Dashboard Access\nCustom Domain & Logo\nLifetime Updates & Support\";
+                                ? implode("\n",  $data['lp_pricing_features'])
+                                : "1 White-Label Platform\nUnlimited End-Customers\n3 White-Label SaaS Products Included\nFull Partner Dashboard Access\nCustom Domain & Logo\nLifetime Updates & Support";
                         @endphp
                         <textarea name="lp_pricing_features_raw" rows="6" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-mono">{{ $featuresText }}</textarea>
                     </div>
@@ -396,8 +396,8 @@
                         <span class="block text-[10px] text-slate-400 mb-1.5">Displayed with icons below the Get Started button</span>
                         @php
                             $badgesText = (isset($data['lp_pricing_trust_badges']) && is_array($data['lp_pricing_trust_badges']))
-                                ? implode(\"\n\", $data['lp_pricing_trust_badges'])
-                                : \"1:1 Demo on Google Meet\nNo Credit Card\n100% Free Demo\";
+                                ? implode("\n",  $data['lp_pricing_trust_badges'])
+                                : "1:1 Demo on Google Meet\nNo Credit Card\n100% Free Demo";
                         @endphp
                         <textarea name="lp_pricing_trust_badges_raw" rows="6" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-mono">{{ $badgesText }}</textarea>
                     </div>

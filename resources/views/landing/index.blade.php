@@ -293,7 +293,7 @@
                 <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Action Buttons -->
                     <div class="hidden sm:flex items-center space-x-3">
-                        <button onclick="openDemoModal()" class="px-5 py-2.5 rounded-full btn-gradient text-white text-xs sm:text-sm font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] transition-all flex items-center space-x-2">
+                        <button onclick="window.openDemoModal()" class="px-5 py-2.5 rounded-full btn-gradient text-white text-xs sm:text-sm font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] transition-all flex items-center space-x-2">
                             <i class="fas fa-video text-xs"></i>
                             <span>Book Free Live Demo</span>
                         </button>
@@ -321,7 +321,7 @@
             <a href="#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Products</a>
             <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">FAQ</a>
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                <button onclick="openDemoModal()" class="block w-full text-center px-4 py-3 rounded-full btn-gradient text-xs font-bold text-white shadow-md">Book Free Live Demo</button>
+                <button onclick="window.openDemoModal()" class="block w-full text-center px-4 py-3 rounded-full btn-gradient text-xs font-bold text-white shadow-md">Book Free Live Demo</button>
             </div>
         </div>
     </header>
@@ -1162,8 +1162,8 @@
                 <div class="flex items-center space-x-4">
                     <div class="bg-white dark:bg-[#0B0F19] p-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
                         <div id="pricingToggleBg" class="absolute left-1.5 top-1.5 bottom-1.5 w-[100px] btn-gradient rounded-full transition-all duration-300 ease-in-out"></div>
-                        <button id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="setPricingPlan('monthly')">Monthly</button>
-                        <button id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="setPricingPlan('yearly')">Yearly</button>
+                        <button type="button" id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="window.setPricingPlan('monthly')">Monthly</button>
+                        <button type="button" id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('yearly')">Yearly</button>
                     </div>
                     <div class="text-xs font-extrabold text-[#ff3d00] flex items-center gap-1">
                         <i class="fas fa-reply fa-flip-vertical text-sm -mt-1"></i>
@@ -1245,7 +1245,7 @@
                             </span>
                         </div>
                         <div class="w-full relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-slate-900">
-                            <img src="{{ asset($data['lp_pricing_image'] ?? '/assets/images/user_dashboard.png') }}" alt="SaaS Dashboard Preview" class="w-full h-auto object-contain">
+                            <img src="{{ asset(ltrim($data['lp_pricing_image'] ?? 'assets/images/user_dashboard.png', '/')) }}" alt="SaaS Dashboard Preview" class="w-full h-auto object-contain">
                         </div>
                     </div>
 
@@ -1299,33 +1299,103 @@
     </section>
 
     <!-- SECTION 9: YOUR GROWTH PATH & TESTIMONIALS -->
-    <section class="py-10 lg:py-14 bg-white dark:bg-[#0B0F19] border-t border-slate-200 dark:border-slate-700/80 reveal">
+    <section class="py-14 lg:py-20 bg-white dark:bg-[#0B0F19] border-t border-slate-200 dark:border-slate-700/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             
-            <!-- Growth Path -->
-            <div>
-                <div class="text-center mb-10">
-                    <span class="badge-pill mx-auto">{{ $data['lp_growth_tag'] }}</span>
-                    <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mt-3">
-                        {{ $data['lp_growth_title'] }}
+            <!-- Growth Path (Task 3: Attractive UI/UX, Increased Font Size & Full Mobile Responsiveness) -->
+            <div id="growth-path">
+                <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+                    <span class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-orange-200/80 dark:border-orange-900/60 shadow-sm mx-auto mb-3">
+                        <i class="fas fa-chart-line text-xs"></i>
+                        <span>{{ $data['lp_growth_tag'] ?? 'YOUR GROWTH PATH' }}</span>
+                    </span>
+                    <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] text-slate-900 dark:text-white tracking-tight mt-2 leading-tight">
+                        {{ $data['lp_growth_title'] ?? 'From One Business to a Global Brand' }}
                     </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">{{ $data['lp_growth_subtitle'] }}</p>
+                    <p class="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 mt-3 font-medium">
+                        {{ (stripos($data['lp_growth_subtitle'] ?? '', 'Nooryak') !== false || empty($data['lp_growth_subtitle'])) ? 'Start small, dream big. SaaSReselling grows with you at every stage.' : $data['lp_growth_subtitle'] }}
+                    </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @if(is_array($data['lp_growth_steps']))
-                        @foreach($data['lp_growth_steps'] as $gstep)
-                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-700/80 flex items-start space-x-3">
-                            <div class="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <i class="{{ $gstep['icon'] ?? 'fas fa-arrow-right' }}"></i>
+                <!-- 4 Step Interactive Timeline Cards -->
+                @php
+                    $growthStepsData = [
+                        [
+                            'step' => '01 • START',
+                            'title' => 'Launch Your Own SaaS',
+                            'desc' => 'Deploy your white-label portal in 24 hours with 3 ready-to-sell products under your brand & custom domain.',
+                            'icon' => 'fas fa-rocket',
+                            'gradient' => 'from-orange-500 to-amber-500',
+                            'badge' => 'Day 1 Launch'
+                        ],
+                        [
+                            'step' => '02 • GROW',
+                            'title' => 'Add Paying Customers',
+                            'desc' => 'Acquire local clients, set your own pricing, collect payments directly, and build predictable monthly recurring revenue.',
+                            'icon' => 'fas fa-chart-line',
+                            'gradient' => 'from-blue-500 to-indigo-600',
+                            'badge' => 'Scale Revenue'
+                        ],
+                        [
+                            'step' => '03 • EXPAND',
+                            'title' => 'Build Reseller Network',
+                            'desc' => 'Upgrade to Master Panel to onboard sub-agencies and partners who sell for you while you earn overrides.',
+                            'icon' => 'fas fa-users-gear',
+                            'gradient' => 'from-purple-500 to-pink-600',
+                            'badge' => 'Partner Overrides'
+                        ],
+                        [
+                            'step' => '04 • GLOBAL',
+                            'title' => 'Scale to a Global Brand',
+                            'desc' => 'Automate your software operations and expand your SaaS enterprise across national and global markets.',
+                            'icon' => 'fas fa-globe',
+                            'gradient' => 'from-emerald-500 to-teal-600',
+                            'badge' => 'Global Enterprise'
+                        ]
+                    ];
+                @endphp
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+                    @foreach($growthStepsData as $idx => $gstep)
+                    <div class="relative group rounded-3xl p-6 sm:p-7 bg-white dark:bg-[#11192e] border-2 border-slate-100 dark:border-slate-800/90 shadow-lg hover:shadow-2xl hover:border-orange-500/50 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+                        
+                        <!-- Top Ambient Card Accent -->
+                        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r {{ $gstep['gradient'] }} opacity-80 group-hover:h-2 transition-all"></div>
+
+                        <div>
+                            <!-- Header: Step Pill & Milestone Badge -->
+                            <div class="flex items-center justify-between gap-2 mb-5">
+                                <span class="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                                    {{ $gstep['step'] }}
+                                </span>
+                                <span class="text-[11px] font-bold text-orange-500 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 px-2.5 py-0.5 rounded-full border border-orange-200/60 dark:border-orange-800/40">
+                                    {{ $gstep['badge'] }}
+                                </span>
                             </div>
-                            <div>
-                                <span class="text-[10px] font-bold text-[#ff3d00] uppercase tracking-wider">{{ $gstep['step'] ?? '' }}</span>
-                                <h5 class="font-bold text-xs text-slate-900 dark:text-white mt-0.5">{{ $gstep['title'] ?? '' }}</h5>
+
+                            <!-- Icon Container -->
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br {{ $gstep['gradient'] }} text-white flex items-center justify-center text-xl sm:text-2xl shadow-md mb-5 group-hover:scale-110 transition-transform duration-300">
+                                <i class="{{ $gstep['icon'] }}"></i>
                             </div>
+
+                            <!-- Step Title (Increased Font Size) -->
+                            <h3 class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white mb-2.5 leading-snug tracking-tight">
+                                {{ $gstep['title'] }}
+                            </h3>
+
+                            <!-- Step Description (Readable, Clear Font) -->
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                                {{ $gstep['desc'] }}
+                            </p>
                         </div>
-                        @endforeach
-                    @endif
+
+                        <!-- Step Footer: Interactive Arrow Indicator -->
+                        <div class="pt-5 mt-5 border-t border-slate-100 dark:border-slate-800/70 flex items-center justify-between text-xs font-bold text-slate-400 group-hover:text-orange-500 transition-colors">
+                            <span class="text-[11px] uppercase tracking-wider">Milestone {{ $idx + 1 }}</span>
+                            <i class="fas fa-arrow-right text-xs transform group-hover:translate-x-1.5 transition-transform"></i>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -1981,7 +2051,7 @@
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-transparent to-orange-500/10 pointer-events-none"></div>
 
             <!-- Close Button -->
-            <button onclick="closeDemoModal()" aria-label="Close" class="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 hover:bg-slate-700 text-white transition-colors focus:outline-none shadow-md">
+            <button onclick="window.closeDemoModal()" aria-label="Close" class="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 hover:bg-slate-700 text-white transition-colors focus:outline-none shadow-md">
                 <i class="fas fa-times text-xs"></i>
             </button>
 
@@ -1997,7 +2067,7 @@
                 </div>
 
                 <!-- Form -->
-                <form id="liveDemoForm" onsubmit="submitLiveDemo(event)" class="space-y-3.5 pt-2">
+                <form id="liveDemoForm" onsubmit="window.submitLiveDemo(event)" class="space-y-3.5 pt-2">
                     @csrf
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Full Name</label>
@@ -2045,6 +2115,168 @@
             </div>
         </div>
     </div>
+
+
+    <!-- GLOBAL SCRIPTS FOR PRICING TOGGLE & BOOK FREE LIVE DEMO MODAL -->
+    <script>
+        // Pricing Plan Toggle for Reference Image 3
+        const pMonthly = {{ $data['lp_pricing_monthly'] ?? 999 }};
+        const pYearly = {{ $data['lp_pricing_yearly'] ?? 799 }};
+
+        window.setPricingPlan = function(plan) {
+            const toggleBg = document.getElementById('pricingToggleBg');
+            const btnMonthly = document.getElementById('toggleMonthlyBtn');
+            const btnYearly = document.getElementById('toggleYearlyBtn');
+            const priceAmount = document.getElementById('priceMainAmount');
+            const pricePeriod = document.getElementById('priceMainPeriod');
+            const subtext = document.getElementById('pricingSubtext');
+
+            if (plan === 'monthly') {
+                if (toggleBg) toggleBg.style.transform = 'translateX(0)';
+                if (btnMonthly) {
+                    btnMonthly.classList.remove('text-slate-600', 'dark:text-slate-300');
+                    btnMonthly.classList.add('text-white');
+                }
+                if (btnYearly) {
+                    btnYearly.classList.remove('text-white');
+                    btnYearly.classList.add('text-slate-600', 'dark:text-slate-300');
+                }
+                if (priceAmount) priceAmount.textContent = '₹' + pMonthly;
+                if (pricePeriod) pricePeriod.textContent = '/ month';
+                if (subtext) subtext.textContent = 'Monthly Plan Selected — Switch to Yearly and save 20%';
+            } else {
+                if (toggleBg) toggleBg.style.transform = 'translateX(100px)';
+                if (btnYearly) {
+                    btnYearly.classList.remove('text-slate-600', 'dark:text-slate-300');
+                    btnYearly.classList.add('text-white');
+                }
+                if (btnMonthly) {
+                    btnMonthly.classList.remove('text-white');
+                    btnMonthly.classList.add('text-slate-600', 'dark:text-slate-300');
+                }
+                if (priceAmount) priceAmount.textContent = '₹' + pYearly;
+                if (pricePeriod) pricePeriod.textContent = '/ month (Billed Yearly)';
+                if (subtext) subtext.textContent = 'Yearly Plan Selected — 20% Discount Applied!';
+            }
+        };
+
+        // Live Demo Modal Controls
+        window.openDemoModal = function() {
+            window.generateCaptcha();
+            const modal = document.getElementById('demoModal');
+            const card = document.getElementById('demoModalCard');
+            if (modal && card) {
+                modal.classList.remove('opacity-0', 'invisible');
+                modal.classList.add('opacity-100', 'visible');
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeDemoModal = function() {
+            const modal = document.getElementById('demoModal');
+            const card = document.getElementById('demoModalCard');
+            if (modal && card) {
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-100', 'visible');
+                    modal.classList.add('opacity-0', 'invisible');
+                    document.body.style.overflow = '';
+                }, 200);
+            }
+        };
+
+        window.generateCaptcha = function() {
+            const n1 = Math.floor(Math.random() * 10) + 1;
+            const n2 = Math.floor(Math.random() * 10) + 1;
+            const lbl = document.getElementById('captchaLabel');
+            const exp = document.getElementById('captchaExpected');
+            const ans = document.getElementById('captchaAnswer');
+            if (lbl && exp) {
+                lbl.textContent = `What is ${n1} + ${n2}?`;
+                exp.value = n1 + n2;
+                if (ans) ans.value = '';
+            }
+        };
+
+        window.submitLiveDemo = function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('demoSubmitBtn');
+            const msg = document.getElementById('demoFormMsg');
+            const n = document.getElementById('demo_name').value;
+            const w = document.getElementById('demo_whatsapp').value;
+            const em = document.getElementById('demo_email').value;
+            const p = document.getElementById('demo_profession').value;
+            const ans = document.getElementById('captchaAnswer').value;
+            const exp = document.getElementById('captchaExpected').value;
+
+            if (parseInt(ans) !== parseInt(exp)) {
+                msg.className = 'text-xs font-bold p-2.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40';
+                msg.textContent = 'Incorrect verification answer. Please try again.';
+                msg.classList.remove('hidden');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class=\"fas fa-spinner fa-spin mr-2\"></i> Submitting...';
+
+            fetch('{{ route(\"demo.submit\") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    name: n,
+                    whatsapp: w,
+                    email: em,
+                    profession: p,
+                    captcha_answer: ans,
+                    captcha_expected: exp
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Book Your Free Demo</span><i class=\"fas fa-arrow-right text-xs ml-2\"></i>';
+                if (data.success) {
+                    msg.className = 'text-xs font-bold p-3 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+                    msg.textContent = data.message;
+                    msg.classList.remove('hidden');
+                    document.getElementById('liveDemoForm').reset();
+                    setTimeout(() => {
+                        window.closeDemoModal();
+                        msg.classList.add('hidden');
+                    }, 3000);
+                } else {
+                    msg.className = 'text-xs font-bold p-2.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40';
+                    msg.textContent = data.message || 'An error occurred. Please try again.';
+                    msg.classList.remove('hidden');
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Book Your Free Demo</span><i class=\"fas fa-arrow-right text-xs ml-2\"></i>';
+                msg.className = 'text-xs font-bold p-2.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40';
+                msg.textContent = 'Unable to submit request. Please try contacting on WhatsApp directly.';
+                msg.classList.remove('hidden');
+            });
+        };
+
+        // Backdrop click listener to close demo modal
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('demoModal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        window.closeDemoModal();
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
