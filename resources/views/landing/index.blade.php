@@ -515,97 +515,136 @@
         </div>
     </section>
 
-    <!-- SECTION 4: WHITE LABEL SAAS PARTNER (Task 1: Detailed Left Explanation & Mobile Responsive) -->
-    <section class="py-10 sm:py-12 lg:py-16 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Card 1: White Label SaaS Partner Card (Active) -->
-            @php $model = $data['lp_model_cards'][0] ?? null; @endphp
-            @if($model)
-            <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-9 lg:p-12 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left">
-                <div class="text-left">
-                    <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-3.5 bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200/80 dark:border-indigo-700/50">
-                        {{ $model['badge'] ?? 'White Label SaaS' }}
-                    </span>
-                    <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[40px] text-slate-900 dark:text-white mb-3 tracking-tight text-left leading-[1.18]">
-                        {{ $model['title'] ?? 'White Label SaaS Partner' }}
-                    </h3>
-                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-left max-w-2xl font-normal">
-                        {{ $model['desc'] ?? 'Launch your own branded SaaS platform and sell subscriptions directly to business owners.' }}
-                    </p>
-
-                    <!-- Feature List & Explanation (Left) & Screen Preview (Right - Dynamic from User Dashboard) -->
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-8 text-left">
-                        
-                        <!-- Left Column: Explanation Box & Feature Checklist (Task 1) -->
-                        <div class="lg:col-span-6 space-y-4 text-left">
+    <!-- SECTION 4: WHITE LABEL SAAS PARTNER (Task 1: Reduced Width Container on Left & Explanation Outside on Right) -->
+    <section class="py-12 sm:py-16 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                
+                <!-- LEFT SIDE: WHITE LABEL SAAS PARTNER CONTAINER (Reduced Width - Task 1) -->
+                @php $model = $data['lp_model_cards'][0] ?? null; @endphp
+                @if($model)
+                <div class="lg:col-span-7 flex">
+                    <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-8 lg:p-9 shadow-xl border border-slate-200 dark:border-slate-700/90 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 relative overflow-hidden text-left w-full">
+                        <div>
+                            <!-- Badge -->
+                            <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-3 bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200/80 dark:border-indigo-700/50">
+                                {{ $model['badge'] ?? 'White Label SaaS' }}
+                            </span>
                             
-                            <!-- Left-Side Explanation Callout Box -->
-                            <div class="p-4 sm:p-5 rounded-2xl bg-orange-50/80 dark:bg-orange-950/20 border border-orange-200/80 dark:border-orange-900/40 text-left">
-                                <div class="flex items-center space-x-2 text-[#ff3d00] font-bold text-xs uppercase tracking-wider mb-1.5">
-                                    <i class="fas fa-sparkles"></i>
-                                    <span>Turnkey SaaS Partner Model</span>
-                                </div>
-                                <p class="text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                                    Our White Label Partner program gives you a complete, ready-to-sell software business under your custom brand. Onboard unlimited clients, set your own pricing, collect 100% of subscription revenue, and manage everything from a unified admin dashboard—with zero coding or server infrastructure required.
-                                </p>
-                            </div>
+                            <!-- Title -->
+                            <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[34px] text-slate-900 dark:text-white mb-2.5 tracking-tight text-left leading-[1.18]">
+                                {{ $model['title'] ?? 'White Label SaaS Partner' }}
+                            </h3>
+                            
+                            <!-- Subtitle -->
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-left font-normal">
+                                {{ $model['desc'] ?? 'Launch your own branded SaaS platform and sell subscriptions directly to business owners.' }}
+                            </p>
 
-                            @php
-                                $cardFeatures = (isset($model['features']) && is_array($model['features']) && count($model['features']) > 0) 
-                                    ? $model['features'] 
-                                    : [
-                                        'Launch Your Own SaaS Brand',
-                                        'Sell Unlimited Subscriptions',
-                                        '3 SaaS Products Included',
-                                        'Manage Your Customers & Business',
-                                        'Custom Domain & Branding',
-                                        'Build Recurring Revenue'
-                                    ];
-                                foreach ($cardFeatures as &$featItem) {
-                                    if ($featItem === 'SaaS Products Included') {
-                                        $featItem = '3 SaaS Products Included';
-                                    }
-                                }
-                            @endphp
-
-                            <!-- Checklist -->
-                            <div class="space-y-2.5 sm:space-y-3 pt-1">
-                                @foreach($cardFeatures as $f)
-                                <div class="flex items-center space-x-3 text-xs sm:text-[14px] font-semibold text-slate-800 dark:text-slate-200 text-left">
-                                    <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm">
-                                        <i class="fas fa-check"></i>
+                            <!-- Features List (Left) & Screen Preview (Right) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center mb-6 text-left">
+                                <div class="sm:col-span-6 space-y-2.5 text-left">
+                                    @php
+                                        $cardFeatures = (isset($model['features']) && is_array($model['features']) && count($model['features']) > 0) 
+                                            ? $model['features'] 
+                                            : [
+                                                'Launch Your Own SaaS Brand',
+                                                'Sell Unlimited Subscriptions',
+                                                '3 SaaS Products Included',
+                                                'Manage Your Customers & Business',
+                                                'Custom Domain & Branding',
+                                                'Build Recurring Revenue'
+                                            ];
+                                        foreach ($cardFeatures as &$featItem) {
+                                            if ($featItem === 'SaaS Products Included') {
+                                                $featItem = '3 SaaS Products Included';
+                                            }
+                                        }
+                                    @endphp
+                                    @foreach($cardFeatures as $f)
+                                    <div class="flex items-center space-x-2.5 text-xs sm:text-[13px] font-semibold text-slate-800 dark:text-slate-200 text-left">
+                                        <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] flex-shrink-0 shadow-sm">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <span>{{ $f }}</span>
                                     </div>
-                                    <span>{{ $f }}</span>
+                                    @endforeach
                                 </div>
-                                @endforeach
-                            </div>
-
-                            <!-- Trust Pills for Mobile/Desktop -->
-                            <div class="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-bold text-slate-600 dark:text-slate-400">
-                                <span class="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full"><i class="fas fa-check-circle text-green-500"></i> No Coding Needed</span>
-                                <span class="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full"><i class="fas fa-check-circle text-green-500"></i> 100% Recurring Profits</span>
-                                <span class="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full"><i class="fas fa-check-circle text-green-500"></i> 24/7 Tech Infrastructure</span>
+                                <div class="sm:col-span-6 mt-4 sm:mt-0">
+                                    <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700">
+                                        <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="User Dashboard Preview" class="w-full h-auto object-contain">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Right Column: Dashboard Mockup -->
-                        <div class="lg:col-span-6 mt-4 lg:mt-0 flex items-center justify-center">
-                            <div class="w-full relative rounded-2xl overflow-hidden shadow-xl border border-slate-200/90 dark:border-slate-700">
-                                <img src="{{ asset($model['image'] ?? '/assets/images/user_dashboard.png') }}" alt="User Dashboard Preview" class="w-full h-auto object-contain">
+                        <!-- CTA Button at bottom of card -->
+                        <div class="pt-5 border-t border-slate-100 dark:border-slate-800 text-left mt-auto">
+                            <a href="{{ $model['cta_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="btn-gradient inline-flex items-center justify-between w-full px-6 py-3.5 sm:py-4 rounded-2xl font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-orange-500/25 group">
+                                <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
+                                <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- RIGHT SIDE: EXPLANATION CONTENT OUTSIDE THE CONTAINER (Task 1) -->
+                <div class="lg:col-span-5 flex flex-col justify-between space-y-6 text-left py-2">
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-orange-200/80">
+                            <i class="fas fa-sparkles text-[10px]"></i>
+                            <span>PARTNER OPPORTUNITY</span>
+                        </div>
+
+                        <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[34px] text-slate-900 dark:text-white leading-[1.2] tracking-tight">
+                            Build a High-Margin Software Business Under Your Own Brand
+                        </h3>
+
+                        <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                            The White Label SaaS Partner program is engineered specifically for agencies, freelancers, IT consultants, and entrepreneurs looking to generate recurring revenue without product development overhead.
+                        </p>
+
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                            You get full turnkey access to 3 ready-to-sell software products—E-Commerce Builder, Website Builder, and WhatsApp Automation. Launch under your custom domain, set your own subscription pricing, onboard unlimited clients, and retain 100% of the customer payments.
+                        </p>
+
+                        <!-- 3 Quick Highlight Benefit Cards -->
+                        <div class="space-y-3 pt-2">
+                            <div class="flex items-start space-x-3.5 p-3.5 rounded-2xl bg-white dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="w-9 h-9 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-[#ff3d00] flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">Turnkey 24-Hour Launch</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">Everything is pre-built, tested, and configured under your logo and custom domain.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3.5 p-3.5 rounded-2xl bg-white dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">100% Recurring Profit Retention</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">Direct billing integration into your bank account. Keep every dollar you earn.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3.5 p-3.5 rounded-2xl bg-white dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">Zero Maintenance & Full Tech Support</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">We handle security, cloud servers, and code updates silently behind the scenes.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- CTA Button -->
-                <div class="pt-6 border-t border-slate-100 dark:border-slate-800 text-left mt-auto">
-                    <a href="{{ $model['cta_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="btn-gradient inline-flex items-center justify-center sm:justify-between w-full px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold text-xs sm:text-base text-white transition-all shadow-lg shadow-orange-500/25 group">
-                        <span>{{ $model['cta_text'] ?? 'Start with White Label SaaS' }}</span>
-                        <i class="fas fa-arrow-right ml-3 text-sm transition-transform group-hover:translate-x-1"></i>
-                    </a>
-                </div>
             </div>
-            @endif
         </div>
     </section>
 
@@ -677,25 +716,27 @@
         </div>
     </section>
 
-    <!-- SECTION 5: OUR ADVANCED SAAS PRODUCTS (Task 5: Overhauled Heading, Text Gradient, Enhanced Readability & Ecommerce Brands) -->
-    <section id="products" class="py-12 lg:py-18 bg-white dark:bg-[#0B0F19] reveal">
+    <!-- SECTION 5: OUR ADVANCED SAAS PRODUCTS (Task 2: Headline Spacing, Blinking Animated Badge & Highlighted Orange Trust Labels) -->
+    <section id="products" class="py-12 lg:py-20 bg-white dark:bg-[#0B0F19] reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-                <!-- Top Badge (Task 5: Our Advanced SAAS Products) -->
-                <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide bg-[#fff2ec] dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-[#fed7aa]/60 mx-auto">
-                    {{ (!empty($data['lp_products_tag']) && $data['lp_products_tag'] !== 'OUR PRODUCTS') ? $data['lp_products_tag'] : 'Our Advanced SAAS Products' }}
-                </span>
-                
-                <!-- Main Heading (Task 5: Increased Size & Modern Text Gradient) -->
-                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[46px] xl:text-[50px] tracking-tight mt-3.5 leading-[1.14]">
-                    <span class="bg-gradient-to-r from-slate-900 via-[#ff3d00] to-orange-500 dark:from-white dark:via-orange-400 dark:to-[#ff3d00] bg-clip-text text-transparent">
-                        {{ $data['lp_products_title'] ?? 'Everything You Need to Build & Scale Your SaaS Business' }}
+            <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+                <!-- Top Badge (Task 2: Attractive, Blinking Pulse & Gradient Font) -->
+                <div class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-gradient-to-r from-orange-500/15 via-[#ff3d00]/10 to-amber-500/15 text-[#ff3d00] dark:text-orange-400 border border-[#ff3d00]/40 shadow-sm relative overflow-hidden group animate-pulse mx-auto">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-ping"></span>
+                    <span class="bg-gradient-to-r from-[#ff3d00] via-orange-500 to-amber-500 bg-clip-text text-transparent font-black tracking-wide">
+                        {{ (!empty($data['lp_products_tag']) && $data['lp_products_tag'] !== 'OUR PRODUCTS') ? $data['lp_products_tag'] : 'Our Advanced SAAS Products' }}
                     </span>
+                </div>
+                
+                <!-- Main Heading (Task 2: Added Bottom Gap between "Everything You Need to Build &" and "Scale Your SaaS Business") -->
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight mt-5 mb-5 sm:mb-6 leading-[1.25]">
+                    <span class="block text-slate-900 dark:text-white mb-2 sm:mb-2.5">Everything You Need to Build &</span>
+                    <span class="block bg-gradient-to-r from-[#ff3d00] via-orange-500 to-amber-500 bg-clip-text text-transparent">Scale Your SaaS Business</span>
                 </h2>
                 
-                <!-- Description (Task 5: Replaced Nooryak with SaaSReselling, 5 with 3) -->
-                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-3.5 max-w-2xl mx-auto leading-relaxed font-normal">
+                <!-- Description -->
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-4 max-w-2xl mx-auto leading-relaxed font-normal">
                     {{ (!empty($data['lp_products_desc']) && stripos($data['lp_products_desc'], 'Nooryak') === false && stripos($data['lp_products_desc'], '5 powerful') === false)
                         ? $data['lp_products_desc']
                         : 'SaaSReselling combines 3 powerful White Label SaaS products, a unified dashboard, Single Sign-On (SSO), custom branding, and enterprise-grade management tools into one complete platform.' }}
@@ -716,7 +757,7 @@
 
                         <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2.5 leading-tight">Complete E-Commerce Solution</h3>
                         
-                        <!-- Product Description (Task 5: Increased font size and readability) -->
+                        <!-- Product Description -->
                         <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-1">
                             Launch your online store, manage products, payments, and customers — all in one place.
                         </p>
@@ -726,10 +767,10 @@
                             <img src="{{ asset('/assets/landing_page/ecombuilder_image.png') }}" alt="Launchshop E-Commerce Solution" class="w-full h-48 sm:h-52 object-cover object-top rounded-2xl shadow-md border border-orange-200/60 dark:border-slate-700 transform group-hover:scale-[1.03] transition-transform duration-300">
                         </div>
 
-                        <!-- Included Features Header (Task 5: Increased readability) -->
+                        <!-- Included Features Header -->
                         <p class="text-xs sm:text-[13px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3.5">INCLUDED FEATURES:</p>
 
-                        <!-- Feature List (Task 5: Increased content size & readability) -->
+                        <!-- Feature List -->
                         <ul class="space-y-3 mb-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-semibold">
                             <li class="flex items-center space-x-3">
                                 <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
@@ -759,8 +800,13 @@
                             <span>Explore Launchshop</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
-                        <!-- Task 5: Trusted by Ecommerce Brands -->
-                        <p class="text-center text-xs text-slate-400 font-medium mt-3">Trusted by Ecommerce Brands</p>
+                        <!-- Task 2: Highlighted Orange Gradient Trust Label (Increased Font Size) -->
+                        <div class="mt-3.5 text-center">
+                            <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-bold bg-gradient-to-r from-orange-500/15 via-[#ff3d00]/10 to-orange-500/15 border border-[#ff3d00]/30 text-[#ff3d00] dark:text-orange-400 shadow-sm">
+                                <i class="fas fa-shield-check text-[11px] mr-1.5"></i>
+                                Trusted by Ecommerce Brands
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -775,7 +821,7 @@
 
                         <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2.5 leading-tight">Professional Website Solution</h3>
                         
-                        <!-- Product Description (Task 5: Increased font size and readability) -->
+                        <!-- Product Description -->
                         <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-1">
                             Create stunning websites with ease using our drag-and-drop website builder with zero coding required.
                         </p>
@@ -788,7 +834,7 @@
                         <!-- Included Features Header -->
                         <p class="text-xs sm:text-[13px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3.5">INCLUDED FEATURES:</p>
 
-                        <!-- Feature List (Task 5: Increased readability & size) -->
+                        <!-- Feature List -->
                         <ul class="space-y-3 mb-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-semibold">
                             <li class="flex items-center space-x-3">
                                 <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
@@ -818,7 +864,13 @@
                             <span>Explore Website Builder</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
-                        <p class="text-center text-xs text-slate-400 font-medium mt-3">Trusted by Agencies & Creators</p>
+                        <!-- Task 2: Highlighted Orange Gradient Trust Label -->
+                        <div class="mt-3.5 text-center">
+                            <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-bold bg-gradient-to-r from-orange-500/15 via-[#ff3d00]/10 to-orange-500/15 border border-[#ff3d00]/30 text-[#ff3d00] dark:text-orange-400 shadow-sm">
+                                <i class="fas fa-shield-check text-[11px] mr-1.5"></i>
+                                Trusted by Agencies & Creators
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -835,7 +887,7 @@
 
                         <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2.5 leading-tight">Whatsappbulk Marketing & Automation</h3>
                         
-                        <!-- Product Description (Task 5: Increased font size and readability) -->
+                        <!-- Product Description -->
                         <p class="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal mb-1">
                             Automate bulk messaging campaigns, AI auto-replies, catalog sharing, and customer engagement directly on WhatsApp.
                         </p>
@@ -848,7 +900,7 @@
                         <!-- Included Features Header -->
                         <p class="text-xs sm:text-[13px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3.5">INCLUDED FEATURES:</p>
 
-                        <!-- Feature List (Task 5: Increased readability & size) -->
+                        <!-- Feature List -->
                         <ul class="space-y-3 mb-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-semibold">
                             <li class="flex items-center space-x-3">
                                 <div class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm"><i class="fas fa-check"></i></div>
@@ -878,7 +930,13 @@
                             <span>Explore Whatsappbulk</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
-                        <p class="text-center text-xs text-slate-400 font-medium mt-3">Trusted by Modern Businesses</p>
+                        <!-- Task 2: Highlighted Orange Gradient Trust Label -->
+                        <div class="mt-3.5 text-center">
+                            <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-bold bg-gradient-to-r from-orange-500/15 via-[#ff3d00]/10 to-orange-500/15 border border-[#ff3d00]/30 text-[#ff3d00] dark:text-orange-400 shadow-sm">
+                                <i class="fas fa-shield-check text-[11px] mr-1.5"></i>
+                                Trusted by Modern Businesses
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -887,47 +945,54 @@
         </div>
     </section>
 
-    <!-- SECTION 6: HOW NOORYAK WORKS (Task 2: Mobile scroll animation & downward arrows between steps) -->
-    <section class="py-10 lg:py-14 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/70 reveal">
+    <!-- SECTION 6: HOW SAASRESELLING WORKS (Task 3: Connected Zip Line & Attractive Glowing Badge) -->
+    <section class="py-12 lg:py-18 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/70 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
-            <span class="badge-pill mx-auto mb-3">{{ $data['lp_how_works_tag'] }}</span>
-            <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mb-14">
+            <!-- Attractive Blinking Badge (Task 3) -->
+            <div class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-gradient-to-r from-orange-500/15 via-[#ff3d00]/10 to-amber-500/15 text-[#ff3d00] dark:text-orange-400 border border-[#ff3d00]/40 shadow-sm relative overflow-hidden group animate-pulse mx-auto mb-4">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-ping"></span>
+                <span class="bg-gradient-to-r from-[#ff3d00] via-orange-500 to-amber-500 bg-clip-text text-transparent font-black tracking-wide">
+                    {{ (!empty($data['lp_how_works_tag']) && $data['lp_how_works_tag'] !== 'HOW NOORYAK WORKS') ? $data['lp_how_works_tag'] : 'HOW SAASRESELLING WORKS' }}
+                </span>
+            </div>
+            
+            <h2 class="font-heading font-extrabold text-2xl sm:text-4xl lg:text-[42px] text-slate-900 dark:text-white tracking-tight mb-14">
                 {{ $data['lp_how_works_title'] }}
             </h2>
 
             @if(is_array($data['lp_how_works_steps']))
-            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-4 max-w-6xl mx-auto">
+            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-4 max-w-6xl mx-auto">
+                
+                <!-- Continuous Zip Line Track behind the step icons (Desktop: Horizontal, Mobile: Vertical) -->
+                <div class="hidden lg:block absolute top-9 left-[10%] right-[10%] h-[3px] bg-gradient-to-r from-orange-300 via-[#ff3d00] to-orange-300 dark:from-slate-700 dark:via-[#ff3d00] dark:to-slate-700 z-0"></div>
+                <div class="lg:hidden absolute top-12 bottom-12 left-1/2 -translate-x-1/2 w-[3px] bg-gradient-to-b from-orange-300 via-[#ff3d00] to-orange-300 dark:from-slate-700 dark:via-[#ff3d00] dark:to-slate-700 z-0"></div>
+
                 @foreach($data['lp_how_works_steps'] as $index => $step)
                     
-                    <!-- Step Item with mobile scroll reveal animation -->
-                    <div class="step-card flex-1 flex flex-col items-center text-center group z-10 px-2 transition-all duration-700 ease-out transform opacity-0 translate-y-8">
-                        <!-- Icon Circle -->
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full btn-gradient flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-orange-500/25 mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <!-- Step Item with zip line connector -->
+                    <div class="step-card flex-1 flex flex-col items-center text-center group z-10 px-2 transition-all duration-700 ease-out transform opacity-0 translate-y-8 relative w-full sm:w-auto">
+                        <!-- Icon Circle with ring mask over zip line -->
+                        <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full btn-gradient flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-orange-500/25 mb-4 group-hover:scale-110 transition-transform duration-300 ring-8 ring-slate-50 dark:ring-[#151c2c] z-10">
                             <i class="{{ $step['icon'] ?? 'fas fa-check' }}"></i>
                         </div>
                         
                         <!-- Step Label -->
-                        <span class="text-xs font-bold text-[#ff3d00] uppercase tracking-wide mb-1">Step {{ $step['step'] ?? ($index + 1) }}</span>
+                        <span class="text-xs font-extrabold text-[#ff3d00] uppercase tracking-wider mb-1.5">Step {{ $step['step'] ?? ($index + 1) }}</span>
                         
                         <!-- Title -->
-                        <h4 class="font-space font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
+                        <h4 class="font-heading font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
                         
                         <!-- Description -->
                         <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-[240px]">{{ $step['desc'] ?? '' }}</p>
                     </div>
 
-                    <!-- Downward Arrow Connector between steps (MOBILE ONLY - Task 2) -->
+                    <!-- Subtle arrow indicator for desktop between steps -->
                     @if(!$loop->last)
-                    <div class="step-arrow flex lg:hidden items-center justify-center my-3 text-[#ff3d00] animate-bounce transition-all duration-500 opacity-0 transform translate-y-4">
-                        <div class="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-900/30/90 border border-orange-200 text-[#ff3d00] flex items-center justify-center text-xs shadow-sm">
-                            <i class="fas fa-arrow-down"></i>
+                    <div class="hidden lg:flex items-center justify-center text-[#ff3d00] font-bold -mt-16 text-sm z-10">
+                        <div class="w-6 h-6 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-700 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-chevron-right text-[10px]"></i>
                         </div>
-                    </div>
-
-                    <!-- Right Arrow Connector between steps (DESKTOP ONLY) -->
-                    <div class="hidden lg:flex items-center justify-center text-slate-400 font-bold -mt-16 text-lg">
-                        <i class="fas fa-arrow-right text-slate-400 opacity-60"></i>
                     </div>
                     @endif
 
@@ -938,99 +1003,138 @@
         </div>
     </section>
 
-    <!-- SECTION 7: WHY CHOOSE & REVENUE CALCULATOR -->
-    <section class="py-10 lg:py-14 bg-white dark:bg-[#0B0F19] reveal border-t border-slate-200 dark:border-slate-700/80">
+    <!-- SECTION 7: WHY CHOOSE & REVENUE CALCULATOR (Task 4: Reference Image 5 Layout & Default 1 Customer) -->
+    <section class="py-12 lg:py-18 bg-white dark:bg-[#0B0F19] reveal border-t border-slate-200 dark:border-slate-700/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
                 
-                <!-- Left: Why Choose Us (7 cols) -->
-                <div class="lg:col-span-7 lg:pr-8 xl:pr-16">
-                    <div class="mb-8 text-left">
-                        <span class="badge-pill mb-3 inline-block">{{ $data['lp_why_choose_tag'] }}</span>
-                        <h2 class="font-space font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
+                <!-- Left: Why Choose Us (6 cols) -->
+                <div class="lg:col-span-6 flex flex-col justify-between">
+                    <div>
+                        <!-- Attractive Badge for WHY CHOOSE (Task 3) -->
+                        <div class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-gradient-to-r from-orange-500/15 via-[#ff3d00]/10 to-amber-500/15 text-[#ff3d00] dark:text-orange-400 border border-[#ff3d00]/40 shadow-sm relative overflow-hidden group animate-pulse mb-4 text-left">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-ping"></span>
+                            <span class="bg-gradient-to-r from-[#ff3d00] via-orange-500 to-amber-500 bg-clip-text text-transparent font-black tracking-wide">
+                                {{ (!empty($data['lp_why_choose_tag']) && $data['lp_why_choose_tag'] !== 'WHY CHOOSE NOORYAK?') ? $data['lp_why_choose_tag'] : 'WHY CHOOSE SAASRESELLING?' }}
+                            </span>
+                        </div>
+
+                        <h2 class="font-heading font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mb-8 text-left">
                             {{ $data['lp_why_choose_title'] }}
                         </h2>
-                    </div>
 
-                    @if(is_array($data['lp_why_choose_items']))
-                    @php
-                        // Curated pastel background color mappings to match reference screenshot
-                        $colorStyles = [
-                            0 => ['bg' => 'bg-emerald-100/90 text-emerald-600'],
-                            1 => ['bg' => 'bg-sky-100/90 text-sky-600'],
-                            2 => ['bg' => 'bg-orange-100 dark:bg-orange-900/30/90 text-orange-600'],
-                            3 => ['bg' => 'bg-teal-100/90 text-teal-600'],
-                            4 => ['bg' => 'bg-purple-100/90 text-purple-600'],
-                            5 => ['bg' => 'bg-blue-100/90 text-blue-600'],
-                        ];
-                    @endphp
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                        @foreach($data['lp_why_choose_items'] as $index => $item)
-                        @php
-                            $style = $colorStyles[$index % count($colorStyles)];
-                        @endphp
-                        <div class="bg-slate-50 dark:bg-[#151c2c] p-5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md transition-all flex flex-col items-start text-left">
-                            <div class="w-9 h-9 rounded-xl {{ $style['bg'] }} flex items-center justify-center text-sm mb-3">
-                                <i class="{{ $item['icon'] ?? 'fas fa-shield-alt' }}"></i>
+                        <!-- 6 Why Choose Feature Cards matching Reference Image 5 Style -->
+                        @if(is_array($data['lp_why_choose_items']))
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @php
+                                $colorStyles = [
+                                    ['bg' => 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400', 'icon' => 'fas fa-shield-alt'],
+                                    ['bg' => 'bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400', 'icon' => 'fas fa-bolt'],
+                                    ['bg' => 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400', 'icon' => 'fas fa-coins'],
+                                    ['bg' => 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400', 'icon' => 'fas fa-tag'],
+                                    ['bg' => 'bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400', 'icon' => 'fas fa-layer-group'],
+                                    ['bg' => 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400', 'icon' => 'fas fa-life-ring']
+                                ];
+                            @endphp
+                            @foreach($data['lp_why_choose_items'] as $index => $item)
+                            @php
+                                $style = $colorStyles[$index % count($colorStyles)];
+                            @endphp
+                            <div class="bg-white dark:bg-[#151c2c] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md transition-all flex flex-col items-start text-left">
+                                <div class="w-9 h-9 rounded-xl {{ $style['bg'] }} flex items-center justify-center text-sm mb-3">
+                                    <i class="{{ $item['icon'] ?? $style['icon'] }}"></i>
+                                </div>
+                                <h4 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white mb-1.5 leading-snug">{{ $item['title'] ?? '' }}</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">{{ $item['desc'] ?? '' }}</p>
                             </div>
-                            <h4 class="font-space font-extrabold text-sm sm:text-base text-slate-900 dark:text-white mb-1.5">{{ $item['title'] ?? '' }}</h4>
-                            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ $item['desc'] ?? '' }}</p>
+                            @endforeach
                         </div>
-                        @endforeach
+                        @endif
                     </div>
-                    @endif
                 </div>
 
-                <!-- Right: Revenue Calculator (5 cols) -->
-                <div class="lg:col-span-5 flex">
-                    <div class="relative w-full text-white rounded-3xl p-7 sm:p-8 shadow-2xl border border-slate-800/80 overflow-hidden flex flex-col justify-between" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}'); background-size: cover; background-color: #0f172a;">
+                <!-- Right: Revenue Opportunity Calculator (6 cols - Task 4: Pixel Matching Reference Image 5 Structure with Brand Colors) -->
+                <div class="lg:col-span-6 flex">
+                    <div class="relative w-full text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-2xl border border-slate-800 flex flex-col justify-between bg-[#080E24] overflow-hidden">
                         
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
-                            <div>
-                                <h3 class="font-space font-extrabold text-lg text-white">{{ $data['lp_rev_calc_title'] }}</h3>
-                                <p class="text-[11px] text-slate-400 mt-0.5">{{ $data['lp_rev_calc_subtitle'] }}</p>
-                            </div>
-                            <div class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-base">
-                                <i class="fas fa-calculator"></i>
-                            </div>
-                        </div>
+                        <!-- Subtle ambient glow in background -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-transparent to-orange-500/10 pointer-events-none"></div>
 
-                        <!-- Interactive Range Slider -->
-                        <div class="space-y-3 mb-5">
-                            <div class="flex justify-between items-center text-xs">
-                                <span class="text-slate-300 font-medium">Active Customers:</span>
-                                <span id="customerCountDisplay" class="font-extrabold text-orange-400 text-base bg-orange-500/20 px-3 py-0.5 rounded-lg">100</span>
-                            </div>
-                            <input type="range" id="customerSlider" min="10" max="1000" step="10" value="{{ $data['lp_rev_calc_default_customers'] }}">
-                        </div>
-
-                        <!-- Revenue Output -->
-                        <div class="bg-white dark:bg-[#0B0F19]/10 rounded-2xl p-5 border border-white/10 text-center mb-5 backdrop-blur-sm">
-                            <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">Estimated Monthly Revenue</p>
-                            <p id="monthlyRevDisplay" class="font-space font-extrabold text-2xl sm:text-3xl text-orange-400">
-                                ₹99,900 <span class="text-xs font-normal text-slate-400">/month</span>
-                            </p>
-                            <p class="text-[10px] text-slate-400 mt-1.5">
-                                Based on <span id="calcSubtextCount">100</span> customers × ₹{{ $data['lp_rev_calc_price_per_customer'] }}/mo
-                            </p>
-                        </div>
-
-                        <!-- Bullets -->
-                        <div class="grid grid-cols-2 gap-2.5 mb-6 text-[11px] font-semibold">
-                            @if(is_array($data['lp_rev_calc_bullets']))
-                                @foreach($data['lp_rev_calc_bullets'] as $bullet)
-                                <div class="flex items-center space-x-2 text-slate-200">
-                                    <i class="fas fa-check-circle text-orange-400 text-[11px]"></i>
-                                    <span>{{ $bullet }}</span>
+                        <div class="relative z-10">
+                            <!-- Calculator Header -->
+                            <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-800">
+                                <div>
+                                    <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-white">{{ $data['lp_rev_calc_title'] ?? 'Revenue Opportunity Calculator' }}</h3>
+                                    <p class="text-xs text-slate-400 mt-1">{{ $data['lp_rev_calc_subtitle'] ?? 'See how much you can earn every month' }}</p>
                                 </div>
-                                @endforeach
-                            @endif
+                                <div class="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 text-orange-400 flex items-center justify-center text-lg shadow-sm flex-shrink-0">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Slider Row: Label on Left, Number Input Badge on Right (Task 4: Starts at 1) -->
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between items-center text-xs sm:text-sm">
+                                    <span class="text-slate-200 font-bold">Active Customers:</span>
+                                    <div class="bg-[#11193d] border border-slate-700/80 px-4 py-1 rounded-xl text-center shadow-inner min-w-[50px]">
+                                        <span id="customerCountDisplay" class="font-heading font-black text-white text-base sm:text-lg">1</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Range Slider Track (min 1, max 500, default 1) -->
+                                <input type="range" id="customerSlider" min="1" max="500" step="1" value="1" class="w-full accent-[#ff3d00] cursor-pointer h-2 bg-slate-800 rounded-lg">
+                            </div>
+
+                            <!-- Calculation Result Box: Matching Reference Image 5 (Two Column Split Layout) -->
+                            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xl my-6 text-left">
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+                                    
+                                    <!-- Left Column: Revenue Amount -->
+                                    <div class="md:col-span-7 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-4">
+                                        <p class="text-xs sm:text-[13px] font-bold text-blue-600 uppercase tracking-wide mb-1">
+                                            Estimated Monthly Revenue
+                                        </p>
+                                        <div id="monthlyRevDisplay" class="font-heading font-black text-3xl sm:text-4xl lg:text-[40px] text-slate-900 leading-tight">
+                                            ₹999 <span class="text-xs sm:text-sm font-semibold text-slate-400">/month</span>
+                                        </div>
+                                        <p class="text-xs text-slate-700 font-semibold mt-2">
+                                            <span id="calcSubtextCount">1</span> Customers × ₹{{ $data['lp_rev_calc_price_per_customer'] ?? 999 }}
+                                        </p>
+                                        <p class="text-[11px] text-slate-400 mt-0.5 font-normal">
+                                            *Average price per customer/month
+                                        </p>
+                                    </div>
+
+                                    <!-- Right Column: 4 Feature Checkmark Bullets (Reference Image 5) -->
+                                    <div class="md:col-span-5 space-y-2.5">
+                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                            <span>Low Investment</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                            <span>High Margin</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                            <span>Recurring Income</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                            <span>Unlimited Potential</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- CTA -->
-                        <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient w-full block text-center py-3.5 rounded-2xl text-white font-bold text-[11px] shadow-lg">
-                            Start Building Your Revenue <i class="fas fa-arrow-right ml-2 text-[10px]"></i>
-                        </a>
+                        <!-- CTA Button at bottom of Calculator -->
+                        <div class="relative z-10 pt-2">
+                            <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20Revenue%20Opportunity" target="_blank" class="btn-gradient w-full py-4 px-6 rounded-2xl text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/25 flex items-center justify-center space-x-2.5 hover:scale-[1.01] transition-transform">
+                                <span>Start Building Your Revenue</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
 
                     </div>
                 </div>
@@ -1038,7 +1142,6 @@
             </div>
         </div>
     </section>
-
 
     <!-- SECTION 8: PRICING -->
     <section id="pricing" class="py-12 lg:py-16 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 relative">
@@ -1512,7 +1615,7 @@
             });
         }
 
-        // Interactive Revenue Calculator Slider
+        // Interactive Revenue Calculator Slider (Task 4: Starts at 1)
         const slider = document.getElementById('customerSlider');
         const countDisplay = document.getElementById('customerCountDisplay');
         const revDisplay = document.getElementById('monthlyRevDisplay');
@@ -1521,11 +1624,11 @@
 
         if (slider && countDisplay && revDisplay) {
             function updateCalculator() {
-                const customers = parseInt(slider.value);
+                const customers = parseInt(slider.value) || 1;
                 const totalRev = customers * pricePerCustomer;
                 countDisplay.textContent = customers;
                 if (subtextCount) subtextCount.textContent = customers;
-                revDisplay.innerHTML = '₹' + totalRev.toLocaleString('en-IN') + ' <span class="text-xs font-normal text-slate-400">/month</span>';
+                revDisplay.innerHTML = '₹' + totalRev.toLocaleString('en-IN') + ' <span class="text-xs sm:text-sm font-semibold text-slate-400">/month</span>';
             }
 
             slider.addEventListener('input', updateCalculator);

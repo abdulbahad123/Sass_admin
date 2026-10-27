@@ -297,6 +297,10 @@ class LandingPageController extends Controller
             if ($curHowTag === 'HOW NOORYAK WORKS') {
                 Setting::set('lp_how_works_tag', 'HOW SAASRESELLING WORKS');
             }
+            $curDefaultCust = Setting::get('lp_rev_calc_default_customers');
+            if (empty($curDefaultCust) || $curDefaultCust == 100 || $curDefaultCust == 10) {
+                Setting::set('lp_rev_calc_default_customers', 1);
+            }
             $curWhyTag = Setting::get('lp_why_choose_tag');
             if ($curWhyTag === 'WHY CHOOSE NOORYAK?') {
                 Setting::set('lp_why_choose_tag', 'WHY CHOOSE SAASRESELLING?');
@@ -421,7 +425,7 @@ class LandingPageController extends Controller
             'lp_rev_calc_title' => Setting::get('lp_rev_calc_title', 'Revenue Opportunity Calculator'),
             'lp_rev_calc_subtitle' => Setting::get('lp_rev_calc_subtitle', 'See how much you can earn every month'),
             'lp_rev_calc_price_per_customer' => (int) Setting::get('lp_rev_calc_price_per_customer', 999),
-            'lp_rev_calc_default_customers' => (int) Setting::get('lp_rev_calc_default_customers', 100),
+            'lp_rev_calc_default_customers' => (int) Setting::get('lp_rev_calc_default_customers', 1),
             'lp_rev_calc_bullets' => json_decode(Setting::get('lp_rev_calc_bullets', json_encode([
                 'Low Investment',
                 'High Margin',
