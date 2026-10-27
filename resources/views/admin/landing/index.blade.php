@@ -50,6 +50,9 @@
         <button @click="activeTab = 'faqs'" :class="activeTab === 'faqs' ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50' : 'border-transparent hover:text-slate-900 hover:bg-slate-100'" class="px-4 py-2.5 rounded-xl border-b-2 transition-all">
             Testimonials & FAQs
         </button>
+        <button @click="activeTab = 'security'" :class="activeTab === 'security' ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50' : 'border-transparent hover:text-slate-900 hover:bg-slate-100'" class="px-4 py-2.5 rounded-xl border-b-2 transition-all">
+            Security & reCAPTCHA
+        </button>
         <button @click="activeTab = 'footer'" :class="activeTab === 'footer' ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50' : 'border-transparent hover:text-slate-900 hover:bg-slate-100'" class="px-4 py-2.5 rounded-xl border-b-2 transition-all">
             CTA Banner & Footer
         </button>
@@ -182,6 +185,12 @@
                         <label class="block text-xs font-bold text-slate-700 mb-2">Hero CTA 2 Target URL</label>
                         <input type="text" name="lp_hero_cta2_url" value="{{ $data['lp_hero_cta2_url'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500">
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Hero Video URL ("See How It Works" Popup)</label>
+                    <input type="text" name="hero_video_url" value="{{ $data['hero_video_url'] ?? 'https://www.youtube.com/embed/dQw4w9WgXcQ' }}" placeholder="https://www.youtube.com/embed/..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 font-mono">
+                    <span class="text-[10px] text-slate-400 mt-1 block">Enter a YouTube embed URL (e.g. https://www.youtube.com/embed/VIDEO_ID).</span>
                 </div>
 
                 <div>
@@ -403,16 +412,17 @@
                     </div>
                 </div>
 
-                <!-- Dashboard Preview Mockup Image -->
+                <!-- Dashboard Preview Mockup Image (Task 1: Live Preview & Reliable Upload) -->
                 <div class="pt-2">
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">Dashboard Screen Preview Image</label>
-                    @if(!empty($data['lp_pricing_image']))
                     <div class="mb-3 flex items-center space-x-3">
-                        <img src="{{ asset($data['lp_pricing_image']) }}" class="h-20 w-auto rounded border p-1 bg-white">
-                        <button type="button" onclick="deleteLandingImage('lp_pricing_image')" class="px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold border border-rose-200">Delete Image</button>
+                        <img id="pricingImagePreview" src="{{ asset(ltrim($data['lp_pricing_image'] ?? 'assets/images/user_dashboard.png', '/')) }}" class="h-20 w-auto rounded-xl border border-slate-200 p-1 bg-white shadow-sm object-contain">
+                        @if(!empty($data['has_custom_pricing_image']))
+                        <button type="button" onclick="deleteLandingImage('lp_pricing_image')" class="px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold border border-rose-200 hover:bg-rose-100 transition">Delete Image</button>
+                        @endif
                     </div>
-                    @endif
-                    <input type="file" name="lp_pricing_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <input type="file" name="lp_pricing_image" onchange="previewLandingImage(this, 'pricingImagePreview')" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    <span class="text-[10px] text-slate-400 mt-1 block">Supports JPG, PNG, WEBP, SVG up to 5MB. Instant live preview on file selection.</span>
                 </div>
 
                 <!-- Trophy Box -->

@@ -146,6 +146,9 @@
             /* If any specific dark mode fixes are needed */
         }
     </style>
+    @if(!empty($data['recaptcha_site_key']))
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
 </head>
 <body class="antialiased">
 
@@ -357,17 +360,18 @@
 
                     <!-- CTAs matching Reference Image -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                        <a href="{{ $data['lp_hero_cta1_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#ff5722] to-[#ff3d00] hover:from-[#ff3d00] hover:to-[#e63600] text-white font-bold text-sm sm:text-base shadow-xl shadow-orange-500/25 transition-all text-center flex items-center justify-center space-x-2 group">
-                            <span>{{ $data['lp_hero_cta1_text'] ?? 'Start Your SaaS Business' }}</span>
+                        <button onclick="window.openDemoModal()" class="px-8 py-3.5 sm:py-4 rounded-full btn-gradient text-white font-bold text-sm sm:text-base shadow-xl shadow-orange-500/30 hover:scale-[1.02] transition-transform text-center flex items-center justify-center space-x-2.5 group">
+                            <i class="fas fa-video text-xs sm:text-sm"></i>
+                            <span>Book Free 1:1 Live Demo</span>
                             <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
-                        </a>
+                        </button>
 
-                        <a href="{{ $data['lp_hero_cta2_url'] ?? 'https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination' }}" class="px-7 py-3.5 sm:py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm sm:text-base hover:bg-slate-50 dark:hover:bg-[#151c2c] transition-all flex items-center justify-center space-x-3 shadow-sm">
-                            <div class="w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-[10px]">
+                        <button onclick="window.openVideoModal()" class="px-7 py-3.5 sm:py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm sm:text-base hover:bg-slate-50 dark:hover:bg-[#151c2c] hover:scale-[1.02] transition-all flex items-center justify-center space-x-3 shadow-sm">
+                            <div class="w-7 h-7 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-xs shadow-sm">
                                 <i class="fas fa-play ml-0.5"></i>
                             </div>
-                            <span>{{ $data['lp_hero_cta2_text'] ?? 'Book Live Demo' }}</span>
-                        </a>
+                            <span>See How It Works</span>
+                        </button>
                     </div>
 
                     <!-- Hero Feature Checkmarks matching Reference Image -->
@@ -946,8 +950,8 @@
         </div>
     </section>
 
-    <!-- SECTION 6: HOW SAASRESELLING WORKS (Task 3: Connected Zip Line & Attractive Glowing Badge) -->
-    <section class="py-12 lg:py-18 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/70 reveal">
+    <!-- SECTION 6: HOW SAASRESELLING WORKS (Task 3: Flawless Mobile Timeline & Desktop Centered Line/Arrows) -->
+    <section class="py-14 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/70 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
             <!-- Attractive Blinking Badge (Task 3) -->
@@ -958,45 +962,68 @@
                 </span>
             </div>
             
-            <h2 class="font-heading font-extrabold text-2xl sm:text-4xl lg:text-[42px] text-slate-900 dark:text-white tracking-tight mb-14">
+            <h2 class="font-heading font-extrabold text-2xl sm:text-4xl lg:text-[42px] text-slate-900 dark:text-white tracking-tight mb-12 sm:mb-16">
                 {{ $data['lp_how_works_title'] }}
             </h2>
 
             @if(is_array($data['lp_how_works_steps']))
-            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-4 max-w-6xl mx-auto">
+            <!-- Desktop Layout (lg:flex): Horizontal Row with Line & Centered Chevron Arrows -->
+            <div class="hidden lg:flex items-start justify-between relative max-w-6xl mx-auto">
                 
-                <!-- Continuous Zip Line Track behind the step icons (Desktop: Horizontal, Mobile: Vertical) -->
-                <div class="hidden lg:block absolute top-9 left-[10%] right-[10%] border-t-2 border-dashed border-[#ff3d00] dark:border-orange-500 z-0 opacity-80"></div>
-                <div class="lg:hidden absolute top-12 bottom-12 left-1/2 -translate-x-1/2 border-l-2 border-dashed border-[#ff3d00] dark:border-orange-500 z-0 opacity-80"></div>
+                <!-- Continuous Dashed Line at top-10 (40px, exact vertical center of the 80px circles) -->
+                <div class="absolute top-10 left-[12%] right-[12%] border-t-2 border-dashed border-[#ff3d00] dark:border-orange-500 z-0 opacity-80"></div>
 
                 @foreach($data['lp_how_works_steps'] as $index => $step)
+                <div class="step-card flex-1 flex flex-col items-center text-center group z-10 px-3 relative">
+                    <!-- Icon Circle (80px, ring mask over dashed line) -->
+                    <div class="w-20 h-20 rounded-full btn-gradient flex items-center justify-center text-white text-2xl shadow-xl shadow-orange-500/25 mb-4 group-hover:scale-110 transition-transform duration-300 ring-8 ring-slate-50 dark:ring-[#151c2c] z-10 flex-shrink-0">
+                        <i class="{{ $step['icon'] ?? 'fas fa-check' }}"></i>
+                    </div>
                     
-                    <!-- Step Item with zip line connector -->
-                    <div class="step-card flex-1 flex flex-col items-center text-center group z-10 px-2 transition-all duration-700 ease-out transform opacity-0 translate-y-8 relative w-full sm:w-auto">
-                        <!-- Icon Circle with ring mask over zip line -->
-                        <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full btn-gradient flex items-center justify-center text-white text-xl sm:text-2xl shadow-xl shadow-orange-500/25 mb-4 group-hover:scale-110 transition-transform duration-300 ring-8 ring-slate-50 dark:ring-[#151c2c] z-10">
-                            <i class="{{ $step['icon'] ?? 'fas fa-check' }}"></i>
-                        </div>
-                        
-                        <!-- Step Label -->
-                        <span class="text-xs font-extrabold text-[#ff3d00] uppercase tracking-wider mb-1.5">Step {{ $step['step'] ?? ($index + 1) }}</span>
-                        
-                        <!-- Title -->
-                        <h4 class="font-heading font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
-                        
-                        <!-- Description -->
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-[240px]">{{ $step['desc'] ?? '' }}</p>
+                    <!-- Step Label -->
+                    <span class="text-xs font-black text-[#ff3d00] uppercase tracking-wider mb-1.5">Step 0{{ $index + 1 }}</span>
+                    
+                    <!-- Title -->
+                    <h4 class="font-heading font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-2 leading-snug">{{ $step['title'] ?? '' }}</h4>
+                    
+                    <!-- Description -->
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-[220px]">{{ $step['desc'] ?? '' }}</p>
+                </div>
+
+                <!-- Perfectly Centered Arrow Badge on the Line Between Steps -->
+                @if(!$loop->last)
+                <div class="absolute top-10 -translate-y-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border border-orange-300 dark:border-slate-700 flex items-center justify-center text-[#ff3d00] shadow-sm z-10" style="left: calc({{ ($index + 1) * 25 }}% - 12px);">
+                    <i class="fas fa-chevron-right text-[10px]"></i>
+                </div>
+                @endif
+                @endforeach
+            </div>
+
+            <!-- Mobile Layout (< lg): Attractive Vertical Timeline (No Line Overlapping Text) -->
+            <div class="lg:hidden relative text-left max-w-sm mx-auto space-y-7 pl-2">
+                <!-- Vertical Dashed Line connecting the circles strictly on the left -->
+                <div class="absolute top-8 bottom-8 left-[35px] w-0.5 border-l-2 border-dashed border-[#ff3d00] dark:border-orange-500 z-0 opacity-80"></div>
+
+                @foreach($data['lp_how_works_steps'] as $index => $step)
+                <div class="relative z-10 flex items-start space-x-4 group">
+                    <!-- Icon Circle -->
+                    <div class="w-14 h-14 rounded-2xl btn-gradient flex items-center justify-center text-white text-xl shadow-lg shadow-orange-500/25 ring-4 ring-slate-50 dark:ring-[#151c2c] flex-shrink-0 group-hover:scale-105 transition-transform">
+                        <i class="{{ $step['icon'] ?? 'fas fa-check' }}"></i>
                     </div>
 
-                    <!-- Subtle arrow indicator for desktop between steps -->
-                    @if(!$loop->last)
-                    <div class="hidden lg:flex items-center justify-center text-[#ff3d00] font-bold -mt-16 text-sm z-10">
-                        <div class="w-6 h-6 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-700 flex items-center justify-center shadow-sm">
-                            <i class="fas fa-chevron-right text-[10px]"></i>
-                        </div>
+                    <!-- Content on the right -->
+                    <div class="pt-0.5 flex-1">
+                        <span class="inline-block text-[11px] font-extrabold text-[#ff3d00] uppercase tracking-wider bg-orange-50 dark:bg-orange-950/40 px-2.5 py-0.5 rounded-full border border-orange-200/60 dark:border-orange-900/40 mb-1">
+                            Step 0{{ $index + 1 }}
+                        </span>
+                        <h4 class="font-heading font-extrabold text-base text-slate-900 dark:text-white leading-snug">
+                            {{ $step['title'] ?? '' }}
+                        </h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                            {{ $step['desc'] ?? '' }}
+                        </p>
                     </div>
-                    @endif
-
+                </div>
                 @endforeach
             </div>
             @endif
@@ -1476,11 +1503,11 @@
                         @foreach($data['lp_faqs_items'] as $fIndex => $faq)
                         <div class="border-b border-slate-100 dark:border-slate-800 last:border-0 pb-3 last:pb-0">
                             <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 dark:text-white bg-white dark:bg-[#0B0F19] hover:text-[#ff3d00] flex items-center justify-between focus:outline-none transition-colors">
-                                <span class="pr-4">{{ $faq['question'] ?? '' }}</span>
+                                <span class="pr-4">{{ str_ireplace(['Nooryak.in', 'nooryak.in', 'Nooryak', 'nooryak'], ['saasreselling.com', 'saasreselling.com', 'SaaSReselling', 'SaaSReselling'], $faq['question'] ?? '') }}</span>
                                 <i class="fas fa-plus text-xs text-slate-400 font-normal transition-transform duration-200 ml-2 flex-shrink-0"></i>
                             </button>
                             <div class="faq-content hidden pt-1 pb-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                {{ $faq['answer'] ?? '' }}
+                                {{ str_ireplace(['Nooryak.in', 'nooryak.in', 'Nooryak', 'nooryak'], ['saasreselling.com', 'saasreselling.com', 'SaaSReselling', 'SaaSReselling'], $faq['answer'] ?? '') }}
                             </div>
                         </div>
                         @endforeach
@@ -2097,12 +2124,12 @@
                         </select>
                     </div>
 
-                    <!-- Math Verification Captcha -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1" id="captchaLabel">What is 10 + 7?</label>
-                        <input type="number" id="captchaAnswer" required placeholder="Enter the answer" class="w-full bg-[#11193d] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] outline-none">
-                        <input type="hidden" id="captchaExpected" value="17">
+                    @if(!empty($data['recaptcha_site_key']))
+                    <!-- Google reCAPTCHA v2 (Task 5) -->
+                    <div class="my-3 flex justify-center">
+                        <div class="g-recaptcha" data-sitekey="{{ $data['recaptcha_site_key'] }}"></div>
                     </div>
+                    @endif
 
                     <div id="demoFormMsg" class="hidden text-xs font-bold p-2.5 rounded-xl"></div>
 
@@ -2162,7 +2189,7 @@
 
         // Live Demo Modal Controls
         window.openDemoModal = function() {
-            window.generateCaptcha();
+            
             const modal = document.getElementById('demoModal');
             const card = document.getElementById('demoModalCard');
             if (modal && card) {
@@ -2201,6 +2228,38 @@
             }
         };
 
+        // Video Modal Controls (Task 4)
+        window.openVideoModal = function() {
+            const modal = document.getElementById('videoModal');
+            const card = document.getElementById('videoModalCard');
+            const iframe = document.getElementById('heroVideoIframe');
+            if (modal && card && iframe) {
+                const videoSrc = iframe.getAttribute('data-src') || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+                iframe.src = videoSrc.includes('?') ? videoSrc + '&autoplay=1' : videoSrc + '?autoplay=1';
+                modal.classList.remove('opacity-0', 'invisible');
+                modal.classList.add('opacity-100', 'visible');
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeVideoModal = function() {
+            const modal = document.getElementById('videoModal');
+            const card = document.getElementById('videoModalCard');
+            const iframe = document.getElementById('heroVideoIframe');
+            if (modal && card && iframe) {
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                iframe.src = '';
+                setTimeout(() => {
+                    modal.classList.remove('opacity-100', 'visible');
+                    modal.classList.add('opacity-0', 'invisible');
+                    document.body.style.overflow = '';
+                }, 200);
+            }
+        };
+
         window.submitLiveDemo = function(e) {
             e.preventDefault();
             const btn = document.getElementById('demoSubmitBtn');
@@ -2209,14 +2268,18 @@
             const w = document.getElementById('demo_whatsapp').value;
             const em = document.getElementById('demo_email').value;
             const p = document.getElementById('demo_profession').value;
-            const ans = document.getElementById('captchaAnswer').value;
-            const exp = document.getElementById('captchaExpected').value;
 
-            if (parseInt(ans) !== parseInt(exp)) {
-                msg.className = 'text-xs font-bold p-2.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40';
-                msg.textContent = 'Incorrect verification answer. Please try again.';
-                msg.classList.remove('hidden');
-                return;
+            let recaptchaToken = '';
+            if (typeof grecaptcha !== 'undefined') {
+                recaptchaToken = grecaptcha.getResponse();
+                @if(!empty($data['recaptcha_site_key']))
+                if (!recaptchaToken) {
+                    msg.className = 'text-xs font-bold p-2.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40';
+                    msg.textContent = 'Please complete the "I\'m not a robot" reCAPTCHA verification.';
+                    msg.classList.remove('hidden');
+                    return;
+                }
+                @endif
             }
 
             btn.disabled = true;
@@ -2233,8 +2296,7 @@
                     whatsapp: w,
                     email: em,
                     profession: p,
-                    captcha_answer: ans,
-                    captcha_expected: exp
+                    g_recaptcha_response: recaptchaToken
                 })
             })
             .then(res => res.json())
@@ -2277,6 +2339,19 @@
             }
         });
     </script>
+
+
+    <!-- YOUTUBE VIDEO POPUP MODAL (Task 4: See How It Works) -->
+    <div id="videoModal" class="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/85 backdrop-blur-md opacity-0 invisible transition-all duration-300 p-4 sm:p-6" onclick="if(event.target === this) window.closeVideoModal()">
+        <div class="relative w-full max-w-4xl bg-black rounded-3xl overflow-hidden shadow-2xl border border-orange-500/30 transform scale-95 opacity-0 transition-all duration-300 text-left" id="videoModalCard">
+            <button onclick="window.closeVideoModal()" aria-label="Close Video" class="absolute top-4 right-4 z-50 w-9 h-9 flex items-center justify-center rounded-full bg-slate-900/80 hover:bg-slate-800 text-white transition-colors focus:outline-none shadow-lg">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+            <div class="relative pb-[56.25%] h-0 bg-black">
+                <iframe id="heroVideoIframe" src="" data-src="{{ $data['hero_video_url'] ?? 'https://www.youtube.com/embed/dQw4w9WgXcQ' }}" class="absolute top-0 left-0 w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

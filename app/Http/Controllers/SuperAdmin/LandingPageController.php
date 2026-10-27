@@ -98,7 +98,10 @@ class LandingPageController extends Controller
             'lp_li_url',
             'lp_tw_url',
             'lp_meta_title',
-            'lp_meta_description'
+            'lp_meta_description',
+            'hero_video_url',
+            'recaptcha_site_key',
+            'recaptcha_secret_key'
         ];
 
         foreach ($textKeys as $key) {
@@ -172,7 +175,7 @@ class LandingPageController extends Controller
                         mkdir($destinationPath, 0777, true);
                     }
                     $file->move($destinationPath, $filename);
-                    Setting::set($imageKey, '/uploads/landing/' . $filename);
+                    Setting::set($imageKey, 'uploads/landing/' . $filename);
                 }
             }
         }
@@ -333,11 +336,35 @@ class LandingPageController extends Controller
             if ($curWhyTag === 'WHY CHOOSE NOORYAK?') {
                 Setting::set('lp_why_choose_tag', 'WHY CHOOSE SAASRESELLING?');
             }
+            $curFaqs = Setting::get('lp_faqs_items');
+            if (!empty($curFaqs) && stripos($curFaqs, 'Nooryak') !== false) {
+                $curFaqs = str_ireplace('Nooryak.in', 'saasreselling.com', $curFaqs);
+                $curFaqs = str_ireplace('Nooryak', 'SaaSReselling', $curFaqs);
+                Setting::set('lp_faqs_items', $curFaqs);
+            }
+            $curTestimonials = Setting::get('lp_testimonials_items');
+            if (!empty($curTestimonials) && stripos($curTestimonials, 'Nooryak') !== false) {
+                $curTestimonials = str_ireplace('Nooryak.in', 'saasreselling.com', $curTestimonials);
+                $curTestimonials = str_ireplace('Nooryak', 'SaaSReselling', $curTestimonials);
+                Setting::set('lp_testimonials_items', $curTestimonials);
+            }
         } catch (\Exception $e) {
             // Safe fallback if DB is temporarily unreachable
         }
 
+        $rawPImg = Setting::get('lp_pricing_image');
+        $cleanPImg = (!empty($rawPImg)) ? ltrim($rawPImg, '/') : 'assets/images/user_dashboard.png';
+        if (!file_exists(public_path($cleanPImg)) && !file_exists(public_path('assets/images/user_dashboard.png'))) {
+            $cleanPImg = 'assets/landing_page/herobanner_dashboard.png';
+        }
+
         return [
+            // Security & Integration
+            'recaptcha_site_key' => Setting::get('recaptcha_site_key', ''),
+            'recaptcha_secret_key' => Setting::get('recaptcha_secret_key', ''),
+            'hero_video_url' => Setting::get('hero_video_url', 'https://www.youtube.com/embed/dQw4w9WgXcQ'),
+            'has_custom_pricing_image' => (!empty($rawPImg) && !str_contains($rawPImg, 'user_dashboard.png')),
+            'lp_pricing_image' => $cleanPImg,
             // Announcement & Top Bar
             'lp_announcement_text' => Setting::get('lp_announcement_text', 'YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.'),
             'lp_announcement_badge' => Setting::get('lp_announcement_badge', 'NEW'),
@@ -495,7 +522,7 @@ class LandingPageController extends Controller
             'lp_pricing_cta_text' => Setting::get('lp_pricing_cta_text', 'Get Started'),
             'lp_pricing_cta_url' => Setting::get('lp_pricing_cta_url', 'https://wa.me/916374913298?text=I%20am%20interested%20in%20White-Label%20Panel'),
             'lp_pricing_mockup_badge' => Setting::get('lp_pricing_mockup_badge', '3 Powerful Products / One Dashboard / Your Brand'),
-            'lp_pricing_image' => Setting::get('lp_pricing_image', 'assets/images/user_dashboard.png'),
+            'lp_pricing_image' => $cleanPImg,
             'lp_pricing_trophy_title' => Setting::get('lp_pricing_trophy_title', 'Most Popular Choice'),
             'lp_pricing_trophy_desc' => Setting::get('lp_pricing_trophy_desc', 'Perfect for getting started and building your customer base.'),
             'lp_pricing_features' => json_decode(Setting::get('lp_pricing_features', json_encode([
@@ -582,7 +609,7 @@ class LandingPageController extends Controller
             'lp_faqs_title' => Setting::get('lp_faqs_title', 'Frequently Asked Questions'),
             'lp_faqs_subtitle' => Setting::get('lp_faqs_subtitle', 'Still have questions? We\'re here to help.'),
             'lp_faqs_items' => json_decode(Setting::get('lp_faqs_items', json_encode([
-                ['question' => 'What is Nooryak?', 'answer' => 'Nooryak is an All-In-One White Label SaaS Platform that allows you to launch and scale your own SaaS business under your own brand.'],
+                ['question' => 'What is SaaSReselling?', 'answer' => 'SaaSReselling is an All-In-One White Label SaaS Platform that allows you to launch and scale your own SaaS business under your own brand.'],
                 ['question' => 'How does the pricing work?', 'answer' => 'We offer simple, transparent monthly pricing with no hidden fees. You keep 100% of the revenue you generate from your clients.'],
                 ['question' => 'Can I use my own domain and branding?', 'answer' => 'Yes! You can connect your custom domain, upload your logo, select your color scheme, and customize all client-facing branding.'],
                 ['question' => 'Is technical knowledge required?', 'answer' => 'No technical or coding knowledge is required. We handle hosting, security, product updates, and infrastructure.'],
@@ -607,7 +634,13 @@ class LandingPageController extends Controller
             'lp_li_url' => Setting::get('lp_li_url', '#'),
             'lp_tw_url' => Setting::get('lp_tw_url', '#'),
             'lp_meta_title' => Setting::get('lp_meta_title', 'Nooryak - Launch Your Own SaaS Business Under Your Brand'),
-            'lp_meta_description' => Setting::get('lp_meta_description', 'Nooryak is an All-In-One White Label SaaS Platform that helps agencies, freelancers, IT companies and entrepreneurs launch their own SaaS business.')
+            'lp_meta_description',
+            'hero_video_url',
+            'recaptcha_site_key',
+            'recaptcha_secret_key' => Setting::get('lp_meta_description',
+            'hero_video_url',
+            'recaptcha_site_key',
+            'recaptcha_secret_key', 'Nooryak is an All-In-One White Label SaaS Platform that helps agencies, freelancers, IT companies and entrepreneurs launch their own SaaS business.')
         ];
     }
 }

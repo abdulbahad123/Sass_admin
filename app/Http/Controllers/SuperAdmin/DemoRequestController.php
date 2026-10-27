@@ -20,16 +20,36 @@ class DemoRequestController extends Controller
             'name' => 'required|string|max:150',
             'whatsapp' => 'required|string|max:30',
             'email' => 'required|email|max:150',
-            'profession' => 'nullable|string|max:100',
-            'captcha_answer' => 'required|numeric',
-            'captcha_expected' => 'required|numeric'
+            'profession' => 'nullable|string|max:100'
         ]);
 
-        if ((int)$validated['captcha_answer'] !== (int)$validated['captcha_expected']) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Incorrect verification answer. Please try again.'
-            ], 422);
+        // Google reCAPTCHA Verification (Configured from Super Admin)
+        $secretKey = \App\Models\Setting::get('recaptcha_secret_key');
+        if (!empty($secretKey)) {
+            $recaptchaResponse = $request->input('g_recaptcha_response');
+            if (empty($recaptchaResponse)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please complete the reCAPTCHA verification.'
+                ], 422);
+            }
+
+            try {
+                $verifyResponse = \Illuminate\Support\Facades\Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret' => $secretKey,
+                    'response' => $recaptchaResponse,
+                    'remoteip' => $request->ip()
+                ]);
+
+                if (!$verifyResponse->json('success')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'reCAPTCHA verification failed. Please try again.'
+                    ], 422);
+                }
+            } catch (\Throwable $e) {
+                // If Google API connection fails, allow lead creation to avoid losing customer
+            }
         }
 
         $lead = DemoRequest::create([
