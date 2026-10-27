@@ -27,12 +27,7 @@
                     <h3 class="text-3xl font-extrabold text-slate-900 font-heading mt-1">{{ number_format($totalAgencies) }}</h3>
                 </div>
             </div>
-            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
-                <span class="text-emerald-600 font-bold flex items-center">
-                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-1"></i> ↑ 12.5%
-                </span>
-                <span class="text-slate-400">vs last month</span>
-            </div>
+
         </div>
 
         <!-- Total Clients -->
@@ -46,12 +41,7 @@
                     <h3 class="text-3xl font-extrabold text-slate-900 font-heading mt-1">{{ is_numeric($totalClientsEstimate) ? number_format($totalClientsEstimate) : $totalClientsEstimate }}</h3>
                 </div>
             </div>
-            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
-                <span class="text-emerald-600 font-bold flex items-center">
-                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-1"></i> ↑ 8.7%
-                </span>
-                <span class="text-slate-400">vs last month</span>
-            </div>
+
         </div>
 
         <!-- Monthly Revenue -->
@@ -65,12 +55,7 @@
                     <h3 class="text-3xl font-extrabold text-emerald-600 font-heading mt-1">{{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($monthlyRevenue, 0) }}</h3>
                 </div>
             </div>
-            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
-                <span class="text-emerald-600 font-bold flex items-center">
-                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-1"></i> ↑ 18.2%
-                </span>
-                <span class="text-slate-400">vs last month</span>
-            </div>
+
         </div>
 
         <!-- Active Subscriptions -->
@@ -84,12 +69,7 @@
                     <h3 class="text-3xl font-extrabold text-slate-900 font-heading mt-1">{{ number_format($activeSubscriptions) }}</h3>
                 </div>
             </div>
-            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
-                <span class="text-emerald-600 font-bold flex items-center">
-                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-1"></i> ↑ 15.3%
-                </span>
-                <span class="text-slate-400">vs last month</span>
-            </div>
+
         </div>
     </div>
 
@@ -155,7 +135,7 @@
                             <i data-lucide="box" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-slate-900">Assign Products</span>
+                            <span class="block text-xs font-bold text-slate-900">Products</span>
                             <span class="text-[10px] text-slate-400">To agency or client</span>
                         </div>
                     </a>
@@ -164,10 +144,10 @@
         </div>
     </div>
 
-    <!-- Bottom Row: Recent Agencies Table & Product Distribution -->
+    <!-- Bottom Row: Recent Agencies Table -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <!-- Recent Agencies Table (8 Cols) -->
-        <div class="lg:col-span-8 card-white rounded-2xl p-6">
+        <!-- Recent Agencies Table (Full Width) -->
+        <div class="lg:col-span-12 card-white rounded-2xl p-6">
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <h3 class="text-base font-bold text-slate-900 font-heading">Recent Agencies</h3>
@@ -224,26 +204,7 @@
             </div>
         </div>
 
-        <!-- Product Distribution & Activity Stream (4 Cols) -->
-        <div class="lg:col-span-4 space-y-6">
-            <div class="card-white rounded-2xl p-6">
-                <h3 class="text-base font-bold text-slate-900 font-heading mb-4">Product Distribution</h3>
-                <div class="h-44 flex items-center justify-center">
-                    <canvas id="productChart"></canvas>
-                </div>
-                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2">
-                    @foreach($products as $prod)
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="flex items-center text-slate-600 font-medium">
-                                <span class="w-2.5 h-2.5 rounded-full bg-indigo-600 mr-2"></span>
-                                {{ $prod->name }}
-                            </span>
-                            <span class="font-bold text-slate-900">{{ $prod->agencies_count + 12 }} Agencies</span>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+
     </div>
 
 </div>

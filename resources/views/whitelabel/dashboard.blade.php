@@ -503,16 +503,10 @@
                     <div class="w-8 h-8 rounded-xl bg-sky-100 group-hover:bg-sky-600 text-sky-600 group-hover:text-white flex items-center justify-center transition-colors">
                         <i data-lucide="box" class="w-4 h-4"></i>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-700 group-hover:text-sky-700 leading-tight">Assign Products</span>
+                    <span class="text-[10px] font-bold text-slate-700 group-hover:text-sky-700 leading-tight">Products</span>
                 </a>
 
-                <a href="{{ route('whitelabel.billing.index') }}" 
-                   class="p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 transition-all text-left group flex flex-col items-center justify-center text-center space-y-1.5">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-100 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white flex items-center justify-center transition-colors">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-700 group-hover:text-emerald-700 leading-tight">Create Invoice</span>
-                </a>
+
 
                 <a href="{{ route('whitelabel.activity-logs.index') }}" 
                    class="p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 hover:border-purple-200 transition-all text-left group flex flex-col items-center justify-center text-center space-y-1.5">
