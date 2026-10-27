@@ -709,7 +709,7 @@ class LandingPageController extends Controller
             'lp_footer_desc' => Setting::get('lp_footer_desc', 'Your technology partner in building profitable white-label SaaS businesses.'),
             'lp_contact_email' => Setting::get('lp_contact_email', 'support@saasreselling.com'),
             'lp_contact_phone' => Setting::get('lp_contact_phone', '+91 63749 13298'),
-            'lp_copyright_text' => Setting::get('lp_copyright_text', '© 2026 SaaSReselling. All rights reserved.'),
+            'lp_copyright_text' => str_ireplace(['Nooryak Technologies', 'Nooryak', 'nooryak'], ['saasreselling', 'saasreselling', 'saasreselling'], Setting::get('lp_copyright_text', '© 2026 saasreselling. All rights reserved.')),
             'lp_fb_url' => Setting::get('lp_fb_url', '#'),
             'lp_ig_url' => Setting::get('lp_ig_url', '#'),
             'lp_yt_url' => Setting::get('lp_yt_url', '#'),

@@ -521,15 +521,15 @@
     </section>
 
     
-        <!-- SECTION 3.5: DEMO WHITELABEL GALLERY SLIDER (3 Images at a time, links to https://saasreselling.in/) -->
-    <section id="demo-whitelabel" class="py-16 sm:py-20 bg-[#080E24] text-white relative overflow-hidden border-t border-b border-slate-800/80">
-        <!-- Ambient Glowing Lights -->
+            <!-- SECTION 3.5: DEMO WHITELABEL GALLERY SLIDER (Image-Only, Auto & Manual Slide, 3 visible on Desktop) -->
+    <section id="demo-whitelabel" class="py-14 sm:py-20 bg-[#080E24] text-white relative overflow-hidden border-t border-b border-slate-800/80">
+        <!-- Ambient Background Glows -->
         <div class="absolute top-10 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <!-- Section Header -->
-            <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+            <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
                 <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest bg-orange-500/15 text-[#ff3d00] border border-orange-500/30 mb-3">
                     <i class="fas fa-desktop mr-2 text-xs"></i> DEMO WHITELABEL
                 </span>
@@ -537,237 +537,105 @@
                     Explore Demo Whitelabel Platform
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-400 mt-2 sm:mt-3 leading-relaxed">
-                    Interactive walkthrough of our turnkey agency command center and client portals. Click any card below to launch the live interactive demo at <a href="https://saasreselling.in/" target="_blank" class="text-orange-400 font-bold underline hover:text-orange-300">saasreselling.in</a>.
+                    Interactive preview of our white-label SaaS platform. Click any image to launch the live interactive demo at <a href="https://saasreselling.in/" target="_blank" rel="noopener noreferrer" class="text-orange-400 font-bold underline hover:text-orange-300">saasreselling.in</a>.
                 </p>
             </div>
 
-            <!-- Slider Wrapper (3 Items Visible on Desktop) -->
-            <div class="relative">
+            <!-- Slider Wrapper (3 Items Visible on Desktop, Auto & Manual) -->
+            <div class="relative group/slider" id="demoSliderWrapper">
                 <!-- Navigation Arrow Left -->
                 <button type="button" 
                         id="demoSliderPrev" 
-                        aria-label="Previous Demo Screenshots"
-                        class="hidden md:flex absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-slate-900/90 hover:bg-[#ff3d00] text-white items-center justify-center backdrop-blur-md border border-slate-700 shadow-2xl transition-all hover:scale-110 focus:outline-none">
+                        aria-label="Previous Demo Screenshot"
+                        class="hidden sm:flex absolute -left-3 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-slate-900/90 hover:bg-[#ff3d00] text-white items-center justify-center backdrop-blur-md border border-slate-700 shadow-2xl transition-all hover:scale-110 focus:outline-none">
                     <i class="fas fa-chevron-left text-sm"></i>
                 </button>
 
                 <!-- Navigation Arrow Right -->
                 <button type="button" 
                         id="demoSliderNext" 
-                        aria-label="Next Demo Screenshots"
-                        class="hidden md:flex absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-slate-900/90 hover:bg-[#ff3d00] text-white items-center justify-center backdrop-blur-md border border-slate-700 shadow-2xl transition-all hover:scale-110 focus:outline-none">
+                        aria-label="Next Demo Screenshot"
+                        class="hidden sm:flex absolute -right-3 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-slate-900/90 hover:bg-[#ff3d00] text-white items-center justify-center backdrop-blur-md border border-slate-700 shadow-2xl transition-all hover:scale-110 focus:outline-none">
                     <i class="fas fa-chevron-right text-sm"></i>
                 </button>
 
-                <!-- Slider Track (Horizontal Scroll on Mobile / 3 Columns on Desktop) -->
+                <!-- Slider Track (3 Images Visible at a time on desktop, only displays images) -->
                 <div id="demoSliderTrack" 
-                     class="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth pb-4 no-scrollbar snap-x snap-mandatory"
+                     class="flex items-center gap-5 sm:gap-6 overflow-x-auto scroll-smooth pb-2 no-scrollbar snap-x snap-mandatory"
                      style="scrollbar-width: none; -ms-overflow-style: none;">
 
-                    <!-- CARD 1: Reseller Admin Command Center -->
-                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex flex-col justify-between rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/50 p-4 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 group">
-                        <div>
-                            <div class="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 mb-4 group/img">
-                                <img src="{{ asset('assets/images/demoscreenshot/demo1.png') }}" 
-                                     alt="Reseller Admin Command Center" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top group-hover/img:scale-105 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
-                                    <span class="px-2.5 py-1 rounded-lg bg-orange-600 text-white font-bold text-[10px] uppercase tracking-wider">
-                                        Live Preview
-                                    </span>
-                                    <button type="button" onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo1.png') }}', 'Reseller Admin Command Center')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center backdrop-blur-md transition-colors" title="Zoom Image">
-                                        <i class="fas fa-search-plus text-xs"></i>
-                                    </button>
-                                </div>
+                    <!-- IMAGE 1 -->
+                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/60 p-2.5 sm:p-3 shadow-xl transition-all duration-300 hover:scale-[1.02] group">
+                        <a href="https://saasreselling.in/" target="_blank" rel="noopener noreferrer" class="block relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80">
+                            <img src="{{ asset('assets/images/demoscreenshot/demo1.png') }}" 
+                                 alt="Demo Whitelabel Screenshot 1" 
+                                 loading="lazy" 
+                                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-gradient text-white font-bold text-xs shadow-lg">
+                                    <span>Launch Live Demo</span>
+                                    <i class="fas fa-external-link-alt text-[10px]"></i>
+                                </span>
+                                <span class="text-[11px] text-white/90 font-mono font-bold bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-sm">saasreselling.in</span>
                             </div>
-
-                            <div class="space-y-1.5 px-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Agency Admin</span>
-                                    <span class="text-[11px] text-slate-500 font-mono">01 / 04</span>
-                                </div>
-                                <h3 class="text-base font-bold text-white font-heading group-hover:text-orange-400 transition-colors">
-                                    Reseller Admin Command Center
-                                </h3>
-                                <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">
-                                    Manage client onboarding, automated tenant databases, monthly recurring subscriptions, and single-click SSO access.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Card Action Buttons -->
-                        <div class="pt-4 mt-3 border-t border-slate-800/80 flex items-center gap-2">
-                            <a href="https://saasreselling.in/" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="flex-1 btn-gradient py-2.5 px-4 rounded-xl font-bold text-xs text-white text-center flex items-center justify-center space-x-1.5 shadow-md shadow-orange-500/20 hover:scale-[1.02] transition-transform">
-                                <span>Open Live Demo</span>
-                                <i class="fas fa-external-link-alt text-[10px]"></i>
-                            </a>
-                            <button type="button" 
-                                    onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo1.png') }}', 'Reseller Admin Command Center')"
-                                    class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" 
-                                    title="View Fullscreen">
-                                <i class="fas fa-expand text-xs"></i>
-                            </button>
-                        </div>
+                        </a>
                     </div>
 
-                    <!-- CARD 2: White-Label Branding & Custom Domains -->
-                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex flex-col justify-between rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/50 p-4 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 group">
-                        <div>
-                            <div class="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 mb-4 group/img">
-                                <img src="{{ asset('assets/images/demoscreenshot/demo2.png') }}" 
-                                     alt="White-Label Branding & Custom Domains" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top group-hover/img:scale-105 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
-                                    <span class="px-2.5 py-1 rounded-lg bg-orange-600 text-white font-bold text-[10px] uppercase tracking-wider">
-                                        Live Preview
-                                    </span>
-                                    <button type="button" onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo2.png') }}', 'White-Label Branding & Custom Domains')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center backdrop-blur-md transition-colors" title="Zoom Image">
-                                        <i class="fas fa-search-plus text-xs"></i>
-                                    </button>
-                                </div>
+                    <!-- IMAGE 2 -->
+                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/60 p-2.5 sm:p-3 shadow-xl transition-all duration-300 hover:scale-[1.02] group">
+                        <a href="https://saasreselling.in/" target="_blank" rel="noopener noreferrer" class="block relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80">
+                            <img src="{{ asset('assets/images/demoscreenshot/demo2.png') }}" 
+                                 alt="Demo Whitelabel Screenshot 2" 
+                                 loading="lazy" 
+                                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-gradient text-white font-bold text-xs shadow-lg">
+                                    <span>Launch Live Demo</span>
+                                    <i class="fas fa-external-link-alt text-[10px]"></i>
+                                </span>
+                                <span class="text-[11px] text-white/90 font-mono font-bold bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-sm">saasreselling.in</span>
                             </div>
-
-                            <div class="space-y-1.5 px-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Branding & DNS</span>
-                                    <span class="text-[11px] text-slate-500 font-mono">02 / 04</span>
-                                </div>
-                                <h3 class="text-base font-bold text-white font-heading group-hover:text-orange-400 transition-colors">
-                                    White-Label Branding & Domains
-                                </h3>
-                                <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">
-                                    Attach your custom agency domain with automated SSL certificates, brand logos, color themes, and white-label portal emails.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Card Action Buttons -->
-                        <div class="pt-4 mt-3 border-t border-slate-800/80 flex items-center gap-2">
-                            <a href="https://saasreselling.in/" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="flex-1 btn-gradient py-2.5 px-4 rounded-xl font-bold text-xs text-white text-center flex items-center justify-center space-x-1.5 shadow-md shadow-orange-500/20 hover:scale-[1.02] transition-transform">
-                                <span>Open Live Demo</span>
-                                <i class="fas fa-external-link-alt text-[10px]"></i>
-                            </a>
-                            <button type="button" 
-                                    onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo2.png') }}', 'White-Label Branding & Custom Domains')"
-                                    class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" 
-                                    title="View Fullscreen">
-                                <i class="fas fa-expand text-xs"></i>
-                            </button>
-                        </div>
+                        </a>
                     </div>
 
-                    <!-- CARD 3: Client Management & Portals -->
-                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex flex-col justify-between rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/50 p-4 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 group">
-                        <div>
-                            <div class="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 mb-4 group/img">
-                                <img src="{{ asset('assets/images/demoscreenshot/demo3.png') }}" 
-                                     alt="Client Management & Portals" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top group-hover/img:scale-105 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
-                                    <span class="px-2.5 py-1 rounded-lg bg-orange-600 text-white font-bold text-[10px] uppercase tracking-wider">
-                                        Live Preview
-                                    </span>
-                                    <button type="button" onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo3.png') }}', 'Client Management & Portals')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center backdrop-blur-md transition-colors" title="Zoom Image">
-                                        <i class="fas fa-search-plus text-xs"></i>
-                                    </button>
-                                </div>
+                    <!-- IMAGE 3 -->
+                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/60 p-2.5 sm:p-3 shadow-xl transition-all duration-300 hover:scale-[1.02] group">
+                        <a href="https://saasreselling.in/" target="_blank" rel="noopener noreferrer" class="block relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80">
+                            <img src="{{ asset('assets/images/demoscreenshot/demo3.png') }}" 
+                                 alt="Demo Whitelabel Screenshot 3" 
+                                 loading="lazy" 
+                                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-gradient text-white font-bold text-xs shadow-lg">
+                                    <span>Launch Live Demo</span>
+                                    <i class="fas fa-external-link-alt text-[10px]"></i>
+                                </span>
+                                <span class="text-[11px] text-white/90 font-mono font-bold bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-sm">saasreselling.in</span>
                             </div>
-
-                            <div class="space-y-1.5 px-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Tenant Portals</span>
-                                    <span class="text-[11px] text-slate-500 font-mono">03 / 04</span>
-                                </div>
-                                <h3 class="text-base font-bold text-white font-heading group-hover:text-orange-400 transition-colors">
-                                    Client Management & Portals
-                                </h3>
-                                <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">
-                                    Turnkey client self-service portals where end-customers build their online stores, publish websites, and run marketing.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Card Action Buttons -->
-                        <div class="pt-4 mt-3 border-t border-slate-800/80 flex items-center gap-2">
-                            <a href="https://saasreselling.in/" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="flex-1 btn-gradient py-2.5 px-4 rounded-xl font-bold text-xs text-white text-center flex items-center justify-center space-x-1.5 shadow-md shadow-orange-500/20 hover:scale-[1.02] transition-transform">
-                                <span>Open Live Demo</span>
-                                <i class="fas fa-external-link-alt text-[10px]"></i>
-                            </a>
-                            <button type="button" 
-                                    onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo3.png') }}', 'Client Management & Portals')"
-                                    class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" 
-                                    title="View Fullscreen">
-                                <i class="fas fa-expand text-xs"></i>
-                            </button>
-                        </div>
+                        </a>
                     </div>
 
-                    <!-- CARD 4: Multi-Product SaaS Engines -->
-                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex flex-col justify-between rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/50 p-4 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 group">
-                        <div>
-                            <div class="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 mb-4 group/img">
-                                <img src="{{ asset('assets/images/demoscreenshot/demo4.png') }}" 
-                                     alt="Multi-Product SaaS Engines" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top group-hover/img:scale-105 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
-                                    <span class="px-2.5 py-1 rounded-lg bg-orange-600 text-white font-bold text-[10px] uppercase tracking-wider">
-                                        Live Preview
-                                    </span>
-                                    <button type="button" onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo4.png') }}', 'Multi-Product SaaS Engines')" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center backdrop-blur-md transition-colors" title="Zoom Image">
-                                        <i class="fas fa-search-plus text-xs"></i>
-                                    </button>
-                                </div>
+                    <!-- IMAGE 4 -->
+                    <div class="snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] rounded-3xl bg-[#0B0F19] border border-slate-800 hover:border-orange-500/60 p-2.5 sm:p-3 shadow-xl transition-all duration-300 hover:scale-[1.02] group">
+                        <a href="https://saasreselling.in/" target="_blank" rel="noopener noreferrer" class="block relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80">
+                            <img src="{{ asset('assets/images/demoscreenshot/demo4.png') }}" 
+                                 alt="Demo Whitelabel Screenshot 4" 
+                                 loading="lazy" 
+                                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-gradient text-white font-bold text-xs shadow-lg">
+                                    <span>Launch Live Demo</span>
+                                    <i class="fas fa-external-link-alt text-[10px]"></i>
+                                </span>
+                                <span class="text-[11px] text-white/90 font-mono font-bold bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-sm">saasreselling.in</span>
                             </div>
-
-                            <div class="space-y-1.5 px-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Core Products</span>
-                                    <span class="text-[11px] text-slate-500 font-mono">04 / 04</span>
-                                </div>
-                                <h3 class="text-base font-bold text-white font-heading group-hover:text-orange-400 transition-colors">
-                                    Multi-Product SaaS Engines
-                                </h3>
-                                <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">
-                                    3 ready-to-sell applications in 1 suite: Launchshop Ecombuilder, Multi-theme Website Builder, and AI WhatsApp Automation.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Card Action Buttons -->
-                        <div class="pt-4 mt-3 border-t border-slate-800/80 flex items-center gap-2">
-                            <a href="https://saasreselling.in/" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="flex-1 btn-gradient py-2.5 px-4 rounded-xl font-bold text-xs text-white text-center flex items-center justify-center space-x-1.5 shadow-md shadow-orange-500/20 hover:scale-[1.02] transition-transform">
-                                <span>Open Live Demo</span>
-                                <i class="fas fa-external-link-alt text-[10px]"></i>
-                            </a>
-                            <button type="button" 
-                                    onclick="window.openDemoLightbox('{{ asset('assets/images/demoscreenshot/demo4.png') }}', 'Multi-Product SaaS Engines')"
-                                    class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" 
-                                    title="View Fullscreen">
-                                <i class="fas fa-expand text-xs"></i>
-                            </button>
-                        </div>
+                        </a>
                     </div>
 
                 </div>
 
-                <!-- Mobile Dots Navigation Indicators -->
-                <div class="flex md:hidden items-center justify-center space-x-2 mt-4" id="demoSliderDots">
+                <!-- Navigation Dot Indicators -->
+                <div class="flex items-center justify-center space-x-2 mt-6" id="demoSliderDots">
                     <button type="button" onclick="window.scrollDemoSlider(0)" class="w-6 h-2 rounded-full bg-orange-500 transition-all"></button>
                     <button type="button" onclick="window.scrollDemoSlider(1)" class="w-2 h-2 rounded-full bg-slate-700 transition-all"></button>
                     <button type="button" onclick="window.scrollDemoSlider(2)" class="w-2 h-2 rounded-full bg-slate-700 transition-all"></button>
@@ -776,12 +644,12 @@
             </div>
 
             <!-- Bottom Live Demo Bar -->
-            <div class="mt-12 text-center p-6 rounded-3xl bg-[#0B0F19] border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="mt-10 text-center p-5 sm:p-6 rounded-3xl bg-[#0B0F19] border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="text-center sm:text-left">
-                    <p class="text-sm font-bold text-white font-heading">Want to test the white-label agency demo live?</p>
-                    <p class="text-xs text-slate-400 mt-0.5">Explore the live preview portal right now at <span class="text-orange-400 font-mono font-bold">saasreselling.in</span></p>
+                    <p class="text-sm font-bold text-white font-heading">Want to explore the live white-label platform?</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Test the live portal instantly at <span class="text-orange-400 font-mono font-bold">saasreselling.in</span></p>
                 </div>
-                <div class="flex items-center gap-3">
+                <div>
                     <a href="https://saasreselling.in/" 
                        target="_blank" 
                        rel="noopener noreferrer" 
@@ -792,27 +660,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Lightbox Zoom Modal (Pure Vanilla JS) -->
-        <div id="demoLightboxModal" 
-             class="fixed inset-0 z-[130] bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 sm:p-6 opacity-0 invisible transition-all duration-300">
-            <div class="w-full max-w-6xl flex items-center justify-between mb-3 text-white">
-                <h4 id="demoLightboxTitle" class="text-sm sm:text-base font-bold font-heading truncate"></h4>
-                <div class="flex items-center space-x-3">
-                    <a href="https://saasreselling.in/" target="_blank" class="px-3 py-1.5 rounded-lg btn-gradient text-white text-xs font-bold flex items-center gap-1.5">
-                        <span>Open Live Demo</span>
-                        <i class="fas fa-external-link-alt text-[10px]"></i>
-                    </a>
-                    <button onclick="window.closeDemoLightbox()" class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white transition-colors focus:outline-none">
-                        <i class="fas fa-times text-sm"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="relative w-full max-w-6xl max-h-[85vh] rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-slate-800 shadow-2xl">
-                <img id="demoLightboxImg" src="" alt="Demo Preview" class="max-w-full max-h-[82vh] object-contain">
-            </div>
-        </div>
     </section>
+
 
 
     <!-- SECTION 4: WHITE LABEL SAAS PARTNER (Task 1: Reduced Width Container on Left & Explanation Outside on Right) -->
@@ -2076,7 +1925,7 @@
 
             <!-- Bottom Copyright & Legal Links (Task 6: Legal Policy Links) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium gap-3">
-                <p>{{ str_ireplace('SaaSReselling', 'SaaSReselling', $data['lp_copyright_text'] ?? '© ' . date('Y') . ' SaaSReselling. All rights reserved.') }}</p>
+                <p>{{ str_ireplace(['Nooryak Technologies', 'Nooryak', 'nooryak'], ['saasreselling', 'saasreselling', 'saasreselling'], $data['lp_copyright_text'] ?? '© ' . date('Y') . ' saasreselling. All rights reserved.') }}</p>
                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
                     <a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
                     <span>|</span>
@@ -2779,5 +2628,78 @@
         </div>
     </div>
 
+<script>
+// Demo Whitelabel Image-Only Auto & Manual Slider
+        (function() {
+            const track = document.getElementById('demoSliderTrack');
+            const wrapper = document.getElementById('demoSliderWrapper');
+            const prevBtn = document.getElementById('demoSliderPrev');
+            const nextBtn = document.getElementById('demoSliderNext');
+            const dots = document.querySelectorAll('#demoSliderDots button');
+            let autoSlideTimer = null;
+
+            if (track) {
+                const getStepWidth = () => {
+                    const firstChild = track.children[0];
+                    return firstChild ? firstChild.offsetWidth + 24 : 380;
+                };
+
+                const scrollNext = () => {
+                    const step = getStepWidth();
+                    const maxScroll = track.scrollWidth - track.clientWidth - 10;
+                    if (track.scrollLeft >= maxScroll) {
+                        track.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        track.scrollBy({ left: step, behavior: 'smooth' });
+                    }
+                };
+
+                const scrollPrev = () => {
+                    const step = getStepWidth();
+                    if (track.scrollLeft <= 10) {
+                        track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+                    } else {
+                        track.scrollBy({ left: -step, behavior: 'smooth' });
+                    }
+                };
+
+                if (prevBtn) prevBtn.addEventListener('click', scrollPrev);
+                if (nextBtn) nextBtn.addEventListener('click', scrollNext);
+
+                window.scrollDemoSlider = function(index) {
+                    const step = getStepWidth();
+                    track.scrollTo({ left: step * index, behavior: 'smooth' });
+                };
+
+                // Track scroll for dots
+                track.addEventListener('scroll', () => {
+                    const step = getStepWidth();
+                    const activeIdx = Math.min(dots.length - 1, Math.round(track.scrollLeft / step));
+                    dots.forEach((dot, idx) => {
+                        dot.className = (idx === activeIdx) ? 'w-6 h-2 rounded-full bg-orange-500 transition-all' : 'w-2 h-2 rounded-full bg-slate-700 transition-all';
+                    });
+                });
+
+                // Auto slide every 3.5 seconds
+                const startAutoSlide = () => {
+                    stopAutoSlide();
+                    autoSlideTimer = setInterval(scrollNext, 3500);
+                };
+
+                const stopAutoSlide = () => {
+                    if (autoSlideTimer) clearInterval(autoSlideTimer);
+                };
+
+                if (wrapper) {
+                    wrapper.addEventListener('mouseenter', stopAutoSlide);
+                    wrapper.addEventListener('mouseleave', startAutoSlide);
+                    wrapper.addEventListener('touchstart', stopAutoSlide, { passive: true });
+                    wrapper.addEventListener('touchend', startAutoSlide, { passive: true });
+                }
+
+                startAutoSlide();
+            }
+        })();
+</script>
 </body>
 </html>

@@ -302,7 +302,7 @@
 
             <!-- Bottom Copyright & Legal Links -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium gap-3">
-                <p>© {{ date('Y') }} SaaSReselling. All rights reserved.</p>
+                <p>© {{ date('Y') }} saasreselling. All rights reserved.</p>
                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
                     <a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'privacy' ? 'text-orange-500 font-bold' : '' }}">Privacy Policy</a>
                     <span>|</span>
