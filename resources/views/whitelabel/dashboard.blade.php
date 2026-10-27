@@ -93,6 +93,13 @@
                 <p class="text-xs text-slate-500">Live breakdown of onboarded end-clients per agency product database</p>
             </div>
             <div class="flex items-center space-x-2">
+                <select onchange="filterSection('product_cards', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
                 <span class="px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100 flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {{ count($productCards ?? []) }} Products Registered
                 </span>
@@ -101,7 +108,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             @foreach($productCards ?? [] as $pCard)
-                <div class="card-white rounded-2xl p-5 hover:shadow-md transition-all border border-slate-100 relative overflow-hidden group">
+                <div class="card-white rounded-2xl p-5 hover:shadow-md transition-all border border-slate-100 relative overflow-hidden group product-card-item" data-product-slug="{{ $pCard['slug'] }}" data-product-name="{{ $pCard['name'] }}">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center space-x-3">
                             <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white shadow-md" style="background-color: {{ $pCard['color'] }}">
@@ -122,12 +129,12 @@
                     <div class="mt-4 pt-3 border-t border-slate-100 flex items-end justify-between">
                         <div>
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Clients Onboarded</span>
-                            <span class="text-2xl font-extrabold text-slate-900 font-heading">{{ number_format($pCard['count']) }}</span>
+                            <span class="text-2xl font-extrabold text-slate-900 font-heading product-card-count">{{ number_format($pCard['count']) }}</span>
                             <span class="text-[11px] text-slate-500 font-medium ml-1">Clients</span>
                         </div>
                         <div class="text-right">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Monthly MRR</span>
-                            <span class="text-sm font-extrabold text-emerald-600 font-heading">₹{{ number_format($pCard['mrr']) }}</span>
+                            <span class="text-sm font-extrabold text-emerald-600 font-heading product-card-mrr">₹{{ number_format($pCard['mrr']) }}</span>
                         </div>
                     </div>
 
@@ -160,11 +167,21 @@
                 </div>
                 <div class="flex items-baseline space-x-2">
                     <span id="revenueOverviewAmount" class="text-2xl font-extrabold text-slate-900 font-heading">₹{{ number_format($revenueOverviewAmount ?? $mrr) }}</span>
-                    <span id="revenueOverviewBadge" class="text-xs font-bold {{ ($revChangeDirection ?? 'up') === 'down' ? 'text-rose-600' : 'text-emerald-600' }} flex items-center">
-                        <i data-lucide="{{ ($revChangeDirection ?? 'up') === 'down' ? 'arrow-down-right' : 'arrow-up-right' }}" class="w-3.5 h-3.5 mr-0.5"></i> 
-                        {{ ($revChangeDirection ?? 'up') === 'down' ? '↓' : '↑' }} {{ $revChangePct ?? '0' }}% 
-                        <span class="text-slate-400 font-normal ml-1">vs last month</span>
-                    </span>
+                    @if(($revenueOverviewAmount ?? 0) <= 0 || ($revChangeDirection ?? '') === 'neutral')
+                        <span id="revenueOverviewBadge" class="text-xs font-semibold text-slate-400 flex items-center">
+                            <i data-lucide="minus" class="w-3.5 h-3.5 mr-0.5"></i> 0% <span class="text-slate-400 font-normal ml-1">vs last month</span>
+                        </span>
+                    @elseif(($revChangeDirection ?? '') === 'down')
+                        <span id="revenueOverviewBadge" class="text-xs font-bold text-rose-600 flex items-center">
+                            <i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-0.5"></i> ↓ {{ $revChangePct ?? '0' }}% 
+                            <span class="text-slate-400 font-normal ml-1">vs last month</span>
+                        </span>
+                    @else
+                        <span id="revenueOverviewBadge" class="text-xs font-bold text-emerald-600 flex items-center">
+                            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ {{ $revChangePct ?? '0' }}% 
+                            <span class="text-slate-400 font-normal ml-1">vs last month</span>
+                        </span>
+                    @endif
                 </div>
             </div>
 
@@ -178,18 +195,25 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Product Usage</h3>
+                <select onchange="filterSection('product_usage', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
             </div>
             
             <div class="h-44 relative flex items-center justify-center">
                 <canvas id="wlProductDonutChart"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <span class="text-[10px] uppercase font-bold text-slate-400">Total</span>
-                    <span class="text-2xl font-extrabold text-slate-900 font-heading">{{ $totalClients }}</span>
+                    <span id="productDonutTotal" class="text-2xl font-extrabold text-slate-900 font-heading">{{ $totalClients }}</span>
                     <span class="text-[10px] text-slate-400 font-medium">Clients</span>
                 </div>
             </div>
 
-            <div class="mt-4 pt-4 border-t border-slate-100 space-y-2.5 text-xs">
+            <div id="productUsageLegendList" class="mt-4 pt-4 border-t border-slate-100 space-y-2.5 text-xs">
                 @foreach($productUsage as $pu)
                     <div class="flex items-center justify-between">
                         <span class="flex items-center text-slate-700 font-medium">
@@ -206,9 +230,16 @@
         <div class="lg:col-span-3 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Top Performing Products</h3>
+                <select onchange="filterSection('top_products', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
             </div>
 
-            <div class="space-y-4">
+            <div id="topProductsList" class="space-y-4">
                 @foreach($productUsage as $pu)
                     <div>
                         <div class="flex items-center justify-between text-xs mb-1.5">
@@ -240,9 +271,18 @@
         <div class="lg:col-span-7 card-white rounded-2xl p-6">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Recent Clients</h3>
-                <a href="{{ route('whitelabel.clients.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition">
+                <div class="flex items-center space-x-2">
+                    <select onchange="filterSection('recent_clients', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                    <a href="{{ route('whitelabel.clients.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition">
                         View All Clients
                     </a>
+                </div>
             </div>
 
             <div class="overflow-x-auto">
@@ -257,7 +297,7 @@
                             <th class="pb-3 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 text-xs">
+                    <tbody id="recentClientsTableBody" class="divide-y divide-slate-100 text-xs">
                         @forelse($recentClients as $client)
                             <tr class="hover:bg-slate-50/80 transition-colors">
                                 <td class="py-3.5 font-bold text-slate-900">
@@ -311,7 +351,7 @@
                     </a>
             </div>
 
-            <div class="space-y-4">
+            <div id="topProductsList" class="space-y-4">
                 @forelse($recentActivities as $act)
                     <div class="flex items-start space-x-3 text-xs p-1">
                         <div class="w-8 h-8 rounded-xl {{ $act['bg_color'] }} {{ $act['text_color'] }} flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -344,6 +384,13 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Subscription Status</h3>
+                <select onchange="filterSection('subscription_status', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -353,7 +400,7 @@
                         <i data-lucide="check-circle-2" class="w-4 h-4"></i>
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Active</span>
-                    <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['active'] }}</span>
+                    <span id="subStatActive" class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['active'] }}</span>
                     
                 </div>
 
@@ -363,7 +410,7 @@
                         <i data-lucide="clock" class="w-4 h-4"></i>
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Expiring Soon</span>
-                    <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['expiring'] }}</span>
+                    <span id="subStatExpiring" class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['expiring'] }}</span>
                     
                 </div>
 
@@ -373,7 +420,7 @@
                         <i data-lucide="x-circle" class="w-4 h-4"></i>
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Cancelled</span>
-                    <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['cancelled'] }}</span>
+                    <span id="subStatCancelled" class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['cancelled'] }}</span>
                     
                 </div>
 
@@ -383,7 +430,7 @@
                         <i data-lucide="flask-conical" class="w-4 h-4"></i>
                     </div>
                     <span class="block text-[11px] font-bold text-slate-500">Trial</span>
-                    <span class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['trial'] }}</span>
+                    <span id="subStatTrial" class="block text-xl font-extrabold text-slate-900 font-heading mt-0.5">{{ $subscriptionStatus['trial'] }}</span>
                     
                 </div>
             </div>
@@ -393,6 +440,13 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Client Distribution</h3>
+                <select onchange="filterSection('client_distribution', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
@@ -413,7 +467,7 @@
                 </div>
 
                 <!-- Right Legend Breakdown -->
-                <div class="sm:col-span-5 space-y-1.5 text-xs">
+                <div id="clientDistributionList" class="sm:col-span-5 space-y-1.5 text-xs">
                     @foreach($clientDistribution as $dist)
                         <div class="flex items-center justify-between text-[11px]">
                             <span class="flex items-center text-slate-600 font-medium">
@@ -431,14 +485,8 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <h3 class="text-base font-bold text-slate-900 font-heading mb-4">Quick Actions</h3>
 
-            <div class="grid grid-cols-3 gap-3">
-                <button onclick="document.getElementById('addClientModal').classList.remove('hidden')" 
-                        class="p-3 rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-100 hover:border-indigo-200 transition-all text-left group flex flex-col items-center justify-center text-center space-y-1.5">
-                    <div class="w-8 h-8 rounded-xl bg-indigo-100 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white flex items-center justify-center transition-colors">
-                        <i data-lucide="user-plus" class="w-4 h-4"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-700 group-hover:text-indigo-700 leading-tight">Add New Client</span>
-                </button>
+            <div class="grid grid-cols-2 gap-3">
+
 
                 <a href="{{ route('whitelabel.products.index') }}" 
                    class="p-3 rounded-2xl bg-slate-50 hover:bg-sky-50 border border-slate-100 hover:border-sky-200 transition-all text-left group flex flex-col items-center justify-center text-center space-y-1.5">
@@ -512,6 +560,168 @@
     </div>
 
     <script>
+        function filterSection(section, val) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("section", section);
+        url.searchParams.set("period", val);
+
+        fetch(url.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.section === 'product_cards' && data.cards) {
+                data.cards.forEach(card => {
+                    const el = document.querySelector(`.product-card-item[data-product-name="${card.name}"]`) || document.querySelector(`.product-card-item[data-product-slug="${card.slug}"]`);
+                    if (el) {
+                        const cntEl = el.querySelector('.product-card-count');
+                        if (cntEl) cntEl.innerText = Number(card.count).toLocaleString();
+                        const mrrEl = el.querySelector('.product-card-mrr');
+                        if (mrrEl) mrrEl.innerText = '₹' + Number(card.mrr).toLocaleString();
+                        const barEl = el.querySelector('.h-full.rounded-full');
+                        if (barEl) barEl.style.width = card.percentage + '%';
+                    }
+                });
+            } else if (data.section === 'product_usage' && data.productUsage) {
+                const totalEl = document.getElementById('productDonutTotal');
+                if (totalEl) totalEl.innerText = data.totalClients;
+
+                const legendList = document.getElementById('productUsageLegendList');
+                if (legendList) {
+                    let html = '';
+                    data.productUsage.forEach(pu => {
+                        html += `
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center text-slate-700 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full mr-2" style="background-color: ${pu.color}"></span> 
+                                ${pu.name}
+                            </span>
+                            <span class="font-bold text-slate-900">${pu.clients} <span class="text-slate-400 font-normal">(${pu.percentage}%)</span></span>
+                        </div>`;
+                    });
+                    legendList.innerHTML = html;
+                }
+
+                if (window.donutChartInstance) {
+                    window.donutChartInstance.data.datasets[0].data = data.productUsage.map(p => p.clients);
+                    window.donutChartInstance.update();
+                }
+            } else if (data.section === 'top_products' && data.productUsage) {
+                const list = document.getElementById('topProductsList');
+                if (list) {
+                    let html = '';
+                    data.productUsage.forEach(pu => {
+                        html += `
+                        <div>
+                            <div class="flex items-center justify-between text-xs mb-1.5">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                        <i data-lucide="${pu.icon}" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-slate-900 block leading-tight text-xs">${pu.name}</span>
+                                        <span class="text-[10px] text-slate-400">${pu.clients} Clients</span>
+                                    </div>
+                                </div>
+                                <span class="font-bold text-slate-900 text-xs">${pu.percentage}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-300" style="width: ${pu.percentage}%; background-color: ${pu.color};"></div>
+                            </div>
+                        </div>`;
+                    });
+                    list.innerHTML = html;
+                    if (window.lucide) lucide.createIcons();
+                }
+            } else if (data.section === 'recent_clients' && data.clients) {
+                const tbody = document.getElementById('recentClientsTableBody');
+                if (tbody) {
+                    if (data.clients.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-400 text-xs font-medium">No clients found for this period.</td></tr>';
+                    } else {
+                        let html = '';
+                        data.clients.forEach(c => {
+                            let iconsHtml = '';
+                            (c.products || ['shopping-bag']).forEach(ic => {
+                                iconsHtml += `<div class="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i data-lucide="${ic}" class="w-3 h-3"></i></div>`;
+                            });
+                            html += `
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="py-3.5 font-bold text-slate-900">
+                                    <div class="flex items-center space-x-2.5">
+                                        <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold flex items-center justify-center text-[10px] shadow-sm">
+                                            <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                                        </div>
+                                        <span>${c.name}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3.5"><div class="flex items-center space-x-1.5">${iconsHtml}</div></td>
+                                <td class="py-3.5 text-slate-600 font-medium">${c.plan}</td>
+                                <td class="py-3.5"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-${c.status_color}-100 text-${c.status_color}-700">${c.status}</span></td>
+                                <td class="py-3.5 text-slate-500 font-medium text-[11px]">${c.joined}</td>
+                                <td class="py-3.5 text-right text-slate-400"><button class="p-1 hover:text-slate-700"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button></td>
+                            </tr>`;
+                        });
+                        tbody.innerHTML = html;
+                        if (window.lucide) lucide.createIcons();
+                    }
+                }
+            } else if (data.section === 'recent_activity' && data.activities) {
+                const actList = document.getElementById('recentActivityList');
+                if (actList) {
+                    if (data.activities.length === 0) {
+                        actList.innerHTML = '<div class="py-6 text-center text-slate-400 text-xs font-medium">No activity recorded for this period.</div>';
+                    } else {
+                        let html = '';
+                        data.activities.forEach(a => {
+                            html += `
+                            <div class="flex items-start space-x-3 text-xs p-1">
+                                <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i data-lucide="activity" class="w-4 h-4"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-slate-800 leading-tight">${a.title}</p>
+                                </div>
+                                <span class="text-[10px] text-slate-400 whitespace-nowrap">${a.time}</span>
+                            </div>`;
+                        });
+                        actList.innerHTML = html;
+                        if (window.lucide) lucide.createIcons();
+                    }
+                }
+            } else if (data.section === 'subscription_status' && data.status) {
+                const s = data.status;
+                const aEl = document.getElementById('subStatActive');
+                if (aEl) aEl.innerText = s.active;
+                const eEl = document.getElementById('subStatExpiring');
+                if (eEl) eEl.innerText = s.expiring;
+                const cEl = document.getElementById('subStatCancelled');
+                if (cEl) cEl.innerText = s.cancelled;
+                const tEl = document.getElementById('subStatTrial');
+                if (tEl) tEl.innerText = s.trial;
+            } else if (data.section === 'client_distribution' && data.distribution) {
+                const list = document.getElementById('clientDistributionList');
+                if (list) {
+                    const colors = { 'India': '#6366F1', 'USA': '#818CF8', 'UK': '#A5B4FC', 'Australia': '#C7D2FE', 'Others': '#E0E7FF' };
+                    let html = '';
+                    data.distribution.forEach(d => {
+                        const col = colors[d.country] || '#E0E7FF';
+                        html += `
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="flex items-center text-slate-600 font-medium">
+                                <span class="w-2 h-2 rounded-full mr-1.5" style="background-color: ${col}"></span>
+                                ${d.country}
+                            </span>
+                            <span class="font-bold text-slate-900">${d.count} <span class="text-slate-400 font-normal text-[10px]">(${d.percentage}%)</span></span>
+                        </div>`;
+                    });
+                    list.innerHTML = html;
+                }
+            }
+        })
+        .catch(err => console.error("Filter section error:", err));
+    }
+
     function setRevenueFilter(val) {
         if (val === "custom") {
             document.getElementById("customDateModal").classList.remove("hidden");
@@ -533,9 +743,16 @@
 
             const badgeEl = document.getElementById('revenueOverviewBadge');
             if (badgeEl) {
-                const isDown = data.revChangeDirection === 'down';
-                badgeEl.className = 'text-xs font-bold ' + (isDown ? 'text-rose-600' : 'text-emerald-600') + ' flex items-center';
-                badgeEl.innerHTML = `<i data-lucide="${isDown ? 'arrow-down-right' : 'arrow-up-right'}" class="w-3.5 h-3.5 mr-0.5"></i> ${isDown ? '↓' : '↑'} ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                if (data.revChangeDirection === 'neutral' || data.mrr <= 0) {
+                    badgeEl.className = 'text-xs font-semibold text-slate-400 flex items-center';
+                    badgeEl.innerHTML = `<i data-lucide="minus" class="w-3.5 h-3.5 mr-0.5"></i> 0% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                } else if (data.revChangeDirection === 'down') {
+                    badgeEl.className = 'text-xs font-bold text-rose-600 flex items-center';
+                    badgeEl.innerHTML = `<i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-0.5"></i> ↓ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                } else {
+                    badgeEl.className = 'text-xs font-bold text-emerald-600 flex items-center';
+                    badgeEl.innerHTML = `<i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                }
                 if (window.lucide) lucide.createIcons();
             }
 
@@ -575,9 +792,16 @@
 
             const badgeEl = document.getElementById('revenueOverviewBadge');
             if (badgeEl) {
-                const isDown = data.revChangeDirection === 'down';
-                badgeEl.className = 'text-xs font-bold ' + (isDown ? 'text-rose-600' : 'text-emerald-600') + ' flex items-center';
-                badgeEl.innerHTML = `<i data-lucide="${isDown ? 'arrow-down-right' : 'arrow-up-right'}" class="w-3.5 h-3.5 mr-0.5"></i> ${isDown ? '↓' : '↑'} ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                if (data.revChangeDirection === 'neutral' || data.mrr <= 0) {
+                    badgeEl.className = 'text-xs font-semibold text-slate-400 flex items-center';
+                    badgeEl.innerHTML = `<i data-lucide="minus" class="w-3.5 h-3.5 mr-0.5"></i> 0% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                } else if (data.revChangeDirection === 'down') {
+                    badgeEl.className = 'text-xs font-bold text-rose-600 flex items-center';
+                    badgeEl.innerHTML = `<i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-0.5"></i> ↓ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                } else {
+                    badgeEl.className = 'text-xs font-bold text-emerald-600 flex items-center';
+                    badgeEl.innerHTML = `<i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                }
                 if (window.lucide) lucide.createIcons();
             }
 
@@ -631,7 +855,7 @@
 
         // Product Usage Donut Chart matching reference image
         const ctxDonut = document.getElementById('wlProductDonutChart').getContext('2d');
-        new Chart(ctxDonut, {
+        window.donutChartInstance = new Chart(ctxDonut, {
             type: 'doughnut',
             data: {
                 labels: @json(array_column($productUsage, 'name')),

@@ -317,6 +317,49 @@ protected function getAgencyClientsData($agency)
         ];
     }
 
+    private function resolveDateRange($period, $customStart = null, $customEnd = null)
+    {
+        $startDate = null;
+        $endDate = null;
+
+        if ($period === 'today') {
+            $startDate = \Carbon\Carbon::today()->startOfDay();
+            $endDate = \Carbon\Carbon::now();
+        } elseif ($period === 'yesterday') {
+            $startDate = \Carbon\Carbon::yesterday()->startOfDay();
+            $endDate = \Carbon\Carbon::yesterday()->endOfDay();
+        } elseif ($period === 'week') {
+            $startDate = \Carbon\Carbon::now()->startOfWeek();
+            $endDate = \Carbon\Carbon::now()->endOfWeek();
+        } elseif ($period === 'month') {
+            $startDate = \Carbon\Carbon::now()->startOfMonth();
+            $endDate = \Carbon\Carbon::now()->endOfMonth();
+        } elseif ($period === 'custom' && !empty($customStart)) {
+            $startDate = \Carbon\Carbon::parse($customStart)->startOfDay();
+            $endDate = !empty($customEnd) ? \Carbon\Carbon::parse($customEnd)->endOfDay() : \Carbon\Carbon::now();
+        }
+
+        return [$startDate, $endDate];
+    }
+
+    private function filterClientsByDate($clients, $startDate, $endDate)
+    {
+        if (!$startDate || !$endDate) {
+            return $clients;
+        }
+
+        $filtered = [];
+        foreach ($clients as $c) {
+            try {
+                $joinedCarbon = \Carbon\Carbon::parse($c['joined']);
+                if ($joinedCarbon->between($startDate, $endDate)) {
+                    $filtered[] = $c;
+                }
+            } catch (\Throwable $e) {}
+        }
+        return $filtered;
+    }
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -326,38 +369,227 @@ protected function getAgencyClientsData($agency)
             $agency = Agency::first();
         }
 
-        // Revenue Overview Filter ONLY (Does not filter other widgets)
-        $revenuePeriod = $request->input('revenue_period', $request->input('period', 'all'));
-        $customStart   = $request->input('start_date');
-        $customEnd     = $request->input('end_date');
-
-        $revStartDate = null;
-        $revEndDate   = null;
-
-        if ($revenuePeriod === 'today') {
-            $revStartDate = \Carbon\Carbon::today()->startOfDay();
-            $revEndDate   = \Carbon\Carbon::now();
-        } elseif ($revenuePeriod === 'yesterday') {
-            $revStartDate = \Carbon\Carbon::yesterday()->startOfDay();
-            $revEndDate   = \Carbon\Carbon::yesterday()->endOfDay();
-        } elseif ($revenuePeriod === 'week') {
-            $revStartDate = \Carbon\Carbon::now()->startOfWeek();
-            $revEndDate   = \Carbon\Carbon::now()->endOfWeek();
-        } elseif ($revenuePeriod === 'month') {
-            $revStartDate = \Carbon\Carbon::now()->startOfMonth();
-            $revEndDate   = \Carbon\Carbon::now()->endOfMonth();
-        } elseif ($revenuePeriod === 'custom' && !empty($customStart)) {
-            $revStartDate = \Carbon\Carbon::parse($customStart)->startOfDay();
-            $revEndDate   = !empty($customEnd) ? \Carbon\Carbon::parse($customEnd)->endOfDay() : \Carbon\Carbon::now();
-        }
-
         $clientsData = $this->getAgencyClientsData($agency);
         $rawClients   = $clientsData['clients'];
         $productCards = $clientsData['productCards'];
 
-        // All agency clients are preserved for overall metrics, usage, tables, and distribution
-        $allClients = $rawClients;
+        // SECTION AJAX HANDLER: If request is asking for a specific section filter
+        if ($request->ajax() && $request->has('section')) {
+            $section = $request->input('section');
+            $secPeriod = $request->input('period', 'all');
+            $customStart = $request->input('start_date');
+            $customEnd = $request->input('end_date');
 
+            list($sDate, $eDate) = $this->resolveDateRange($secPeriod, $customStart, $customEnd);
+            $secClients = $this->filterClientsByDate($rawClients, $sDate, $eDate);
+            $secTotal = count($secClients);
+
+            if ($section === 'revenue') {
+                $revAmt = ($secPeriod === 'all') ? array_sum(array_column($rawClients, 'price')) : array_sum(array_column($secClients, 'price'));
+
+                if ($secPeriod === 'today' || $secPeriod === 'yesterday') {
+                    $labels = ['09:00', '12:00', '15:00', '18:00', '21:00', '23:59'];
+                } elseif ($secPeriod === 'week') {
+                    $labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                } else {
+                    $monthName = now()->format('M');
+                    $labels = ["{$monthName} 1", "{$monthName} 6", "{$monthName} 11", "{$monthName} 16", "{$monthName} 21", "{$monthName} 26", "{$monthName} 31"];
+                }
+
+                $numPts = count($labels);
+                $chartData = [];
+                if ($revAmt > 0) {
+                    for ($i = 1; $i <= $numPts; $i++) {
+                        $pct = $i / $numPts;
+                        $chartData[] = round($revAmt * max(0.15, $pct));
+                    }
+                } else {
+                    $chartData = array_fill(0, $numPts, 0);
+                }
+
+                // Dynamic comparison vs last month
+                $thisMonthStart = \Carbon\Carbon::now()->startOfMonth();
+                $thisMonthEnd   = \Carbon\Carbon::now()->endOfMonth();
+                $lastMonthStart = \Carbon\Carbon::now()->subMonth()->startOfMonth();
+                $lastMonthEnd   = \Carbon\Carbon::now()->subMonth()->endOfMonth();
+
+                $lastMonthRev = 0;
+                foreach ($rawClients as $c) {
+                    try {
+                        $dt = \Carbon\Carbon::parse($c['joined']);
+                        if ($dt->between($lastMonthStart, $lastMonthEnd)) {
+                            $lastMonthRev += floatval($c['price'] ?? 0);
+                        }
+                    } catch (\Throwable $e) {}
+                }
+
+                if ($revAmt <= 0) {
+                    $changePct = 0;
+                    $direction = 'neutral';
+                } elseif ($lastMonthRev > 0) {
+                    $diff = $revAmt - $lastMonthRev;
+                    $changePct = round(($diff / $lastMonthRev) * 100, 1);
+                    $direction = ($changePct >= 0) ? 'up' : 'down';
+                    $changePct = abs($changePct);
+                } else {
+                    $changePct = 100.0;
+                    $direction = 'up';
+                }
+
+                return response()->json([
+                    'section'            => 'revenue',
+                    'amount'             => '₹' . number_format($revAmt),
+                    'mrr'                => $revAmt,
+                    'revenueChartLabels' => $labels,
+                    'revenueChartData'   => $chartData,
+                    'revChangePct'       => $changePct,
+                    'revChangeDirection' => $direction,
+                ]);
+            }
+
+            if ($section === 'product_cards') {
+                $counts = [];
+                $mrrs = [];
+                foreach ($secClients as $c) {
+                    $pName = $c['product_name'] ?? 'Ecombuilder';
+                    $counts[$pName] = ($counts[$pName] ?? 0) + 1;
+                    $mrrs[$pName] = ($mrrs[$pName] ?? 0) + ($c['price'] ?? 0);
+                }
+                $cardsOut = [];
+                foreach ($productCards as $pc) {
+                    $cCnt = $counts[$pc['name']] ?? 0;
+                    $cMrr = $mrrs[$pc['name']] ?? 0;
+                    $pct = ($secTotal > 0 && $cCnt > 0) ? min(100, round(($cCnt / $secTotal) * 100)) : 0;
+                    $cardsOut[] = [
+                        'name'       => $pc['name'],
+                        'slug'       => $pc['slug'],
+                        'count'      => $cCnt,
+                        'mrr'        => $cMrr,
+                        'percentage' => $pct,
+                    ];
+                }
+                return response()->json([
+                    'section' => 'product_cards',
+                    'cards'   => $cardsOut,
+                ]);
+            }
+
+            if ($section === 'product_usage' || $section === 'top_products') {
+                $counts = [];
+                foreach ($secClients as $c) {
+                    $pName = $c['product_name'] ?? 'Ecombuilder';
+                    $counts[$pName] = ($counts[$pName] ?? 0) + 1;
+                }
+                $usageOut = [];
+                foreach ($productCards as $pc) {
+                    $cCnt = $counts[$pc['name']] ?? 0;
+                    $pct = ($secTotal > 0 && $cCnt > 0) ? min(100, round(($cCnt / $secTotal) * 100)) : 0;
+                    $usageOut[] = [
+                        'name'       => $pc['name'],
+                        'clients'    => $cCnt,
+                        'percentage' => $pct,
+                        'color'      => $pc['color'],
+                        'icon'       => $pc['icon'],
+                    ];
+                }
+                return response()->json([
+                    'section'      => $section,
+                    'totalClients' => $secTotal,
+                    'productUsage' => $usageOut,
+                ]);
+            }
+
+            if ($section === 'recent_clients') {
+                $recentOut = [];
+                foreach (array_slice($secClients, 0, 5) as $rc) {
+                    $recentOut[] = [
+                        'name'         => $rc['name'],
+                        'products'     => $rc['products'] ?? ['shopping-bag'],
+                        'plan'         => $rc['plan'] ?? 'Standard',
+                        'status'       => $rc['status'] ?? 'Active',
+                        'status_color' => $rc['status_color'] ?? 'emerald',
+                        'joined'       => $rc['joined'] ?? '',
+                    ];
+                }
+                return response()->json([
+                    'section' => 'recent_clients',
+                    'clients' => $recentOut,
+                ]);
+            }
+
+            if ($section === 'recent_activity') {
+                $logsQuery = AuditLog::latest();
+                if ($sDate && $eDate) {
+                    $logsQuery->whereBetween('created_at', [$sDate, $eDate]);
+                }
+                $actOut = [];
+                foreach ($logsQuery->take(5)->get() as $log) {
+                    $actOut[] = [
+                        'title' => $log->action,
+                        'time'  => $log->created_at ? $log->created_at->diffForHumans() : 'Just now',
+                    ];
+                }
+                return response()->json([
+                    'section'    => 'recent_activity',
+                    'activities' => $actOut,
+                ]);
+            }
+
+            if ($section === 'subscription_status') {
+                $actv = 0;
+                $pnd = 0;
+                foreach ($secClients as $c) {
+                    if (strtolower($c['status']) === 'active') {
+                        $actv++;
+                    } else {
+                        $pnd++;
+                    }
+                }
+                return response()->json([
+                    'section' => 'subscription_status',
+                    'status'  => [
+                        'active'    => $actv,
+                        'expiring'  => $pnd,
+                        'cancelled' => 0,
+                        'trial'     => max(0, $secTotal - $actv - $pnd),
+                    ],
+                ]);
+            }
+
+            if ($section === 'client_distribution') {
+                $cCounts = ['India' => 0, 'USA' => 0, 'UK' => 0, 'Australia' => 0, 'Others' => 0];
+                foreach ($secClients as $c) {
+                    $cCountry = $c['country'] ?? 'India';
+                    if (isset($cCounts[$cCountry])) {
+                        $cCounts[$cCountry]++;
+                    } else {
+                        $cCounts['Others']++;
+                    }
+                }
+                $distOut = [];
+                foreach ($cCounts as $country => $cnt) {
+                    $pct = ($secTotal > 0 && $cnt > 0) ? round(($cnt / $secTotal) * 100) : 0;
+                    $distOut[] = [
+                        'country'    => $country,
+                        'count'      => $cnt,
+                        'percentage' => $pct,
+                    ];
+                }
+                return response()->json([
+                    'section'      => 'client_distribution',
+                    'distribution' => $distOut,
+                ]);
+            }
+        }
+
+        // Full Dashboard Default Rendering
+        $revenuePeriod = $request->input('revenue_period', $request->input('period', 'all'));
+        $customStart   = $request->input('start_date');
+        $customEnd     = $request->input('end_date');
+
+        list($revStartDate, $revEndDate) = $this->resolveDateRange($revenuePeriod, $customStart, $customEnd);
+
+        $allClients     = $rawClients;
         $totalClients   = count($allClients);
         $activeClients  = 0;
         $pendingClients = 0;
@@ -370,27 +602,15 @@ protected function getAgencyClientsData($agency)
             }
         }
 
-        // Total Agency MRR from all active client subscriptions
         $mrr = array_sum(array_column($allClients, 'price'));
 
-        // Calculate Revenue specifically for Revenue Overview based on selected Revenue Period
         if ($revStartDate && $revEndDate) {
-            $filteredRevClients = [];
-            foreach ($rawClients as $c) {
-                try {
-                    $joinedCarbon = \Carbon\Carbon::parse($c['joined']);
-                    if ($joinedCarbon->between($revStartDate, $revEndDate)) {
-                        $filteredRevClients[] = $c;
-                    }
-                } catch (\Throwable $dEx) {}
-            }
-            $revenueOverviewAmount = array_sum(array_column($filteredRevClients, 'price'));
+            $filteredRev = $this->filterClientsByDate($rawClients, $revStartDate, $revEndDate);
+            $revenueOverviewAmount = array_sum(array_column($filteredRev, 'price'));
         } else {
-            // 'all' time
             $revenueOverviewAmount = $mrr;
         }
 
-        // Generate Dynamic Revenue Chart based on selected Revenue Period
         if ($revenuePeriod === 'today' || $revenuePeriod === 'yesterday') {
             $revenueChartLabels = ['09:00', '12:00', '15:00', '18:00', '21:00', '23:59'];
         } elseif ($revenuePeriod === 'week') {
@@ -411,46 +631,34 @@ protected function getAgencyClientsData($agency)
             $revenueChartData = array_fill(0, $numPoints, 0);
         }
 
-        // Calculate Dynamic % vs last month
-        $thisMonthStart = \Carbon\Carbon::now()->startOfMonth();
-        $thisMonthEnd   = \Carbon\Carbon::now()->endOfMonth();
+        // Dynamic % vs last month
         $lastMonthStart = \Carbon\Carbon::now()->subMonth()->startOfMonth();
         $lastMonthEnd   = \Carbon\Carbon::now()->subMonth()->endOfMonth();
-
-        $thisMonthRev = 0;
         $lastMonthRev = 0;
         foreach ($rawClients as $c) {
-            $p = floatval($c['price'] ?? 0);
             try {
-                $joinedCarbon = \Carbon\Carbon::parse($c['joined']);
-                if ($joinedCarbon->between($thisMonthStart, $thisMonthEnd)) {
-                    $thisMonthRev += $p;
-                } elseif ($joinedCarbon->between($lastMonthStart, $lastMonthEnd)) {
-                    $lastMonthRev += $p;
+                $dt = \Carbon\Carbon::parse($c['joined']);
+                if ($dt->between($lastMonthStart, $lastMonthEnd)) {
+                    $lastMonthRev += floatval($c['price'] ?? 0);
                 }
             } catch (\Throwable $e) {}
         }
 
-        if ($thisMonthRev == 0 && $mrr > 0) {
-            $thisMonthRev = $mrr;
-        }
-
-        if ($lastMonthRev > 0) {
-            $diff = $thisMonthRev - $lastMonthRev;
+        if ($revenueOverviewAmount <= 0) {
+            $revChangePct = 0;
+            $revChangeDirection = 'neutral';
+        } elseif ($lastMonthRev > 0) {
+            $diff = $revenueOverviewAmount - $lastMonthRev;
             $revChangePct = round(($diff / $lastMonthRev) * 100, 1);
             $revChangeDirection = ($revChangePct >= 0) ? 'up' : 'down';
             $revChangePct = abs($revChangePct);
-        } elseif ($thisMonthRev > 0) {
-            $revChangePct = 100.0;
-            $revChangeDirection = 'up';
         } else {
-            $revChangePct = 0.0;
+            $revChangePct = 100.0;
             $revChangeDirection = 'up';
         }
 
         $activeSubscriptions = $activeClients;
 
-        // Recalculate productCards and productUsage based on all agency clients
         $clientCounts = [];
         $clientMrrs   = [];
         foreach ($allClients as $c) {
@@ -485,10 +693,8 @@ protected function getAgencyClientsData($agency)
             ];
         }
 
-        // Recent Clients (unfiltered, top 5)
         $recentClients = array_slice($allClients, 0, 5);
 
-        // Recent Activity Stream from database AuditLogs
         $recentActivities = [];
         $logs = AuditLog::latest()->take(5)->get();
         foreach ($logs as $log) {
@@ -502,7 +708,6 @@ protected function getAgencyClientsData($agency)
             ];
         }
 
-        // Subscription status live breakdown
         $subscriptionStatus = [
             'active'    => $activeClients,
             'expiring'  => $pendingClients,
@@ -510,15 +715,7 @@ protected function getAgencyClientsData($agency)
             'trial'     => max(0, $totalClients - $activeClients - $pendingClients),
         ];
 
-        // Dynamic Client distribution by location
-        $countryCounts = [
-            'India'     => 0,
-            'USA'       => 0,
-            'UK'        => 0,
-            'Australia' => 0,
-            'Others'    => 0,
-        ];
-
+        $countryCounts = ['India' => 0, 'USA' => 0, 'UK' => 0, 'Australia' => 0, 'Others' => 0];
         foreach ($allClients as $c) {
             $cCountry = $c['country'] ?? 'India';
             if (isset($countryCounts[$cCountry])) {
@@ -545,17 +742,6 @@ protected function getAgencyClientsData($agency)
                 'percentage' => $pct,
                 'color'      => $countryColors[$country] ?? '#E0E7FF',
             ];
-        }
-
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'amount'             => '₹' . number_format($revenueOverviewAmount),
-                'mrr'                => $revenueOverviewAmount,
-                'revenueChartLabels' => $revenueChartLabels,
-                'revenueChartData'   => $revenueChartData,
-                'revChangePct'       => $revChangePct,
-                'revChangeDirection' => $revChangeDirection,
-            ]);
         }
 
         return view('whitelabel.dashboard', compact(
