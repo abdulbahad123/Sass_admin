@@ -374,30 +374,43 @@ protected function getAgencyClientsData($agency)
         $productCards = $clientsData['productCards'];
 
         // SECTION AJAX HANDLER: If request is asking for a specific section filter
-        if ($request->ajax() && $request->has('section')) {
-            $section = $request->input('section');
-            $secPeriod = $request->input('period', 'all');
-            $customStart = $request->input('start_date');
-            $customEnd = $request->input('end_date');
+        if ($request->ajax() || $request->wantsJson() || $request->has('section')) {
+            $section = $request->input('section', ($request->has('revenue_period') ? 'revenue' : null));
+            if ($section) {
+                $secPeriod = $request->input('period', $request->input('revenue_period', 'all'));
+                $customStart = $request->input('start_date');
+                $customEnd = $request->input('end_date');
 
-            list($sDate, $eDate) = $this->resolveDateRange($secPeriod, $customStart, $customEnd);
-            $secClients = $this->filterClientsByDate($rawClients, $sDate, $eDate);
-            $secTotal = count($secClients);
+                list($sDate, $eDate) = $this->resolveDateRange($secPeriod, $customStart, $customEnd);
+                $secClients = $this->filterClientsByDate($rawClients, $sDate, $eDate);
+                $secTotal = count($secClients);
 
-            if ($section === 'revenue') {
-                $revAmt = ($secPeriod === 'all') ? array_sum(array_column($rawClients, 'price')) : array_sum(array_column($secClients, 'price'));
+                if ($section === 'revenue') {
+                    $revAmt = ($secPeriod === 'all') ? array_sum(array_column($rawClients, 'price')) : array_sum(array_column($secClients, 'price'));
 
-                if ($secPeriod === 'today' || $secPeriod === 'yesterday') {
-                    $labels = ['09:00', '12:00', '15:00', '18:00', '21:00', '23:59'];
-                } elseif ($secPeriod === 'week') {
-                    $labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                } else {
-                    $monthName = now()->format('M');
-                    $labels = ["{$monthName} 1", "{$monthName} 6", "{$monthName} 11", "{$monthName} 16", "{$monthName} 21", "{$monthName} 26", "{$monthName} 31"];
-                }
+                    if ($secPeriod === 'today' || $secPeriod === 'yesterday') {
+                        $labels = ['09:00', '12:00', '15:00', '18:00', '21:00', '23:59'];
+                    } elseif ($secPeriod === 'week') {
+                        $labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    } elseif ($secPeriod === 'custom' && $sDate && $eDate) {
+                        $diffDays = $sDate->diffInDays($eDate);
+                        if ($diffDays <= 7) {
+                            $labels = [];
+                            $cur = $sDate->copy();
+                            while ($cur->lte($eDate)) {
+                                $labels[] = $cur->format('d M');
+                                $cur->addDay();
+                            }
+                        } else {
+                            $labels = [$sDate->format('d M'), $sDate->copy()->addDays(round($diffDays * 0.25))->format('d M'), $sDate->copy()->addDays(round($diffDays * 0.5))->format('d M'), $sDate->copy()->addDays(round($diffDays * 0.75))->format('d M'), $eDate->format('d M')];
+                        }
+                    } else {
+                        $monthName = now()->format('M');
+                        $labels = ["{$monthName} 1", "{$monthName} 6", "{$monthName} 11", "{$monthName} 16", "{$monthName} 21", "{$monthName} 26", "{$monthName} 31"];
+                    }
 
-                $numPts = count($labels);
-                $chartData = [];
+                    $numPts = count($labels);
+                    $chartData = [];
                 if ($revAmt > 0) {
                     for ($i = 1; $i <= $numPts; $i++) {
                         $pct = $i / $numPts;
@@ -581,6 +594,7 @@ protected function getAgencyClientsData($agency)
                 ]);
             }
         }
+    }
 
         // Full Dashboard Default Rendering
         $revenuePeriod = $request->input('revenue_period', $request->input('period', 'all'));

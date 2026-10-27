@@ -156,7 +156,7 @@
             <div>
                                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-base font-bold text-slate-900 font-heading">Revenue Overview</h3>
-                    <select id="revenuePeriodSelect" onchange="setRevenueFilter(this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <select id="revenuePeriodSelect" onchange="handleSectionSelect('revenue', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
                         <option value="all" {{ ($revenuePeriod ?? "all") == "all" ? "selected" : "" }}>All Time</option>
                         <option value="today" {{ ($revenuePeriod ?? "") == "today" ? "selected" : "" }}>Today</option>
                         <option value="yesterday" {{ ($revenuePeriod ?? "") == "yesterday" ? "selected" : "" }}>Yesterday</option>
@@ -195,12 +195,13 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Product Usage</h3>
-                <select onchange="filterSection('product_usage', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                <select onchange="handleSectionSelect('product_usage', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
                     <option value="all">All Time</option>
                     <option value="today">Today</option>
                     <option value="yesterday">Yesterday</option>
                     <option value="week">This Week</option>
                     <option value="month">This Month</option>
+                    <option value="custom">Custom Dates...</option>
                 </select>
             </div>
             
@@ -230,12 +231,13 @@
         <div class="lg:col-span-3 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Top Performing Products</h3>
-                <select onchange="filterSection('top_products', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                <select onchange="handleSectionSelect('top_products', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
                     <option value="all">All Time</option>
                     <option value="today">Today</option>
                     <option value="yesterday">Yesterday</option>
                     <option value="week">This Week</option>
                     <option value="month">This Month</option>
+                    <option value="custom">Custom Dates...</option>
                 </select>
             </div>
 
@@ -272,12 +274,13 @@
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Recent Clients</h3>
                 <div class="flex items-center space-x-2">
-                    <select onchange="filterSection('recent_clients', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                    <select onchange="handleSectionSelect('recent_clients', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
                         <option value="all">All Time</option>
                         <option value="today">Today</option>
                         <option value="yesterday">Yesterday</option>
                         <option value="week">This Week</option>
                         <option value="month">This Month</option>
+                        <option value="custom">Custom Dates...</option>
                     </select>
                     <a href="{{ route('whitelabel.clients.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition">
                         View All Clients
@@ -384,12 +387,13 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Subscription Status</h3>
-                <select onchange="filterSection('subscription_status', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                <select onchange="handleSectionSelect('subscription_status', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
                     <option value="all">All Time</option>
                     <option value="today">Today</option>
                     <option value="yesterday">Yesterday</option>
                     <option value="week">This Week</option>
                     <option value="month">This Month</option>
+                    <option value="custom">Custom Dates...</option>
                 </select>
             </div>
 
@@ -440,12 +444,13 @@
         <div class="lg:col-span-4 card-white rounded-2xl p-6 flex flex-col justify-between">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-bold text-slate-900 font-heading">Client Distribution</h3>
-                <select onchange="filterSection('client_distribution', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
+                <select onchange="handleSectionSelect('client_distribution', this.value)" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700 font-semibold focus:outline-none cursor-pointer">
                     <option value="all">All Time</option>
                     <option value="today">Today</option>
                     <option value="yesterday">Yesterday</option>
                     <option value="week">This Week</option>
                     <option value="month">This Month</option>
+                    <option value="custom">Custom Dates...</option>
                 </select>
             </div>
 
@@ -536,7 +541,7 @@
                     <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
                     </div>
-                    <h4 class="text-sm font-bold text-slate-900">Custom Date Range</h4>
+                    <h4 class="text-sm font-bold text-slate-900"><span id="customDateModalSectionTitle">Revenue Overview</span> - Custom Dates</h4>
                 </div>
                 <button type="button" onclick="document.getElementById('customDateModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                     <i data-lucide="x" class="w-4 h-4"></i>
@@ -560,17 +565,88 @@
     </div>
 
     <script>
-        function filterSection(section, val) {
+        let currentCustomSection = 'revenue';
+
+    function handleSectionSelect(section, val) {
+        if (val === 'custom') {
+            currentCustomSection = section;
+            const titleEl = document.getElementById('customDateModalSectionTitle');
+            if (titleEl) {
+                const names = {
+                    'revenue': 'Revenue Overview',
+                    'product_usage': 'Product Usage',
+                    'top_products': 'Top Performing Products',
+                    'recent_clients': 'Recent Clients',
+                    'subscription_status': 'Subscription Status',
+                    'client_distribution': 'Client Distribution'
+                };
+                titleEl.innerText = names[section] || 'Section';
+            }
+            document.getElementById('customDateModal').classList.remove('hidden');
+            return;
+        }
+        filterSection(section, val);
+    }
+
+    function setRevenueFilter(val) {
+        handleSectionSelect('revenue', val);
+    }
+
+    function applyCustomDate(e) {
+        e.preventDefault();
+        const start = document.getElementById('custStartDate').value;
+        const end = document.getElementById('custEndDate').value;
+        if (!start || !end) return;
+        document.getElementById('customDateModal').classList.add('hidden');
+
+        filterSection(currentCustomSection || 'revenue', 'custom', start, end);
+    }
+
+    function filterSection(section, val, startDate = null, endDate = null) {
         const url = new URL(window.location.href);
-        url.searchParams.set("section", section);
-        url.searchParams.set("period", val);
+        url.searchParams.set('section', section);
+        url.searchParams.set('period', val);
+        if (startDate && endDate) {
+            url.searchParams.set('start_date', startDate);
+            url.searchParams.set('end_date', endDate);
+        } else {
+            url.searchParams.delete('start_date');
+            url.searchParams.delete('end_date');
+        }
 
         fetch(url.toString(), {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            headers: { 
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
         })
         .then(res => res.json())
         .then(data => {
-            if (data.section === 'product_cards' && data.cards) {
+            if (data.section === 'revenue') {
+                const amtEl = document.getElementById('revenueOverviewAmount');
+                if (amtEl) amtEl.innerText = data.amount;
+
+                const badgeEl = document.getElementById('revenueOverviewBadge');
+                if (badgeEl) {
+                    if (data.revChangeDirection === 'neutral' || data.mrr <= 0) {
+                        badgeEl.className = 'text-xs font-semibold text-slate-400 flex items-center';
+                        badgeEl.innerHTML = `<i data-lucide="minus" class="w-3.5 h-3.5 mr-0.5"></i> 0% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                    } else if (data.revChangeDirection === 'down') {
+                        badgeEl.className = 'text-xs font-bold text-rose-600 flex items-center';
+                        badgeEl.innerHTML = `<i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-0.5"></i> ↓ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                    } else {
+                        badgeEl.className = 'text-xs font-bold text-emerald-600 flex items-center';
+                        badgeEl.innerHTML = `<i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
+                    }
+                    if (window.lucide) lucide.createIcons();
+                }
+
+                if (window.revenueChartInstance) {
+                    window.revenueChartInstance.data.labels = data.revenueChartLabels;
+                    window.revenueChartInstance.data.datasets[0].data = data.revenueChartData;
+                    window.revenueChartInstance.update();
+                }
+            } else if (data.section === 'product_cards' && data.cards) {
                 data.cards.forEach(card => {
                     const el = document.querySelector(`.product-card-item[data-product-name="${card.name}"]`) || document.querySelector(`.product-card-item[data-product-slug="${card.slug}"]`);
                     if (el) {
@@ -666,29 +742,6 @@
                         if (window.lucide) lucide.createIcons();
                     }
                 }
-            } else if (data.section === 'recent_activity' && data.activities) {
-                const actList = document.getElementById('recentActivityList');
-                if (actList) {
-                    if (data.activities.length === 0) {
-                        actList.innerHTML = '<div class="py-6 text-center text-slate-400 text-xs font-medium">No activity recorded for this period.</div>';
-                    } else {
-                        let html = '';
-                        data.activities.forEach(a => {
-                            html += `
-                            <div class="flex items-start space-x-3 text-xs p-1">
-                                <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <i data-lucide="activity" class="w-4 h-4"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-medium text-slate-800 leading-tight">${a.title}</p>
-                                </div>
-                                <span class="text-[10px] text-slate-400 whitespace-nowrap">${a.time}</span>
-                            </div>`;
-                        });
-                        actList.innerHTML = html;
-                        if (window.lucide) lucide.createIcons();
-                    }
-                }
             } else if (data.section === 'subscription_status' && data.status) {
                 const s = data.status;
                 const aEl = document.getElementById('subStatActive');
@@ -719,106 +772,9 @@
                 }
             }
         })
-        .catch(err => console.error("Filter section error:", err));
-    }
-
-    function setRevenueFilter(val) {
-        if (val === "custom") {
-            document.getElementById("customDateModal").classList.remove("hidden");
-            return;
-        }
-        const url = new URL(window.location.href);
-        url.searchParams.set("revenue_period", val);
-        url.searchParams.delete("period");
-        url.searchParams.delete("start_date");
-        url.searchParams.delete("end_date");
-
-        fetch(url.toString(), {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(res => res.json())
-        .then(data => {
-            const amtEl = document.getElementById('revenueOverviewAmount');
-            if (amtEl) amtEl.innerText = data.amount;
-
-            const badgeEl = document.getElementById('revenueOverviewBadge');
-            if (badgeEl) {
-                if (data.revChangeDirection === 'neutral' || data.mrr <= 0) {
-                    badgeEl.className = 'text-xs font-semibold text-slate-400 flex items-center';
-                    badgeEl.innerHTML = `<i data-lucide="minus" class="w-3.5 h-3.5 mr-0.5"></i> 0% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
-                } else if (data.revChangeDirection === 'down') {
-                    badgeEl.className = 'text-xs font-bold text-rose-600 flex items-center';
-                    badgeEl.innerHTML = `<i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-0.5"></i> ↓ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
-                } else {
-                    badgeEl.className = 'text-xs font-bold text-emerald-600 flex items-center';
-                    badgeEl.innerHTML = `<i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
-                }
-                if (window.lucide) lucide.createIcons();
-            }
-
-            if (window.revenueChartInstance) {
-                window.revenueChartInstance.data.labels = data.revenueChartLabels;
-                window.revenueChartInstance.data.datasets[0].data = data.revenueChartData;
-                window.revenueChartInstance.update();
-            }
-
-            window.history.replaceState({}, '', url.toString());
-        })
-        .catch(() => {
-            window.location.href = url.toString();
-        });
-    }
-
-    function applyCustomDate(e) {
-        e.preventDefault();
-        const start = document.getElementById("custStartDate").value;
-        const end = document.getElementById("custEndDate").value;
-        if (!start || !end) return;
-        document.getElementById("customDateModal").classList.add("hidden");
-
-        const url = new URL(window.location.href);
-        url.searchParams.set("revenue_period", "custom");
-        url.searchParams.delete("period");
-        url.searchParams.set("start_date", start);
-        url.searchParams.set("end_date", end);
-
-        fetch(url.toString(), {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(res => res.json())
-        .then(data => {
-            const amtEl = document.getElementById('revenueOverviewAmount');
-            if (amtEl) amtEl.innerText = data.amount;
-
-            const badgeEl = document.getElementById('revenueOverviewBadge');
-            if (badgeEl) {
-                if (data.revChangeDirection === 'neutral' || data.mrr <= 0) {
-                    badgeEl.className = 'text-xs font-semibold text-slate-400 flex items-center';
-                    badgeEl.innerHTML = `<i data-lucide="minus" class="w-3.5 h-3.5 mr-0.5"></i> 0% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
-                } else if (data.revChangeDirection === 'down') {
-                    badgeEl.className = 'text-xs font-bold text-rose-600 flex items-center';
-                    badgeEl.innerHTML = `<i data-lucide="arrow-down-right" class="w-3.5 h-3.5 mr-0.5"></i> ↓ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
-                } else {
-                    badgeEl.className = 'text-xs font-bold text-emerald-600 flex items-center';
-                    badgeEl.innerHTML = `<i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-0.5"></i> ↑ ${data.revChangePct}% <span class="text-slate-400 font-normal ml-1">vs last month</span>`;
-                }
-                if (window.lucide) lucide.createIcons();
-            }
-
-            if (window.revenueChartInstance) {
-                window.revenueChartInstance.data.labels = data.revenueChartLabels;
-                window.revenueChartInstance.data.datasets[0].data = data.revenueChartData;
-                window.revenueChartInstance.update();
-            }
-
-            window.history.replaceState({}, '', url.toString());
-        })
-        .catch(() => {
-            window.location.href = url.toString();
-        });
+        .catch(err => console.error('Filter section error:', err));
     }
     </script>
-
 @endsection
 
 @push('scripts')
