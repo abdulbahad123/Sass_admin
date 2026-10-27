@@ -101,6 +101,16 @@ class WhiteLabelGeneralController extends Controller
             $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : (!empty($request->input('openai_api_key')) ? 1 : 0);
         }
 
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE agencies ADD COLUMN is_gemini_active TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_openai_active')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE agencies ADD COLUMN is_openai_active TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
         $agency->update($updateData);
 
         AuditLog::create([
@@ -325,6 +335,16 @@ class WhiteLabelGeneralController extends Controller
             $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : (!empty($request->input('openai_api_key')) ? 1 : 0);
         }
 
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE agencies ADD COLUMN is_gemini_active TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_openai_active')) {
+                \Illuminate\Support\Facades\DB::statement("ALTER TABLE agencies ADD COLUMN is_openai_active TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        } catch (\Throwable $e) {}
         $agency->update($updateData);
 
         AuditLog::create([
