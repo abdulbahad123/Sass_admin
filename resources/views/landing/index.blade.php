@@ -293,9 +293,10 @@
                 <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Action Buttons -->
                     <div class="hidden sm:flex items-center space-x-3">
-                        <a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-100 dark:hover:bg-[#1e293b] transition-all shadow-sm">
-                            Book a Demo
-                        </a>
+                        <button onclick="openDemoModal()" class="px-5 py-2.5 rounded-full btn-gradient text-white text-xs sm:text-sm font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] transition-all flex items-center space-x-2">
+                            <i class="fas fa-video text-xs"></i>
+                            <span>Book Free Live Demo</span>
+                        </button>
                     </div>
                     
                     <!-- Theme Toggle -->
@@ -320,7 +321,7 @@
             <a href="#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Products</a>
             <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">FAQ</a>
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                <a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="block w-full text-center px-4 py-3 rounded-full border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-700 dark:text-slate-200">Book a Demo</a>
+                <button onclick="openDemoModal()" class="block w-full text-center px-4 py-3 rounded-full btn-gradient text-xs font-bold text-white shadow-md">Book Free Live Demo</button>
             </div>
         </div>
     </header>
@@ -965,8 +966,8 @@
             <div class="relative flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-4 max-w-6xl mx-auto">
                 
                 <!-- Continuous Zip Line Track behind the step icons (Desktop: Horizontal, Mobile: Vertical) -->
-                <div class="hidden lg:block absolute top-9 left-[10%] right-[10%] h-[3px] bg-gradient-to-r from-orange-300 via-[#ff3d00] to-orange-300 dark:from-slate-700 dark:via-[#ff3d00] dark:to-slate-700 z-0"></div>
-                <div class="lg:hidden absolute top-12 bottom-12 left-1/2 -translate-x-1/2 w-[3px] bg-gradient-to-b from-orange-300 via-[#ff3d00] to-orange-300 dark:from-slate-700 dark:via-[#ff3d00] dark:to-slate-700 z-0"></div>
+                <div class="hidden lg:block absolute top-9 left-[10%] right-[10%] border-t-2 border-dashed border-[#ff3d00] dark:border-orange-500 z-0 opacity-80"></div>
+                <div class="lg:hidden absolute top-12 bottom-12 left-1/2 -translate-x-1/2 border-l-2 border-dashed border-[#ff3d00] dark:border-orange-500 z-0 opacity-80"></div>
 
                 @foreach($data['lp_how_works_steps'] as $index => $step)
                     
@@ -1053,27 +1054,27 @@
                     </div>
                 </div>
 
-                <!-- Right: Revenue Opportunity Calculator (6 cols - Task 4: Pixel Matching Reference Image 5 Structure with Brand Colors) -->
+                <!-- Right: Revenue Opportunity Calculator (Task 2 & 4: 1 Customer = ₹999, Expanded White Box & Zero Dead Whitespace) -->
                 <div class="lg:col-span-6 flex">
-                    <div class="relative w-full text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-2xl border border-slate-800 flex flex-col justify-between bg-[#080E24] overflow-hidden">
+                    <div class="relative w-full text-white rounded-3xl p-6 sm:p-8 lg:p-9 shadow-2xl border border-slate-800 flex flex-col justify-between bg-[#080E24] overflow-hidden min-h-[520px]">
                         
                         <!-- Subtle ambient glow in background -->
                         <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-transparent to-orange-500/10 pointer-events-none"></div>
 
-                        <div class="relative z-10">
+                        <div class="relative z-10 flex-1 flex flex-col justify-between">
                             <!-- Calculator Header -->
-                            <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-800">
+                            <div class="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-800">
                                 <div>
                                     <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-white">{{ $data['lp_rev_calc_title'] ?? 'Revenue Opportunity Calculator' }}</h3>
-                                    <p class="text-xs text-slate-400 mt-1">{{ $data['lp_rev_calc_subtitle'] ?? 'See how much you can earn every month' }}</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">{{ $data['lp_rev_calc_subtitle'] ?? 'See how much you can earn every month' }}</p>
                                 </div>
                                 <div class="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 text-orange-400 flex items-center justify-center text-lg shadow-sm flex-shrink-0">
                                     <i class="fas fa-calculator"></i>
                                 </div>
                             </div>
 
-                            <!-- Interactive Slider Row: Label on Left, Number Input Badge on Right (Task 4: Starts at 1) -->
-                            <div class="space-y-3 mb-6">
+                            <!-- Interactive Slider Row: Starts at 1 -->
+                            <div class="space-y-2 mb-4">
                                 <div class="flex justify-between items-center text-xs sm:text-sm">
                                     <span class="text-slate-200 font-bold">Active Customers:</span>
                                     <div class="bg-[#11193d] border border-slate-700/80 px-4 py-1 rounded-xl text-center shadow-inner min-w-[50px]">
@@ -1081,59 +1082,58 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Range Slider Track (min 1, max 500, default 1) -->
-                                <input type="range" id="customerSlider" min="1" max="500" step="1" value="1" class="w-full accent-[#ff3d00] cursor-pointer h-2 bg-slate-800 rounded-lg">
+                                <input type="range" id="customerSlider" min="1" max="500" step="1" value="1" class="w-full accent-[#ff3d00] cursor-pointer h-2.5 bg-slate-800 rounded-lg">
                             </div>
 
-                            <!-- Calculation Result Box: Matching Reference Image 5 (Two Column Split Layout) -->
-                            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xl my-6 text-left">
+                            <!-- Calculation Result Box: Expanded White Container Filling Vertical Space (Task 2) -->
+                            <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-xl my-4 text-left flex-1 flex flex-col justify-center">
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
                                     
                                     <!-- Left Column: Revenue Amount -->
                                     <div class="md:col-span-7 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-4">
-                                        <p class="text-xs sm:text-[13px] font-bold text-blue-600 uppercase tracking-wide mb-1">
+                                        <p class="text-xs sm:text-sm font-bold text-blue-600 uppercase tracking-wide mb-1.5">
                                             Estimated Monthly Revenue
                                         </p>
-                                        <div id="monthlyRevDisplay" class="font-heading font-black text-3xl sm:text-4xl lg:text-[40px] text-slate-900 leading-tight">
-                                            ₹999 <span class="text-xs sm:text-sm font-semibold text-slate-400">/month</span>
+                                        <div id="monthlyRevDisplay" class="font-heading font-black text-4xl sm:text-5xl lg:text-[46px] text-slate-900 leading-none">
+                                            ₹999 <span class="text-sm sm:text-base font-semibold text-slate-400">/month</span>
                                         </div>
-                                        <p class="text-xs text-slate-700 font-semibold mt-2">
-                                            <span id="calcSubtextCount">1</span> Customers × ₹{{ $data['lp_rev_calc_price_per_customer'] ?? 999 }}
+                                        <p class="text-xs sm:text-sm text-slate-800 font-bold mt-2.5">
+                                            <span id="calcSubtextCount">1</span> Customers × ₹999
                                         </p>
                                         <p class="text-[11px] text-slate-400 mt-0.5 font-normal">
                                             *Average price per customer/month
                                         </p>
                                     </div>
 
-                                    <!-- Right Column: 4 Feature Checkmark Bullets (Reference Image 5) -->
-                                    <div class="md:col-span-5 space-y-2.5">
-                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
-                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                    <!-- Right Column: 4 Feature Checkmark Bullets -->
+                                    <div class="md:col-span-5 space-y-3">
+                                        <div class="flex items-center space-x-2.5 text-xs sm:text-[13px] font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-base flex-shrink-0"></i>
                                             <span>Low Investment</span>
                                         </div>
-                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
-                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                        <div class="flex items-center space-x-2.5 text-xs sm:text-[13px] font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-base flex-shrink-0"></i>
                                             <span>High Margin</span>
                                         </div>
-                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
-                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                        <div class="flex items-center space-x-2.5 text-xs sm:text-[13px] font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-base flex-shrink-0"></i>
                                             <span>Recurring Income</span>
                                         </div>
-                                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-800">
-                                            <i class="fas fa-check-circle text-blue-600 text-sm flex-shrink-0"></i>
+                                        <div class="flex items-center space-x-2.5 text-xs sm:text-[13px] font-bold text-slate-800">
+                                            <i class="fas fa-check-circle text-blue-600 text-base flex-shrink-0"></i>
                                             <span>Unlimited Potential</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- CTA Button at bottom of Calculator -->
-                        <div class="relative z-10 pt-2">
-                            <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20Revenue%20Opportunity" target="_blank" class="btn-gradient w-full py-4 px-6 rounded-2xl text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/25 flex items-center justify-center space-x-2.5 hover:scale-[1.01] transition-transform">
-                                <span>Start Building Your Revenue</span>
-                                <i class="fas fa-arrow-right text-xs"></i>
-                            </a>
+                            <!-- CTA Button at bottom of Calculator (No empty dead space above) -->
+                            <div class="pt-1">
+                                <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20Revenue%20Opportunity" target="_blank" class="btn-gradient w-full py-4 px-6 rounded-2xl text-white font-bold text-sm sm:text-base shadow-xl shadow-orange-500/25 flex items-center justify-center space-x-2.5 hover:scale-[1.01] transition-transform">
+                                    <span>Start Building Your Revenue</span>
+                                    <i class="fas fa-arrow-right text-xs sm:text-sm"></i>
+                                </a>
+                            </div>
                         </div>
 
                     </div>
@@ -1143,180 +1143,159 @@
         </div>
     </section>
 
-    <!-- SECTION 8: PRICING -->
-    <section id="pricing" class="py-12 lg:py-16 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 relative">
-        <div class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <!-- SECTION 8: PRICING (Task 3: Pixel-Perfect Match with Reference Image 3 & Full Dashboard Integration) -->
+    <section id="pricing" class="py-14 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
+            <!-- Section Header -->
             <div class="text-center max-w-2xl mx-auto mb-10">
-                <span class="badge-pill mx-auto mb-3">{{ $data['lp_pricing_tag'] }}</span>
-                <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mt-3">
-                    {{ $data['lp_pricing_title'] }}
+                <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide bg-[#fff2ec] dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-[#fed7aa]/60 mx-auto mb-3">
+                    {{ $data['lp_pricing_tag'] ?? 'PRICING' }}
+                </span>
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[42px] text-slate-900 dark:text-white tracking-tight mt-2">
+                    {{ $data['lp_pricing_title'] ?? 'Transparent Pricing for Every Stage' }}
                 </h2>
-                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">{{ $data['lp_pricing_desc'] }}</p>
             </div>
 
-            <!-- Monthly / Yearly Toggle -->
+            <!-- Monthly / Yearly Toggle with Save 20% curved badge -->
             <div class="flex flex-col items-center justify-center mb-10">
                 <div class="flex items-center space-x-4">
-                    <div class="bg-white dark:bg-[#0B0F19] p-1 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
-                        <!-- Active Indicator Background -->
-                        <div id="pricingToggleBg" class="absolute left-1 top-1 bottom-1 w-[90px] btn-gradient rounded-full transition-all duration-300 ease-in-out"></div>
-                        
-                        <button id="toggleMonthlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-white transition-colors duration-300" onclick="setPricing('monthly')">Monthly</button>
-                        <button id="toggleYearlyBtn" class="relative z-10 w-[90px] py-2 text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="setPricing('yearly')">Yearly</button>
+                    <div class="bg-white dark:bg-[#0B0F19] p-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
+                        <div id="pricingToggleBg" class="absolute left-1.5 top-1.5 bottom-1.5 w-[100px] btn-gradient rounded-full transition-all duration-300 ease-in-out"></div>
+                        <button id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="setPricingPlan('monthly')">Monthly</button>
+                        <button id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="setPricingPlan('yearly')">Yearly</button>
                     </div>
-                    <div class="text-[11px] font-bold text-orange-600 flex items-center">
-                        <i class="fas fa-reply fa-flip-vertical mr-1 -mt-1"></i> Save 20%
+                    <div class="text-xs font-extrabold text-[#ff3d00] flex items-center gap-1">
+                        <i class="fas fa-reply fa-flip-vertical text-sm -mt-1"></i>
+                        <span>Save 20%</span>
                     </div>
                 </div>
                 
-                <div id="pricingSubtextContainer" class="mt-4 bg-white dark:bg-[#0B0F19] px-4 py-1.5 rounded-full border border-orange-100 dark:border-slate-700 shadow-sm flex items-center space-x-2 transition-colors duration-300">
-                    <i id="pricingSubtextIcon" class="far fa-calendar-alt text-orange-500 text-[10px]"></i>
-                    <span id="pricingSubtext" class="text-[10px] font-bold text-orange-600 transition-colors duration-300">Monthly Plan Selected — Switch to Yearly and save 20%</span>
+                <div id="pricingSubtextContainer" class="mt-4 bg-orange-50 dark:bg-orange-950/30 px-5 py-2 rounded-full border border-orange-200/80 dark:border-orange-800/50 shadow-sm flex items-center space-x-2 transition-all">
+                    <i id="pricingSubtextIcon" class="far fa-calendar-alt text-[#ff3d00] text-xs"></i>
+                    <span id="pricingSubtext" class="text-xs font-bold text-[#c2410c] dark:text-orange-300">Monthly Plan Selected — Switch to Yearly and save 20%</span>
                 </div>
             </div>
 
-            <div class="max-w-xl mx-auto">
-                <!-- Card 1: White-Label Panel -->
-                <div class="bg-white dark:bg-[#0B0F19] rounded-[2rem] p-8 shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col relative hover:shadow-2xl transition-all duration-300">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="inline-flex items-center space-x-2 bg-orange-50 dark:bg-[#1e293b] text-orange-600 text-[8px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-100 dark:border-slate-700 h-max">
-                            <i class="fas fa-user-tie"></i> <span>For Agencies & Freelancers</span>
-                        </div>
-                        
-                        <div class="text-right flex flex-col items-end">
-                            <span class="text-[9px] font-extrabold text-orange-600 leading-tight">3 Powerful Products<br/>One Dashboard<br/>Your Brand</span>
-                            <div class="mt-1 relative right-2">
-                                <i class="fas fa-level-down-alt fa-flip-horizontal text-orange-400 text-lg"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-start">
-                        <div class="pr-2">
-                            <h3 class="font-space font-extrabold text-2xl text-slate-900 dark:text-white mb-0.5 tracking-tight">White-Label Panel</h3>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed min-h-[50px] pr-2 mt-2">Get 5 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.</p>
-                        </div>
-                        <div class="w-[120px] sm:w-[140px] flex-shrink-0 mt-2 rounded-lg overflow-hidden shadow-md border border-slate-100 dark:border-slate-800">
-                            <img src="{{ asset('/assets/images/user_dashboard.png') }}" class="w-full h-auto object-cover opacity-90" alt="Dashboard Preview">
-                        </div>
-                    </div>
-                    
-                    <div class="my-6 flex flex-col items-start justify-end h-16">
-                        <div class="flex items-end">
-                            <span id="priceValue1" class="font-space font-extrabold text-[44px] text-slate-900 dark:text-white tracking-tighter leading-none">₹999</span>
-                            <span id="pricePeriod1" class="text-sm text-slate-500 dark:text-slate-400 font-bold mb-1.5 ml-1">/ month</span>
-                        </div>
-                        <div id="priceSave1" class="hidden mt-1"></div>
-                    </div>
-
-                    <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient w-full block text-center py-3.5 rounded-xl text-white font-bold text-sm shadow-md mb-4 hover:scale-[1.02] transition-transform">
-                        Get Started <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-
-                    <div class="flex items-center justify-between text-[8px] sm:text-[9px] font-semibold text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-5 mb-5">
-                        <span class="flex items-center"><i class="fas fa-video mr-1"></i> 1:1 Demo on Google Meet</span>
-                        <span class="flex items-center"><i class="far fa-credit-card mr-1"></i> No Credit Card</span>
-                        <span class="flex items-center"><i class="fas fa-check-circle mr-1"></i> 100% Free Demo</span>
-                    </div>
-
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-extrabold text-slate-900 dark:text-white">Everything You Get</span>
-                        <span class="text-[9px] font-bold text-orange-600">All features included in yearly plan</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-y-3 mt-2 text-[11px] text-slate-700 dark:text-slate-200 font-medium">
-                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>1 White-Label Platform</span></div>
-                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>5 White-Label SaaS Products Included</span></div>
-                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Custom Domain & Logo</span></div>
-                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Unlimited End-Customers</span></div>
-                        <div class="flex items-start space-x-2"><i class="fas fa-check text-orange-500 mt-0.5 text-[10px]"></i> <span>Full Partner Dashboard Access</span></div>
-                    </div>
-
-                    <div class="mt-8 bg-orange-50 dark:bg-[#1e293b]/70 rounded-xl p-4 flex items-start space-x-3 border border-orange-100 dark:border-slate-700">
-                        <div class="w-8 h-8 rounded-md bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 flex-shrink-0"><i class="fas fa-rocket"></i></div>
-                        <div>
-                            <span class="block text-[11px] font-extrabold text-slate-900 dark:text-white mb-0.5">Most Popular Choice</span>
-                            <span class="block text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Perfect for getting started and building your customer base.</span>
-                        </div>
-                    </div>
-                </div></div>
-        </div>
-        
-        <script>
-            // Pricing Toggle Script
-            function setPricing(plan) {
-                const toggleBg = document.getElementById('pricingToggleBg');
-                const btnMonthly = document.getElementById('toggleMonthlyBtn');
-                const btnYearly = document.getElementById('toggleYearlyBtn');
-                const price1 = document.getElementById('priceValue1');
-                const price2 = document.getElementById('priceValue2');
-                const period1 = document.getElementById('pricePeriod1');
-                const period2 = document.getElementById('pricePeriod2');
+            <!-- Main High-Converting Pricing Card (Reference Image 3) -->
+            <div class="bg-white dark:bg-[#0B0F19] rounded-[2.5rem] p-6 sm:p-9 lg:p-12 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
                 
-                const save1 = document.getElementById('priceSave1');
-                const save2 = document.getElementById('priceSave2');
+                <!-- Upper Split: Plan Info (Left) & Screen Preview (Right) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+                    
+                    <!-- Left Column: Core Pricing Info -->
+                    <div class="lg:col-span-7 text-left space-y-4">
+                        <!-- Top Tag -->
+                        <div class="inline-flex items-center space-x-2 bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-orange-200/80 dark:border-orange-900/60">
+                            <i class="fas fa-user-friends text-xs"></i>
+                            <span>{{ $data['lp_pricing_badge'] ?? 'FOR AGENCIES & FREELANCERS' }}</span>
+                        </div>
 
-                const subtextContainer = document.getElementById('pricingSubtextContainer');
-                const subtextIcon = document.getElementById('pricingSubtextIcon');
-                const subtext = document.getElementById('pricingSubtext');
+                        <!-- Title -->
+                        <h3 class="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight leading-tight">
+                            {{ $data['lp_pricing_name'] ?? 'White-Label Panel' }}
+                        </h3>
 
-                if (plan === 'monthly') {
-                    toggleBg.style.transform = 'translateX(0)';
-                    btnMonthly.classList.remove('text-slate-600 dark:text-slate-300');
-                    btnMonthly.classList.add('text-white');
-                    btnYearly.classList.remove('text-white');
-                    btnYearly.classList.add('text-slate-600 dark:text-slate-300');
-                    
-                    price1.innerHTML = '₹999';
-                    price2.innerHTML = '₹2,499';
-                    period1.innerHTML = '/ month';
-                    period2.innerHTML = '/ month';
-                    
-                    save1.classList.add('hidden');
-                    save2.classList.add('hidden');
-                    
-                    if(subtextContainer) {
-                        subtextContainer.classList.remove('bg-green-50', 'border-green-200');
-                        subtextContainer.classList.add('bg-white dark:bg-[#0B0F19]', 'border-orange-100 dark:border-slate-700');
-                        subtextIcon.classList.remove('text-green-600', 'fa-gift');
-                        subtextIcon.classList.add('text-orange-500', 'fa-calendar-alt');
-                        subtext.classList.remove('text-green-700');
-                        subtext.classList.add('text-orange-600');
-                        subtext.innerHTML = 'Monthly Plan Selected — Switch to Yearly and save 20%';
-                    }
-                } else {
-                    toggleBg.style.transform = 'translateX(90px)';
-                    btnYearly.classList.remove('text-slate-600 dark:text-slate-300');
-                    btnYearly.classList.add('text-white');
-                    btnMonthly.classList.remove('text-white');
-                    btnMonthly.classList.add('text-slate-600 dark:text-slate-300');
-                    
-                    price1.innerHTML = '₹9,990';
-                    price2.innerHTML = '₹24,990';
-                    period1.innerHTML = '/ year';
-                    period2.innerHTML = '/ year';
-                    
-                    save1.innerHTML = '<span class="inline-block text-[10px] ml-2 px-2 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-200 font-extrabold flex items-center shadow-sm"><i class="fas fa-check mr-1 text-[8px]"></i> Save ₹1,998</span>';
-                    save1.classList.remove('hidden');
-                    save1.classList.add('flex');
-                    
-                    save2.innerHTML = '<span class="inline-block text-[10px] ml-2 px-2 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-200 font-extrabold flex items-center shadow-sm"><i class="fas fa-check mr-1 text-[8px]"></i> Save ₹4,998</span>';
-                    save2.classList.remove('hidden');
-                    save2.classList.add('flex');
+                        <!-- Subtitle -->
+                        <h4 class="font-bold text-base sm:text-lg text-slate-800 dark:text-slate-200 leading-snug">
+                            {{ $data['lp_pricing_subtitle'] ?? 'One platform. Your brand. Unlimited growth.' }}
+                        </h4>
 
-                    if(subtextContainer) {
-                        subtextContainer.classList.remove('bg-white dark:bg-[#0B0F19]', 'border-orange-100 dark:border-slate-700');
-                        subtextContainer.classList.add('bg-green-50', 'border-green-200');
-                        subtextIcon.classList.remove('text-orange-500', 'fa-calendar-alt');
-                        subtextIcon.classList.add('text-green-600', 'fa-gift');
-                        subtext.classList.remove('text-orange-600');
-                        subtext.classList.add('text-green-700');
-                        subtext.innerHTML = 'Yearly Plan Selected (Best Value) — Save 20%';
-                    }
-                }
-            }
-        </script>
+                        <!-- Description -->
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                            {{ $data['lp_pricing_desc'] ?? 'Get 3 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.' }}
+                        </p>
+
+                        <!-- Price Box -->
+                        <div class="pt-2 pb-1 flex items-baseline space-x-2">
+                            <span id="priceMainAmount" class="font-heading font-black text-4xl sm:text-5xl lg:text-[54px] text-slate-900 dark:text-white tracking-tight">₹{{ $data['lp_pricing_monthly'] ?? '999' }}</span>
+                            <span id="priceMainPeriod" class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400">/ month</span>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <div class="pt-2">
+                            <a href="{{ $data['lp_pricing_cta_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20in%20White-Label%20Panel' }}" class="btn-gradient inline-flex items-center justify-center w-full py-4 rounded-2xl font-bold text-sm sm:text-base text-white shadow-xl shadow-orange-500/30 hover:scale-[1.01] transition-transform group text-center">
+                                <span>{{ $data['lp_pricing_cta_text'] ?? 'Get Started' }}</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm transition-transform group-hover:translate-x-1"></i>
+                            </a>
+                        </div>
+
+                        <!-- 3 Trust Badges below button -->
+                        <div class="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+                            @php
+                                $trustBadges = (isset($data['lp_pricing_trust_badges']) && is_array($data['lp_pricing_trust_badges']) && count($data['lp_pricing_trust_badges']) > 0)
+                                    ? $data['lp_pricing_trust_badges']
+                                    : ['1:1 Demo on Google Meet', 'No Credit Card', '100% Free Demo'];
+                                $tIcons = ['fas fa-video text-blue-500', 'far fa-credit-card text-emerald-500', 'fas fa-check-circle text-orange-500'];
+                            @endphp
+                            @foreach($trustBadges as $bIdx => $badge)
+                            <div class="flex items-center justify-center space-x-1.5 text-[10px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                                <i class="{{ $tIcons[$bIdx % count($tIcons)] }}"></i>
+                                <span>{{ $badge }}</span>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Screen Preview Mockup with Arrow Tag -->
+                    <div class="lg:col-span-5 text-right flex flex-col items-end w-full">
+                        <div class="mb-2 text-right">
+                            <span class="inline-block text-[11px] sm:text-xs font-bold text-[#ff3d00] italic leading-tight">
+                                {{ $data['lp_pricing_mockup_badge'] ?? '3 Powerful Products / One Dashboard / Your Brand' }} ⤵
+                            </span>
+                        </div>
+                        <div class="w-full relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-slate-900">
+                            <img src="{{ asset($data['lp_pricing_image'] ?? '/assets/images/user_dashboard.png') }}" alt="SaaS Dashboard Preview" class="w-full h-auto object-contain">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Lower Section: Everything You Get Checklist & Trophy Box -->
+                <div class="pt-8 mt-8 border-t border-slate-200 dark:border-slate-800 text-left">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                        <h4 class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white">Everything You Get</h4>
+                        <span class="text-xs sm:text-sm font-bold text-[#ff3d00]">All features included in monthly plan</span>
+                    </div>
+
+                    <!-- 6 Feature Checklist in 2 Columns -->
+                    @php
+                        $pricingFeatures = (isset($data['lp_pricing_features']) && is_array($data['lp_pricing_features']) && count($data['lp_pricing_features']) > 0)
+                            ? $data['lp_pricing_features']
+                            : [
+                                '1 White-Label Platform',
+                                'Unlimited End-Customers',
+                                '3 White-Label SaaS Products Included',
+                                'Full Partner Dashboard Access',
+                                'Custom Domain & Logo',
+                                'Lifetime Updates & Support'
+                            ];
+                    @endphp
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
+                        @foreach($pricingFeatures as $feat)
+                        <div class="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>{{ $feat }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Trophy Box (Reference Image 3) -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-orange-50/80 dark:bg-orange-950/20 border border-orange-200/80 dark:border-orange-900/40 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/40 text-[#ff3d00] flex items-center justify-center text-xl flex-shrink-0 shadow-sm">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="text-left">
+                            <h5 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">{{ $data['lp_pricing_trophy_title'] ?? 'Most Popular Choice' }}</h5>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">{{ $data['lp_pricing_trophy_desc'] ?? 'Perfect for getting started and building your customer base.' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
 
     <!-- SECTION 9: YOUR GROWTH PATH & TESTIMONIALS -->
@@ -1993,5 +1972,79 @@
         document.documentElement.classList.remove('dark');
     }
 </script>
+
+    <!-- BOOK FREE LIVE DEMO MODAL (Task 4: Reference Image 5 Design) -->
+    <div id="demoModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/85 backdrop-blur-md opacity-0 invisible transition-all duration-300 overflow-y-auto p-4 sm:p-6">
+        <div class="relative w-full max-w-lg mx-auto bg-[#080E24] border border-orange-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl transform scale-95 opacity-0 transition-all duration-300 text-left overflow-hidden" id="demoModalCard">
+            
+            <!-- Ambient Background Glow -->
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-transparent to-orange-500/10 pointer-events-none"></div>
+
+            <!-- Close Button -->
+            <button onclick="closeDemoModal()" aria-label="Close" class="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/80 hover:bg-slate-700 text-white transition-colors focus:outline-none shadow-md">
+                <i class="fas fa-times text-xs"></i>
+            </button>
+
+            <div class="relative z-10 space-y-4">
+                <!-- Header -->
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight flex items-center gap-2">
+                        <span>🚀 Launch Your SaaS in 24 Hours</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">
+                        3 Ready-to-Sell Products • 1 Dashboard • Your Brand
+                    </p>
+                </div>
+
+                <!-- Form -->
+                <form id="liveDemoForm" onsubmit="submitLiveDemo(event)" class="space-y-3.5 pt-2">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Full Name</label>
+                        <input type="text" name="name" id="demo_name" required placeholder="Enter your full name" class="w-full bg-[#11193d] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">WhatsApp Number</label>
+                        <input type="tel" name="whatsapp" id="demo_whatsapp" required placeholder="Enter your WhatsApp number (with country code)" class="w-full bg-[#11193d] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
+                        <input type="email" name="email" id="demo_email" required placeholder="Enter your email" class="w-full bg-[#11193d] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Current Profession</label>
+                        <select name="profession" id="demo_profession" required class="w-full bg-[#11193d] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] outline-none">
+                            <option value="" disabled selected>Select an Option</option>
+                            <option value="Agency Owner">Agency Owner</option>
+                            <option value="Freelancer">Freelancer</option>
+                            <option value="Digital Marketer">Digital Marketer</option>
+                            <option value="IT Consultant / Developer">IT Consultant / Developer</option>
+                            <option value="Business Owner / Entrepreneur">Business Owner / Entrepreneur</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Math Verification Captcha -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1" id="captchaLabel">What is 10 + 7?</label>
+                        <input type="number" id="captchaAnswer" required placeholder="Enter the answer" class="w-full bg-[#11193d] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] outline-none">
+                        <input type="hidden" id="captchaExpected" value="17">
+                    </div>
+
+                    <div id="demoFormMsg" class="hidden text-xs font-bold p-2.5 rounded-xl"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="demoSubmitBtn" class="w-full btn-gradient py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white shadow-xl shadow-orange-500/30 flex items-center justify-center space-x-2 hover:scale-[1.01] transition-transform mt-2">
+                        <span>Book Your Free Demo</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

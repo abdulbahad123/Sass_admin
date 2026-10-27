@@ -133,6 +133,18 @@
                 Landing Page
             </a>
 
+            <a href="{{ route('admin.demo-requests.index') }}" 
+               class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.demo-requests.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                <i data-lucide="calendar" class="w-4 h-4 mr-3 text-orange-400"></i>
+                <span>Demo Requests</span>
+                @php
+                    $pendingDemosCount = \Illuminate\Support\Facades\Schema::hasTable('demo_requests') ? \App\Models\DemoRequest::where('status', 'new')->count() : 0;
+                @endphp
+                @if($pendingDemosCount > 0)
+                    <span class="ml-auto bg-[#ff3d00] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $pendingDemosCount }}</span>
+                @endif
+            </a>
+
             <a href="{{ route('admin.whatsapp-gateway.index') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.whatsapp-gateway.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
                 <i data-lucide="message-square" class="w-4 h-4 mr-3 text-emerald-400"></i>

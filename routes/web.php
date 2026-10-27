@@ -104,6 +104,7 @@ Route::get('/contact', function (\Illuminate\Http\Request $request) use ($getAge
     return view('whitelabel.website.public_legal', ['type' => 'contact', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.contact');
 Route::post('/contact/submit', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'submitContactForm'])->name('agency.contact.submit');
+Route::post('/book-free-live-demo', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'submit'])->name('demo.submit');
 
 Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
     return view('whitelabel.website.public_legal', ['type' => 'privacy', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
@@ -243,11 +244,16 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::post('/profile', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/settings', [\App\Http\Controllers\SuperAdmin\ProfileController::class, 'updateSettings'])->name('settings.update');
 
-    // Nooryak.in Platform Landing Page Editor
+    // SaaSReselling Platform Landing Page Editor
     Route::get('/landing-page', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'edit'])->name('landing-page.edit');
     Route::post('/landing-page', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'update'])->name('landing-page.update');
     Route::post('/landing-page/upload', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'uploadImage'])->name('landing-page.upload');
     Route::post('/landing-page/delete-image', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'deleteImage'])->name('landing-page.delete-image');
+
+    // Demo Requests & Leads Management
+    Route::get('/demo-requests', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'index'])->name('demo-requests.index');
+    Route::patch('/demo-requests/{demoRequest}/status', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'updateStatus'])->name('demo-requests.update-status');
+    Route::delete('/demo-requests/{demoRequest}', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'destroy'])->name('demo-requests.destroy');
 
     // Audit Logs
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');

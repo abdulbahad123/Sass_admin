@@ -62,6 +62,16 @@ class LandingPageController extends Controller
             'lp_why_choose_title',
             'lp_pricing_tag',
             'lp_pricing_title',
+            'lp_pricing_badge',
+            'lp_pricing_name',
+            'lp_pricing_subtitle',
+            'lp_pricing_monthly',
+            'lp_pricing_yearly',
+            'lp_pricing_cta_text',
+            'lp_pricing_cta_url',
+            'lp_pricing_mockup_badge',
+            'lp_pricing_trophy_title',
+            'lp_pricing_trophy_desc',
             'lp_pricing_desc',
             'lp_growth_tag',
             'lp_growth_title',
@@ -113,6 +123,16 @@ class LandingPageController extends Controller
             'lp_faqs_items'
         ];
 
+        // Process multiline raw pricing features and trust badges
+        if ($request->has('lp_pricing_features_raw')) {
+            $pFeatures = array_filter(array_map('trim', explode("\n", str_replace("\r", "", $request->input('lp_pricing_features_raw')))));
+            Setting::set('lp_pricing_features', json_encode(array_values($pFeatures)));
+        }
+        if ($request->has('lp_pricing_trust_badges_raw')) {
+            $pBadges = array_filter(array_map('trim', explode("\n", str_replace("\r", "", $request->input('lp_pricing_trust_badges_raw')))));
+            Setting::set('lp_pricing_trust_badges', json_encode(array_values($pBadges)));
+        }
+
         foreach ($jsonKeys as $key) {
             if ($request->has($key)) {
                 $val = $request->input($key);
@@ -139,7 +159,7 @@ class LandingPageController extends Controller
             'lp_header_logo_dark',
             'lp_hero_image',
             'lp_about_image',
-            'lp_cta_banner_bg'
+            'lp_cta_banner_bg', 'lp_pricing_image'
         ];
 
         foreach ($imageKeys as $imageKey) {
@@ -296,6 +316,10 @@ class LandingPageController extends Controller
             $curHowTag = Setting::get('lp_how_works_tag');
             if ($curHowTag === 'HOW NOORYAK WORKS') {
                 Setting::set('lp_how_works_tag', 'HOW SAASRESELLING WORKS');
+            }
+            $curPriceCust = Setting::get('lp_rev_calc_price_per_customer');
+            if (empty($curPriceCust) || $curPriceCust == 499) {
+                Setting::set('lp_rev_calc_price_per_customer', 999);
             }
             $curDefaultCust = Setting::get('lp_rev_calc_default_customers');
             if (empty($curDefaultCust) || $curDefaultCust == 100 || $curDefaultCust == 10) {
@@ -457,7 +481,17 @@ class LandingPageController extends Controller
 
             // Pricing
             'lp_pricing_tag' => Setting::get('lp_pricing_tag', 'PRICING'),
-            'lp_pricing_title' => Setting::get('lp_pricing_title', 'Transparent Pricing for Every Stage'),
+            'lp_pricing_title' => Setting::get('lp_pricing_title',
+            'lp_pricing_badge',
+            'lp_pricing_name',
+            'lp_pricing_subtitle',
+            'lp_pricing_monthly',
+            'lp_pricing_yearly',
+            'lp_pricing_cta_text',
+            'lp_pricing_cta_url',
+            'lp_pricing_mockup_badge',
+            'lp_pricing_trophy_title',
+            'lp_pricing_trophy_desc', 'Transparent Pricing for Every Stage'),
             'lp_pricing_desc' => Setting::get('lp_pricing_desc', 'Choose the path that fits your SaaS business.'),
             'lp_pricing_plans' => json_decode(Setting::get('lp_pricing_plans', json_encode([
                 [
@@ -552,7 +586,7 @@ class LandingPageController extends Controller
             'lp_cta_banner_button1_url' => Setting::get('lp_cta_banner_button1_url', '/login'),
             'lp_cta_banner_button2_text' => Setting::get('lp_cta_banner_button2_text', 'Book a Demo'),
             'lp_cta_banner_button2_url' => Setting::get('lp_cta_banner_button2_url', '#book-demo'),
-            'lp_cta_banner_bg' => Setting::get('lp_cta_banner_bg', '/assets/images/cta_background.png'),
+            'lp_cta_banner_bg', 'lp_pricing_image' => Setting::get('lp_cta_banner_bg', 'lp_pricing_image', '/assets/images/cta_background.png'),
             'lp_footer_desc' => Setting::get('lp_footer_desc', 'Your technology partner in building profitable SaaS businesses.'),
             'lp_contact_email' => Setting::get('lp_contact_email', 'support@nooryak.in'),
             'lp_contact_phone' => Setting::get('lp_contact_phone', '+91 98765 43210'),

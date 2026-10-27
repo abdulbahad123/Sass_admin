@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Platform Landing Page Editor')
-@section('page_title', 'Nooryak.in Landing Page Editor')
+@section('page_title', 'SaaSReselling.com Landing Page Editor')
 
 @section('content')
 <div class="max-w-6xl mx-auto space-y-8" x-data="{ activeTab: 'hero' }">
@@ -9,8 +9,8 @@
     <!-- Top Banner & Actions -->
     <div class="card-white p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-slate-200">
         <div>
-            <h2 class="text-2xl font-extrabold text-slate-900 font-heading tracking-tight">Nooryak Platform Landing Page Editor</h2>
-            <p class="text-xs text-slate-500 mt-1">Manage all headlines, images, product features, model cards, calculator values, pricing, FAQs, and testimonials on <span class="font-bold text-blue-600">nooryak.in</span>.</p>
+            <h2 class="text-2xl font-extrabold text-slate-900 font-heading tracking-tight">SaaSReselling Platform Landing Page Editor</h2>
+            <p class="text-xs text-slate-500 mt-1">Manage all headlines, images, product features, model cards, calculator values, pricing, FAQs, and testimonials on <span class="font-bold text-blue-600">saasreselling.com</span>.</p>
         </div>
         <div class="flex items-center space-x-3">
             <a href="{{ url('/') }}" target="_blank" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all flex items-center space-x-2">
@@ -313,18 +313,118 @@
             </div>
         </div>
 
-        <!-- TAB 7: PRICING & GROWTH -->
+        <!-- TAB 7: PRICING & GROWTH (Task 3: Full Dynamic Controls matching Reference Image 3) -->
         <div x-show="activeTab === 'pricing'" class="card-white p-6 rounded-2xl space-y-6">
-            <h3 class="font-bold text-slate-900 text-base border-b pb-3">Pricing & Growth Path</h3>
+            <h3 class="font-bold text-slate-900 text-base border-b pb-3 flex items-center justify-between">
+                <span>Pricing Plan Card (Reference Design)</span>
+                <span class="text-xs font-normal text-slate-500">Editable from Dashboard</span>
+            </h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Section Headings -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">Pricing Tag</label>
-                    <input type="text" name="lp_pricing_tag" value="{{ $data['lp_pricing_tag'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Section Pill Tag</label>
+                    <input type="text" name="lp_pricing_tag" value="{{ $data['lp_pricing_tag'] ?? 'PRICING' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">Pricing Section Heading</label>
-                    <input type="text" name="lp_pricing_title" value="{{ $data['lp_pricing_title'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Section Title</label>
+                    <input type="text" name="lp_pricing_title" value="{{ $data['lp_pricing_title'] ?? 'Transparent Pricing for Every Stage' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs">
+                </div>
+            </div>
+
+            <!-- Plan Card Details -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-5">
+                <h4 class="font-bold text-xs text-indigo-700 uppercase tracking-wider">Plan Card Core Information</h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Card Top Badge</label>
+                        <input type="text" name="lp_pricing_badge" value="{{ $data['lp_pricing_badge'] ?? 'FOR AGENCIES & FREELANCERS' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Plan Name</label>
+                        <input type="text" name="lp_pricing_name" value="{{ $data['lp_pricing_name'] ?? 'White-Label Panel' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Plan Subtitle</label>
+                        <input type="text" name="lp_pricing_subtitle" value="{{ $data['lp_pricing_subtitle'] ?? 'One platform. Your brand. Unlimited growth.' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Monthly Price (₹)</label>
+                        <input type="number" name="lp_pricing_monthly" value="{{ $data['lp_pricing_monthly'] ?? '999' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Yearly Price (₹ / month equivalent)</label>
+                        <input type="number" name="lp_pricing_yearly" value="{{ $data['lp_pricing_yearly'] ?? '799' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-orange-600">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Plan Description</label>
+                    <textarea name="lp_pricing_desc" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">{{ $data['lp_pricing_desc'] ?? 'Get 3 core SaaS products, unlimited client subscriptions, and complete white-label control under your own domain. Best for solo marketers and growth agencies.' }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">CTA Button Text</label>
+                        <input type="text" name="lp_pricing_cta_text" value="{{ $data['lp_pricing_cta_text'] ?? 'Get Started' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">CTA Button URL</label>
+                        <input type="text" name="lp_pricing_cta_url" value="{{ $data['lp_pricing_cta_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20in%20White-Label%20Panel' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                </div>
+
+                <!-- Features & Badges -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Checklist Features (One per line)</label>
+                        <span class="block text-[10px] text-slate-400 mb-1.5">Displayed in 2 columns under "Everything You Get"</span>
+                        @php
+                            $featuresText = (isset($data['lp_pricing_features']) && is_array($data['lp_pricing_features']))
+                                ? implode(\"\n\", $data['lp_pricing_features'])
+                                : \"1 White-Label Platform\nUnlimited End-Customers\n3 White-Label SaaS Products Included\nFull Partner Dashboard Access\nCustom Domain & Logo\nLifetime Updates & Support\";
+                        @endphp
+                        <textarea name="lp_pricing_features_raw" rows="6" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-mono">{{ $featuresText }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Trust Badges Below Button (One per line)</label>
+                        <span class="block text-[10px] text-slate-400 mb-1.5">Displayed with icons below the Get Started button</span>
+                        @php
+                            $badgesText = (isset($data['lp_pricing_trust_badges']) && is_array($data['lp_pricing_trust_badges']))
+                                ? implode(\"\n\", $data['lp_pricing_trust_badges'])
+                                : \"1:1 Demo on Google Meet\nNo Credit Card\n100% Free Demo\";
+                        @endphp
+                        <textarea name="lp_pricing_trust_badges_raw" rows="6" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-mono">{{ $badgesText }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Dashboard Preview Mockup Image -->
+                <div class="pt-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Dashboard Screen Preview Image</label>
+                    @if(!empty($data['lp_pricing_image']))
+                    <div class="mb-3 flex items-center space-x-3">
+                        <img src="{{ asset($data['lp_pricing_image']) }}" class="h-20 w-auto rounded border p-1 bg-white">
+                        <button type="button" onclick="deleteLandingImage('lp_pricing_image')" class="px-3 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold border border-rose-200">Delete Image</button>
+                    </div>
+                    @endif
+                    <input type="file" name="lp_pricing_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                </div>
+
+                <!-- Trophy Box -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Bottom Trophy Title</label>
+                        <input type="text" name="lp_pricing_trophy_title" value="{{ $data['lp_pricing_trophy_title'] ?? 'Most Popular Choice' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Bottom Trophy Description</label>
+                        <input type="text" name="lp_pricing_trophy_desc" value="{{ $data['lp_pricing_trophy_desc'] ?? 'Perfect for getting started and building your customer base.' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                    </div>
                 </div>
             </div>
         </div>
@@ -380,7 +480,7 @@
         <div class="sticky bottom-4 z-20 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex items-center justify-between">
             <div class="flex items-center space-x-2 text-xs">
                 <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-                <span>Ready to update Nooryak.in landing page</span>
+                <span>Ready to update saasreselling.com landing page</span>
             </div>
             <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-lg transition-all flex items-center space-x-2">
                 <i data-lucide="save" class="w-4 h-4"></i>
