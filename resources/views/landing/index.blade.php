@@ -330,46 +330,65 @@
         <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 
-                <!-- Left Text Column (6 cols on lg for dedicated text space) -->
+                <!-- Left Text Column (6 cols on lg for dedicated text space - Matches Reference Design) -->
                 <div class="lg:col-span-6 min-w-0 space-y-6 text-left relative z-20">
-                    <div class="inline-flex items-center space-x-2 bg-orange-100 dark:bg-orange-900/30/90 border border-orange-200/80 dark:border-indigo-700/50 px-4 py-1.5 rounded-full text-orange-700 dark:text-indigo-300 text-[10px] font-bold tracking-wide uppercase shadow-sm">
-                        <span><i class="fas fa-users mr-1 opacity-70"></i> FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS</span>
+                    
+                    <!-- Top Audience Pill Badge -->
+                    <div class="inline-flex items-center space-x-2 bg-[#fff3ec] dark:bg-orange-950/40 border border-[#ffdcd0] dark:border-orange-800/60 px-4 py-2 rounded-full text-[#c2410c] dark:text-orange-300 text-[11px] sm:text-xs font-bold tracking-wide uppercase shadow-sm">
+                        <div class="w-5 h-5 rounded-full bg-[#ff5a2c] text-white flex items-center justify-center text-[10px] flex-shrink-0">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span>{{ $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS' }}</span>
                     </div>
 
-                    <h1 class="font-space font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 dark:text-white leading-[1.12] tracking-tight">
-                        Launch Your Own SaaS Business <span class="gradient-text">Under Your Brand</span>
+                    <!-- Main Headline matching Reference Image -->
+                    <h1 class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-[56px] xl:text-[62px] text-slate-900 dark:text-white leading-[1.08] tracking-tight">
+                        @php
+                            $heroTitle = $data['lp_hero_title'] ?? '';
+                        @endphp
+                        @if(!empty($heroTitle) && strpos($heroTitle, 'SaaS') !== false)
+                            {!! $heroTitle !!}
+                        @else
+                            Turn Your Agency Into a<br>
+                            <span class="text-[#ff3d00]">SaaS Software Brand</span>
+                        @endif
                     </h1>
 
+                    <!-- Subtitle paragraph matching Reference Image -->
                     <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl">
-                        {{ $data['lp_hero_subtitle'] }}
+                        {{ $data['lp_hero_subtitle'] ?? 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.' }}
                     </p>
 
-                    <!-- CTAs -->
+                    <!-- CTAs matching Reference Image -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                        <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-gradient px-8 py-4 rounded-full text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/30 text-center">
-                            {{ $data['lp_hero_cta1_text'] }}
+                        <a href="{{ $data['lp_hero_cta1_url'] ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#ff5722] to-[#ff3d00] hover:from-[#ff3d00] hover:to-[#e63600] text-white font-bold text-sm sm:text-base shadow-xl shadow-orange-500/25 transition-all text-center flex items-center justify-center space-x-2 group">
+                            <span>{{ $data['lp_hero_cta1_text'] ?? 'Start Your SaaS Business' }}</span>
+                            <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
                         </a>
 
-                        <a href="https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination" class="px-7 py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-bold text-xs sm:text-sm hover:bg-slate-50 dark:bg-[#151c2c] transition-all flex items-center justify-center space-x-3 shadow-sm">
-                            <div class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">
+                        <a href="{{ $data['lp_hero_cta2_url'] ?? 'https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination' }}" class="px-7 py-3.5 sm:py-4 rounded-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm sm:text-base hover:bg-slate-50 dark:hover:bg-[#151c2c] transition-all flex items-center justify-center space-x-3 shadow-sm">
+                            <div class="w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-[10px]">
                                 <i class="fas fa-play ml-0.5"></i>
                             </div>
-                            <span>{{ $data['lp_hero_cta2_text'] }}</span>
+                            <span>{{ $data['lp_hero_cta2_text'] ?? 'Book Live Demo' }}</span>
                         </a>
                     </div>
 
-                    <!-- Hero Feature Checkmarks -->
-                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs font-bold text-slate-700 dark:text-slate-200">
-                        @if(is_array($data['lp_hero_badges']))
-                            @foreach($data['lp_hero_badges'] as $badge)
-                            <div class="flex items-center space-x-2">
-                                <div class="w-4 h-4 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px]">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <span>{{ $badge }}</span>
+                    <!-- Hero Feature Checkmarks matching Reference Image -->
+                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                        @php
+                            $badges = (!empty($data['lp_hero_badges']) && is_array($data['lp_hero_badges'])) 
+                                ? $data['lp_hero_badges'] 
+                                : ['White Label Ready', 'Custom Branding', 'Unlimited Customers'];
+                        @endphp
+                        @foreach($badges as $badge)
+                        <div class="flex items-center space-x-2">
+                            <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] shadow-sm flex-shrink-0">
+                                <i class="fas fa-check"></i>
                             </div>
-                            @endforeach
-                        @endif
+                            <span>{{ $badge }}</span>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
 
@@ -384,26 +403,34 @@
         </div>
     </section>
 
-    <!-- SECTION 2: COUNTER STATS BAR CARD -->
-    <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-6 relative z-20 reveal">
-        <div class="bg-white dark:bg-[#0B0F19] rounded-3xl p-4 sm:p-5 shadow-xl border border-slate-100 dark:border-slate-800">
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center">
-                @if(is_array($data['lp_stats_bar']))
-                    @foreach($data['lp_stats_bar'] as $stat)
-                    <div class="p-2 sm:p-2.5 rounded-2xl hover:bg-orange-50 dark:bg-[#1e293b]/50 dark:hover:bg-[#1e293b] transition-colors">
-                        <div class="flex items-center justify-center space-x-2.5 mb-0.5">
-                            <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/30/90 text-[#ff3d00] flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm flex-shrink-0">
-                                <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
-                            </div>
-                            <!-- Task 3: Animated Running Counter Number -->
-                            <span class="stat-counter font-space font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white" data-target="{{ $stat['count'] ?? '0' }}">
-                                {{ $stat['count'] ?? '0' }}
-                            </span>
-                        </div>
-                        <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mt-0.5">{{ $stat['label'] ?? '' }}</p>
+    <!-- SECTION 2: COUNTER STATS BAR CARD (Matches Reference Image) -->
+    <div class="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8 relative z-20 reveal">
+        <div class="bg-white dark:bg-[#0B0F19] rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 items-center">
+                @php
+                    $stats = (!empty($data['lp_stats_bar']) && is_array($data['lp_stats_bar']) && count($data['lp_stats_bar']) > 0) 
+                        ? $data['lp_stats_bar'] 
+                        : [
+                            ['count' => '500+', 'label' => 'ACTIVE PARTNERS', 'icon' => 'fas fa-users'],
+                            ['count' => '50K+', 'label' => 'BUSINESSES SERVED', 'icon' => 'fas fa-building'],
+                            ['count' => '5', 'label' => 'POWERFUL SAAS PRODUCTS', 'icon' => 'fas fa-cube'],
+                            ['count' => '99.9%', 'label' => 'UPTIME GUARANTEE', 'icon' => 'fas fa-shield-alt'],
+                            ['count' => '24/7', 'label' => 'EXPERT SUPPORT', 'icon' => 'fas fa-headset']
+                        ];
+                @endphp
+                @foreach($stats as $stat)
+                <div class="flex items-center space-x-3 p-2 sm:p-2.5 rounded-xl">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#fff2ec] dark:bg-orange-950/40 text-[#ff3d00] flex items-center justify-center text-sm sm:text-base font-bold shadow-sm flex-shrink-0">
+                        <i class="{{ $stat['icon'] ?? 'fas fa-chart-pie' }}"></i>
                     </div>
-                    @endforeach
-                @endif
+                    <div class="text-left">
+                        <div class="stat-counter font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white leading-tight" data-target="{{ $stat['count'] ?? '0' }}">
+                            {{ $stat['count'] ?? '0' }}
+                        </div>
+                        <p class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5 leading-tight">{{ $stat['label'] ?? '' }}</p>
+                    </div>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>

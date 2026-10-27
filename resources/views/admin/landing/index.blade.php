@@ -9,7 +9,7 @@
     <!-- Top Banner & Actions -->
     <div class="card-white p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-slate-200">
         <div>
-            <h2 class="text-xl font-bold text-slate-900 font-heading">Nooryak Platform Landing Page Editor</h2>
+            <h2 class="text-2xl font-extrabold text-slate-900 font-heading tracking-tight">Nooryak Platform Landing Page Editor</h2>
             <p class="text-xs text-slate-500 mt-1">Manage all headlines, images, product features, model cards, calculator values, pricing, FAQs, and testimonials on <span class="font-bold text-blue-600">nooryak.in</span>.</p>
         </div>
         <div class="flex items-center space-x-3">
@@ -144,11 +144,16 @@
 
         <!-- TAB 2: HERO SECTION -->
         <div x-show="activeTab === 'hero'" class="card-white p-6 rounded-2xl space-y-6">
-            <h3 class="font-bold text-slate-900 text-base border-b pb-3">Hero Banner Section</h3>
+            <h3 class="font-extrabold text-slate-900 text-base border-b pb-3 font-heading">Hero Banner Section (Matches Reference Design)</h3>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-2">Hero Main Headline</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Hero Top Audience Badge</label>
+                    <input type="text" name="lp_hero_announcement_badge" value="{{ $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Hero Main Headline (HTML allowed e.g. &lt;span class="text-[#ff3d00]"&gt;...&lt;/span&gt;)</label>
                     <input type="text" name="lp_hero_title" value="{{ $data['lp_hero_title'] }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500">
                 </div>
 

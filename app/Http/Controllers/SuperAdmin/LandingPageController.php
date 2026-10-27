@@ -39,6 +39,7 @@ class LandingPageController extends Controller
             'lp_book_demo_url',
             'lp_cta_button_text',
             'lp_cta_button_url',
+            'lp_hero_announcement_badge',
             'lp_hero_title',
             'lp_hero_subtitle',
             'lp_hero_cta1_text',
@@ -235,12 +236,13 @@ class LandingPageController extends Controller
             'lp_cta_button_url' => Setting::get('lp_cta_button_url', '/login'),
 
             // Hero
-            'lp_hero_title' => Setting::get('lp_hero_title', 'Launch Your Own SaaS Business Under Your Brand'),
-            'lp_hero_subtitle' => Setting::get('lp_hero_subtitle', 'Nooryak is an All-In-One White Label SaaS Platform that helps agencies, freelancers, IT companies and entrepreneurs launch their own SaaS business with 5 powerful products, custom branding and complete white-label control.'),
+            'lp_hero_announcement_badge' => Setting::get('lp_hero_announcement_badge', 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS'),
+            'lp_hero_title' => Setting::get('lp_hero_title', 'Turn Your Agency Into a <br><span class="text-[#ff3d00]">SaaS Software Brand</span>'),
+            'lp_hero_subtitle' => Setting::get('lp_hero_subtitle', 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.'),
             'lp_hero_cta1_text' => Setting::get('lp_hero_cta1_text', 'Start Your SaaS Business'),
-            'lp_hero_cta1_url' => Setting::get('lp_hero_cta1_url', '/login'),
+            'lp_hero_cta1_url' => Setting::get('lp_hero_cta1_url', 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business'),
             'lp_hero_cta2_text' => Setting::get('lp_hero_cta2_text', 'Book Live Demo'),
-            'lp_hero_cta2_url' => Setting::get('lp_hero_cta2_url', '#book-demo'),
+            'lp_hero_cta2_url' => Setting::get('lp_hero_cta2_url', 'https://wa.me/916374913298?text=I%20want%20the%20demo%20explaination'),
             'lp_hero_badges' => json_decode(Setting::get('lp_hero_badges', json_encode([
                 'White Label Ready',
                 'Custom Branding',
@@ -250,11 +252,11 @@ class LandingPageController extends Controller
 
             // Stats Bar
             'lp_stats_bar' => json_decode(Setting::get('lp_stats_bar', json_encode([
-                ['count' => '500+', 'label' => 'Active Partners', 'icon' => 'fas fa-users'],
-                ['count' => '50K+', 'label' => 'Businesses Served', 'icon' => 'fas fa-city'],
-                ['count' => '5', 'label' => 'Powerful SaaS Products', 'icon' => 'fas fa-cube'],
-                ['count' => '99.9%', 'label' => 'Uptime Guarantee', 'icon' => 'fas fa-shield-alt'],
-                ['count' => '24/7', 'label' => 'Expert Support', 'icon' => 'fas fa-headset']
+                ['count' => '500+', 'label' => 'ACTIVE PARTNERS', 'icon' => 'fas fa-users'],
+                ['count' => '50K+', 'label' => 'BUSINESSES SERVED', 'icon' => 'fas fa-building'],
+                ['count' => '5', 'label' => 'POWERFUL SAAS PRODUCTS', 'icon' => 'fas fa-cube'],
+                ['count' => '99.9%', 'label' => 'UPTIME GUARANTEE', 'icon' => 'fas fa-shield-alt'],
+                ['count' => '24/7', 'label' => 'EXPERT SUPPORT', 'icon' => 'fas fa-headset']
             ])), true),
 
             // About
