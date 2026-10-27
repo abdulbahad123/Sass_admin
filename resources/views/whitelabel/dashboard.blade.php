@@ -532,9 +532,11 @@
     </div>
 
 </div>
+@endsection
 
+@push('modals')
     <!-- Custom Date Range Filter Modal -->
-    <div id="customDateModal" class="fixed inset-0 z-[100] hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div id="customDateModal" class="fixed inset-0 z-[100] hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 !m-0 !mt-0 !mb-0" style="margin: 0 !important; margin-top: 0 !important;">
         <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-2.5">
@@ -563,7 +565,9 @@
             </form>
         </div>
     </div>
+@endpush
 
+@push('scripts')
     <script>
         let currentCustomSection = 'revenue';
 
@@ -775,7 +779,7 @@
         .catch(err => console.error('Filter section error:', err));
     }
     </script>
-@endsection
+@endpush
 
 @push('scripts')
 <script>
