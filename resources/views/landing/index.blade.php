@@ -341,22 +341,17 @@
                         <span>{{ $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS' }}</span>
                     </div>
 
-                    <!-- Main Headline matching Reference Image -->
-                    <h1 class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-[56px] xl:text-[62px] text-slate-900 dark:text-white leading-[1.08] tracking-tight">
-                        @php
-                            $heroTitle = $data['lp_hero_title'] ?? '';
-                        @endphp
-                        @if(!empty($heroTitle) && strpos($heroTitle, 'SaaS') !== false)
-                            {!! $heroTitle !!}
-                        @else
-                            Turn Your Agency Into a<br>
-                            <span class="text-[#ff3d00]">SaaS Software Brand</span>
-                        @endif
+                    <!-- Main Headline matching Reference Image (No awkward wrapping for "a") -->
+                    <h1 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] xl:text-[50px] 2xl:text-[54px] text-slate-900 dark:text-white leading-[1.12] tracking-tight">
+                        <span class="block whitespace-normal sm:whitespace-nowrap">Turn Your Agency Into a</span>
+                        <span class="text-[#ff3d00] block mt-1 whitespace-normal sm:whitespace-nowrap">SaaS Software Brand</span>
                     </h1>
 
                     <!-- Subtitle paragraph matching Reference Image -->
                     <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl">
-                        {{ $data['lp_hero_subtitle'] ?? 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.' }}
+                        {{ (!empty($data['lp_hero_subtitle']) && stripos($data['lp_hero_subtitle'], 'Nooryak is an All-In-One') === false) 
+                            ? $data['lp_hero_subtitle'] 
+                            : 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.' }}
                     </p>
 
                     <!-- CTAs matching Reference Image -->

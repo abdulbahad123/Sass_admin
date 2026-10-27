@@ -225,6 +225,26 @@ class LandingPageController extends Controller
      */
     public function getLandingData(): array
     {
+        // Auto-upgrade legacy database settings to reference design
+        try {
+            $curTitle = Setting::get('lp_hero_title');
+            if (empty($curTitle) || $curTitle === 'Launch Your Own SaaS Business Under Your Brand' || $curTitle === 'Turn Your Agency Into a SaaS Software Brand') {
+                Setting::set('lp_hero_title', 'Turn Your Agency Into a<br><span class="text-[#ff3d00]">SaaS Software Brand</span>');
+            }
+
+            $curSub = Setting::get('lp_hero_subtitle');
+            if (empty($curSub) || stripos($curSub, 'Nooryak is an All-In-One') !== false) {
+                Setting::set('lp_hero_subtitle', 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.');
+            }
+
+            $curBadge = Setting::get('lp_hero_announcement_badge');
+            if (empty($curBadge) || stripos($curBadge, 'FOR AGENCIES') !== false && stripos($curBadge, 'BUILT FOR') === false) {
+                Setting::set('lp_hero_announcement_badge', 'BUILT FOR AGENCIES · FREELANCERS · RESELLERS · DIGITAL MARKETERS');
+            }
+        } catch (\Exception $e) {
+            // Safe fallback if DB is temporarily unreachable
+        }
+
         return [
             // Announcement & Top Bar
             'lp_announcement_text' => Setting::get('lp_announcement_text', 'YOUR BRAND. OUR TECHNOLOGY. UNLIMITED GROWTH.'),
