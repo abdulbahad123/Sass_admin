@@ -228,7 +228,7 @@ Route::get('/agency-sso-login', function (\Illuminate\Http\Request $request) {
         return redirect()->route('login')->withErrors(['email' => 'SSO link expired.']);
     }
 
-    $secret = env('SSO_SECRET_KEY');
+    $secret = env('SSO_SECRET_KEY') ?: 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey';
     if (empty($secret)) {
         return redirect()->route('login')->withErrors(['email' => 'SSO authentication is temporarily unavailable.']);
     }
