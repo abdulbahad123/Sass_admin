@@ -1645,14 +1645,14 @@
                         ? $data['lp_testimonials_items']
                         : [
                             [
-                                'name' => '1tap World',
-                                'domain' => '1tapworld.com',
-                                'url' => 'https://youverse.in',
-                                'role' => 'Digital Marketing Agency',
-                                'location' => 'Mumbai',
-                                'icon' => 'fas fa-fingerprint',
-                                'color' => '#f59e0b',
-                                'quote' => 'I was already offering digital marketing services, but I wanted something that clients would keep paying for every month. SaaSReselling gave me a much easier way to add software to my existing services without building anything from scratch. It has made my agency offering feel much more complete.'
+                                'name' => 'Nooryak Technology',
+                                'domain' => 'nooryak.in',
+                                'url' => 'https://nooryak.in',
+                                'role' => 'Digital Tech & SaaS Agency',
+                                'location' => 'Bangalore',
+                                'icon' => 'fas fa-laptop-code',
+                                'color' => '#ff3d00',
+                                'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our own domain (nooryak.in) has completely transformed our business model. Our clients log in with our custom branding, and we keep 100% of our recurring subscription revenue without dealing with server maintenance or coding.'
                             ],
                             [
                                 'name' => 'Youverse Tech',
@@ -1662,17 +1662,17 @@
                                 'location' => 'Chennai',
                                 'icon' => 'fas fa-globe',
                                 'color' => '#3b82f6',
-                                'quote' => 'I was initially confused about how the whole white label SaaS model worked. After seeing the demo, everything became much clearer. I liked that I could put my own branding on the platform and offer software along with my existing services. It opened up a completely new service category for us.'
+                                'quote' => 'We connected our custom domain and immediately launched all 3 white-label SaaS tools to our client roster. The ability to offer our own branded ecom store builder, website creator, and WhatsApp marketing platform under one roof has doubled our client retention and given us stable monthly recurring income.'
                             ],
                             [
                                 'name' => 'Cockroach Studio',
                                 'domain' => 'cockroach.in',
                                 'url' => 'https://cockroach.in',
-                                'role' => 'Digital Services Company',
+                                'role' => 'Digital Services & Studio',
                                 'location' => 'Delhi',
-                                'icon' => 'fas fa-bug',
+                                'icon' => 'fas fa-layer-group',
                                 'color' => '#ef4444',
-                                'quote' => 'We were already helping businesses with digital solutions, so adding SaaS products to our offering made a lot of sense. What I liked about SaaSReselling was that we didn\'t have to spend months developing the software ourselves. We could focus more on our clients and sales instead of worrying about the technology.'
+                                'quote' => 'Instead of spending months and millions developing software ourselves, SaaSReselling gave us a complete, ready-to-sell 3-in-1 software suite. Our clients love building stores and running bulk campaigns on our domain, and the automated client provisioning lets us focus purely on growth and client acquisition.'
                             ],
                             [
                                 'name' => 'BullionX Academy',
@@ -1682,27 +1682,27 @@
                                 'location' => 'Hyderabad',
                                 'icon' => 'fas fa-coins',
                                 'color' => '#8b5cf6',
-                                'quote' => 'Being in the business & training space, I wanted to offer something beyond the usual services. Having software under our own brand gives us another way to serve our clients and build a stronger business model. The process was much simpler than I expected, and the team helped us understand everything clearly.'
+                                'quote' => 'Offering the 3 SaaS platforms—ecommerce builder, website creator, and WhatsApp bulk tools—under our own domain gave our brand incredible authority. Our trainees and clients use the platforms daily, giving us predictable subscription cash flow every month without managing any backend tech.'
                             ],
                             [
                                 'name' => 'TapNow India',
                                 'domain' => 'tapnow.in',
-                                'url' => 'https://nooryak.in',
-                                'role' => 'Digital Solutions / SaaS Reseller',
+                                'url' => 'https://tapnow.in',
+                                'role' => 'Digital Marketing & Automation',
                                 'location' => 'Chandigarh',
                                 'icon' => 'fas fa-mobile-screen',
                                 'color' => '#06b6d4',
-                                'quote' => 'We had been looking for a way to enter the SaaS space without taking on the cost and complexity of developing software ourselves. The white label model made much more sense for us. Now we can offer multiple software solutions under our own brand while focusing our efforts on marketing and customer acquisition.'
+                                'quote' => 'Having all 3 high-demand SaaS products operating smoothly under our own branded domain has been a huge competitive advantage. Businesses trust our software because our brand is on every portal, notification, and dashboard. It is by far the most profitable agency addition we have made.'
                             ],
                             [
-                                'name' => 'Nooryak Media',
-                                'domain' => 'nooryak.in',
-                                'url' => 'https://nooryak.in',
-                                'role' => 'Digital Marketing & Coaching',
+                                'name' => 'SaaSReselling India',
+                                'domain' => 'saasreselling.in',
+                                'url' => 'https://saasreselling.in',
+                                'role' => 'White Label SaaS Network',
                                 'location' => 'Bangalore',
-                                'icon' => 'fas fa-layer-group',
+                                'icon' => 'fas fa-shield-alt',
                                 'color' => '#10b981',
-                                'quote' => 'SaaS is the future, and there\'s no better platform than SaaSReselling to simplify the entire process of building a scalable business. Our clients love the software and our recurring income has grown month over month.'
+                                'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
                             ]
                         ];
                 @endphp

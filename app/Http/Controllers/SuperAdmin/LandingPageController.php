@@ -352,81 +352,76 @@ class LandingPageController extends Controller
                 Setting::set('lp_testimonials_title', 'WHAT OUR WHITE LABEL PARTNERS SAY');
             }
             $curTestimonials = Setting::get('lp_testimonials_items');
-            if (empty($curTestimonials) || stripos($curTestimonials, 'youverse.in') === false || stripos($curTestimonials, 'Rohit Sharma') !== false) {
-                $genuinePartners = [
-                    [
-                        'name' => '1tap World',
-                        'domain' => '1tapworld.com',
-                        'url' => 'https://youverse.in',
-                        'role' => 'Digital Marketing Agency',
-                        'location' => 'Mumbai',
-                        'badge' => 'Verified Partner',
-                        'icon' => 'fas fa-fingerprint',
-                        'color' => '#f59e0b',
-                        'quote' => 'I was already offering digital marketing services, but I wanted something that clients would keep paying for every month. SaaSReselling gave me a much easier way to add software to my existing services without building anything from scratch. It has made my agency offering feel much more complete.'
-                    ],
-                    [
-                        'name' => 'Youverse Tech',
-                        'domain' => 'youverse.in',
-                        'url' => 'https://youverse.in',
-                        'role' => 'Digital Marketing / IT',
-                        'location' => 'Chennai',
-                        'badge' => 'Active SaaS Reseller',
-                        'icon' => 'fas fa-globe',
-                        'color' => '#3b82f6',
-                        'quote' => 'I was initially confused about how the whole white label SaaS model worked. After seeing the demo, everything became much clearer. I liked that I could put my own branding on the platform and offer software along with my existing services. It opened up a completely new service category for us.'
-                    ],
-                    [
-                        'name' => 'Cockroach Studio',
-                        'domain' => 'cockroach.in',
-                        'url' => 'https://cockroach.in',
-                        'role' => 'Digital Services Company',
-                        'location' => 'Delhi',
-                        'badge' => 'White Label Client',
-                        'icon' => 'fas fa-bug',
-                        'color' => '#ef4444',
-                        'quote' => 'We were already helping businesses with digital solutions, so adding SaaS products to our offering made a lot of sense. What I liked about SaaSReselling was that we didn\'t have to spend months developing the software ourselves. We could focus more on our clients and sales instead of worrying about the technology.'
-                    ],
-                    [
-                        'name' => 'BullionX Academy',
-                        'domain' => 'bullionxacademy.com',
-                        'url' => 'https://bullionxacademy.com',
-                        'role' => 'Technology & Business Solutions',
-                        'location' => 'Hyderabad',
-                        'badge' => 'FinTech & EduTech',
-                        'icon' => 'fas fa-coins',
-                        'color' => '#8b5cf6',
-                        'quote' => 'Being in the digital marketing space, I wanted to offer something beyond the usual services. Having software under our own brand gives us another way to serve our clients and build a stronger business model. The process was much simpler than I expected, and the team helped us understand everything clearly.'
-                    ],
-                    [
-                        'name' => 'TapNow India',
-                        'domain' => 'tapnow.in',
-                        'url' => 'https://nooryak.in',
-                        'role' => 'Digital Solutions / SaaS Reseller',
-                        'location' => 'Chandigarh',
-                        'badge' => 'Active Agency',
-                        'icon' => 'fas fa-mobile-screen',
-                        'color' => '#06b6d4',
-                        'quote' => 'We had been looking for a way to enter the SaaS space without taking on the cost and complexity of developing software ourselves. The white label model made much more sense for us. Now we can offer multiple software solutions under our own brand while focusing our efforts on marketing and customer acquisition.'
-                    ],
-                    [
-                        'name' => 'Nooryak Media',
-                        'domain' => 'nooryak.in',
-                        'url' => 'https://nooryak.in',
-                        'role' => 'Digital Marketing & Coaching',
-                        'location' => 'Bangalore',
-                        'badge' => 'Master Panel Partner',
-                        'icon' => 'fas fa-layer-group',
-                        'color' => '#10b981',
-                        'quote' => 'SaaS is the future, and there\'s no better platform than SaaSReselling to simplify the entire process of building a scalable business. Our clients love the software and our recurring income has grown month over month.'
-                    ]
-                ];
+            $genuinePartners = [
+                [
+                    'name' => 'Nooryak Technology',
+                    'domain' => 'nooryak.in',
+                    'url' => 'https://nooryak.in',
+                    'role' => 'Digital Tech & SaaS Agency',
+                    'location' => 'Bangalore',
+                    'badge' => 'Verified Partner',
+                    'icon' => 'fas fa-laptop-code',
+                    'color' => '#ff3d00',
+                    'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our own domain (nooryak.in) has completely transformed our business model. Our clients log in with our custom branding, and we keep 100% of our recurring subscription revenue without dealing with server maintenance or coding.'
+                ],
+                [
+                    'name' => 'Youverse Tech',
+                    'domain' => 'youverse.in',
+                    'url' => 'https://youverse.in',
+                    'role' => 'Digital Marketing / IT',
+                    'location' => 'Chennai',
+                    'badge' => 'Active SaaS Reseller',
+                    'icon' => 'fas fa-globe',
+                    'color' => '#3b82f6',
+                    'quote' => 'We connected our custom domain and immediately launched all 3 white-label SaaS tools to our client roster. The ability to offer our own branded ecom store builder, website creator, and WhatsApp marketing platform under one roof has doubled our client retention and given us stable monthly recurring income.'
+                ],
+                [
+                    'name' => 'Cockroach Studio',
+                    'domain' => 'cockroach.in',
+                    'url' => 'https://cockroach.in',
+                    'role' => 'Digital Services & Studio',
+                    'location' => 'Delhi',
+                    'badge' => 'White Label Agency',
+                    'icon' => 'fas fa-layer-group',
+                    'color' => '#ef4444',
+                    'quote' => 'Instead of spending months and millions developing software ourselves, SaaSReselling gave us a complete, ready-to-sell 3-in-1 software suite. Our clients love building stores and running bulk campaigns on our domain, and the automated client provisioning lets us focus purely on growth and client acquisition.'
+                ],
+                [
+                    'name' => 'BullionX Academy',
+                    'domain' => 'bullionxacademy.com',
+                    'url' => 'https://bullionxacademy.com',
+                    'role' => 'Technology & Business Solutions',
+                    'location' => 'Hyderabad',
+                    'badge' => 'FinTech & EduTech',
+                    'icon' => 'fas fa-coins',
+                    'color' => '#8b5cf6',
+                    'quote' => 'Offering the 3 SaaS platforms—ecommerce builder, website creator, and WhatsApp bulk tools—under our own domain gave our brand incredible authority. Our trainees and clients use the platforms daily, giving us predictable subscription cash flow every month without managing any backend tech.'
+                ],
+                [
+                    'name' => 'TapNow India',
+                    'domain' => 'tapnow.in',
+                    'url' => 'https://tapnow.in',
+                    'role' => 'Digital Marketing & Automation',
+                    'location' => 'Chandigarh',
+                    'badge' => 'Active Reseller Partner',
+                    'icon' => 'fas fa-mobile-screen',
+                    'color' => '#06b6d4',
+                    'quote' => 'Having all 3 high-demand SaaS products operating smoothly under our own branded domain has been a huge competitive advantage. Businesses trust our software because our brand is on every portal, notification, and dashboard. It is by far the most profitable agency addition we have made.'
+                ],
+                [
+                    'name' => 'SaaSReselling India',
+                    'domain' => 'saasreselling.in',
+                    'url' => 'https://saasreselling.in',
+                    'role' => 'White Label SaaS Network',
+                    'location' => 'Bangalore',
+                    'badge' => 'Verified Reseller Network',
+                    'icon' => 'fas fa-shield-alt',
+                    'color' => '#10b981',
+                    'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
+                ]
+            ];
+            if (empty($curTestimonials) || stripos($curTestimonials, 'youverse.in') === false || stripos($curTestimonials, 'Rohit Sharma') !== false || stripos($curTestimonials, '1tap') !== false || stripos($curTestimonials, 'saasreselling.com') !== false || stripos($curTestimonials, 'Nooryak Technology') === false) {
                 Setting::set('lp_testimonials_items', json_encode($genuinePartners));
-            }
-            if (!empty($curTestimonials) && stripos($curTestimonials, 'Nooryak') !== false) {
-                $curTestimonials = str_ireplace('Nooryak.in', 'saasreselling.com', $curTestimonials);
-                $curTestimonials = str_ireplace('Nooryak', 'SaaSReselling', $curTestimonials);
-                Setting::set('lp_testimonials_items', $curTestimonials);
             }
         } catch (\Exception $e) {
             // Safe fallback if DB is temporarily unreachable
@@ -662,29 +657,7 @@ class LandingPageController extends Controller
             'lp_testimonials_tag' => Setting::get('lp_testimonials_tag', 'TRUSTED BY GROWING AGENCIES'),
             'lp_testimonials_title' => Setting::get('lp_testimonials_title', 'WHAT OUR WHITE LABEL PARTNERS SAY'),
             'lp_testimonials_subtitle' => Setting::get('lp_testimonials_subtitle', 'Real success stories from real entrepreneurs.'),
-            'lp_testimonials_items' => json_decode(Setting::get('lp_testimonials_items', json_encode([
-                [
-                    'name' => 'Rohit Sharma',
-                    'role' => 'Digital Agency Owner',
-                    'avatar' => null,
-                    'quote' => 'Nooryak helped me launch my own SaaS business in just a few days. The platform is powerful and super easy to use.',
-                    'rating' => 5
-                ],
-                [
-                    'name' => 'Priya Mehta',
-                    'role' => 'IT Company Founder',
-                    'avatar' => null,
-                    'quote' => 'The Master Panel gives me complete control to manage multiple partners. It\'s a game changer for our business.',
-                    'rating' => 5
-                ],
-                [
-                    'name' => 'Amit Verma',
-                    'role' => 'Freelancer',
-                    'avatar' => null,
-                    'quote' => 'Amazing support and a feature-rich platform. Highly recommended for anyone looking to create recurring revenue.',
-                    'rating' => 5
-                ]
-            ])), true),
+            'lp_testimonials_items' => json_decode(Setting::get('lp_testimonials_items', json_encode($genuinePartners)), true),
 
             // FAQ
             'lp_faqs_tag' => Setting::get('lp_faqs_tag', 'FAQ'),

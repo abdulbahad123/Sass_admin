@@ -142,12 +142,6 @@ if (empty($adminLoginSlug)) {
 Route::get('/' . $adminLoginSlug, [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/' . $adminLoginSlug, [LoginController::class, 'login']);
 
-// Handle accidental double-slash (e.g. //F7_AdMn-GaTeWaY_9x) gracefully
-Route::get('//' . $adminLoginSlug, function () use ($adminLoginSlug) {
-    return redirect('/' . $adminLoginSlug, 301);
-});
-Route::post('//' . $adminLoginSlug, [LoginController::class, 'login']);
-
 // Standard /login route:
 // On main platform (saasreselling.com), returns 404 to hide admin from scanners & bots.
 // On agency domains (e.g. saasreselling.in), allows agency owners & clients to log in normally!
