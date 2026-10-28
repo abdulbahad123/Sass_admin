@@ -280,7 +280,7 @@
                                         <span class="block text-xs text-slate-400">Common questions</span>
                                     </div>
                                 </a>
-                                <a href="https://wa.me/6374913298" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
+                                <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20All-in-One%20White-Label%20SaaS%20Panel.%20Please%20share%20details%20about%20the%2015%25%20offer%20on%20the%202-year%20plan,%20setup,%20branding,%20and%20the%203%20SaaS%20solutions." target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
                                     <i class="fab fa-whatsapp text-green-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
                                         <span class="block text-white font-bold text-sm mb-0.5">WhatsApp</span>
