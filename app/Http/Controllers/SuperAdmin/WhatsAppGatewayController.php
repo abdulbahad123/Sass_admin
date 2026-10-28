@@ -47,6 +47,10 @@ class WhatsAppGatewayController extends Controller
      */
     public function update(Request $request)
     {
+        if (!$request->user()->hasPermission(['view-settings', 'manage-settings']) && !$request->user()->isSuperAdmin()) {
+            abort(403, 'Access Denied: You do not have permission to modify WhatsApp gateway settings.');
+        }
+
         $user = Auth::user();
 
         Setting::set('whatsapp_gateway_url', trim((string)$request->input('whatsapp_gateway_url')));

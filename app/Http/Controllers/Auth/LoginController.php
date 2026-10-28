@@ -105,14 +105,12 @@ class LoginController extends Controller
             }
 
             if (!$agency && !$isPlatformSubdomain) {
-                $agency = Agency::where('type', 'white_label')->first() ?? Agency::first();
+                $agency = null;
             }
 
             $agencyUser = null;
             if ($agency) {
-                $agencyUser = \App\Models\User::where('agency_id', $agency->id)->first() 
-                    ?? \App\Models\User::where('email', 'like', "%priya%")->first() 
-                    ?? \App\Models\User::where('role', 'agency')->first();
+                $agencyUser = \App\Models\User::where('agency_id', $agency->id)->first();
             }
 
             $isAgencyPortal = ($agency !== null);
@@ -130,6 +128,14 @@ class LoginController extends Controller
 
         $loginInput = trim((string) $request->input('email'));
         $password = (string) $request->input('password');
+
+        $throttleKey = 'login_attempt_' . $request->ip() . '_' . md5(strtolower($loginInput));
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'email' => "Too many login attempts. Please try again in {$seconds} seconds.",
+            ])->onlyInput('email');
+        }
 
         $credentials = ['password' => $password];
 
@@ -224,6 +230,8 @@ class LoginController extends Controller
                 return redirect()->route('master.dashboard');
             }
 
+            \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
+
             $adminLoginSlug = trim((string) env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x'), '/');
             if ($intended && (str_contains($intended, '/' . $adminLoginSlug) || str_contains($intended, '/admin'))) {
                 $intended = str_replace('/admin', '/' . $adminLoginSlug, $intended);
@@ -231,6 +239,8 @@ class LoginController extends Controller
             }
             return redirect()->route('admin.dashboard');
         }
+
+        \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 60);
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

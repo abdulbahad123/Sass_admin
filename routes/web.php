@@ -87,9 +87,7 @@ $getAgencyForRoute = function (\Illuminate\Http\Request $request) {
     return \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")
         ->orWhere('custom_domain', 'LIKE', "%{$host}%")
         ->orWhere('slug', 'LIKE', "%{$cleanHost}%")
-        ->first()
-        ?? \App\Models\Agency::where('type', 'white_label')->first()
-        ?? \App\Models\Agency::first();
+        ->first();
 };
 
 $getLandingData = function() {
@@ -230,7 +228,10 @@ Route::get('/agency-sso-login', function (\Illuminate\Http\Request $request) {
         return redirect()->route('login')->withErrors(['email' => 'SSO link expired.']);
     }
 
-    $secret = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
+    $secret = env('SSO_SECRET_KEY');
+    if (empty($secret)) {
+        return redirect()->route('login')->withErrors(['email' => 'SSO authentication is temporarily unavailable.']);
+    }
     $expectedSignature = hash_hmac('sha256', "{$email}|{$expires}", $secret);
 
     if (!hash_equals($expectedSignature, $signature)) {
@@ -246,6 +247,9 @@ Route::get('/agency-sso-login', function (\Illuminate\Http\Request $request) {
     }
 
     if ($user) {
+        if ($user->isSuperAdmin()) {
+            return redirect()->route('login')->withErrors(['email' => 'Access Denied: Super Admin cannot log in via agency SSO.']);
+        }
         \Illuminate\Support\Facades\Auth::login($user);
         return redirect($redirectPath);
     }

@@ -47,8 +47,8 @@ class WebsiteBuilderLimitsController extends Controller
         $timestamp = time() + 300;
         $nonce = Str::random(16);
         $targetUser = 'Admin1@Launchshop';
-        $secret = env('SSO_SECRET_KEY', 'LaunchshopSaaS_SSO_SecretKey_2026_SecureKey');
-        $signature = hash_hmac('sha256', "{$targetUser}|{$timestamp}|{$nonce}", $secret);
+        $secret = env('SSO_SECRET_KEY', '');
+        $signature = !empty($secret) ? hash_hmac('sha256', "{$targetUser}|{$timestamp}|{$nonce}", $secret) : '';
 
         $wbAdminLaunchUrl = "https://websitebuilder.{$rootDomain}/website-builder/admin/limits?" . http_build_query([
             'user' => $targetUser,

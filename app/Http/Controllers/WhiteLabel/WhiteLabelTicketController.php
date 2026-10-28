@@ -169,4 +169,13 @@ class WhiteLabelTicketController extends Controller
 
         return redirect()->back()->with('success', 'Reply submitted successfully.');
     }
+
+    protected function getAttachmentValidationRules(): array
+    {
+        return [
+            'attachments'   => 'nullable|array|max:5',
+            'attachments.*' => 'file|mimes:jpeg,jpg,png,pdf,webp,doc,docx,zip|max:10240',
+            'attachment'    => 'nullable|file|mimes:jpeg,jpg,png,pdf,webp,doc,docx,zip|max:10240',
+        ];
+    }
 }

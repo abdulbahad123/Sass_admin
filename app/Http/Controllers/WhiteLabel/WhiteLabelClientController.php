@@ -17,7 +17,10 @@ class WhiteLabelClientController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = $user->agency ?? ($user->agency_id ? Agency::find($user->agency_id) : null);
+        if (!$agency) {
+            return redirect()->route('whitelabel.dashboard')->with('error', 'Agency profile not found.');
+        }
 
         $cpanelUser = env('CPANEL_USER', 'nooryak');
         $agencySlug = str_replace('-', '_', strtolower($agency->slug ?? 'ysquare'));

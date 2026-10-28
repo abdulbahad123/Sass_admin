@@ -65,6 +65,10 @@ class ProfileController extends Controller
 
     public function updateSettings(Request $request)
     {
+        if (!$request->user()->hasPermission(['view-settings', 'manage-settings']) && !$request->user()->isSuperAdmin()) {
+            abort(403, 'Access Denied: You do not have permission to modify platform settings.');
+        }
+
         $validated = $request->validate([
             'platform_name' => 'required|string|max:255',
             'currency_code' => 'required|string|max:10',

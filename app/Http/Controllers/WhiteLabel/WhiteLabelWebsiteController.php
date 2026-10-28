@@ -13,20 +13,52 @@ class WhiteLabelWebsiteController extends Controller
     protected function getAgency()
     {
         $user = Auth::user();
-        return $user->agency ?? Agency::where('type', 'white_label')->first();
+        if (!$user) return null;
+        if ($user->agency) return $user->agency;
+        if (!empty($user->agency_id)) {
+            return Agency::find($user->agency_id);
+        }
+        return null;
+    }
+
+    protected function saveSecureUpload($file, string $prefix, string $subDir = 'uploads/agency'): ?string
+    {
+        if (!$file || !$file->isValid()) {
+            return null;
+        }
+
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'ico'];
+        $ext = strtolower($file->guessExtension() ?: pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION));
+
+        if (!in_array($ext, $allowedExts, true)) {
+            return null;
+        }
+
+        $uploadDir = public_path($subDir);
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir, 0755, true);
+        }
+
+        $fileName = $prefix . '_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $ext;
+        $file->move($uploadDir, $fileName);
+
+        return $subDir . '/' . $fileName;
     }
 
     public function landing()
     {
         $user = Auth::user();
         $agency = $this->getAgency();
+        if (!$agency) {
+            return redirect()->route('whitelabel.dashboard')->with('error', 'Agency profile not found for this account.');
+        }
         return view('whitelabel.website.landing', compact('user', 'agency'));
     }
 
     public function updateLanding(Request $request)
     {
         $agency = $this->getAgency();
-        if (!$agency) return back()->with('error', 'Agency profile not found.');
+        if (!$agency) return back()->with('error', 'Agency profile not found for this account.');
 
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
@@ -65,46 +97,36 @@ class WhiteLabelWebsiteController extends Controller
             'youtube_url'      => 'nullable|string|max:500',
             'linkedin_url'     => 'nullable|string|max:500',
             'twitter_url'      => 'nullable|string|max:500',
+            'logo'             => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:4096',
+            'favicon'          => 'nullable|mimes:ico,png,jpg,svg|max:2048',
+            'hero_image'       => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:8192',
+            'about_image'      => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:8192',
+            'cta_image'        => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:8192',
         ]);
 
-        $uploadDir = public_path('uploads/agency');
-        if (!file_exists($uploadDir)) {
-            @mkdir($uploadDir, 0777, true);
-        }
-
         if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $fileName = 'logo_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fileName);
-            $validated['logo'] = 'uploads/agency/' . $fileName;
+            $saved = $this->saveSecureUpload($request->file('logo'), 'logo');
+            if ($saved) $validated['logo'] = $saved;
         }
 
         if ($request->hasFile('favicon')) {
-            $file = $request->file('favicon');
-            $fileName = 'favicon_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fileName);
-            $validated['favicon'] = 'uploads/agency/' . $fileName;
+            $saved = $this->saveSecureUpload($request->file('favicon'), 'favicon');
+            if ($saved) $validated['favicon'] = $saved;
         }
 
         if ($request->hasFile('hero_image')) {
-            $file = $request->file('hero_image');
-            $fileName = 'hero_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fileName);
-            $validated['hero_image'] = 'uploads/agency/' . $fileName;
+            $saved = $this->saveSecureUpload($request->file('hero_image'), 'hero');
+            if ($saved) $validated['hero_image'] = $saved;
         }
 
         if ($request->hasFile('about_image')) {
-            $file = $request->file('about_image');
-            $fileName = 'about_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fileName);
-            $validated['about_image'] = 'uploads/agency/' . $fileName;
+            $saved = $this->saveSecureUpload($request->file('about_image'), 'about');
+            if ($saved) $validated['about_image'] = $saved;
         }
 
         if ($request->hasFile('cta_image')) {
-            $file = $request->file('cta_image');
-            $fileName = 'cta_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fileName);
-            $validated['cta_image'] = 'uploads/agency/' . $fileName;
+            $saved = $this->saveSecureUpload($request->file('cta_image'), 'cta');
+            if ($saved) $validated['cta_image'] = $saved;
         }
 
         // 1. About Features repeater
@@ -224,14 +246,8 @@ class WhiteLabelWebsiteController extends Controller
         ]);
 
         if ($request->hasFile('about_image')) {
-            $uploadDir = public_path('uploads/agency');
-            if (!file_exists($uploadDir)) {
-                @mkdir($uploadDir, 0777, true);
-            }
-            $file = $request->file('about_image');
-            $fileName = 'about_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-            $file->move($uploadDir, $fileName);
-            $validated['about_image'] = 'uploads/agency/' . $fileName;
+            $saved = $this->saveSecureUpload($request->file('about_image'), 'about');
+            if ($saved) $validated['about_image'] = $saved;
         }
 
         $agency->update($validated);
@@ -891,21 +907,18 @@ class WhiteLabelWebsiteController extends Controller
                 );
 
                 // Handle product_logo file upload if provided
+                // Handle product_logo file upload if provided
                 $logoPath = $productLogos[$i] ?? '';
                 if ($request->hasFile("product_logo_file.{$i}")) {
-                    $file = $request->file("product_logo_file.{$i}");
-                    $fileName = 'logo_' . time() . '_' . $i . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-                    $file->move($uploadDir, $fileName);
-                    $logoPath = 'uploads/agency_pricing/' . $fileName;
+                    $saved = $this->saveSecureUpload($request->file("product_logo_file.{$i}"), 'logo_' . $i, 'uploads/agency_pricing');
+                    if ($saved) $logoPath = $saved;
                 }
 
                 // Handle product_image mockup file upload if provided
                 $imagePath = $productImages[$i] ?? '';
                 if ($request->hasFile("product_image_file.{$i}")) {
-                    $file = $request->file("product_image_file.{$i}");
-                    $fileName = 'mockup_' . time() . '_' . $i . '_' . \Illuminate\Support\Str::random(6) . '.' . $file->getClientOriginalExtension();
-                    $file->move($uploadDir, $fileName);
-                    $imagePath = 'uploads/agency_pricing/' . $fileName;
+                    $saved = $this->saveSecureUpload($request->file("product_image_file.{$i}"), 'mockup_' . $i, 'uploads/agency_pricing');
+                    if ($saved) $imagePath = $saved;
                 }
 
                 $plans[] = [

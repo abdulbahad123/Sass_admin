@@ -590,12 +590,15 @@ class DatabaseProvisioningService
     protected function cpanelMysqlRequest(string $function, array $query): ?string
     {
         $cpanelUser = env('CPANEL_USER', 'nooryak');
-        $cpanelPass = env('CPANEL_PASSWORD', 'Admin@123#');
+        $cpanelPass = env('CPANEL_PASSWORD');
         $cpanelToken = env('CPANEL_API_TOKEN');
+
+        if (empty($cpanelPass) && empty($cpanelToken)) {
+            return null;
+        }
 
         $hostsToTry = array_values(array_filter(array_unique([
             env('CPANEL_HOST'),
-            '95.135.254.154',
             '127.0.0.1',
             $_SERVER['HTTP_HOST'] ?? null,
             'localhost',
@@ -640,8 +643,6 @@ class DatabaseProvisioningService
             database_path('schema/website_builder_clean_template.sql'),
             database_path('schema/launchshop_clean_template.sql'),
             database_path('schema/launchshop_schema.sql'),
-            base_path('bazaarwa_launchshop (1).sql'),
-            base_path('bazaarwa_launchshop.sql'),
         ];
 
         if (in_array($slug, ['website_builder', 'websitebuilder'])) {

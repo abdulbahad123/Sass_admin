@@ -370,6 +370,10 @@ class AgencyController extends Controller
 
     public function loginAsAgency(Request $request, Agency $agency)
     {
+        if (!$request->user()->hasPermission(['view-agencies', 'edit-agencies', 'create-agencies']) && !$request->user()->isSuperAdmin()) {
+            abort(403, 'Access Denied: You do not have administrative permission to impersonate agencies.');
+        }
+
         // Find or create the agency user
         $agencyUser = User::where('agency_id', $agency->id)->first() 
             ?? User::where('email', $agency->email)->first();
