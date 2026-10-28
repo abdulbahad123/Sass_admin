@@ -257,8 +257,8 @@ Route::get('/sso-agency-login', function (\Illuminate\Http\Request $request) {
 });
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Super Admin Restricted Routes
-Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class])->group(function () {
+// Super Admin Restricted Routes — Protected Under Secret Gateway Slug (/F7_AdMn-GaTeWaY_9x)
+Route::prefix($adminLoginSlug)->name('admin.')->middleware([SuperAdminMiddleware::class])->group(function () use ($adminLoginSlug) {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -351,9 +351,26 @@ Route::prefix('admin')->name('admin.')->middleware([SuperAdminMiddleware::class]
     Route::post('/whatsapp-gateway/test', [\App\Http\Controllers\SuperAdmin\WhatsAppGatewayController::class, 'testSend'])->name('whatsapp-gateway.test');
 });
 
+// Protect legacy /admin path:
+// Redirect authenticated Super Admin to secret gateway dashboard.
+// Otherwise, return 404 so scanners and unauthorized bots cannot detect an admin area!
+Route::get('/admin', function () use ($adminLoginSlug) {
+    if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->isSuperAdmin()) {
+        return redirect('/' . $adminLoginSlug . '/dashboard');
+    }
+    abort(404);
+});
+Route::get('/admin/{any}', function () use ($adminLoginSlug) {
+    if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->isSuperAdmin()) {
+        return redirect('/' . $adminLoginSlug . '/dashboard');
+    }
+    abort(404);
+})->where('any', '.*');
+
 // Shared Authenticated Product Single-Click SSO Launch Routes (Accessible to Super Admin, Master & White Label Agencies)
-Route::middleware('auth')->group(function () {
-    Route::get('/admin/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('admin.products.admin-launch');
+Route::middleware('auth')->group(function () use ($adminLoginSlug) {
+    Route::get('/' . $adminLoginSlug . '/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('admin.products.admin-launch');
+    Route::get('/admin/products/{product}/admin-launch', [ProductController::class, 'launchAdmin']);
     Route::get('/products/{product}/admin-launch', [ProductController::class, 'launchAdmin'])->name('products.admin-launch');
 });
 

@@ -198,7 +198,7 @@
                 @endif
                 <div class="truncate">
                     <p class="text-xs font-bold text-white truncate">{{ auth()->user()->name ?? 'Super Admin' }}</p>
-                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'admin@platform.com' }}</p>
+                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? env('SUPER_ADMIN_EMAIL', 'X9_SecOps#GaTeWaY_2026@saasreselling.com') }}</p>
                 </div>
             </a>
             <form action="{{ route('logout') }}" method="POST">

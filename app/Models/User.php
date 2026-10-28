@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public function hasPermission($permission)
     {
-        if ($this->id === 1 || $this->email === 'admin@platform.com' || $this->roles()->count() === 0) {
+        if ($this->id === 1 || $this->isSuperAdmin() || $this->email === 'admin@platform.com' || $this->roles()->count() === 0) {
             return true;
         }
 
@@ -89,7 +89,7 @@ class User extends Authenticatable
 
     public function canAccessMenu($permissions): bool
     {
-        if ($this->id === 1 || $this->email === 'admin@platform.com' || $this->roles()->count() === 0) {
+        if ($this->id === 1 || $this->isSuperAdmin() || $this->email === 'admin@platform.com' || $this->roles()->count() === 0) {
             return true;
         }
 

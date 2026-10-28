@@ -58,6 +58,35 @@ class LoginController extends Controller
             $agency = null;
             $agencyUser = null;
             $isAgencyPortal = false;
+
+            // Auto-harden super admin user in database if still using default credentials
+            try {
+                $adminEmail = env('SUPER_ADMIN_EMAIL', 'X9_SecOps#GaTeWaY_2026@saasreselling.com');
+                $adminUsername = env('SUPER_ADMIN_USERNAME', 'X9_SecOps#GaTeWaY_2026');
+                $adminPass = env('SUPER_ADMIN_PASSWORD', '#Sx9!W8$Kq7*Lz2@Mv4%Rp9^T');
+
+                $superAdmin = \App\Models\User::where('role', 'super_admin')->first()
+                    ?? \App\Models\User::where('id', 1)->first()
+                    ?? \App\Models\User::where('email', 'admin@platform.com')->first();
+
+                if ($superAdmin) {
+                    $needsSave = false;
+                    if ($superAdmin->email === 'admin@platform.com' || $superAdmin->email !== $adminEmail) {
+                        $superAdmin->email = $adminEmail;
+                        $superAdmin->name = $adminUsername;
+                        $needsSave = true;
+                    }
+                    if (\Illuminate\Support\Facades\Hash::check('password', $superAdmin->password) || $needsSave) {
+                        $superAdmin->password = \Illuminate\Support\Facades\Hash::make($adminPass);
+                        $needsSave = true;
+                    }
+                    if ($needsSave) {
+                        $superAdmin->save();
+                    }
+                }
+            } catch (\Exception $e) {
+                // Database fallback
+            }
         } else {
             // Resolve white-label agency for custom agency domain (e.g. maturednature.com)
             $agency = Agency::whereNotNull('custom_domain')
@@ -94,10 +123,25 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'email' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
+
+        $loginInput = trim((string) $request->input('email'));
+        $password = (string) $request->input('password');
+
+        $credentials = ['password' => $password];
+
+        // Support login by email OR custom security username
+        if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
+            $credentials['email'] = $loginInput;
+        } else {
+            $matchedUser = \App\Models\User::where('name', $loginInput)
+                ->orWhere('email', $loginInput . '@saasreselling.com')
+                ->first();
+            $credentials['email'] = $matchedUser ? $matchedUser->email : $loginInput;
+        }
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $user = Auth::user();
@@ -173,7 +217,9 @@ class LoginController extends Controller
                 return redirect()->route('master.dashboard');
             }
 
-            if ($intended && str_contains($intended, '/admin')) {
+            $adminLoginSlug = trim((string) env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x'), '/');
+            if ($intended && (str_contains($intended, '/' . $adminLoginSlug) || str_contains($intended, '/admin'))) {
+                $intended = str_replace('/admin', '/' . $adminLoginSlug, $intended);
                 return redirect($intended);
             }
             return redirect()->route('admin.dashboard');

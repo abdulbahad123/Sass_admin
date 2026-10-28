@@ -217,7 +217,7 @@
 @push('scripts')
 <script>
     function openEditProductModal(product) {
-        document.getElementById('editProductForm').action = "/admin/products/" + product.id;
+        document.getElementById('editProductForm').action = "{{ url(env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x')) }}/products/" + product.id;
         document.getElementById('ep_name').value = product.name || '';
         document.getElementById('ep_tagline').value = product.tagline || '';
         document.getElementById('ep_description').value = product.description || '';

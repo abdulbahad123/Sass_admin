@@ -494,7 +494,7 @@
 @push('scripts')
 <script>
     function openEditAgencyModal(agency) {
-        document.getElementById('editAgencyForm').action = "/admin/agencies/" + agency.id;
+        document.getElementById('editAgencyForm').action = "{{ url(env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x')) }}/agencies/" + agency.id;
         document.getElementById('ea_name').value = agency.name || '';
         document.getElementById('ea_type').value = agency.type || 'white_label';
         document.getElementById('ea_parent_id').value = agency.parent_id || '';

@@ -626,7 +626,7 @@
 <script>
     function openEditStaffModal(staff, roleId) {
         const form = document.getElementById('editStaffForm');
-        form.action = `/admin/staff/${staff.id}`;
+        form.action = "{{ url(env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x')) }}/staff/" + staff.id;
         document.getElementById('edit_name').value = staff.name;
         document.getElementById('edit_email').value = staff.email;
         document.getElementById('edit_designation').value = staff.designation || '';
@@ -637,7 +637,7 @@
 
     function openEditRoleModal(role, permissionIds) {
         const form = document.getElementById('editRoleForm');
-        form.action = `/admin/roles/${role.id}`;
+        form.action = "{{ url(env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x')) }}/roles/" + role.id;
         document.getElementById('edit_role_name').value = role.name;
         document.getElementById('edit_role_description').value = role.description || '';
         

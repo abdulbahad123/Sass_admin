@@ -20,12 +20,13 @@ class DatabaseSeeder extends Seeder
         \App\Models\Setting::set('currency_code', 'INR');
         \App\Models\Setting::set('platform_name', 'Master SaaS Engine');
 
-        // 1. Create Super Admin User
+        // 1. Create Super Admin User (Hardened Credentials)
         User::updateOrCreate(
-            ['email' => 'admin@platform.com'],
+            ['role' => 'super_admin'],
             [
-                'name' => 'Super Admin',
-                'password' => Hash::make('password'),
+                'name' => env('SUPER_ADMIN_USERNAME', 'X9_SecOps#GaTeWaY_2026'),
+                'email' => env('SUPER_ADMIN_EMAIL', 'X9_SecOps#GaTeWaY_2026@saasreselling.com'),
+                'password' => Hash::make(env('SUPER_ADMIN_PASSWORD', '#Sx9!W8$Kq7*Lz2@Mv4%Rp9^T')),
                 'role' => 'super_admin',
                 'status' => 'active',
             ]

@@ -63,16 +63,16 @@
                 </div>
             @endif
 
-            <form action="{{ route('login') }}" method="POST" class="space-y-5">
+            <form action="{{ route('login') }}" method="POST" class="space-y-5" autocomplete="off">
                 @csrf
 
                 <input type="hidden" name="is_agency_portal" value="{{ empty($isMainDomain) ? '1' : '0' }}">
 
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Account Email</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Account Username or Email</label>
                     <div class="relative">
-                        <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500"></i>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="e.g. owner@agency.com" required 
+                        <i data-lucide="user-check" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500"></i>
+                        <input type="text" id="email" name="email" value="{{ old('email') }}" placeholder="Enter username or email" required autocomplete="off"
                                class="w-full bg-slate-800/80 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Security Key / Password</label>
                     <div class="relative">
                         <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500"></i>
-                        <input type="password" id="password" name="password" placeholder="Enter password" required 
+                        <input type="password" id="password" name="password" placeholder="Enter security key" required autocomplete="new-password"
                                class="w-full bg-slate-800/80 border border-slate-700 rounded-xl pl-10 pr-11 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                         <button type="button" onclick="togglePasswordVisibility()" 
                                 class="absolute right-3.5 top-3.5 text-slate-400 hover:text-white transition-colors focus:outline-none"
@@ -105,70 +105,10 @@
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
-
-            @if(!empty($isMainDomain))
-                <!-- Demo Quick Fill ONLY shown on main domain (saasreselling.com / localhost) -->
-                <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
-                    <p class="text-xs text-slate-400 font-medium text-center">Click a Demo Account to Fill Credentials:</p>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                        <button type="button" onclick="fillCredentials('admin@platform.com', 'password')" 
-                                class="p-2.5 rounded-xl bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-700/40 text-indigo-200 transition text-left space-y-0.5 group">
-                            <div class="font-semibold text-indigo-400 flex items-center justify-between text-[11px]">
-                                <span>Super Admin</span>
-                                <i data-lucide="shield" class="w-3 h-3"></i>
-                            </div>
-                            <div class="text-[10px] text-slate-300 truncate">admin@platform.com</div>
-                            <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-indigo-300">password</span></div>
-                        </button>
-
-                        <button type="button" onclick="fillCredentials('abdulbahad.dev@gmail.com', 'password')" 
-                                class="p-2.5 rounded-xl bg-purple-950/50 hover:bg-purple-900/60 border border-purple-700/40 text-purple-200 transition text-left space-y-0.5 group">
-                            <div class="font-semibold text-purple-400 flex items-center justify-between text-[11px]">
-                                <span>KKK Master</span>
-                                <i data-lucide="building" class="w-3 h-3"></i>
-                            </div>
-                            <div class="text-[10px] text-slate-300 truncate">abdulbahad...</div>
-                            <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-purple-300">password</span></div>
-                        </button>
-
-                        <button type="button" onclick="fillCredentials('priya@abcdigital.com', 'password')" 
-                                class="p-2.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-700/40 text-emerald-200 transition text-left space-y-0.5 group">
-                            <div class="font-semibold text-emerald-400 flex items-center justify-between text-[11px]">
-                                <span>White Label</span>
-                                <i data-lucide="layers" class="w-3 h-3"></i>
-                            </div>
-                            <div class="text-[10px] text-slate-300 truncate">priya@abcdigital...</div>
-                            <div class="text-[9px] text-slate-400 font-mono">Pass: <span class="text-emerald-300">password</span></div>
-                        </button>
-                    </div>
-                </div>
-            @else
-                <!-- 1-Click Auto Assign Credentials Button for Agency Domain -->
-                <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
-                    @php
-                        $targetEmail = isset($agencyUser) && !empty($agencyUser->email) ? $agencyUser->email : 'priya@abcdigital.com';
-                    @endphp
-                    <button type="button" onclick="fillCredentials('{{ $targetEmail }}', 'password')" 
-                            class="w-full p-3.5 rounded-xl bg-gradient-to-r from-emerald-950/70 to-teal-950/70 hover:from-emerald-900/80 hover:to-teal-900/80 border border-emerald-700/50 text-emerald-200 transition text-left flex items-center justify-between group shadow-lg">
-                        <div class="space-y-0.5">
-                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5 text-xs">
-                                <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i>
-                                <span>Auto Assign {{ isset($agency) && $agency ? $agency->name : 'Agency' }} Credentials</span>
-                            </div>
-                            <div class="text-[11px] text-slate-300">{{ $targetEmail }}</div>
-                        </div>
-                        <span class="px-3 py-1.5 bg-emerald-500/20 text-emerald-300 font-extrabold rounded-lg text-xs border border-emerald-500/30 group-hover:bg-emerald-500/30 transition">1-Click Apply</span>
-                    </button>
-                </div>
-            @endif
         </div>
     </div>
 
     <script>
-        function fillCredentials(email, password) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
-        }
 
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('password');
