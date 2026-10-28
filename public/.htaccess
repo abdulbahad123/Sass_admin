@@ -3,6 +3,18 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    # Block sensitive files from direct download
+    <FilesMatch "\.(sql|log|csv|env|sh|git|bak|lock)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    # Block direct access to test scripts
+    <FilesMatch "^(test_|check_|export_|reset_).*\.php$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
     RewriteEngine On
 
     # Handle Authorization Header
