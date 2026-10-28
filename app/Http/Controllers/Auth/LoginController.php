@@ -157,13 +157,26 @@ class LoginController extends Controller
                 'user_agent' => $request->userAgent(),
             ]);
 
+            // Safely handle intended URL — never send White Label or Master users to Super Admin routes
+            $intended = session()->get('url.intended');
+            session()->forget('url.intended');
+
             if ($user->isWhiteLabelAgency()) {
-                return redirect()->intended(route('whitelabel.dashboard'));
+                if ($intended && str_contains($intended, '/whitelabel')) {
+                    return redirect($intended);
+                }
+                return redirect()->route('whitelabel.dashboard');
             } elseif ($user->isMasterAgency()) {
-                return redirect()->intended(route('master.dashboard'));
+                if ($intended && str_contains($intended, '/master')) {
+                    return redirect($intended);
+                }
+                return redirect()->route('master.dashboard');
             }
 
-            return redirect()->intended(route('admin.dashboard'));
+            if ($intended && str_contains($intended, '/admin')) {
+                return redirect($intended);
+            }
+            return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors([

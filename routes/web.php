@@ -134,18 +134,83 @@ Route::get('/refund', function() { return redirect()->route('agency.refund'); })
 Route::get('/shipping', function() { return redirect()->route('agency.shipping'); });
 
 // Authentication Routes — Protected Secret Admin URL (/F7_AdMn-GaTeWaY_9x)
-$adminLoginSlug = env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x');
+$adminLoginSlug = trim((string) env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x'), '/');
+if (empty($adminLoginSlug)) {
+    $adminLoginSlug = 'F7_AdMn-GaTeWaY_9x';
+}
+
 Route::get('/' . $adminLoginSlug, [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/' . $adminLoginSlug, [LoginController::class, 'login']);
 
-// Standard /login blocked with 404 to hide admin portal from scanners & bots
-Route::any('/login', function () {
-    abort(404);
+// Handle accidental double-slash (e.g. //F7_AdMn-GaTeWaY_9x) gracefully
+Route::get('//' . $adminLoginSlug, function () use ($adminLoginSlug) {
+    return redirect('/' . $adminLoginSlug, 301);
+});
+Route::post('//' . $adminLoginSlug, [LoginController::class, 'login']);
+
+// Standard /login route:
+// On main platform (saasreselling.com), returns 404 to hide admin from scanners & bots.
+// On agency domains (e.g. saasreselling.in), allows agency owners & clients to log in normally!
+Route::get('/login', function (\Illuminate\Http\Request $request) use ($adminLoginSlug) {
+    $host = strtolower($request->getHost());
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder)\./i', '', $host);
+    $mainSuperAdminHosts = ['saasreselling.com', 'www.saasreselling.com', 'localhost', '127.0.0.1'];
+    $configuredAdminHost = strtolower((string) env('MAIN_ADMIN_HOST', 'saasreselling.com'));
+    if (!empty($configuredAdminHost)) {
+        $mainSuperAdminHosts[] = $configuredAdminHost;
+        $mainSuperAdminHosts[] = 'www.' . $configuredAdminHost;
+    }
+
+    $isMainDomain = in_array($cleanHost, $mainSuperAdminHosts, true) || in_array($host, $mainSuperAdminHosts, true);
+    if (!$isMainDomain) {
+        foreach ($mainSuperAdminHosts as $pHost) {
+            if ($pHost !== 'localhost' && $pHost !== '127.0.0.1' && str_ends_with($host, '.' . $pHost)) {
+                $isMainDomain = true;
+                break;
+            }
+        }
+    }
+
+    if ($isMainDomain) {
+        abort(404);
+    }
+
+    return app(LoginController::class)->showLoginForm($request);
+});
+
+Route::post('/login', function (\Illuminate\Http\Request $request) {
+    $host = strtolower($request->getHost());
+    $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder)\./i', '', $host);
+    $mainSuperAdminHosts = ['saasreselling.com', 'www.saasreselling.com', 'localhost', '127.0.0.1'];
+    $configuredAdminHost = strtolower((string) env('MAIN_ADMIN_HOST', 'saasreselling.com'));
+    if (!empty($configuredAdminHost)) {
+        $mainSuperAdminHosts[] = $configuredAdminHost;
+        $mainSuperAdminHosts[] = 'www.' . $configuredAdminHost;
+    }
+
+    $isMainDomain = in_array($cleanHost, $mainSuperAdminHosts, true) || in_array($host, $mainSuperAdminHosts, true);
+    if (!$isMainDomain) {
+        foreach ($mainSuperAdminHosts as $pHost) {
+            if ($pHost !== 'localhost' && $pHost !== '127.0.0.1' && str_ends_with($host, '.' . $pHost)) {
+                $isMainDomain = true;
+                break;
+            }
+        }
+    }
+
+    if ($isMainDomain) {
+        abort(404);
+    }
+
+    return app(LoginController::class)->login($request);
 });
 
 Route::get('/whitelabel-panel/login', [LoginController::class, 'showLoginForm'])->name('whitelabel.login');
+Route::post('/whitelabel-panel/login', [LoginController::class, 'login']);
 Route::get('/agency-portal/login', [LoginController::class, 'showLoginForm'])->name('agency.login');
+Route::post('/agency-portal/login', [LoginController::class, 'login']);
 Route::get('/agency_portal/login', [LoginController::class, 'showLoginForm']);
+Route::post('/agency_portal/login', [LoginController::class, 'login']);
 Route::get('/whitelabel-panel', function () {
     return redirect()->route('whitelabel.dashboard');
 });
