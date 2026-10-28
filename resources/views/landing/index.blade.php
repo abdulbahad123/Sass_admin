@@ -337,12 +337,12 @@
                 <!-- Left Text Column (6 cols on lg for dedicated text space - Matches Reference Design) -->
                 <div class="lg:col-span-6 min-w-0 space-y-6 text-left relative z-20">
                     
-                    <!-- Top Audience Pill Badge (Task 1: Pipe Separator) -->
-                    <div class="inline-flex items-center space-x-2 bg-[#fff3ec] dark:bg-orange-950/40 border border-[#ffdcd0] dark:border-orange-800/60 px-4 py-2 rounded-full text-[#c2410c] dark:text-orange-300 text-[11px] sm:text-xs font-bold tracking-wide uppercase shadow-sm">
-                        <div class="w-5 h-5 rounded-full bg-[#ff5a2c] text-white flex items-center justify-center text-[10px] flex-shrink-0">
+                    <!-- Top Audience Pill Badge (Task 4: Reduced Font Size on Mobile Only) -->
+                    <div class="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#fff3ec] dark:bg-orange-950/40 border border-[#ffdcd0] dark:border-orange-800/60 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-[#c2410c] dark:text-orange-300 text-[9px] sm:text-xs font-bold tracking-wide uppercase shadow-sm">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#ff5a2c] text-white flex items-center justify-center text-[8px] sm:text-[10px] flex-shrink-0">
                             <i class="fas fa-users"></i>
                         </div>
-                        <span>{{ str_replace(' · ', ' | ', $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS') }}</span>
+                        <span class="leading-tight">{{ str_replace(' · ', ' | ', $data['lp_hero_announcement_badge'] ?? 'BUILT FOR AGENCIES | FREELANCERS | RESELLERS | DIGITAL MARKETERS') }}</span>
                     </div>
 
                     <!-- Main Headline matching Reference Image (Task 1: Added Bottom Gap Below "Turn Your Agency Into a") -->
@@ -357,6 +357,13 @@
                             ? $data['lp_hero_subtitle'] 
                             : 'Turn your experties into your own SaaS business with 3 ready-to-sell white-label products, one unified platform, and your brand across every customer touchpoint. No coding or server management required. You stay in control of your brand while we handle the technology.' }}
                     </p>
+
+                    <!-- Mobile Only Hero Banner Graphic (Task 3: Displayed directly below description on mobile) -->
+                    <div class="block lg:hidden w-full pt-2 pb-1">
+                        <div class="relative w-full flex items-center justify-center">
+                            <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="SaaSReselling Platform" class="w-full h-auto max-h-[360px] sm:max-h-[460px] object-contain mx-auto">
+                        </div>
+                    </div>
 
                     <!-- CTAs matching Reference Image -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
@@ -374,26 +381,29 @@
                         </button>
                     </div>
 
-                    <!-- Hero Feature Checkmarks matching Reference Image -->
-                    <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
-                        @php
-                            $badges = (!empty($data['lp_hero_badges']) && is_array($data['lp_hero_badges'])) 
-                                ? $data['lp_hero_badges'] 
-                                : ['White Label Ready', 'Custom Branding', 'Unlimited Customers'];
-                        @endphp
+                    <!-- Hero Feature Checkmarks (Task 3: Balanced 2x2 grid on mobile with 4th point beside Unlimited Customers) -->
+                    @php
+                        $badges = (!empty($data['lp_hero_badges']) && is_array($data['lp_hero_badges'])) 
+                            ? $data['lp_hero_badges'] 
+                            : ['White Label Ready', 'Custom Branding', 'Unlimited Customers'];
+                        if (count($badges) === 3) {
+                            $badges[] = 'Instant Setup';
+                        }
+                    @endphp
+                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3.5 sm:gap-6 pt-2 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                         @foreach($badges as $badge)
                         <div class="flex items-center space-x-2">
                             <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] shadow-sm flex-shrink-0">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span>{{ $badge }}</span>
+                            <span class="whitespace-nowrap">{{ $badge }}</span>
                         </div>
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Right Hero Image Graphic (Enlarged by ~20%, Contained Within 6-Col Right Area) -->
-                <div class="lg:col-span-6 min-w-0 relative mt-6 lg:mt-0 flex items-center justify-center lg:justify-end">
+                <!-- Right Hero Image Graphic (Desktop Only: Enlarged by ~20%, Contained Within 6-Col Right Area) -->
+                <div class="hidden lg:flex lg:col-span-6 min-w-0 relative mt-6 lg:mt-0 items-center justify-center lg:justify-end">
                     <div class="relative z-10 w-full min-w-0 flex items-center justify-center lg:justify-end">
                         <img src="{{ asset($data['lp_hero_image'] ?? '/assets/images/herobanner_right.png') }}" alt="SaaSReselling Platform" class="w-full h-auto max-h-[600px] sm:max-h-[720px] lg:max-h-[820px] xl:max-h-[900px] object-contain object-center lg:object-right transition-transform duration-500 lg:scale-125">
                     </div>
@@ -1314,9 +1324,9 @@
         </div>
     </section>
 
-    <!-- SECTION 8: PRICING (Task 3: Pixel-Perfect Match with Reference Image 3 & Full Dashboard Integration) -->
+    <!-- SECTION 8: PRICING (Task 1: Wide Layout, Crisp Text Contrast, Aligned Trust Badges, ₹4,000/mo & ₹35,000/yr) -->
     <section id="pricing" class="py-14 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/80 border-t border-slate-200 dark:border-slate-700/80 relative">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
             <!-- Section Header -->
             <div class="text-center max-w-2xl mx-auto mb-10">
@@ -1328,7 +1338,7 @@
                 </h2>
             </div>
 
-            <!-- Monthly / Yearly Toggle with Save 20% curved badge -->
+            <!-- Monthly / Yearly Toggle with Save 27% curved badge -->
             <div class="flex flex-col items-center justify-center mb-10">
                 <div class="flex items-center space-x-4">
                     <div class="bg-white dark:bg-[#0B0F19] p-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
@@ -1336,34 +1346,34 @@
                         <button type="button" id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="window.setPricingPlan('monthly')">Monthly</button>
                         <button type="button" id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('yearly')">Yearly</button>
                     </div>
-                    <div class="text-xs font-extrabold text-[#ff3d00] flex items-center gap-1">
-                        <i class="fas fa-reply fa-flip-vertical text-sm -mt-1"></i>
-                        <span>Save 20%</span>
+                    <div class="text-xs font-extrabold text-[#ff3d00] flex items-center gap-1 bg-orange-100 dark:bg-orange-950/60 px-3 py-1 rounded-full border border-orange-200 dark:border-orange-800 shadow-xs">
+                        <i class="fas fa-reply fa-flip-vertical text-xs"></i>
+                        <span>Save 27% (₹13,000)</span>
                     </div>
                 </div>
                 
                 <div id="pricingSubtextContainer" class="mt-4 bg-orange-50 dark:bg-orange-950/30 px-5 py-2 rounded-full border border-orange-200/80 dark:border-orange-800/50 shadow-sm flex items-center space-x-2 transition-all">
                     <i id="pricingSubtextIcon" class="far fa-calendar-alt text-[#ff3d00] text-xs"></i>
-                    <span id="pricingSubtext" class="text-xs font-bold text-[#c2410c] dark:text-orange-300">Monthly Plan Selected — Switch to Yearly and save 20%</span>
+                    <span id="pricingSubtext" class="text-xs font-bold text-[#c2410c] dark:text-orange-300">Monthly Plan Selected — Switch to Yearly for ₹35,000/year (Save over 27%)</span>
                 </div>
             </div>
 
-            <!-- Main High-Converting Pricing Card (Reference Image 3) -->
-            <div class="bg-white dark:bg-[#0B0F19] rounded-[2.5rem] p-6 sm:p-9 lg:p-12 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
+            <!-- Main High-Converting Pricing Card (Wider, Balanced, No Awkward Side Margins) -->
+            <div class="bg-white dark:bg-[#0B0F19] rounded-[2.5rem] p-6 sm:p-10 lg:p-12 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
                 
                 <!-- Upper Split: Plan Info (Left) & Screen Preview (Right) -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     
                     <!-- Left Column: Core Pricing Info -->
                     <div class="lg:col-span-7 text-left space-y-4">
                         <!-- Top Tag -->
-                        <div class="inline-flex items-center space-x-2 bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-orange-200/80 dark:border-orange-900/60">
-                            <i class="fas fa-user-friends text-xs"></i>
+                        <div class="inline-flex items-center space-x-2 bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-orange-200/80 dark:border-orange-900/60 shadow-xs">
+                            <i class="fas fa-user-friends text-xs text-[#ff3d00]"></i>
                             <span>{{ $data['lp_pricing_badge'] ?? 'FOR AGENCIES & FREELANCERS' }}</span>
                         </div>
 
                         <!-- Title -->
-                        <h3 class="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight leading-tight">
+                        <h3 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[40px] text-slate-900 dark:text-white tracking-tight leading-tight">
                             {{ $data['lp_pricing_name'] ?? 'White-Label Panel' }}
                         </h3>
 
@@ -1379,7 +1389,7 @@
 
                         <!-- Price Box -->
                         <div class="pt-2 pb-1 flex items-baseline space-x-2">
-                            <span id="priceMainAmount" class="font-heading font-black text-4xl sm:text-5xl lg:text-[54px] text-slate-900 dark:text-white tracking-tight">₹{{ $data['lp_pricing_monthly'] ?? '999' }}</span>
+                            <span id="priceMainAmount" class="font-heading font-black text-4xl sm:text-5xl lg:text-[54px] text-slate-900 dark:text-white tracking-tight">₹{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}</span>
                             <span id="priceMainPeriod" class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400">/ month</span>
                         </div>
 
@@ -1391,28 +1401,30 @@
                             </a>
                         </div>
 
-                        <!-- 3 Trust Badges below button -->
-                        <div class="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+                        <!-- 3 Trust Badges below button (High Contrast, Perfectly Aligned) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-4 sm:pt-5 border-t border-slate-200/80 dark:border-slate-800">
                             @php
                                 $trustBadges = (isset($data['lp_pricing_trust_badges']) && is_array($data['lp_pricing_trust_badges']) && count($data['lp_pricing_trust_badges']) > 0)
                                     ? $data['lp_pricing_trust_badges']
-                                    : ['1:1 Demo on Google Meet', 'No Credit Card', '100% Free Demo'];
-                                $tIcons = ['fas fa-video text-blue-500', 'far fa-credit-card text-emerald-500', 'fas fa-check-circle text-orange-500'];
+                                    : ['1:1 Demo on Google Meet', 'No Credit Card Required', '100% Free Demo Access'];
+                                $tIcons = ['fas fa-video text-blue-500', 'far fa-credit-card text-emerald-500', 'fas fa-shield-alt text-[#ff3d00]'];
                             @endphp
                             @foreach($trustBadges as $bIdx => $badge)
-                            <div class="flex items-center justify-center space-x-1.5 text-[10px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                                <i class="{{ $tIcons[$bIdx % count($tIcons)] }}"></i>
-                                <span>{{ $badge }}</span>
+                            <div class="flex items-center justify-center space-x-2 py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs">
+                                <i class="{{ $tIcons[$bIdx % count($tIcons)] }} text-sm"></i>
+                                <span class="whitespace-nowrap">{{ $badge }}</span>
                             </div>
                             @endforeach
                         </div>
                     </div>
 
-                    <!-- Right Column: Screen Preview Mockup with Arrow Tag -->
+                    <!-- Right Column: Screen Preview Mockup with High-Contrast Arrow Badge -->
                     <div class="lg:col-span-5 text-right flex flex-col items-end w-full">
-                        <div class="mb-2 text-right">
-                            <span class="inline-block text-[11px] sm:text-xs font-bold text-[#ff3d00] italic leading-tight">
-                                {{ $data['lp_pricing_mockup_badge'] ?? '3 Powerful Products / One Dashboard / Your Brand' }} ⤵
+                        <div class="mb-3 text-right">
+                            <span class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-950/60 border border-orange-300 dark:border-orange-800 text-[#ff3d00] dark:text-orange-400 font-extrabold text-xs shadow-sm">
+                                <i class="fas fa-layer-group text-[11px]"></i>
+                                <span>{{ $data['lp_pricing_mockup_badge'] ?? '3 Powerful Products / One Dashboard / Your Brand' }}</span>
+                                <i class="fas fa-arrow-down text-[10px]"></i>
                             </span>
                         </div>
                         <div class="w-full relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-slate-900">
@@ -1422,11 +1434,14 @@
 
                 </div>
 
-                <!-- Lower Section: Everything You Get Checklist & Trophy Box -->
+                <!-- Lower Section: Everything You Get Checklist (Trophy Box Removed) -->
                 <div class="pt-8 mt-8 border-t border-slate-200 dark:border-slate-800 text-left">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-                        <h4 class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white">Everything You Get</h4>
-                        <span class="text-xs sm:text-sm font-bold text-[#ff3d00]">All features included in monthly plan</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                        <h4 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white">Everything You Get</h4>
+                        <span class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-xs sm:text-sm font-extrabold text-[#c2410c] dark:text-orange-300 shadow-xs self-start sm:self-auto">
+                            <i class="fas fa-check-circle text-[#ff3d00]"></i>
+                            <span id="pricingIncludedPlanText">All features included in monthly plan</span>
+                        </span>
                     </div>
 
                     <!-- 6 Feature Checklist in 2 Columns -->
@@ -1442,7 +1457,7 @@
                                 'Lifetime Updates & Support'
                             ];
                     @endphp
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach($pricingFeatures as $feat)
                         <div class="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
                             <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm">
@@ -1451,17 +1466,6 @@
                             <span>{{ $feat }}</span>
                         </div>
                         @endforeach
-                    </div>
-
-                    <!-- Trophy Box (Reference Image 3) -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-orange-50/80 dark:bg-orange-950/20 border border-orange-200/80 dark:border-orange-900/40 flex items-center space-x-4">
-                        <div class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/40 text-[#ff3d00] flex items-center justify-center text-xl flex-shrink-0 shadow-sm">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="text-left">
-                            <h5 class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">{{ $data['lp_pricing_trophy_title'] ?? 'Most Popular Choice' }}</h5>
-                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">{{ $data['lp_pricing_trophy_desc'] ?? 'Perfect for getting started and building your customer base.' }}</p>
-                        </div>
                     </div>
                 </div>
 
@@ -1821,21 +1825,25 @@
                     </p>
                 </div>
 
-                <!-- Right Buttons & Handwritten Arrow (Task 2: Changed blue button to orange) -->
-                <div class="flex flex-col sm:flex-row items-center gap-4 relative">
-                    <a href="{{ $data['lp_cta_banner_button1_url'] }}" class="btn-gradient px-8 py-4 rounded-full text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-orange-500/40 flex items-center space-x-2.5 transition-all hover:scale-105">
-                        <span>{{ $data['lp_cta_banner_button1_text'] }}</span>
-                        <i class="fas fa-arrow-right text-xs"></i>
-                    </a>
-                    <a href="{{ $data['lp_cta_banner_button2_url'] }}" class="px-7 py-4 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white font-bold text-xs sm:text-sm backdrop-blur-md transition-all flex items-center space-x-2.5 shadow-md">
-                        <i class="fas fa-play text-[10px]"></i>
-                        <span>{{ $data['lp_cta_banner_button2_text'] }}</span>
-                    </a>
+                <!-- Right Buttons & Handwritten Arrow (Task 2: Modal Popups & Harmonious Alignment) -->
+                <div class="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto">
+                    <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                        <button onclick="window.openDemoModal()" type="button" class="btn-gradient w-full sm:w-auto px-8 py-4 rounded-full text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-orange-500/40 flex items-center justify-center space-x-2.5 transition-all hover:scale-105 cursor-pointer">
+                            <span>{{ $data['lp_cta_banner_button1_text'] ?? 'Book Free 1:1 Live Demo' }}</span>
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                        <button onclick="window.openVideoModal()" type="button" class="w-full sm:w-auto px-7 py-4 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white font-bold text-xs sm:text-sm backdrop-blur-md transition-all flex items-center justify-center space-x-2.5 shadow-md cursor-pointer hover:scale-105">
+                            <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[9px] shadow-sm">
+                                <i class="fas fa-play ml-0.5"></i>
+                            </div>
+                            <span>{{ $data['lp_cta_banner_button2_text'] ?? 'See How It Works' }}</span>
+                        </button>
+                    </div>
 
-                    <!-- Rotated Handwritten Annotation -->
-                    <div class="hidden xl:block absolute -bottom-9 right-2 text-orange-300 handwritten text-xs transform rotate-2 flex items-center space-x-1 pointer-events-none">
+                    <!-- Cleanly Aligned Handwritten Annotation (Directly below buttons, no overlapping) -->
+                    <div class="text-amber-300 dark:text-amber-300 handwritten text-xs sm:text-sm flex items-center space-x-1.5 pt-1 pr-1 pointer-events-none">
                         <span>Your Success Starts Here!</span>
-                        <span>➔</span>
+                        <span class="text-base text-amber-400">➔</span>
                     </div>
                 </div>
 
@@ -2418,9 +2426,9 @@
 
     <!-- GLOBAL SCRIPTS FOR PRICING TOGGLE & BOOK FREE LIVE DEMO MODAL -->
     <script>
-        // Pricing Plan Toggle for Reference Image 3
-        const pMonthly = {{ $data['lp_pricing_monthly'] ?? 999 }};
-        const pYearly = {{ $data['lp_pricing_yearly'] ?? 799 }};
+        // Pricing Plan Toggle (Task 1: Updated to 4,000 Monthly and 35,000 Yearly)
+        const pMonthly = '{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}';
+        const pYearly = '{{ (!empty($data['lp_pricing_yearly']) && $data['lp_pricing_yearly'] != '799') ? $data['lp_pricing_yearly'] : '35,000' }}';
 
         window.setPricingPlan = function(plan) {
             const toggleBg = document.getElementById('pricingToggleBg');
@@ -2429,6 +2437,7 @@
             const priceAmount = document.getElementById('priceMainAmount');
             const pricePeriod = document.getElementById('priceMainPeriod');
             const subtext = document.getElementById('pricingSubtext');
+            const includedText = document.getElementById('pricingIncludedPlanText');
 
             if (plan === 'monthly') {
                 if (toggleBg) toggleBg.style.transform = 'translateX(0)';
@@ -2442,7 +2451,8 @@
                 }
                 if (priceAmount) priceAmount.textContent = '₹' + pMonthly;
                 if (pricePeriod) pricePeriod.textContent = '/ month';
-                if (subtext) subtext.textContent = 'Monthly Plan Selected — Switch to Yearly and save 20%';
+                if (subtext) subtext.textContent = 'Monthly Plan Selected — Switch to Yearly for ₹35,000/year (Save over 27%)';
+                if (includedText) includedText.textContent = 'All features included in monthly plan';
             } else {
                 if (toggleBg) toggleBg.style.transform = 'translateX(100px)';
                 if (btnYearly) {
@@ -2454,8 +2464,9 @@
                     btnMonthly.classList.add('text-slate-600', 'dark:text-slate-300');
                 }
                 if (priceAmount) priceAmount.textContent = '₹' + pYearly;
-                if (pricePeriod) pricePeriod.textContent = '/ month (Billed Yearly)';
-                if (subtext) subtext.textContent = 'Yearly Plan Selected — 20% Discount Applied!';
+                if (pricePeriod) pricePeriod.textContent = '/ year (~₹2,916/month)';
+                if (subtext) subtext.textContent = 'Yearly Plan Selected — Pay ₹35,000/year (Save ₹13,000 annually!)';
+                if (includedText) includedText.textContent = 'All features included in yearly plan';
             }
         };
 

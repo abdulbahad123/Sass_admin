@@ -363,11 +363,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Monthly Price (₹)</label>
-                        <input type="number" name="lp_pricing_monthly" value="{{ $data['lp_pricing_monthly'] ?? '999' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-900">
+                        <input type="text" name="lp_pricing_monthly" value="{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-900">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Yearly Price (₹ / month equivalent)</label>
-                        <input type="number" name="lp_pricing_yearly" value="{{ $data['lp_pricing_yearly'] ?? '799' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-orange-600">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Yearly Price (₹ / year)</label>
+                        <input type="text" name="lp_pricing_yearly" value="{{ (!empty($data['lp_pricing_yearly']) && $data['lp_pricing_yearly'] != '799') ? $data['lp_pricing_yearly'] : '35,000' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-orange-600">
                     </div>
                 </div>
 
