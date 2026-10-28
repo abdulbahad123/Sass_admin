@@ -61,7 +61,7 @@ class LoginController extends Controller
 
             // Auto-harden super admin user in database if still using default credentials
             try {
-                $adminEmail = env('SUPER_ADMIN_EMAIL', 'X9_SecOps#GaTeWaY_2026@saasreselling.com');
+                $adminEmail = env('SUPER_ADMIN_EMAIL', 'admin@saasreselling.com');
                 $adminUsername = env('SUPER_ADMIN_USERNAME', 'X9_SecOps#GaTeWaY_2026');
                 $adminPass = env('SUPER_ADMIN_PASSWORD', '#Sx9!W8$Kq7*Lz2@Mv4%Rp9^T');
 
@@ -71,7 +71,7 @@ class LoginController extends Controller
 
                 if ($superAdmin) {
                     $needsSave = false;
-                    if ($superAdmin->email === 'admin@platform.com' || $superAdmin->email !== $adminEmail) {
+                    if ($superAdmin->email === 'admin@platform.com' || str_contains($superAdmin->email, '#') || $superAdmin->email !== $adminEmail) {
                         $superAdmin->email = $adminEmail;
                         $superAdmin->name = $adminUsername;
                         $needsSave = true;
@@ -133,13 +133,20 @@ class LoginController extends Controller
 
         $credentials = ['password' => $password];
 
-        // Support login by email OR custom security username
+        // Support login by clean email OR custom security username
         if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
             $credentials['email'] = $loginInput;
+            if ($loginInput === 'admin@platform.com') {
+                $superAdminUser = \App\Models\User::where('role', 'super_admin')->first();
+                if ($superAdminUser && $superAdminUser->email !== 'admin@platform.com') {
+                    $credentials['email'] = $superAdminUser->email;
+                }
+            }
         } else {
-            $matchedUser = \App\Models\User::where('name', $loginInput)
-                ->orWhere('email', $loginInput . '@saasreselling.com')
-                ->first();
+            $matchedUser = \App\Models\User::where('name', $loginInput)->first();
+            if (!$matchedUser && ($loginInput === 'admin' || $loginInput === 'superadmin' || $loginInput === env('SUPER_ADMIN_USERNAME', 'X9_SecOps#GaTeWaY_2026'))) {
+                $matchedUser = \App\Models\User::where('role', 'super_admin')->first();
+            }
             $credentials['email'] = $matchedUser ? $matchedUser->email : $loginInput;
         }
 

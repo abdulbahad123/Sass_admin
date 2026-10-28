@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             ['role' => 'super_admin'],
             [
                 'name' => env('SUPER_ADMIN_USERNAME', 'X9_SecOps#GaTeWaY_2026'),
-                'email' => env('SUPER_ADMIN_EMAIL', 'X9_SecOps#GaTeWaY_2026@saasreselling.com'),
+                'email' => env('SUPER_ADMIN_EMAIL', 'admin@saasreselling.com'),
                 'password' => Hash::make(env('SUPER_ADMIN_PASSWORD', '#Sx9!W8$Kq7*Lz2@Mv4%Rp9^T')),
                 'role' => 'super_admin',
                 'status' => 'active',
