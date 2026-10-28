@@ -133,8 +133,16 @@ Route::get('/privacy', function() { return redirect()->route('agency.privacy'); 
 Route::get('/refund', function() { return redirect()->route('agency.refund'); });
 Route::get('/shipping', function() { return redirect()->route('agency.shipping'); });
 
-// Authentication Routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Authentication Routes — Protected Secret Admin URL (/F7_AdMn-GaTeWaY_9x)
+$adminLoginSlug = env('ADMIN_LOGIN_SLUG', 'F7_AdMn-GaTeWaY_9x');
+Route::get('/' . $adminLoginSlug, [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/' . $adminLoginSlug, [LoginController::class, 'login']);
+
+// Standard /login blocked with 404 to hide admin portal from scanners & bots
+Route::any('/login', function () {
+    abort(404);
+});
+
 Route::get('/whitelabel-panel/login', [LoginController::class, 'showLoginForm'])->name('whitelabel.login');
 Route::get('/agency-portal/login', [LoginController::class, 'showLoginForm'])->name('agency.login');
 Route::get('/agency_portal/login', [LoginController::class, 'showLoginForm']);
@@ -188,7 +196,6 @@ Route::get('/agency-sso-login', function (\Illuminate\Http\Request $request) {
 Route::get('/sso-agency-login', function (\Illuminate\Http\Request $request) {
     return redirect()->to('/agency-sso-login?' . http_build_query($request->all()));
 });
-Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Super Admin Restricted Routes

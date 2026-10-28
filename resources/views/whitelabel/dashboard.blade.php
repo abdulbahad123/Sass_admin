@@ -455,19 +455,33 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-                <!-- SVG World Map graphic -->
-                <div class="sm:col-span-7 h-32 flex items-center justify-center">
-                    <svg class="w-full h-full text-indigo-200 opacity-80" viewBox="0 0 200 100" fill="currentColor">
-                        <!-- Simplified World Map Polygons -->
-                        <path d="M20 30 Q30 20 45 35 T70 40 T50 70 T20 50 Z" class="text-indigo-300" />
-                        <path d="M90 25 Q110 15 130 30 T150 45 T120 75 T90 50 Z" class="text-indigo-400" />
-                        <path d="M140 60 Q160 50 185 65 T170 85 Z" class="text-indigo-300" />
-                        <!-- Pin Markers -->
-                        <circle cx="110" cy="45" r="3.5" class="fill-indigo-600 animate-ping" />
-                        <circle cx="110" cy="45" r="3" class="fill-indigo-600" />
-                        <circle cx="45" cy="35" r="3" class="fill-violet-600" />
-                        <circle cx="130" cy="30" r="3" class="fill-purple-600" />
-                        <circle cx="165" cy="70" r="3" class="fill-indigo-500" />
+                <!-- SVG India Map graphic with State Pin Markers -->
+                <div class="sm:col-span-7 h-32 flex items-center justify-center relative">
+                    <svg class="w-full h-full text-indigo-200 opacity-90 drop-shadow-sm" viewBox="0 0 200 120" fill="currentColor">
+                        <!-- Stylized India Geometric Outline -->
+                        <!-- Northern region (Kashmir/Himachal/Punjab) -->
+                        <path d="M96 10 L108 16 L116 26 L104 34 L92 32 L86 22 Z" class="text-indigo-300" opacity="0.85" />
+                        <!-- Central & Western region (Gujarat/Rajasthan/Maharashtra/MP) -->
+                        <path d="M86 22 L104 34 L118 40 L112 60 L86 64 L70 52 L66 40 L78 30 Z" class="text-indigo-400" opacity="0.9" />
+                        <!-- Eastern region (Bengal/Odisha/Bihar/NE) -->
+                        <path d="M118 40 L136 36 L154 40 L146 52 L128 56 L112 60 Z" class="text-indigo-300" opacity="0.8" />
+                        <!-- Southern peninsula (Karnataka/AP/TN/Kerala) -->
+                        <path d="M86 64 L112 60 L108 82 L100 102 L92 82 Z" class="text-indigo-400" opacity="0.95" />
+
+                        <!-- Dynamic Pin Markers for Key Indian States -->
+                        <!-- Maharashtra (Mumbai/Pune) -->
+                        <circle cx="84" cy="60" r="4.5" class="fill-indigo-600 animate-ping opacity-75" />
+                        <circle cx="84" cy="60" r="3" class="fill-indigo-600" />
+                        <!-- Delhi (NCR) -->
+                        <circle cx="98" cy="32" r="3" class="fill-violet-600" />
+                        <!-- Karnataka (Bangalore) -->
+                        <circle cx="96" cy="76" r="3" class="fill-sky-500" />
+                        <!-- Gujarat (Ahmedabad) -->
+                        <circle cx="74" cy="46" r="3" class="fill-emerald-500" />
+                        <!-- Tamil Nadu (Chennai) -->
+                        <circle cx="104" cy="84" r="3" class="fill-amber-500" />
+                        <!-- West Bengal (Kolkata) -->
+                        <circle cx="132" cy="48" r="3" class="fill-purple-500" />
                     </svg>
                 </div>
 
@@ -475,11 +489,11 @@
                 <div id="clientDistributionList" class="sm:col-span-5 space-y-1.5 text-xs">
                     @foreach($clientDistribution as $dist)
                         <div class="flex items-center justify-between text-[11px]">
-                            <span class="flex items-center text-slate-600 font-medium">
-                                <span class="w-2 h-2 rounded-full mr-1.5" style="background-color: {{ $dist['color'] }}"></span>
-                                {{ $dist['country'] }}
+                            <span class="flex items-center text-slate-600 font-medium truncate max-w-[100px]" title="{{ $dist['state'] ?? $dist['country'] }}">
+                                <span class="w-2 h-2 rounded-full mr-1.5 flex-shrink-0" style="background-color: {{ $dist['color'] }}"></span>
+                                <span class="truncate">{{ $dist['state'] ?? $dist['country'] }}</span>
                             </span>
-                            <span class="font-bold text-slate-900">{{ $dist['count'] }} <span class="text-slate-400 font-normal text-[10px]">({{ $dist['percentage'] }}%)</span></span>
+                            <span class="font-bold text-slate-900 whitespace-nowrap">{{ $dist['count'] }} <span class="text-slate-400 font-normal text-[10px]">({{ $dist['percentage'] }}%)</span></span>
                         </div>
                     @endforeach
                 </div>
@@ -759,17 +773,26 @@
             } else if (data.section === 'client_distribution' && data.distribution) {
                 const list = document.getElementById('clientDistributionList');
                 if (list) {
-                    const colors = { 'India': '#6366F1', 'USA': '#818CF8', 'UK': '#A5B4FC', 'Australia': '#C7D2FE', 'Others': '#E0E7FF' };
+                    const defaultColors = { 
+                        'Maharashtra': '#6366F1', 
+                        'Delhi': '#818CF8', 
+                        'Karnataka': '#0EA5E9', 
+                        'Gujarat': '#10B981', 
+                        'Tamil Nadu': '#F59E0B', 
+                        'Uttar Pradesh': '#EC4899',
+                        'Others': '#94A3B8' 
+                    };
                     let html = '';
                     data.distribution.forEach(d => {
-                        const col = colors[d.country] || '#E0E7FF';
+                        const stateName = d.state || d.country;
+                        const col = d.color || defaultColors[stateName] || '#6366F1';
                         html += `
                         <div class="flex items-center justify-between text-[11px]">
-                            <span class="flex items-center text-slate-600 font-medium">
-                                <span class="w-2 h-2 rounded-full mr-1.5" style="background-color: ${col}"></span>
-                                ${d.country}
+                            <span class="flex items-center text-slate-600 font-medium truncate max-w-[100px]" title="${stateName}">
+                                <span class="w-2 h-2 rounded-full mr-1.5 flex-shrink-0" style="background-color: ${col}"></span>
+                                <span class="truncate">${stateName}</span>
                             </span>
-                            <span class="font-bold text-slate-900">${d.count} <span class="text-slate-400 font-normal text-[10px]">(${d.percentage}%)</span></span>
+                            <span class="font-bold text-slate-900 whitespace-nowrap">${d.count} <span class="text-slate-400 font-normal text-[10px]">(${d.percentage}%)</span></span>
                         </div>`;
                     });
                     list.innerHTML = html;
