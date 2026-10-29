@@ -949,7 +949,7 @@
 
 
 {{-- ══ SECTION 5: FLAGSHIP PRODUCTS SHOWCASE (3 Products, Launch Product CTA) ══ --}}
-<section id="products" class="products-section" style="padding:80px 0 90px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
+<section id="products" class="products-section" style="padding:80px 0 36px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
     <div id="pricing"></div>
     <div style="max-width:1240px; margin:0 auto; padding:0 24px;">
 
@@ -1120,11 +1120,11 @@
 
 
 {{-- ══ SECTION 6: HOW IT WORKS (Enhanced Attractive UI/UX) ═════════════════ --}}
-<section id="how-it-works" style="background: linear-gradient(180deg, #f8faff 0%, #edf1ff 100%); padding: 90px 0; overflow: visible; position: relative;">
+<section id="how-it-works" style="background: linear-gradient(180deg, #f8faff 0%, #edf1ff 100%); padding: 48px 0 84px; overflow: visible; position: relative;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px">
         
         {{-- Section Title & Badge --}}
-        <div style="text-align: center; margin-bottom: 64px">
+        <div style="text-align: center; margin-bottom: 40px">
             <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.1)); color: #4f46e5; border: 1.5px solid rgba(79,70,229,0.22); font-size: 12px; font-weight: 900; padding: 7px 22px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em;">
                 <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #4f46e5;"></i>
                 <span>SIMPLE 3-STEP PROCESS</span>
@@ -1516,7 +1516,9 @@
             {{-- Col 1: Brand Info & Socials --}}
             <div style="display:flex;flex-direction:column;gap:16px">
                 <div style="display:flex;align-items:center;gap:12px">
-                    @if(!empty($agency->logo_dark))
+                    @if(!empty($agency->footer_logo ?? ''))
+                        <img src="{{ asset(ltrim($agency->footer_logo, '/')) }}" alt="{{ $agencyName }}" style="height:64px;max-height:68px;width:auto;object-fit:contain">
+                    @elseif(!empty($agency->logo_dark))
                         <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                         <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                     @elseif(!empty($agency->logo))

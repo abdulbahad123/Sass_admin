@@ -854,7 +854,9 @@
                 {{-- Col 1: Brand Info & Socials --}}
                 <div style="display:flex;flex-direction:column;gap:16px">
                     <div style="display:flex;align-items:center;gap:12px">
-                        @if(!empty($agency->logo_dark))
+                        @if(!empty($agency->footer_logo ?? ''))
+                            <img src="{{ asset(ltrim($agency->footer_logo, '/')) }}" alt="{{ $agencyName }}" style="height:64px;max-height:68px;width:auto;object-fit:contain">
+                        @elseif(!empty($agency->logo_dark))
                             <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                             <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                         @elseif(!empty($agency->logo))

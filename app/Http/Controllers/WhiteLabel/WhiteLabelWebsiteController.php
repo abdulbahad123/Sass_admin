@@ -129,6 +129,7 @@ class WhiteLabelWebsiteController extends Controller
             'twitter_url'      => 'nullable|string|max:500',
             'logo'             => $this->makeImageValidationRule(4096, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
             'logo_dark'        => $this->makeImageValidationRule(4096, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
+            'footer_logo'      => $this->makeImageValidationRule(4096, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
             'about_section_badge' => 'nullable|string|max:255',
             'favicon'          => $this->makeImageValidationRule(2048, ['ico', 'png', 'jpg', 'svg']),
             'hero_image'       => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
@@ -144,6 +145,11 @@ class WhiteLabelWebsiteController extends Controller
         if ($request->hasFile('logo_dark')) {
             $saved = $this->saveSecureUpload($request->file('logo_dark'), 'logo_dark');
             if ($saved) $validated['logo_dark'] = $saved;
+        }
+
+        if ($request->hasFile('footer_logo')) {
+            $saved = $this->saveSecureUpload($request->file('footer_logo'), 'footer_logo');
+            if ($saved) $validated['footer_logo'] = $saved;
         }
 
         if ($request->hasFile('favicon')) {
@@ -252,7 +258,7 @@ class WhiteLabelWebsiteController extends Controller
             $validated['sections_enabled'] = json_encode($request->input('sections'));
         }
 
-        // Auto-safeguard for logo_dark & about_section_badge if migration has not run on production DB yet
+        // Auto-safeguard for logo_dark, footer_logo & about_section_badge if migration has not run on production DB yet
         try {
             if (isset($validated['logo_dark']) && !\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'logo_dark')) {
                 \Illuminate\Support\Facades\Schema::table('agencies', function ($table) {
@@ -262,6 +268,18 @@ class WhiteLabelWebsiteController extends Controller
         } catch (\Throwable $e) {
             if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'logo_dark')) {
                 unset($validated['logo_dark']);
+            }
+        }
+
+        try {
+            if (isset($validated['footer_logo']) && !\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'footer_logo')) {
+                \Illuminate\Support\Facades\Schema::table('agencies', function ($table) {
+                    $table->string('footer_logo')->nullable()->after('logo_dark');
+                });
+            }
+        } catch (\Throwable $e) {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'footer_logo')) {
+                unset($validated['footer_logo']);
             }
         }
 
