@@ -128,6 +128,8 @@ class WhiteLabelWebsiteController extends Controller
             'linkedin_url'     => 'nullable|string|max:500',
             'twitter_url'      => 'nullable|string|max:500',
             'logo'             => $this->makeImageValidationRule(4096, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
+            'logo_dark'        => $this->makeImageValidationRule(4096, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
+            'about_section_badge' => 'nullable|string|max:255',
             'favicon'          => $this->makeImageValidationRule(2048, ['ico', 'png', 'jpg', 'svg']),
             'hero_image'       => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
             'about_image'      => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
@@ -137,6 +139,11 @@ class WhiteLabelWebsiteController extends Controller
         if ($request->hasFile('logo')) {
             $saved = $this->saveSecureUpload($request->file('logo'), 'logo');
             if ($saved) $validated['logo'] = $saved;
+        }
+
+        if ($request->hasFile('logo_dark')) {
+            $saved = $this->saveSecureUpload($request->file('logo_dark'), 'logo_dark');
+            if ($saved) $validated['logo_dark'] = $saved;
         }
 
         if ($request->hasFile('favicon')) {

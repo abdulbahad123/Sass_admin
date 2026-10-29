@@ -13,6 +13,11 @@
         @csrf
         <div class="card-white rounded-2xl p-6 space-y-4">
             <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">About Section Badge / Top Pill</label>
+                <input type="text" name="about_section_badge" value="{{ old('about_section_badge', $agency->about_section_badge ?? 'About Us') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500" placeholder="e.g. About Us or Built For Scale">
+            </div>
+
+            <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">About Main Heading</label>
                 <input type="text" name="about_title" value="{{ old('about_title', $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500" placeholder="e.g. Built for entrepreneurs, by entrepreneurs.">
             </div>

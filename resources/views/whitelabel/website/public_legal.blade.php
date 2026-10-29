@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
         // Immediate dark mode initialization to prevent flash
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -321,6 +321,13 @@
         html.dark .about-stat-card p {
             color: #94a3b8 !important;
         }
+    
+        /* Light/Dark Logo Display */
+        html.dark .site-logo-light { display: none !important; }
+        html.dark .site-logo-dark { display: block !important; }
+        html:not(.dark) .site-logo-light { display: block !important; }
+        html:not(.dark) .site-logo-dark { display: none !important; }
+
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
@@ -335,14 +342,19 @@
         <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px">
 
             {{-- Logo --}}
-            <a href="{{ url('/') }}" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+            <a href="{{ url('/') }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0">
                 @if(!empty($agency->logo))
-                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:50px;width:auto;object-fit:contain">
+                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-light" style="height:62px;max-height:64px;width:auto;max-width:240px;object-fit:contain">
+                @endif
+                @if(!empty($agency->logo_dark))
+                    <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:62px;max-height:64px;width:auto;max-width:240px;object-fit:contain">
+                @elseif(!empty($agency->logo))
+                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:62px;max-height:64px;width:auto;max-width:240px;object-fit:contain">
                 @else
-                    <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center">
+                    <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center">
                         <i class="fas fa-layer-group text-white text-base"></i>
                     </div>
-                    <span class="logo-text" style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name ?? $agencyName }}</span>
+                    <span class="logo-text" style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name ?? $agencyName }}</span>
                 @endif
             </a>
 
@@ -358,13 +370,12 @@
 
             {{-- Desktop CTAs (Includes Light/Dark Mode Switcher) --}}
             <div class="hidden sm:flex items-center space-x-3">
-                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn" style="width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
+                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn" style="width:40px;height:40px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
                     <i class="fas fa-moon" id="moonIcon" style="font-size:15px"></i>
                     <i class="fas fa-sun" id="sunIcon" style="font-size:15px;color:#fbbf24;display:none;"></i>
                 </button>
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="text-white text-xs font-extrabold px-6 py-2.5 rounded-full shadow-lg transition-all" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
-                    {{ $agency->cta_text ?? 'Start Free Today' }}
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services' }}" class="text-white text-xs font-extrabold px-6 py-2.5 rounded-full shadow-lg transition-all" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
+                    {{ !empty($agency->cta_text) && $agency->cta_text !== 'Start Free Today' ? $agency->cta_text : 'Enquire' }}
                 </a>
             </div>
 
@@ -402,9 +413,8 @@
             </div>
 
             <div class="pt-2 border-t border-slate-100 space-y-2">
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700">Login</a>
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
-                    {{ $agency->cta_text ?? 'Start Free Today' }}
+                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
+                    {{ !empty($agency->cta_text) && $agency->cta_text !== 'Start Free Today' ? $agency->cta_text : 'Enquire' }}
                 </a>
             </div>
         </div>
@@ -417,11 +427,19 @@
             <!-- Page Header Bar -->
             <div class="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <span class="badge-pill mb-2">
-                        Official Policy Document
-                    </span>
-                    <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-space tracking-tight">{{ $pageTitle }}</h1>
-                    <p class="text-xs text-slate-500 mt-1.5 font-medium">Effective Date: {{ date('F d, Y') }} — {{ $agencyName }}</p>
+                    @if($type === 'about')
+                        <span class="badge-pill mb-2">
+                            {{ $agency->about_section_badge ?? 'About Us' }}
+                        </span>
+                        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-space tracking-tight">{{ $agency->about_title ?? ($agency->name ?? $agencyName) }}</h1>
+                        <p class="text-sm text-slate-500 mt-1.5 font-medium">{{ $agency->about_mission ?? 'Learn more about our vision, team, and story' }}</p>
+                    @else
+                        <span class="badge-pill mb-2">
+                            Official Policy Document
+                        </span>
+                        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-space tracking-tight">{{ $pageTitle }}</h1>
+                        <p class="text-xs text-slate-500 mt-1.5 font-medium">Effective Date: {{ date('F d, Y') }} — {{ $agencyName }}</p>
+                    @endif
                 </div>
                 <a href="{{ url('/') }}" class="back-home-btn self-start sm:self-auto inline-flex items-center space-x-2 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 px-4 py-2.5 rounded-2xl transition-all">
                     <i class="fas fa-arrow-left text-xs"></i>
@@ -442,43 +460,43 @@
                 
                 @if($type === 'about')
                     <!-- ABOUT US PAGE CONTENT -->
-                    <div class="space-y-8">
+                    <div class="space-y-10">
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                            <div class="lg:col-span-7 space-y-4">
-                                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-space">
-                                    {{ $agency->about_title ?? 'Empower Your Business With White-Label SaaS Solutions.' }}
+                            <div class="lg:col-span-7 space-y-5">
+                                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-space leading-tight">
+                                    {{ $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.' }}
                                 </h2>
-                                @if(!empty($agency->about_content))
-                                    <p class="text-slate-600 leading-relaxed font-medium">
-                                        {{ $agency->about_content }}
-                                    </p>
-                                @endif
-                                <p class="text-slate-600 leading-relaxed font-medium">
-                                    {{ $agency->about_mission ?? 'Our mission is to help agencies and business owners launch, operate, and scale profitable SaaS software platforms under their custom brand identity.' }}
+                                <p class="text-slate-700 dark:text-slate-100 text-base sm:text-lg leading-relaxed font-semibold">
+                                    {{ $agency->about_mission ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.' }}
                                 </p>
+                                @if(!empty($agency->about_content))
+                                    <div class="text-slate-600 dark:text-slate-200 text-sm sm:text-base leading-relaxed space-y-3 font-normal">
+                                        {!! nl2br(e($agency->about_content)) !!}
+                                    </div>
+                                @endif
                             </div>
                             <div class="lg:col-span-5">
-                                <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}" class="w-full h-auto rounded-2xl border border-slate-200 shadow-md object-cover">
+                                <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}" class="w-full h-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl object-cover">
                             </div>
                         </div>
 
                         <!-- 4 Stats Grid -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
-                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">10,000+</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Active Partners</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
+                            <div class="about-stat-card bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 text-center space-y-1.5 shadow-sm">
+                                <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-space gradient-text">10,000+</h4>
+                                <p class="text-xs font-bold text-slate-600 dark:text-slate-300">Active Partners</p>
                             </div>
-                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">1M+</h4>
-                                <p class="text-[11px] font-bold text-slate-500">End Users Served</p>
+                            <div class="about-stat-card bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 text-center space-y-1.5 shadow-sm">
+                                <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-space gradient-text">1M+</h4>
+                                <p class="text-xs font-bold text-slate-600 dark:text-slate-300">End Users Served</p>
                             </div>
-                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">500K+</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Subscriptions Managed</p>
+                            <div class="about-stat-card bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 text-center space-y-1.5 shadow-sm">
+                                <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-space gradient-text">500K+</h4>
+                                <p class="text-xs font-bold text-slate-600 dark:text-slate-300">Subscriptions Managed</p>
                             </div>
-                            <div class="about-stat-card bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-center space-y-1">
-                                <h4 class="text-2xl font-black text-slate-900 font-space gradient-text">99.9%</h4>
-                                <p class="text-[11px] font-bold text-slate-500">Uptime Guarantee</p>
+                            <div class="about-stat-card bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 text-center space-y-1.5 shadow-sm">
+                                <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-space gradient-text">99.9%</h4>
+                                <p class="text-xs font-bold text-slate-600 dark:text-slate-300">Uptime Guarantee</p>
                             </div>
                         </div>
                     </div>
@@ -598,9 +616,12 @@
 
                 {{-- Col 1: Brand & Social --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
-                    <div style="display:flex;align-items:center;gap:10px">
-                        @if(!empty($agency->logo))
-                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:50px;width:auto">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        @if(!empty($agency->logo_dark))
+                            <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-light" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                        @elseif(!empty($agency->logo))
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:60px;max-height:64px;width:auto;object-fit:contain">
                         @else
                             <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#e2e8f0">{{ $agency->name ?? $agencyName }}</span>
                         @endif

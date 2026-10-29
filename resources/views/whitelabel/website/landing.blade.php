@@ -93,6 +93,15 @@
                         <img src="{{ asset(ltrim($agency->favicon, '/')) }}" alt="Favicon" class="h-6 mt-2 object-contain">
                     @endif
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Dark Mode Logo (Optional)</label>
+                    <input type="file" name="logo_dark" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    @if(!empty($agency->logo_dark))
+                        <div class="bg-slate-900 p-2 rounded-xl mt-2 inline-block">
+                            <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="Dark Logo" class="h-8 object-contain">
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -203,6 +212,10 @@
                 <span class="text-[11px] text-slate-400 font-normal">Controls the dark "Built for entrepreneurs" card</span>
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">About Section Badge / Top Pill</label>
+                    <input type="text" name="about_section_badge" value="{{ old('about_section_badge', $agency->about_section_badge ?? 'About Us') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500" placeholder="e.g. About Us">
+                </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">About Main Heading</label>
                     <input type="text" name="about_title" value="{{ old('about_title', $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">

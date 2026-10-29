@@ -20,6 +20,12 @@
         tailwind.config = {
             darkMode: 'class',
         }
+        // Strict light mode default — ONLY activate dark mode if user explicitly selected it
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -215,6 +221,12 @@
         .btn-outline:hover { background: #f8fafc; }
 
         /* ── HEADER ── */
+        /* ── LOGO SWITCHING (Light default & Dark mode support) ── */
+        .site-logo-dark { display: none !important; }
+        .site-logo-light { display: block !important; }
+        html.dark .site-logo-dark { display: block !important; }
+        html.dark .site-logo-light { display: none !important; }
+
         .site-header {
             position: sticky; top: 0; z-index: 50;
             background: rgba(255,255,255,.96);
@@ -222,7 +234,7 @@
             border-bottom: 1px solid #f1f5f9;
             box-shadow: 0 1px 3px 0 rgba(0,0,0,.04);
         }
-        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; min-height: 76px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 
         /* ── CATEGORY PILL ── */
         .cat-pill {
@@ -545,347 +557,74 @@
     <div class="star-dot" style="left: 85%; width: 3px; height: 3px; animation-duration: 26s; animation-delay: 12s;"></div>
 </div>
 
-{{-- ══ ANNOUNCEMENT BAR ══════════════════════════════════ --}}
-<div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
-    🎉 Special Offer: Get Started with <strong>{{ $agency->name }}</strong> Today &amp; Automate Your Business!
-</div>
-
-{{-- ══ HEADER ════════════════════════════════════════════ --}}
-<header class="site-header">
-    <div class="header-inner">
-
-        {{-- Logo --}}
-        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
-            @if(!empty($agency->logo))
-                <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:50px;width:auto;object-fit:contain">
-            @else
-                <div class="bg-brand" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center">
-                    <i data-lucide="layers" style="width:18px;height:18px;color:#fff"></i>
-                </div>
-                <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.5px">{{ $agency->name }}</span>
-            @endif
-        </a>
-
-        {{-- Desktop Nav --}}
-        <nav style="display:none" class="lg-nav">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#how-it-works','How It Works'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
-                <a href="{{ $href }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">{{ $label }}</a>
-            @endforeach
-        </nav>
-
-        {{-- Desktop CTAs --}}
-        <div class="desktop-ctas" style="display:flex;align-items:center;gap:10px">
-            <button onclick="toggleTheme()" style="width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
-                <i data-lucide="moon" id="moonIcon" style="width:16px;height:16px"></i>
-                <i data-lucide="sun" id="sunIcon" style="width:16px;height:16px;color:#fbbf24;display:none;"></i>
-            </button>
-            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;padding:6px 12px">Login</a>
-            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-brand" style="border-radius:10px;padding:11px 20px;font-size:13px;font-weight:800">
-                {{ $agency->cta_text ?? 'Get Started Free' }}
-            </a>
-        </div>
-
-        {{-- Mobile hamburger --}}
-        <button onclick="toggleMobileMenu()" class="mobile-ham" style="display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:10px" aria-label="Menu">
-            <i data-lucide="menu" style="width:24px;height:24px;color:#475569" id="ham-icon"></i>
-        </button>
-    </div>
-
-    {{-- Mobile Menu --}}
-    <div id="mobile-menu" style="background:#fff;border-top:1px solid #f1f5f9;padding:20px 20px 24px">
-        <nav style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#how-it-works','How It Works'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
-                <a href="{{ $href }}" onclick="toggleMobileMenu()" style="font-size:14px;font-weight:700;color:#334155;text-decoration:none">{{ $label }}</a>
-            @endforeach
-        </nav>
-        <div style="display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid #f1f5f9">
-            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" style="text-align:center;font-size:14px;font-weight:700;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px;text-decoration:none">Login</a>
-            <a href="https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business" class="btn-brand" style="justify-content:center;border-radius:12px">{{ $agency->cta_text ?? 'Get Started Free' }}</a>
-        </div>
-    </div>
-</header>
-
-
-<section style="background:#f0efff; padding:72px 0 90px; overflow:hidden; position:relative;">
-    {{-- Soft decorative glow blobs --}}
-    <div style="position:absolute;top:-120px;right:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.18) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
-    <div style="position:absolute;bottom:-80px;left:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.10) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
-
-    <div style="max-width:1200px; margin:0 auto; padding:0 24px; position:relative; z-index:1;">
-        <div style="display:grid; grid-template-columns:42% 58%; gap:48px; align-items:center;" class="hero-grid">
-
-            {{-- Left --}}
-            <div style="display:flex; flex-direction:column; gap:28px;">
-
-                {{-- Badge --}}
-                <span style="display:inline-flex; align-items:center; gap:8px; background:rgba(109,40,217,.1); border:1px solid rgba(109,40,217,.2); color:#5b21b6; padding:7px 16px; border-radius:999px; font-size:12px; font-weight:700; width:fit-content; letter-spacing:.01em">
-                    {{ $agency->hero_badge ?? '⚡ All-in-One Growth Platform for Indian Businesses' }}
-                </span>
-
-                {{-- Headline --}}
-                <h1 style="font-size:clamp(1.8rem,3.8vw,3.2rem); font-weight:900; color:#0f172a; line-height:1.15; letter-spacing:-.8px; margin:0">
-                    {!! !empty($agency->hero_title) ? nl2br(e($agency->hero_title)) : 'Grow, Manage &<br>Automate Your<br>Business — <span class="text-brand">All in One Place</span><br>Scale. All in One' !!}
-                </h1>
-
-                {{-- Subtitle --}}
-                <p style="font-size:15px; color:#475569; line-height:1.8; max-width:460px; margin:0; text-align:justify;">
-                    {{ $agency->hero_subtitle ?? ($agency->name . ' helps Indian businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation – all in one place.') }}
-                </p>
-
-                {{-- CTA Buttons --}}
-                <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-                    <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}"
-                       style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14px; padding:15px 30px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
-                       onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
-                       onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
-                        {{ !empty($agency->cta_text) ? $agency->cta_text : 'Start Your Free Trial' }}
-                        <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
-                    </a>
-                    <a href="#how-it-works" class="btn-outline"
-                       style="display:inline-flex; align-items:center; gap:10px; background:#fff; color:#1e293b; font-weight:700; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; border:1.5px solid #e2e8f0; transition:all .2s; white-space:nowrap;"
-                       onmouseover="this.style.borderColor='#a5b4fc';this.style.background='#fafafa'"
-                       onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#fff'">
-                        <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--brand-primary);"><i data-lucide="play" style="width:10px;height:10px;color:#fff;margin-left:2px"></i></span>
-                        Book a Live Demo
-                    </a>
-                </div>
-
-                {{-- Trust badges --}}
-                <div style="display:flex; flex-wrap:wrap; gap:22px; font-size:12.5px; font-weight:700; color:#64748b; margin-top:-4px;">
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="check-circle" style="width:15px;height:15px;color:var(--brand-primary)"></i> No Credit Card</span>
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="zap" style="width:15px;height:15px;color:var(--brand-primary)"></i> Easy Setup</span>
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="refresh-cw" style="width:15px;height:15px;color:var(--brand-primary)"></i> Cancel Anytime</span>
-                </div>
+{{-- ══ WHY CHOOSE — 4 Feature Cards ═════════════════════════ --}}
+<section id="features" style="background: linear-gradient(180deg, #f5f4ff 0%, #faf8ff 100%); padding: 84px 0; border-bottom: 1px solid #f1f5f9;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+        <div style="text-align: center; margin-bottom: 56px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(249,115,22,0.12)); color: #7c3aed; border: 1.5px solid rgba(124,58,237,0.25); font-size: 13px; font-weight: 900; padding: 8px 24px; border-radius: 999px; margin-bottom: 16px; letter-spacing: .06em; text-transform: uppercase;">
+                <i data-lucide="award" style="width: 16px; height: 16px; color: #7c3aed;"></i>
+                <span>WHY CHOOSE US</span>
             </div>
-
-                        {{-- Right: Dashboard image with animated circles and floating elements --}}
-            <div style="display:flex; justify-content:center; position:relative; width:100%;">
-                {{-- Animated Concentric Circles --}}
-                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:350px; height:350px; border:1px solid rgba(167,139,250,0.3); border-radius:50%; animation: pulseCircle 4s infinite ease-in-out;"></div>
-                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:500px; height:500px; border:1px solid rgba(167,139,250,0.15); border-radius:50%; animation: pulseCircle 4s infinite ease-in-out 1s;"></div>
-                
-                {{-- Hero Image --}}
-                <img src="{{ $heroImg }}" alt="{{ $agency->name }} Dashboard"
-                     style="position:relative;z-index:2;width:100%;max-width:850px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15)); margin-right:-20px;">
-
-                {{-- Floating Element 1 (Top-Right): AI Powered --}}
-                <div class="badge-top-right" style="position:absolute; top:20px; right:-35px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #7c3aed, #4f46e5); display:flex; align-items:center; justify-content:center;">
-                        <i data-lucide="sparkles" style="width:18px; height:18px; color:#fff;"></i>
-                    </div>
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:14px; font-weight:800; color:#fff;">AI Powered</span>
-                        <span style="font-size:12px; font-weight:600; color:#a78bfa;">Smart automation</span>
-                    </div>
-                </div>
-
-                {{-- Floating Element 2 (Bottom-Left): Growth Ready --}}
-                <div class="badge-bot-left" style="position:absolute; bottom:40px; left:-25px; z-index:10; background:rgba(30, 41, 59, 0.9); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #10b981, #059669); display:flex; align-items:center; justify-content:center;">
-                        <i data-lucide="trending-up" style="width:18px; height:18px; color:#fff;"></i>
-                    </div>
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:14px; font-weight:800; color:#fff;">Growth Ready</span>
-                        <span style="font-size:12px; font-weight:600; color:#34d399;">Scale instantly</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-{{-- ══ BUILT FOR ENTREPRENEURS — features_leftside + KB Floating Elements ══ --}}
-<section id="about-section" class="about-section" style="padding:72px 0; background: transparent; overflow: hidden;">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-        
-        <div style="background: #0f172a; border-radius: 28px; padding: 48px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center" class="about-grid">
-                
-                {{-- LEFT SIDE: Text and Features --}}
-                <div style="display:flex; flex-direction:column; gap:24px;">
-                    <h2 style="font-size:clamp(1.8rem,3vw,2.4rem); font-weight:900; color:#ffffff; line-height:1.2; letter-spacing:-0.5px;">
-                        {{ $agency->about_title ?? 'Built for entrepreneurs, by entrepreneurs.' }}
-                    </h2>
-                    
-                    <p style="font-size:15px; color:#94a3b8; line-height:1.8; max-width:500px; margin:0;">
-                        {{ $agency->about_mission ?? $agency->about_content ?? 'Our mission is to help Indian entrepreneurs automate repetitive operations, boost sales revenue, build customer loyalty, and scale seamlessly without juggling multiple expensive tools.' }}
-                    </p>
-
-                    <div style="display:flex; flex-direction:column; gap:20px; margin-top:10px;">
-                        @foreach($aboutFeatures as $af)
-                        <div style="display:flex; gap:16px; align-items:flex-start;">
-                            <div style="width:40px; height:40px; border-radius:12px; background:rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <i data-lucide="{{ $af['icon'] ?? 'zap' }}" style="width:18px; height:18px; color:#f97316;"></i>
-                            </div>
-                            <div>
-                                <h4 style="color:#ffffff; font-size:14px; font-weight:800; margin-bottom:4px;">{{ $af['title'] }}</h4>
-                                <p style="color:#94a3b8; font-size:12.5px; line-height:1.6; margin:0;">{{ $af['desc'] }}</p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- RIGHT SIDE: Image --}}
-                <div style="display:flex; justify-content:flex-end;">
-                    <img src="{{ $aboutImg }}" alt="About {{ $agency->name }}" style="width:100%; max-width:500px; height:auto; border-radius:20px; object-fit:contain; filter:drop-shadow(0 20px 30px rgba(0,0,0,0.3));">
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-</section>
-
-
-
-{{-- ══ TRUST BAR — Category Pills ════════════════════════ --}}
-<section style="background:#fff;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;padding:36px 0">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px;text-align:center">
-        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:20px">{{ $agency->trusted_businesses_title ?? 'Trusted by 10,000+ Local Businesses Across India' }}</p>
-        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
-            @foreach($categories as $cat)
-                <div class="cat-pill">
-                    <span class="cat-icon">{{ $cat['icon'] }}</span>
-                    <span>{{ $cat['label'] }}</span>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- ══ WHY CHOOSE — 4 Feature Cards (Pixel-Perfect 4th Reference) ═════════ --}}
-<section id="features" style="background:#f5f4ff; padding:72px 0">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-        <div style="text-align:center;margin-bottom:52px">
-            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#0f172a;margin-bottom:12px">{{ $agency->why_choose_title ?? ('Why Choose ' . $agency->name . '?') }}</h2>
-            <p style="font-size:14px;color:#64748b;max-width:600px;margin:0 auto;line-height:1.7">
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 4vw, 3.1rem); font-weight: 900; margin-bottom: 14px; line-height: 1.2; letter-spacing: -0.6px; color: #0f172a;">
+                Why Choose <span style="background: linear-gradient(135deg, #7c3aed 0%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ $agency->name }}</span>?
+            </h2>
+            <p style="font-size: 16.5px; color: #475569; max-width: 640px; margin: 0 auto; line-height: 1.8; font-weight: 500;">
                 {{ $agency->why_choose_subtitle ?? 'Everything you need to run, grow and scale your business — without juggling multiple tools.' }}
             </p>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px" class="feat-grid">
+        <div style="display: grid; grid-template-columns: repeat(4,1fr); gap: 24px;" class="feat-grid">
             @php
                 $featIconGradients = [
-                    0 => 'linear-gradient(135deg,#7c3aed,#6d28d9)',  /* purple */
-                    1 => 'linear-gradient(135deg,#10b981,#059669)',  /* green */
-                    2 => 'linear-gradient(135deg,#f97316,#ea580c)',  /* orange */
-                    3 => 'linear-gradient(135deg,#3b82f6,#1d4ed8)',  /* blue */
+                    0 => ['grad' => 'linear-gradient(135deg,#7c3aed,#6d28d9)', 'border' => '#c4b5fd', 'shadow' => 'rgba(124,58,237,0.22)', 'bg' => '#ffffff'],
+                    1 => ['grad' => 'linear-gradient(135deg,#10b981,#059669)', 'border' => '#a7f3d0', 'shadow' => 'rgba(16,185,129,0.22)', 'bg' => '#ffffff'],
+                    2 => ['grad' => 'linear-gradient(135deg,#f97316,#ea580c)', 'border' => '#fdba74', 'shadow' => 'rgba(249,115,22,0.22)', 'bg' => '#ffffff'],
+                    3 => ['grad' => 'linear-gradient(135deg,#3b82f6,#1d4ed8)', 'border' => '#93c5fd', 'shadow' => 'rgba(59,130,246,0.22)', 'bg' => '#ffffff'],
                 ];
             @endphp
             @foreach($features as $fi => $f)
-                <div class="feat-card" style="background:#fff; border:1px solid #e9eef4; border-radius:20px; padding:28px 22px; transition:all .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px -12px rgba(79,70,229,.12)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                    <div style="width:54px; height:54px; border-radius:16px; background:{{ $featIconGradients[$fi] ?? $featIconGradients[0] }}; display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
-                        <i data-lucide="{{ $f['icon'] ?? 'zap' }}" style="width:26px;height:26px;color:#fff"></i>
+                @php $fg = $featIconGradients[$fi % 4]; @endphp
+                <div class="feat-card" style="background: {{ $fg['bg'] }}; border: 1.5px solid #e9eef4; border-radius: 24px; padding: 36px 26px; transition: all .28s cubic-bezier(0.16,1,0.3,1); position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(15,23,42,0.03);"
+                     onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 22px 45px -10px ' + '{{ $fg['shadow'] }}';this.style.borderColor='{{ $fg['border'] }}'"
+                     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(15,23,42,0.03)';this.style.borderColor='#e9eef4'">
+                    <div style="width: 62px; height: 62px; border-radius: 18px; background: {{ $fg['grad'] }}; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; box-shadow: 0 10px 22px {{ $fg['shadow'] }};">
+                        <i data-lucide="{{ $f['icon'] ?? 'zap' }}" style="width: 28px; height: 28px; color: #fff;"></i>
                     </div>
-                    <h3 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:10px">{{ $f['title'] }}</h3>
-                    <p style="font-size:13px;color:#4f46e5;line-height:1.75">{{ $f['desc'] }}</p>
+                    <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin-bottom: 12px; line-height: 1.3;">{{ $f['title'] }}</h3>
+                    <p style="font-size: 14.5px; color: #475569; line-height: 1.7; margin: 0; font-weight: 500;">{{ $f['desc'] }}</p>
                 </div>
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- ══ SMART TOOLS — Products 3×2 Grid Container Card (MATCHING 2ND REFERENCE IMAGE) ══════════════════ --}}
-<section id="products" style="padding:48px 0; background:#f8fafc;">
-    <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
-        <div class="products-container-card" style="background: linear-gradient(135deg, #f5f4ff 0%, #eef2ff 100%); border-radius:28px; padding:48px 40px; box-shadow:0 10px 40px rgba(79,70,229,0.06); border:1px solid rgba(226,232,240,0.8);">
-            <div style="display:grid; grid-template-columns:300px 1fr; gap:48px; align-items:start" class="products-grid">
-
-                {{-- Left column --}}
-                <div style="display:flex; flex-direction:column; gap:18px; position:sticky; top:80px">
-                    <span style="background:#e0e7ff; color:#4338ca; font-size:11px; font-weight:800; padding:5px 14px; border-radius:999px; width:fit-content">{{ $agency->products_section_badge ?? 'Our Products' }}</span>
-                    <h2 style="font-size:clamp(1.6rem,3vw,2.3rem); font-weight:900; color:#0f172a; line-height:1.18; letter-spacing:-.3px">
-                        {{ $agency->products_section_title ?? 'Smart Tools for Smarter Businesses' }}
-                    </h2>
-                    <p style="font-size:13px; color:#64748b; line-height:1.75">
-                        {{ $agency->products_section_subtitle ?? 'A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.' }}
-                    </p>
-                    <a href="{{ !empty($agency->products_cta_url) ? $agency->products_cta_url : 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business' }}" class="btn-brand" style="width:fit-content; border-radius:14px; padding:12px 24px">
-                        {{ $agency->products_cta_text ?? 'Explore All Products' }}
-                        <i data-lucide="arrow-right" style="width:15px; height:15px"></i>
-                    </a>
-                </div>
-
-                {{-- Right 3×2 product grid --}}
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px" class="prod-cards-3x2">
-                    @foreach($services as $s)
-                        @php
-                            $ps = $pIconMap[$s['title']] ?? ['icon' => $s['icon'] ?? 'box', 'bg' => '#ede9fe', 'clr' => '#7c3aed'];
-                            $prodLink = !empty($s['link']) && $s['link'] !== '#' ? $s['link'] : (isset($agency) ? $agency->getProductSubdomainUrl($s['title']) : '#');
-                        @endphp
-                        <a href="{{ $prodLink }}" target="_blank" class="prod-card" style="display:block; text-decoration:none; background:#fff; border:1px solid #f1f5f9; border-radius:20px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.03); transition:transform .25s, box-shadow .25s;">
-                            <div class="prod-card-top" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                                <div class="prod-icon" style="width:42px; height:42px; border-radius:12px; background:{{ $ps['bg'] }}; display:flex; align-items:center; justify-content:center;">
-                                    <i data-lucide="{{ $ps['icon'] }}" style="width:20px; height:20px; color:{{ $ps['clr'] }}"></i>
-                                </div>
-                                <div class="prod-arrow" style="width:30px; height:30px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#94a3b8;">
-                                    <i data-lucide="arrow-right" style="width:14px; height:14px"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 style="font-size:14px; font-weight:800; color:#0f172a; margin-bottom:6px">{{ $s['title'] }}</h3>
-                                <p style="font-size:12px; color:#64748b; line-height:1.6">{{ $s['desc'] }}</p>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- ══ PRICING PLANS — 3rd Reference Split Layout ════════════════════════════ --}}
-<section id="pricing" style="padding:72px 0 80px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
+{{-- ══ FLAGSHIP PRODUCTS SHOWCASE (Converted from Pricing Plans Section) ══ --}}
+<section id="products" class="products-section" style="padding:76px 0 84px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
+    <div id="pricing"></div>
     <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
 
         {{-- Section Header --}}
         <div style="text-align:center; margin-bottom:52px; display:flex; flex-direction:column; align-items:center; gap:12px; position:relative;">
             
             {{-- Badge --}}
-            <span style="background:#ede9fe; color:#6d28d9; font-size:11px; font-weight:800; padding:5px 18px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:6px;">👑 {{ $pricingBadgeText }}</span>
+            <span style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:12px; font-weight:800; padding:6px 20px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:7px;">
+                <i data-lucide="layers" style="width:14px;height:14px"></i>
+                <span>{{ !empty($agency->products_section_badge) ? $agency->products_section_badge : ($pricingBadgeText ?? 'Our Products') }}</span>
+            </span>
 
             {{-- Main Title --}}
-            <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,3.8vw,2.8rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.15;">
-                {{ $pricingSectionTitle }}
+            <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,3.8vw,2.8rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.2;">
+                {{ !empty($agency->products_section_title) ? $agency->products_section_title : ($pricingSectionTitle ?? 'Powerful Solutions Built For Your Business') }}
             </h2>
 
             {{-- Subtitle --}}
-            <p style="font-size:14px; color:#64748b; max-width:540px; line-height:1.7; margin:0; font-weight:500;">
-                {{ $pricingSectionSubtitle }}
+            <p style="font-size:15px; color:#64748b; max-width:620px; line-height:1.75; margin:0; font-weight:500;">
+                {{ !empty($agency->products_section_subtitle) ? $agency->products_section_subtitle : ($pricingSectionSubtitle ?? 'Explore our enterprise-grade tools designed to automate, streamline, and grow your operations.') }}
             </p>
         </div>
-        <!-- Monthly / Yearly Toggle -->
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:40px;">
-            <div style="display:flex; align-items:center; gap:16px;">
-                <div style="background:#fff; padding:4px; border-radius:999px; border:1px solid #e2e8f0; box-shadow:0 2px 4px rgba(0,0,0,0.02); display:flex; position:relative;">
-                    <div id="pricingToggleBg" style="position:absolute; left:4px; top:4px; bottom:4px; width:90px; background:linear-gradient(135deg,#3b82f6,#6366f1); border-radius:999px; transition:all 0.3s ease;"></div>
-                    <button id="toggleMonthlyBtn" style="position:relative; z-index:10; width:90px; padding:8px 0; font-size:12px; font-weight:800; color:#fff; border:none; background:transparent; cursor:pointer;" onclick="setPricing('monthly')">Monthly</button>
-                    <button id="toggleYearlyBtn" style="position:relative; z-index:10; width:90px; padding:8px 0; font-size:12px; font-weight:800; color:#64748b; border:none; background:transparent; cursor:pointer;" onclick="setPricing('yearly')">Yearly</button>
-                </div>
-                <div style="font-size:11px; font-weight:800; color:#ea580c; display:flex; align-items:center;"><i data-lucide="corner-down-left" style="width:14px; height:14px; margin-right:4px;"></i> {{ $pricingYearlyDiscount }}</div>
-            </div>
-        </div>
-        <script>
-        function setPricing(type) {
-            const isMonthly = type === "monthly";
-            document.getElementById("pricingToggleBg").style.left = isMonthly ? "4px" : "94px";
-            document.getElementById("toggleMonthlyBtn").style.color = isMonthly ? "#fff" : "#64748b";
-            document.getElementById("toggleYearlyBtn").style.color = isMonthly ? "#64748b" : "#fff";
-            document.querySelectorAll(".pricing-card-price-val").forEach(el => {
-                el.textContent = "₹" + (isMonthly ? el.dataset.monthly : el.dataset.yearly);
-            });
-            document.querySelectorAll(".pricing-card-period").forEach(el => {
-                el.textContent = isMonthly ? "/month" : "/year";
-            });
-        }
-        </script>
 
-        {{-- Product Plan Cards Grid --}}
+        {{-- Product Showcase Cards Grid (NO prices, NO monthly/yearly toggle) --}}
         <div class="pricing-cards-outer">
-
             @foreach($pricingPlans as $plan)
             @php
                 $planColor    = $plan['color'] ?? '#ea580c';
@@ -896,7 +635,7 @@
                 $pSlugLower   = strtolower($plan['product_slug'] ?? \Illuminate\Support\Str::slug($plan['product_name'] ?? ''));
                 $isEcom       = $loop->first || str_contains($pSlugLower, 'launch') || str_contains($pSlugLower, 'ecom') || str_contains(strtolower($plan['product_name'] ?? ''), 'ecom');
 
-                // Image path fallbacks (ensuring images load on all subdomains like checkout.youverse.in)
+                // Image path fallbacks
                 $rawLogo   = !empty($plan['product_logo'])  ? $plan['product_logo']  : ($isEcom ? 'assets/landing_page/ecom_logo.png' : 'assets/landing_page/websitebuilder_logo.png');
                 $rawMockup = !empty($plan['product_image']) ? $plan['product_image'] : ($isEcom ? 'assets/landing_page/ecombuilder_image.png' : 'assets/landing_page/websitebuilder_image.png');
 
@@ -909,10 +648,10 @@
                 } elseif (str_contains($pSlugLower, 'website')) {
                     $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.youverse.in';
                 } else {
-                    $prodLink = !empty($plan['cta_url']) && $plan['cta_url'] !== '/login' ? $plan['cta_url'] : (isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : '/login');
+                    $prodLink = !empty($plan['cta_url']) && $plan['cta_url'] !== '/login' ? $plan['cta_url'] : (isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : 'https://wa.me/916374913298?text=I%20am%20interested%20in%20' . urlencode($plan['product_name'] ?? 'Product'));
                 }
 
-                // Vibrant CTA Button Gradient & Text Contrast Fix
+                // Vibrant CTA Button Gradient
                 $btnGradient = $isEcom 
                     ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' 
                     : 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)';
@@ -927,7 +666,6 @@
 
                 {{-- LEFT PANEL: Product Visual & Branding --}}
                 <div class="pricing-left-panel" style="background:{{ $leftBg }};">
-                    
                     <div>
                         {{-- Product Logo --}}
                         <div style="margin-bottom:14px; min-height:48px; display:flex; align-items:center;">
@@ -948,73 +686,65 @@
                         @endif
 
                         {{-- Product Title --}}
-                        <h4 style="font-family:'Outfit',sans-serif; font-size:18px; font-weight:900; color:#0f172a; margin:0 0 6px; line-height:1.25;">
+                        <h4 style="font-family:'Outfit',sans-serif; font-size:19px; font-weight:900; color:#0f172a; margin:0 0 6px; line-height:1.25;">
                             {{ $plan['product_title'] ?? ($plan['product_name'] . ' Solution') }}
                         </h4>
 
                         {{-- Subtitle Paragraph --}}
                         @if(!empty($plan['product_subtitle']))
-                        <p style="font-size:12.5px; color:#64748b; line-height:1.6; margin:0;">
+                        <p style="font-size:13px; color:#64748b; line-height:1.6; margin:0;">
                             {{ $plan['product_subtitle'] }}
                         </p>
                         @endif
 
-                        {{-- Center Product Image Mockup (Prominent & Clear) --}}
+                        {{-- Center Product Image Mockup --}}
                         @if(!empty($mockupImgPath))
                         <div style="margin-top:20px; text-align:center;">
                             <img src="{{ $mockupImgPath }}" alt="{{ $plan['product_name'] ?? '' }}"
-                                 style="width:100%; max-height:200px; object-fit:contain; border-radius:14px; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.12));">
+                                 style="width:100%; max-height:210px; object-fit:contain; border-radius:14px; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.12));">
                         </div>
                         @endif
                     </div>
                 </div>
 
-                {{-- RIGHT PANEL: Plan & Pricing Details --}}
-                <div class="pricing-right-panel">
-                    
+                {{-- RIGHT PANEL: Solution Details & Features (NO PRICES) --}}
+                <div class="pricing-right-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
                         {{-- Badges Row --}}
                         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
-                            <span style="background:{{ $plan['plan_badge_bg'] ?? ($planColor . '1a') }}; color:{{ $plan['plan_badge_color'] ?? $planColor }}; font-size:10px; font-weight:900; padding:4px 10px; border-radius:6px; text-transform:uppercase; letter-spacing:.05em;">
-                                {{ $plan['plan_badge'] ?? 'STARTER' }}
+                            <span style="background:{{ $plan['plan_badge_bg'] ?? ($planColor . '1a') }}; color:{{ $plan['plan_badge_color'] ?? $planColor }}; font-size:10.5px; font-weight:900; padding:4px 12px; border-radius:6px; text-transform:uppercase; letter-spacing:.06em;">
+                                {{ $plan['plan_badge'] ?? 'ALL-IN-ONE SOLUTION' }}
                             </span>
                             @if(!empty($plan['plan_subbadge']))
-                            <span style="font-size:11px; font-weight:700; color:{{ $isPopular ? '#4f46e5' : '#64748b' }};">
+                            <span style="font-size:11.5px; font-weight:800; color:{{ $isPopular ? '#4f46e5' : '#64748b' }};">
                                 {{ $plan['plan_subbadge'] }}
                             </span>
                             @endif
                         </div>
 
-                        {{-- Plan Name --}}
-                        <h3 style="font-family:'Outfit',sans-serif; font-size:21px; font-weight:900; color:#0f172a; margin:0 0 4px;">
-                            {{ $plan['plan_name'] ?? 'Plan Name' }}
+                        {{-- Product Plan Name / Title --}}
+                        <h3 style="font-family:'Outfit',sans-serif; font-size:22px; font-weight:900; color:#0f172a; margin:0 0 6px;">
+                            {{ $plan['plan_name'] ?? $plan['product_name'] }}
                         </h3>
 
-                        {{-- Plan Subtitle --}}
+                        {{-- Description --}}
                         @if(!empty($plan['plan_subtitle']))
-                        <p style="font-size:12px; color:#64748b; margin:0 0 14px; line-height:1.4;">
+                        <p style="font-size:13.5px; color:#64748b; margin:0 0 16px; line-height:1.55;">
                             {{ $plan['plan_subtitle'] }}
                         </p>
                         @endif
 
-                        {{-- Price Display --}}
-                        <div style="display:flex; align-items:baseline; gap:4px; margin-bottom:16px;">
-                            <span class="pricing-card-price-val" data-monthly="{{ $plan['price_monthly'] ?? '499' }}" data-yearly="{{ !empty($plan['price_yearly']) ? $plan['price_yearly'] : (intval($plan['price_monthly'] ?? 499) * 10) }}" style="font-family:'Outfit',sans-serif; font-size:38px; font-weight:900; color:{{ $planColor }}; line-height:1;">
-                                ₹{{ $plan['price_monthly'] ?? '499' }}
-                            </span>
-                            <span class="pricing-card-period" style="font-size:13px; color:#64748b; font-weight:700;">/month</span>
-                        </div>
-
                         {{-- Included Features Header --}}
-                        <div style="font-size:10px; font-weight:900; color:#94a3b8; letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px; border-top:1px solid #f1f5f9; padding-top:14px;">
-                            INCLUDED FEATURES:
+                        <div style="font-size:11px; font-weight:900; color:#94a3b8; letter-spacing:.08em; text-transform:uppercase; margin-bottom:12px; border-top:1px solid #f1f5f9; padding-top:16px; display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="check-circle-2" style="width:14px;height:14px;color:#10b981"></i>
+                            <span>KEY FEATURES &amp; CAPABILITIES:</span>
                         </div>
 
                         {{-- Features List --}}
-                        <ul style="list-style:none; display:flex; flex-direction:column; gap:9px; margin:0 0 20px; padding:0;">
+                        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; margin:0 0 24px; padding:0;">
                             @foreach($planFeatures as $feature)
-                            <li style="display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color:#334155; font-weight:600; line-height:1.4;">
-                                <span style="width:17px; height:17px; border-radius:50%; background:{{ $planColor }}; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; font-size:10px; font-weight:900;">
+                            <li style="display:flex; align-items:flex-start; gap:10px; font-size:13.5px; color:#334155; font-weight:600; line-height:1.45;">
+                                <span style="width:18px; height:18px; border-radius:50%; background:{{ $planColor }}; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; font-size:10px; font-weight:900;">
                                     ✓
                                 </span>
                                 <span>{{ $feature }}</span>
@@ -1023,17 +753,18 @@
                         </ul>
                     </div>
 
-                    {{-- CTA Button (View Details -> Product Landing Page) --}}
+                    {{-- CTA Button (Explore Product) --}}
                     <div>
                         <a href="{{ $prodLink }}" target="_blank"
-                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:13.5px; padding:14px 22px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
+                           style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:14px; padding:15px 24px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span style="color:#ffffff !important; font-weight:800; font-size:13.5px;">{{ !empty($plan['cta_text']) ? $plan['cta_text'] : 'View Details →' }}</span>
+                            <span style="color:#ffffff !important; font-weight:800; font-size:14px;">{{ !empty($plan['cta_text']) && $plan['cta_text'] !== 'Get Started Free' && $plan['cta_text'] !== 'Start 14-Day Free Trial' ? $plan['cta_text'] : 'Explore Product &rarr;</span>
                         </a>
-                        @if(!empty($plan['cta_subnote']))
-                        <div style="text-align:center; font-size:10.5px; color:#94a3b8; font-weight:600; margin-top:7px;">
-                            {{ $plan['cta_subnote'] }}
+                        @if(!empty($plan['trust_count']))
+                        <div style="text-align:center; font-size:11.5px; color:#64748b; font-weight:700; margin-top:8px; display:flex; align-items:center; justify-content:center; gap:5px;">
+                            <i data-lucide="shield-check" style="width:13px;height:13px;color:#10b981"></i>
+                            <span>{{ $plan['trust_count'] }}</span>
                         </div>
                         @endif
                     </div>
@@ -1043,7 +774,7 @@
             @endforeach
         </div>
 
-        {{-- 3-Column Trust Bar (Dynamic from Agency Dashboard) --}}
+        {{-- 3-Column Trust Bar --}}
         <div class="trust-bar-grid">
             @foreach($trustElements as $te)
             <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
@@ -1247,14 +978,17 @@
 
             {{-- Col 1: Brand + Social --}}
             <div style="display:flex;flex-direction:column;gap:14px">
-                <div style="display:flex;align-items:center;gap:10px">
-                    @if(!empty($agency->logo))
-                        <img src="{{ asset($agency->logo) }}" alt="{{ $agency->name }}" style="height:50px;width:auto">
+                <div style="display:flex;align-items:center;gap:12px">
+                    @if(!empty($agency->logo_dark))
+                        <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agency->name }}" class="site-logo-dark" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name }}" class="site-logo-light" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                    @elseif(!empty($agency->logo))
+                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name }}" style="height:60px;max-height:64px;width:auto;object-fit:contain">
                     @else
-                        <div class="bg-brand" style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                            <i data-lucide="layers" style="width:16px;height:16px;color:#fff"></i>
+                        <div class="bg-brand" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i data-lucide="layers" style="width:18px;height:18px;color:#fff"></i>
                         </div>
-                        <span style="font-family:'Outfit',sans-serif;font-size:17px;font-weight:900;color:#e2e8f0">{{ $agency->name }}</span>
+                        <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#e2e8f0">{{ $agency->name }}</span>
                     @endif
                 </div>
                 <p style="font-size:12px;color:#64748b;line-height:1.7;max-width:190px">
