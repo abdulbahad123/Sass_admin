@@ -104,19 +104,35 @@ Route::get('/contact', function (\Illuminate\Http\Request $request) use ($getAge
 Route::post('/contact/submit', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'submitContactForm'])->name('agency.contact.submit');
 Route::post('/book-free-live-demo', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'submit'])->name('demo.submit');
 
-Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) use ($getLandingData) {
+Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    $agency = $getAgencyForRoute($request);
+    if ($agency) {
+        return view('whitelabel.website.public_legal', ['type' => 'privacy', 'pageTitle' => 'Privacy Policy', 'agency' => $agency, 'data' => $getLandingData()]);
+    }
     return view('landing.legal', ['type' => 'privacy', 'title' => 'Privacy Policy', 'data' => $getLandingData()]);
 })->name('agency.privacy');
 
-Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) use ($getLandingData) {
+Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    $agency = $getAgencyForRoute($request);
+    if ($agency) {
+        return view('whitelabel.website.public_legal', ['type' => 'terms', 'pageTitle' => 'Terms and Conditions', 'agency' => $agency, 'data' => $getLandingData()]);
+    }
     return view('landing.legal', ['type' => 'terms', 'title' => 'Terms and Conditions', 'data' => $getLandingData()]);
 })->name('agency.terms');
 
-Route::get('/shipping-policy', function (\Illuminate\Http\Request $request) use ($getLandingData) {
+Route::get('/shipping-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    $agency = $getAgencyForRoute($request);
+    if ($agency) {
+        return view('whitelabel.website.public_legal', ['type' => 'shipping', 'pageTitle' => 'Shipping & Delivery Policy', 'agency' => $agency, 'data' => $getLandingData()]);
+    }
     return view('landing.legal', ['type' => 'shipping', 'title' => 'Shipping & Delivery Policy', 'data' => $getLandingData()]);
 })->name('agency.shipping');
 
-Route::get('/refund-policy', function (\Illuminate\Http\Request $request) use ($getLandingData) {
+Route::get('/refund-policy', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
+    $agency = $getAgencyForRoute($request);
+    if ($agency) {
+        return view('whitelabel.website.public_legal', ['type' => 'refund', 'pageTitle' => 'Refund Policy', 'agency' => $agency, 'data' => $getLandingData()]);
+    }
     return view('landing.legal', ['type' => 'refund', 'title' => 'Refund & Cancellation Policy', 'data' => $getLandingData()]);
 })->name('agency.refund');
 

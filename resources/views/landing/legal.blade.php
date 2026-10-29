@@ -131,68 +131,114 @@
 
             <!-- Policy Text Body -->
             <div class="space-y-6 text-xs sm:text-sm leading-relaxed text-slate-300">
-                @if($type === 'privacy')
+                                @if($type === 'privacy')
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">1. Introduction</h2>
-                        <p>Welcome to <strong>SaaSReselling</strong> (accessible at <code>https://saasreselling.com</code>). We take your data privacy seriously. This Privacy Policy outlines our guidelines and practices regarding the collection, storage, and processing of personal information when you access or register on our white-label SaaS platform.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">Privacy Policy</h2>
+                        <p>At <strong>SaaSReselling</strong> (accessible at <a href="https://saasreselling.com/" target="_blank" class="text-orange-400 underline">https://saasreselling.com/</a>), we respect your privacy and are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+                        <p>By accessing or using our website and services, you agree to the terms of this Privacy Policy.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">2. Information Collection</h2>
-                        <p>We collect essential data to establish and manage your white-label partner portal:</p>
-                        <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-400">
-                            <li>Partner registration information: Full name, business email, WhatsApp contact number.</li>
-                            <li>Agency setup data: Agency company name, chosen custom domain, and logo preferences.</li>
-                            <li>System logs: IP address, device telemetry, browser type, and API request timestamps for platform security and fraud prevention.</li>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">1. Information We Collect</h2>
+                        <p>We may collect the following types of information:</p>
+                        <h3 class="text-sm font-semibold text-slate-200">1.1 Personal Information</h3>
+                        <p>When you register, contact us, or make a purchase, we may collect: Name, Email address, Phone number, Business name, and Billing/payment-related details (payment verification only; we do not store card details).</p>
+                        <h3 class="text-sm font-semibold text-slate-200">1.2 Non-Personal Information</h3>
+                        <p>IP address, Browser type and version, Device information, Pages visited, time spent on site, and Referring URLs for security, analytics, and optimization.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">2. How We Use Your Information</h2>
+                        <ul class="list-disc list-inside space-y-1 text-slate-400">
+                            <li>Provide and deliver our products and services</li>
+                            <li>Verify payments, including manual transactions (UPI/bank transfers)</li>
+                            <li>Communicate regarding inquiries, orders, and support requests</li>
+                            <li>Improve website functionality and user experience</li>
+                            <li>Send important updates, service-related messages, or promotional communication (you may opt out anytime)</li>
+                            <li>Prevent fraud, abuse, or unauthorized access</li>
                         </ul>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">3. Use of Information</h2>
-                        <p>Your data is used solely to provision and operate your multi-tenant SaaS services, handle billing and subscription renewals, dispatch critical technical updates, and provide 24/7 technical support. We never sell or rent your data to external third parties.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">3. Manual Payments & Data Usage</h2>
+                        <p>If you choose to make a manual payment, we may collect payment reference details or screenshots solely for verification purposes. This information is used only to confirm payment, not shared publicly, and retained only as long as required for accounting or legal purposes.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">4. Contacting Privacy Support</h2>
-                        <p>For any inquiries regarding your data or this policy, contact our compliance team at: <strong class="text-orange-400">support@saasreselling.com</strong>.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">4. Cookies & Tracking Technologies</h2>
+                        <p>We use cookies and similar technologies to understand user behavior, improve site performance, and track marketing effectiveness. You can disable cookies through your browser settings.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">5. Sharing of Information</h2>
+                        <p>We do not sell, trade, or rent your personal information to third parties. We share information only with trusted service providers strictly for service delivery, to comply with legal obligations, or to protect our rights.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">6. Data Security & Retention</h2>
+                        <p>We implement industry-standard security measures to protect your information and retain it only as long as necessary to fulfill service delivery, comply with law, and resolve disputes.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">7. Your Rights & Changes</h2>
+                        <p>You have the right to access, update, or request deletion of your data and opt out of marketing. We may update this policy periodically; continued use implies acceptance.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">8. Contact Us</h2>
+                        <p>Website: <a href="https://saasreselling.com/" target="_blank" class="text-orange-400">https://saasreselling.com/</a><br>Phone / WhatsApp: <strong class="text-white">+91 63749 13298</strong><br>Email: <strong class="text-orange-400">support@saasreselling.com</strong></p>
                     </section>
 
                 @elseif($type === 'terms')
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">1. Acceptance of Terms</h2>
-                        <p>By registering, subscribing, or using the services of <strong>SaaSReselling</strong> (<code>saasreselling.com</code>), you agree to comply with and be bound by these Terms and Conditions. These terms govern your commercial relationship with SaaSReselling as an authorized white-label agency or reseller partner.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">Terms and Conditions</h2>
+                        <p>Welcome to <strong>SaaSReselling</strong> (accessible at <a href="https://saasreselling.com/" target="_blank" class="text-orange-400 underline">https://saasreselling.com/</a>, including related sub-pages such as “White Label Solutions”). These Terms and Conditions govern your access to and use of our website, products, and services.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">2. White-Label License Grant</h2>
-                        <p>Upon active subscription, SaaSReselling grants you a non-transferable, commercial white-label license to rebrand, market, and resell our integrated SaaS applications (including Ecombuilder, Website Builder, and WhatsApp Automation) under your proprietary brand identity to your end-clients.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">1. About Our Services</h2>
+                        <p>SaaSReselling provides digital products, software tools, white-label SaaS solutions, website services, reseller programs, and related digital services.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">3. Agency Conduct & Compliance</h2>
-                        <p>Agencies must not utilize the platform for unlawful transmission of unsolicited commercial bulk messages (spam), transmission of malware, or copyright infringement. Failure to observe compliance may result in suspension of tenant instances.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">2. Eligibility & Payments</h2>
+                        <p>You must be at least 18 years old. We accept online payment gateways and manual transactions (UPI/Bank transfer). All payments are solely for purchasing SaaSReselling's own products and reseller memberships. SaaSReselling does not hold or split payments between resellers and their end customers.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">4. Contact & Inquiries</h2>
-                        <p>Questions regarding our platform terms may be directed to <strong class="text-orange-400">support@saasreselling.com</strong>.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">3. No Refund & No Cancellation Policy</h2>
+                        <p>All sales are final and non-refundable, including manual and online payments. Once payment is completed and access is provided, no refunds or chargebacks will be entertained.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">4. Source Code & Script Policy</h2>
+                        <p>All software is provided as managed white-label solutions. Source code, scripts, and backend infrastructure remain hosted on our cloud VPS servers and are owned and controlled by us. We do not sell or transfer source code under any circumstances.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">5. Contact Information</h2>
+                        <p>Website: <a href="https://saasreselling.com/" target="_blank" class="text-orange-400">https://saasreselling.com/</a><br>Phone / WhatsApp: <strong class="text-white">+91 63749 13298</strong><br>Email: <strong class="text-orange-400">support@saasreselling.com</strong></p>
                     </section>
 
                 @elseif($type === 'refund')
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">1. Subscription Cancellation</h2>
-                        <p>You may cancel your SaaSReselling agency subscription at any time directly through your Super Admin billing portal or by emailing our billing support team at <strong class="text-orange-400">support@saasreselling.com</strong>. Upon cancellation, your account remains fully active until the conclusion of your current paid billing cycle.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">Refund Policy</h2>
+                        <p>Thank you for choosing <strong>SaaSReselling</strong>. We strive to deliver the highest quality digital products, services, and reseller solutions.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">2. Refund Eligibility</h2>
-                        <p>Because SaaSReselling immediately provisions dedicated cloud database containers, SSL security layers, and white-label license keys upon account creation, monthly subscription fees are generally non-refundable once the billing period has commenced.</p>
-                        <p>If you experience any platform disruption where core SaaS services are inaccessible and our engineering support is unable to resolve it within 7 business days, you will be eligible for a full prorated refund.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">1. No Refunds / All Sales Are Final</h2>
+                        <p>All purchases made through <a href="https://saasreselling.com/" target="_blank" class="text-orange-400">https://saasreselling.com/</a> or manual payments are final and non-refundable. Once purchase is completed and digital access or services begin, we do not offer returns, cancellations, or exchanges.</p>
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">3. Processing of Approved Refunds</h2>
-                        <p>Approved refunds are credited back to your original payment method within 5 to 7 business days.</p>
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">2. Why We Do Not Offer Refunds</h2>
+                        <p>Because products and services involve instant digital provisioning, server resources, and custom setup, digital content cannot be returned once access is delivered.</p>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-base sm:text-lg font-bold text-white font-heading">3. Contact Us</h2>
+                        <p>Website: <a href="https://saasreselling.com/" target="_blank" class="text-orange-400">https://saasreselling.com/</a><br>Phone / WhatsApp: <strong class="text-white">+91 63749 13298</strong><br>Email: <strong class="text-orange-400">support@saasreselling.com</strong></p>
                     </section>
 
                 @elseif($type === 'shipping')

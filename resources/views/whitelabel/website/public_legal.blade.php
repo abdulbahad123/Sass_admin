@@ -332,24 +332,19 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-    {{-- EXACT SAME ANNOUNCEMENT BAR AS LANDING PAGE --}}
-    <div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-1.5 px-4 text-[11px] font-semibold">
-        ⚡ Special Offer: Get Started with <strong>{{ $agency->name ?? $agencyName }}</strong> Today &amp; Automate Your Business!
-    </div>
-
     {{-- EXACT SAME HEADER AS LANDING PAGE (With Theme Toggle) --}}
     <header class="site-header" style="background:#fff;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:50;transition:background-color .2s,border-color .2s">
-        <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px">
+        <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:88px">
 
             {{-- Logo --}}
             <a href="{{ url('/') }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0">
                 @if(!empty($agency->logo))
-                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-light" style="height:62px;max-height:64px;width:auto;max-width:240px;object-fit:contain">
+                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-light" style="height:76px;max-height:80px;width:auto;max-width:260px;object-fit:contain">
                 @endif
                 @if(!empty($agency->logo_dark))
-                    <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:62px;max-height:64px;width:auto;max-width:240px;object-fit:contain">
+                    <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:76px;max-height:80px;width:auto;max-width:260px;object-fit:contain">
                 @elseif(!empty($agency->logo))
-                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:62px;max-height:64px;width:auto;max-width:240px;object-fit:contain">
+                    <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:76px;max-height:80px;width:auto;max-width:260px;object-fit:contain">
                 @else
                     <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center">
                         <i class="fas fa-layer-group text-white text-base"></i>
@@ -579,15 +574,257 @@
                         </div>
                     </div>
 
-                @elseif($type === 'privacy')
-                    {!! !empty($agency->privacy_policy) ? $agency->privacy_policy : ("<h2>Privacy Policy for " . e($agencyName) . "</h2><p>At " . e($agencyName) . ", accessible from " . e($agency->custom_domain ?? request()->getHost()) . ", we prioritize your privacy and protect data collected during service usage.</p><h3>1. Information We Collect</h3><p>We collect essential business information, account registration details, and contact details to process orders, manage subscriptions, and provide customer support.</p><h3>2. Data Protection & Security</h3><p>Your business data is protected with enterprise-grade encryption standards, automated backups, and strict access protocols.</p><h3>3. Contact Information</h3><p>For any privacy inquiries, email us at: <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@saasreselling.com') . "</strong></p>") !!}
+                                @elseif($type === 'privacy')
+                    @if(!empty($agency->privacy_policy))
+                        {!! $agency->privacy_policy !!}
+                    @else
+                        <h2>Privacy Policy for {{ $agencyName }}</h2>
+                        <p>At <strong>{{ $agencyName }}</strong> (accessible at <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a>), we respect your privacy and are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+                        <p>By accessing or using our website and services, you agree to the terms of this Privacy Policy.</p>
+
+                        <h3>1. Information We Collect</h3>
+                        <p>We may collect the following types of information:</p>
+
+                        <h4>1.1 Personal Information</h4>
+                        <p>When you register, contact us, or make a purchase, we may collect:</p>
+                        <ul>
+                            <li>Name</li>
+                            <li>Email address</li>
+                            <li>Phone number</li>
+                            <li>Business name</li>
+                            <li>Billing and payment-related details (payment verification only; we do not store card details)</li>
+                        </ul>
+
+                        <h4>1.2 Non-Personal Information</h4>
+                        <p>We may automatically collect:</p>
+                        <ul>
+                            <li>IP address</li>
+                            <li>Browser type and version</li>
+                            <li>Device information</li>
+                            <li>Pages visited and time spent on the website</li>
+                            <li>Referring URLs</li>
+                        </ul>
+                        <p>This data is used for analytics, security, and website optimization.</p>
+
+                        <h3>2. How We Use Your Information</h3>
+                        <p>We use the collected information to:</p>
+                        <ul>
+                            <li>Provide and deliver our products and services</li>
+                            <li>Verify payments, including manual transactions (UPI/bank transfers)</li>
+                            <li>Communicate regarding inquiries, orders, and support requests</li>
+                            <li>Improve website functionality and user experience</li>
+                            <li>Send important updates, service-related messages, or promotional communication (you may opt out anytime)</li>
+                            <li>Prevent fraud, abuse, or unauthorized access</li>
+                        </ul>
+
+                        <h3>3. Manual Payments &amp; Data Usage</h3>
+                        <p>If you choose to make a manual payment, we may collect payment reference details or screenshots solely for verification purposes. This information is:</p>
+                        <ul>
+                            <li>Used only to confirm payment</li>
+                            <li>Not shared publicly</li>
+                            <li>Retained only as long as required for accounting, legal, or dispute-resolution purposes</li>
+                        </ul>
+
+                        <h3>4. Cookies &amp; Tracking Technologies</h3>
+                        <p>We use cookies and similar technologies to:</p>
+                        <ul>
+                            <li>Understand user behavior</li>
+                            <li>Improve site performance</li>
+                            <li>Track marketing and advertising effectiveness</li>
+                        </ul>
+                        <p>You can disable cookies through your browser settings. However, some features of the website may not function properly if cookies are disabled.</p>
+
+                        <h3>5. Sharing of Information</h3>
+                        <p>We do not sell, trade, or rent your personal information to third parties.</p>
+                        <p>We may share information only:</p>
+                        <ul>
+                            <li>With trusted service providers (hosting, payment gateways, analytics tools) strictly for service delivery</li>
+                            <li>To comply with legal obligations or law enforcement requests</li>
+                            <li>To protect our rights, property, or safety</li>
+                        </ul>
+
+                        <h3>6. Data Security</h3>
+                        <p>We implement reasonable administrative, technical, and security measures to protect your personal information. However, no online system is 100% secure, and we cannot guarantee absolute security of data transmitted online.</p>
+
+                        <h3>7. Third-Party Links</h3>
+                        <p>Our website may contain links to third-party websites or tools. We are not responsible for the privacy practices or content of those external sites. We encourage you to review their privacy policies separately.</p>
+
+                        <h3>8. Data Retention</h3>
+                        <p>We retain personal information only for as long as necessary to:</p>
+                        <ul>
+                            <li>Fulfill the purposes outlined in this policy</li>
+                            <li>Comply with legal, tax, or regulatory requirements</li>
+                            <li>Resolve disputes and enforce agreements</li>
+                        </ul>
+
+                        <h3>9. Your Rights</h3>
+                        <p>Depending on applicable laws, you may have the right to:</p>
+                        <ul>
+                            <li>Access your personal data</li>
+                            <li>Request correction or update of your information</li>
+                            <li>Request deletion of your data (subject to legal and business requirements)</li>
+                            <li>Opt out of marketing communications</li>
+                        </ul>
+                        <p>To exercise these rights, please contact us using the details below.</p>
+
+                        <h3>10. Changes to This Privacy Policy</h3>
+                        <p>We reserve the right to update or modify this Privacy Policy at any time. Changes will be effective immediately upon posting on this page. Continued use of our website means you accept the updated policy.</p>
+
+                        <h3>11. Contact Us</h3>
+                        <p>If you have any questions or concerns regarding this Privacy Policy, please contact us:</p>
+                        <p>
+                            <strong>Website:</strong> <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a><br>
+                            <strong>Phone / WhatsApp:</strong> {{ $agency->contact_phone ?? '+91 63749 13298' }}<br>
+                            <strong>Email:</strong> {{ $agency->contact_email ?? 'support@saasreselling.com' }}
+                        </p>
+                        <p>By using our website or services, you acknowledge that you have read, understood, and agreed to this Privacy Policy.</p>
+                    @endif
                 @elseif($type === 'terms')
-                    {!! !empty($agency->terms_conditions) ? $agency->terms_conditions : ("<h2>Terms & Conditions for " . e($agencyName) . "</h2><p>Welcome to " . e($agencyName) . "! These terms govern your use of our platform, SaaS reseller products, and subscriptions.</p><h3>1. User Account Responsibility</h3><p>By registering or purchasing a White-Label reseller package on " . e($agencyName) . ", you agree to maintain accurate account details and adhere to acceptable usage rules.</p><h3>2. Intellectual Property & Reseller Rights</h3><p>You receive white-label rebranding rights for customer management according to your chosen plan tier.</p><h3>3. Support & Inquiries</h3><p>Email: <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@saasreselling.com') . "</strong></p>") !!}
+                    @if(!empty($agency->terms_conditions))
+                        {!! $agency->terms_conditions !!}
+                    @else
+                        <h2>Terms and Conditions for {{ $agencyName }}</h2>
+                        <p>Welcome to <strong>{{ $agencyName }}</strong> (accessible at <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a>, including related sub-pages such as “White Label Solutions”). These Terms and Conditions (“Terms”) govern your access to and use of our website, products, and services. By accessing our website or making a purchase, you agree to be bound by these Terms. If you do not agree, please do not use our services.</p>
+
+                        <h3>1. About Our Services</h3>
+                        <p><strong>{{ $agencyName }}</strong> provides digital products, software tools, white-label SaaS solutions, website services, reseller programs, and related digital services. All offerings are provided under your acceptance of these Terms, our Refund Policy, and other policies published on our website.</p>
+
+                        <h3>2. Eligibility</h3>
+                        <p>By using our website or services, you confirm that:</p>
+                        <ul>
+                            <li>You are at least 18 years old, or legally eligible to enter into a binding agreement under Indian law.</li>
+                            <li>You are providing accurate and complete information while purchasing or registering.</li>
+                        </ul>
+
+                        <h3>3. Pricing &amp; Payments</h3>
+                        <h4>3.1 Payment Modes</h4>
+                        <p>We accept payments through:</p>
+                        <ul>
+                            <li>Online payment gateways (cards, UPI, net banking, wallets, etc.)</li>
+                            <li>Manual payments such as UPI transfer, bank transfer, or other offline modes communicated by our team</li>
+                        </ul>
+
+                        <h4>3.2 Manual Transactions</h4>
+                        <p>For manual transactions:</p>
+                        <ul>
+                            <li>Payment confirmation may take additional time.</li>
+                            <li>Services or access will be provided only after successful verification of payment.</li>
+                            <li>You are responsible for sharing correct payment proof.</li>
+                        </ul>
+
+                        <h4>3.3 Taxes</h4>
+                        <p>All prices are exclusive of applicable taxes unless stated otherwise. Any applicable GST or government taxes will be borne by the customer.</p>
+
+                        <h4>3.4 Payment &amp; Transaction Disclaimer</h4>
+                        <p>All payments made on <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a> are solely for purchasing {{ $agencyName }}’s own SaaS products, digital services, or reseller memberships.</p>
+                        <p><strong>{{ $agencyName }}</strong> does not facilitate, process, hold, split, or route payments between resellers and their customers. All reseller-to-customer transactions, pricing, billing, and payment collection are handled independently by the reseller using their own systems.</p>
+
+                        <h3>4. No Refund &amp; No Cancellation Policy</h3>
+                        <p>All sales are final and non-refundable, including payments made via manual or online methods. Once payment is completed and service access is provided or work is initiated, no refunds, cancellations, or chargebacks will be entertained, except where required by applicable law.</p>
+                        <p>Please refer to our Refund Policy page for complete details.</p>
+
+                        <h3>5. Service Delivery</h3>
+                        <ul>
+                            <li>Digital products or access credentials are usually delivered electronically.</li>
+                            <li>Timelines may vary based on the nature of the service (standard, custom, or reseller plans).</li>
+                            <li>Delays caused due to incomplete information, incorrect details, or customer non-responsiveness will not be our responsibility.</li>
+                        </ul>
+
+                        <h3>6. User Responsibilities</h3>
+                        <p>You agree:</p>
+                        <ul>
+                            <li>Not to misuse, copy, resell, reverse-engineer, or redistribute our products or services unless explicitly allowed under a reseller agreement.</li>
+                            <li>Not to use our services for illegal, abusive, fraudulent, or unethical purposes.</li>
+                            <li>To maintain confidentiality of login credentials and account details.</li>
+                        </ul>
+
+                        <h3>7. Intellectual Property Rights</h3>
+                        <p>All content on this website, including text, graphics, logos, software, UI/UX, designs, and trademarks, are the intellectual property of <strong>{{ $agencyName }}</strong>, unless stated otherwise.</p>
+                        <p>You may not copy, reproduce, modify, distribute, or exploit any content without prior written permission.</p>
+
+                        <h3>8. Third-Party Tools &amp; Services</h3>
+                        <p>Some services may integrate or rely on third-party platforms (e.g., hosting providers, APIs, payment gateways). We are not responsible for downtime, policy changes, or issues caused by third-party services.</p>
+
+                        <h3>9. Limitation of Liability</h3>
+                        <p>To the maximum extent permitted by law:</p>
+                        <ul>
+                            <li><strong>{{ $agencyName }}</strong> shall not be liable for any indirect, incidental, special, or consequential damages.</li>
+                            <li>We do not guarantee specific business results, revenue, leads, or profits from using our products or reseller programs.</li>
+                            <li>All services are provided on an “as-is” and “as-available” basis.</li>
+                        </ul>
+
+                        <h3>10. Termination of Access</h3>
+                        <p>We reserve the right to suspend or terminate access to our services without prior notice if:</p>
+                        <ul>
+                            <li>These Terms are violated</li>
+                            <li>Payment disputes or chargebacks are raised</li>
+                            <li>Services are misused or abused</li>
+                        </ul>
+                        <p>No refunds will be provided in such cases.</p>
+
+                        <h3>11. Source Code &amp; Script Policy</h3>
+                        <p>All our software products are provided as fully managed, white-label solutions under the client’s brand name and domain.</p>
+                        <p>However, the complete system, source code, scripts, and backend infrastructure remain hosted on our VPS servers and are owned and controlled by us.</p>
+                        <p>We do not sell, transfer, or provide access to the source code or core system files under any circumstances.</p>
+                        <p>Clients are granted usage rights to operate and resell the platform under their branding, while all technical maintenance, security, and server management are handled by our team.</p>
+                        <p>Any attempt to copy, reverse engineer, resell, or misuse the system is strictly prohibited.</p>
+
+                        <h3>12. Modifications to Terms</h3>
+                        <p>We may update or modify these Terms at any time without prior notice. Continued use of the website or services after changes means you accept the updated Terms.</p>
+
+                        <h3>13. Governing Law &amp; Jurisdiction</h3>
+                        <p>These Terms shall be governed by and interpreted in accordance with the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts located in India.</p>
+
+                        <h3>14. Contact Information</h3>
+                        <p>If you have any questions regarding these Terms and Conditions, please contact us:</p>
+                        <p>
+                            <strong>Website:</strong> <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a><br>
+                            <strong>Phone / WhatsApp:</strong> {{ $agency->contact_phone ?? '+91 63749 13298' }}<br>
+                            <strong>Email:</strong> {{ $agency->contact_email ?? 'support@saasreselling.com' }}
+                        </p>
+                        <p>By using our website or purchasing from <strong>{{ $agencyName }}</strong>, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.</p>
+                    @endif
                 @elseif($type === 'shipping')
                     {!! !empty($agency->shipping_policy) ? $agency->shipping_policy : ("<h2>Shipping & Delivery Policy for " . e($agencyName) . "</h2><p>All SaaS products, white-label portals, and software subscriptions purchased from " . e($agencyName) . " are delivered 100% electronically via instant email confirmation and dashboard portal access.</p><h3>Instant Digital Fulfillment</h3><p>No physical shipping or postal dispatch is involved. Account credentials and setup tools become active immediately upon payment confirmation.</p><h3>Delivery Timeline</h3><p>Software provisioning completes automatically within 5 to 15 minutes of purchase.</p><h3>Contact Support</h3><p>Email: <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@saasreselling.com') . "</strong></p>") !!}
                 @elseif($type === 'refund')
-                    {!! !empty($agency->refund_policy) ? $agency->refund_policy : ("<h2>Cancellation & Refund Policy for " . e($agencyName) . "</h2><p>We offer a hassle-free cancellation and 7-day money-back guarantee for subscription packages.</p><h3>Refund Processing</h3><p>Upon approval of your refund request, funds are automatically remitted to your original payment method within 5 to 7 business days.</p><h3>How to Submit a Request</h3><p>Please contact our support desk at <strong>" . e($agency->contact_email ?? $data['lp_contact_email'] ?? 'support@saasreselling.com') . "</strong> with your order invoice number and account details.</p>") !!}
+                    @if(!empty($agency->refund_policy))
+                        {!! $agency->refund_policy !!}
+                    @else
+                        <h2>Cancellation &amp; Refund Policy for {{ $agencyName }}</h2>
+                        <p>Thank you for choosing <strong>{{ $agencyName }}</strong>. We strive to deliver the highest quality digital products, services, and reseller solutions. Please read this Refund Policy carefully before making a purchase.</p>
 
+                        <h3>1. No Refunds / All Sales Are Final</h3>
+                        <p>All purchases made through <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a> or related sub-sites or Manual Payments are final and non-refundable. Once a purchase is completed, we do not offer returns, refunds, cancellations, credits, or exchanges under any circumstances.</p>
+                        <p>This includes, but is not limited to:</p>
+                        <ul>
+                            <li>Digital products and downloads</li>
+                            <li>Website design &amp; development services</li>
+                            <li>Software tools, templates, and digital assets</li>
+                            <li>Reseller membership plans and franchise fees</li>
+                            <li>Custom development &amp; ongoing support services</li>
+                            <li>All other goods and services sold through our platform</li>
+                        </ul>
+
+                        <h3>2. Why We Do Not Offer Refunds</h3>
+                        <p>Because our products and services are delivered instantly or involve digital access and customized work, refunds cannot be processed once service delivery has begun or digital access has been provided. Digital content cannot be “returned” once delivered or accessed, and services begin as soon as you engage with our team or platform.</p>
+
+                        <h3>3. Exceptions Only as Required by Law</h3>
+                        <p>We do not provide refunds for change of mind, dissatisfaction, incorrect decisions, or any reason related to personal preference. We will only consider exceptions if required under applicable consumer protection laws. In such cases, the refund process will follow legal guidelines and timelines.</p>
+
+                        <h3>4. Defects or Access Issues</h3>
+                        <p>If you experience technical issues or are unable to access a digital product or service due to a problem on our side, please contact support immediately. We will make commercially reasonable efforts to resolve access issues but this is not a guarantee of a refund. In rare cases, we may provide a replacement or corrective action at our discretion.</p>
+
+                        <h3>5. Chargebacks and Disputes</h3>
+                        <p>Customers must first contact us with any concerns before initiating a chargeback or payment dispute. Unilateral chargebacks without communication may result in the suspension of service access or future account restrictions.</p>
+
+                        <h3>6. Contact Us</h3>
+                        <p>If you have questions about this Refund Policy or encounter technical issues, please get in touch:</p>
+                        <p>
+                            <strong>Website:</strong> <a href="{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}" target="_blank">{{ !empty($agency->custom_domain) ? 'https://' . $agency->custom_domain : 'https://saasreselling.com/' }}</a><br>
+                            <strong>Phone / WhatsApp:</strong> {{ $agency->contact_phone ?? '+91 63749 13298' }}<br>
+                            <strong>Email:</strong> {{ $agency->contact_email ?? 'support@saasreselling.com' }}
+                        </p>
+                    @endif
                 @endif
 
             </div>
@@ -610,80 +847,84 @@
             ]);
         }
     @endphp
-    <footer class="site-footer" style="background:#020617;border-top:1px solid #0f172a;padding:56px 0 28px;margin-top:auto">
+        <footer class="site-footer" style="background:#020617;border-top:1px solid #1e293b;padding:56px 0 28px;margin-top:auto">
         <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-            <div class="footer-grid">
+            <div style="display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:36px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
 
-                {{-- Col 1: Brand & Social --}}
-                <div style="display:flex;flex-direction:column;gap:14px">
+                {{-- Col 1: Brand Info & Socials --}}
+                <div style="display:flex;flex-direction:column;gap:16px">
                     <div style="display:flex;align-items:center;gap:12px">
                         @if(!empty($agency->logo_dark))
-                            <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-dark" style="height:60px;max-height:64px;width:auto;object-fit:contain">
-                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" class="site-logo-light" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                            <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:64px;max-height:68px;width:auto;object-fit:contain">
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                         @elseif(!empty($agency->logo))
-                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agency->name ?? $agencyName }}" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                         @else
-                            <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#e2e8f0">{{ $agency->name ?? $agencyName }}</span>
+                            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#ea580c);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                                <i class="fas fa-layer-group text-white text-base"></i>
+                            </div>
+                            <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#e2e8f0">{{ $agencyName }}</span>
                         @endif
                     </div>
-                    <p style="font-size:12px;color:#64748b;line-height:1.7;max-width:240px">
-                        {{ $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.' }}
+                    <p style="font-size:12.5px;color:#94a3b8;line-height:1.7;max-width:240px">
+                        {{ $agency->footer_content ?? 'Your technology partner in building profitable digital and white-label SaaS businesses.' }}
                     </p>
-                    <div style="display:flex;gap:8px;margin-top:4px">
-                        @if(!empty($agency->facebook_url))<a href="{{ $agency->facebook_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-facebook-f text-xs"></i></a>@endif
-                        @if(!empty($agency->instagram_url))<a href="{{ $agency->instagram_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-instagram text-xs"></i></a>@endif
-                        @if(!empty($agency->youtube_url))<a href="{{ $agency->youtube_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-youtube text-xs"></i></a>@endif
-                        @if(!empty($agency->linkedin_url))<a href="{{ $agency->linkedin_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-linkedin-in text-xs"></i></a>@endif
-                        @if(!empty($agency->twitter_url))<a href="{{ $agency->twitter_url }}" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-twitter text-xs"></i></a>@endif
+                    <div style="display:flex;gap:10px;margin-top:4px">
+                        @if(!empty($agency->facebook_url))<a href="{{ $agency->facebook_url }}" target="_blank" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-facebook-f text-xs"></i></a>@endif
+                        @if(!empty($agency->instagram_url))<a href="{{ $agency->instagram_url }}" target="_blank" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-instagram text-xs"></i></a>@endif
+                        @if(!empty($agency->youtube_url))<a href="{{ $agency->youtube_url }}" target="_blank" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-youtube text-xs"></i></a>@endif
+                        @if(!empty($agency->linkedin_url))<a href="{{ $agency->linkedin_url }}" target="_blank" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i class="fab fa-linkedin-in text-xs"></i></a>@endif
                     </div>
                 </div>
 
-                {{-- Col 2: Products --}}
+                {{-- Col 2: Quick Links (Screenshot 5 Match) --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
-                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Products</h4>
-                    <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0">
-                        @foreach($footerProds as $fp)
-                            <li>
-                                <a href="{{ url('/#products') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">
-                                    <i class="fas fa-chevron-right text-[9px] text-slate-500"></i>
-                                    {{ $fp->name }}
-                                </a>
-                            </li>
-                        @endforeach
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Quick Links</h4>
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
+                        <li><a href="{{ url('/') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
+                        <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
+                        <li><a href="{{ url('/#about-section') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
+                        <li><a href="{{ url('/#how-it-works') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">How It Works</a></li>
+                        <li><a href="{{ url('/#testimonials') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>
+                        <li><a href="{{ url('/#faq') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">FAQ</a></li>
                     </ul>
                 </div>
 
-                {{-- Col 3: Legal Policies --}}
+                {{-- Col 3: Our Products (Screenshot 5 Match) --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
-                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Legal</h4>
-                    <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0">
-                        <li><a href="{{ route('agency.about') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> About Us</a></li>
-                        <li><a href="{{ route('agency.contact') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Contact Us</a></li>
-                        <li><a href="{{ route('agency.privacy') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Privacy Policy</a></li>
-                        <li><a href="{{ route('agency.terms') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Terms &amp; Conditions</a></li>
-                        <li><a href="{{ route('agency.shipping') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Shipping Policy</a></li>
-                        <li><a href="{{ route('agency.refund') }}" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'"><i class="fas fa-chevron-right text-[9px] text-slate-500"></i> Refund Policy</a></li>
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Our Products</h4>
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
+                        <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Ecombuilder</a></li>
+                        <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Website Builder</a></li>
+                        <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">WhatsApp Bulk</a></li>
                     </ul>
                 </div>
 
-                {{-- Col 4: Newsletter --}}
+                {{-- Col 4: Policies / Legal (policy.md Column) --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
-                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Subscribe to our newsletter</h4>
-                    <p style="font-size:12px;color:#64748b;margin:0">Get updates, tips and offers.</p>
-                    <form onsubmit="event.preventDefault(); alert('Thank you for subscribing!');" style="display:flex;align-items:center;background:#1e293b;border-radius:14px;padding:4px 6px;border:1px solid #334155;">
-                        <input type="email" placeholder="Enter your email" required style="background:transparent;border:none;outline:none;color:#fff;font-size:12px;padding:8px 12px;flex:1;">
-                        <button type="submit" style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#ea580c);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;">
-                            <i class="fas fa-paper-plane text-xs"></i>
-                        </button>
-                    </form>
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Policies</h4>
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
+                        <li><a href="{{ route('agency.privacy') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Privacy Policy</a></li>
+                        <li><a href="{{ route('agency.terms') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Terms &amp; Conditions</a></li>
+                        <li><a href="{{ route('agency.refund') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Refund Policy</a></li>
+                        <li><a href="{{ route('agency.contact') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            {{-- Bottom Bar Matching Screenshot 5 --}}
+            <div style="padding-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+                <p style="font-size:12px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
+                <div style="display:flex;align-items:center;gap:14px;font-size:12px;color:#64748b">
+                    <a href="{{ route('agency.privacy') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.terms') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Terms &amp; Conditions</a>
+                    <span>|</span>
+                    <a href="{{ route('agency.refund') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Refund Policy</a>
                 </div>
             </div>
 
-            {{-- Bottom bar --}}
-            <div style="padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:11px;color:#475569">
-                <p style="margin:0">&copy; {{ date('Y') }} {{ $agency->name ?? $agencyName }}. All rights reserved.</p>
-                <p style="margin:0;display:flex;align-items:center;gap:4px">Made with <span style="color:#f43f5e">♥</span> in India 🇮🇳</p>
-            </div>
         </div>
     </footer>
 

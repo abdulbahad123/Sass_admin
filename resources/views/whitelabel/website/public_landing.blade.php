@@ -6,7 +6,7 @@
 
     // Image fallbacks
     $heroImg = !empty($agency->hero_image) ? asset(ltrim($agency->hero_image, '/')) : asset('assets/landing_page/header_image.png');
-    $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/about_image.png');
+    $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/features_leftside.png');
     $ctaImg = !empty($agency->cta_image) ? asset(ltrim($agency->cta_image, '/')) : asset('assets/landing_page/cta_image.png');
 
     // Dynamic Collections from Database
@@ -305,7 +305,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 76px;
+            height: 88px;
         }
 
         @media (min-width: 900px) {
@@ -470,11 +470,6 @@
 </head>
 <body>
 
-{{-- Top Announcement Bar --}}
-<div style="background:linear-gradient(90deg,#1e3a8a,#312e81,#4c1d95)" class="text-white text-center py-2 px-4 text-xs font-semibold">
-    🎉 Special Offer: Get Started with <strong>{{ $agencyName }}</strong> Today &amp; Automate Your Business!
-</div>
-
 {{-- ══ HEADER (64px Logo, Light Mode Default, No Login, Enquire CTA) ════════════════ --}}
 <header class="site-header">
     <div class="header-inner">
@@ -482,12 +477,12 @@
         {{-- Logo (Light & Dark Support, 64px) --}}
         <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0">
             @if(!empty($agency->logo))
-                <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:64px;max-height:68px;width:auto;max-width:240px;object-fit:contain">
+                <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:76px;max-height:80px;width:auto;max-width:260px;object-fit:contain">
             @endif
             @if(!empty($agency->logo_dark))
-                <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:64px;max-height:68px;width:auto;max-width:240px;object-fit:contain">
+                <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:76px;max-height:80px;width:auto;max-width:260px;object-fit:contain">
             @elseif(!empty($agency->logo))
-                <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:64px;max-height:68px;width:auto;max-width:240px;object-fit:contain">
+                <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:76px;max-height:80px;width:auto;max-width:260px;object-fit:contain">
             @else
                 <div class="btn-brand" style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center">
                     <i data-lucide="layers" style="width:22px;height:22px;color:#fff"></i>
@@ -576,7 +571,7 @@
                        style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14.5px; padding:15px 32px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
                        onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
                        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
-                        <span>View Plans</span>
+                        <span>View Products</span>
                         <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                     </a>
                     <a href="#how-it-works" class="btn-outline"
@@ -588,11 +583,26 @@
                     </a>
                 </div>
 
-                {{-- Trust checkmarks --}}
-                <div style="display:flex; flex-wrap:wrap; gap:22px; font-size:13px; font-weight:700; color:#64748b; margin-top:2px;">
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="check-circle" style="width:15px;height:15px;color:var(--brand-primary)"></i> No Credit Card</span>
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="zap" style="width:15px;height:15px;color:var(--brand-primary)"></i> Easy Setup</span>
-                    <span style="display:flex;align-items:center;gap:7px"><i data-lucide="refresh-cw" style="width:15px;height:15px;color:var(--brand-primary)"></i> Cancel Anytime</span>
+                {{-- Metrics Badges (3 Products, 99.9% Uptime, 24/7 Support) --}}
+                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:4px;">
+                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid #e0e7ff; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(79,70,229,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;color:#fff;">
+                            <i data-lucide="package" style="width:15px;height:15px"></i>
+                        </div>
+                        <span style="font-size:13.5px;font-weight:900;color:#1e1b4b;letter-spacing:-0.2px;">3 Products</span>
+                    </div>
+                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid #d1fae5; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(16,185,129,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;color:#fff;">
+                            <i data-lucide="activity" style="width:15px;height:15px"></i>
+                        </div>
+                        <span style="font-size:13.5px;font-weight:900;color:#064e3b;letter-spacing:-0.2px;">99.9% Uptime</span>
+                    </div>
+                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid #ffedd5; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(249,115,22,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;color:#fff;">
+                            <i data-lucide="headphones" style="width:15px;height:15px"></i>
+                        </div>
+                        <span style="font-size:13.5px;font-weight:900;color:#7c2d12;letter-spacing:-0.2px;">24/7 Support</span>
+                    </div>
                 </div>
             </div>
 
@@ -925,42 +935,91 @@
 </section>
 
 
-{{-- ══ SECTION 6: HOW IT WORKS ═════════════════════════════════════════════════ --}}
-<section id="how-it-works" style="background:#f0efff; padding:80px 0; overflow:visible;">
-    <div style="max-width:1100px; margin:0 auto; padding:0 24px">
-        <div style="text-align:center; margin-bottom:60px">
-            <h2 style="font-size:clamp(1.75rem,3.2vw,2.4rem); font-weight:900; color:#0f172a; margin-bottom:12px; letter-spacing:-0.5px;">{{ $agency->how_it_works_title ?? 'How It Works?' }}</h2>
-            <p style="font-size:14px; color:#64748b; font-weight:500;">{{ $agency->how_it_works_subtitle ?? 'Get started in 3 simple steps and transform your business today.' }}</p>
+{{-- ══ SECTION 6: HOW IT WORKS (Enhanced Attractive UI/UX) ═════════════════ --}}
+<section id="how-it-works" style="background: linear-gradient(180deg, #f8faff 0%, #edf1ff 100%); padding: 90px 0; overflow: visible; position: relative;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px">
+        
+        {{-- Section Title & Badge --}}
+        <div style="text-align: center; margin-bottom: 64px">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.1)); color: #4f46e5; border: 1.5px solid rgba(79,70,229,0.22); font-size: 12px; font-weight: 900; padding: 7px 22px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em;">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #4f46e5;"></i>
+                <span>SIMPLE 3-STEP PROCESS</span>
+            </div>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 3.8vw, 3rem); font-weight: 900; color: #0f172a; margin-bottom: 12px; letter-spacing: -0.5px;">
+                {{ $agency->how_it_works_title ?? 'How It Works?' }}
+            </h2>
+            <p style="font-size: 16px; color: #64748b; font-weight: 500; max-width: 600px; margin: 0 auto; line-height: 1.7;">
+                {{ $agency->how_it_works_subtitle ?? 'Get started in 3 simple steps and transform your business today.' }}
+            </p>
         </div>
 
-        <div style="display:flex; align-items:stretch; gap:0; position:relative;" class="steps-row">
+        {{-- 3 Step Cards with Curved Connecting Arrows --}}
+        <div style="display: flex; align-items: stretch; gap: 0; position: relative;" class="steps-row">
             @php
-                $stepColors = [
-                    0 => ['grad' => 'linear-gradient(135deg,#7c3aed,#6d28d9)', 'bg' => '#ede9fe', 'clr' => '#7c3aed', 'shadow' => 'rgba(124,58,237,.4)'],
-                    1 => ['grad' => 'linear-gradient(135deg,#2563eb,#1d4ed8)', 'bg' => '#dbeafe', 'clr' => '#2563eb', 'shadow' => 'rgba(37,99,235,.4)'],
-                    2 => ['grad' => 'linear-gradient(135deg,#10b981,#059669)', 'bg' => '#d1fae5', 'clr' => '#059669', 'shadow' => 'rgba(16,185,129,.4)'],
+                $stepThemes = [
+                    0 => [
+                        'grad'   => 'linear-gradient(135deg,#7c3aed,#4f46e5)',
+                        'iconBg' => '#ede9fe',
+                        'clr'    => '#7c3aed',
+                        'shadow' => 'rgba(124,58,237,.28)',
+                        'border' => '#ddd6fe',
+                        'cardBg' => '#ffffff',
+                    ],
+                    1 => [
+                        'grad'   => 'linear-gradient(135deg,#2563eb,#0284c7)',
+                        'iconBg' => '#dbeafe',
+                        'clr'    => '#2563eb',
+                        'shadow' => 'rgba(37,99,235,.28)',
+                        'border' => '#bfdbfe',
+                        'cardBg' => '#ffffff',
+                    ],
+                    2 => [
+                        'grad'   => 'linear-gradient(135deg,#10b981,#059669)',
+                        'iconBg' => '#d1fae5',
+                        'clr'    => '#059669',
+                        'shadow' => 'rgba(16,185,129,.28)',
+                        'border' => '#a7f3d0',
+                        'cardBg' => '#ffffff',
+                    ],
                 ];
             @endphp
+
             @foreach($hiwSteps as $hIdx => $hStep)
-            @php $sc = $stepColors[$hIdx % 3]; @endphp
-            <div class="step-card-2" style="flex:1; background:#fff; border:1px solid rgba(220,224,238,0.6); border-radius:22px; padding:44px 28px 38px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; position:relative; z-index:1; box-shadow:0 8px 32px rgba(79,70,229,0.05); transition:transform .25s, box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(79,70,229,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(79,70,229,.05)'">
-                <div style="position:absolute; top:-17px; left:20px; width:38px; height:38px; border-radius:50%; background:{{ $sc['grad'] }}; color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px {{ $sc['shadow'] }}; border:2px solid #fff; letter-spacing:.5px;">{{ $hStep['num'] ?? sprintf('%02d', $hIdx + 1) }}</div>
-                <div style="width:64px; height:64px; border-radius:50%; background:{{ $sc['bg'] }}; display:flex; align-items:center; justify-content:center; margin-top:8px;">
-                    <i data-lucide="{{ $hStep['icon'] ?? 'user-plus' }}" style="width:28px; height:28px; color:{{ $sc['clr'] }}"></i>
+            @php $st = $stepThemes[$hIdx % 3]; @endphp
+            <div class="step-card-2" style="flex: 1; background: {{ $st['cardBg'] }}; border: 1.5px solid {{ $st['border'] }}; border-radius: 26px; padding: 48px 30px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; position: relative; z-index: 1; box-shadow: 0 10px 36px rgba(79,70,229,0.06); transition: all .28s cubic-bezier(0.16,1,0.3,1);"
+                 onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 22px 50px -10px ' + '{{ $st['shadow'] }}';this.style.borderColor='{{ $st['clr'] }}'"
+                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 10px 36px rgba(79,70,229,0.06)';this.style.borderColor='{{ $st['border'] }}'">
+                
+                {{-- Floating Step Pill Badge --}}
+                <div style="position: absolute; top: -18px; left: 24px; width: 44px; height: 44px; border-radius: 14px; background: {{ $st['grad'] }}; color: #fff; font-weight: 900; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px {{ $st['shadow'] }}; border: 2.5px solid #fff; letter-spacing: .5px;">
+                    {{ $hStep['num'] ?? sprintf('%02d', $hIdx + 1) }}
                 </div>
-                <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">{{ $hStep['title'] }}</h3>
-                <p style="font-size:13px; color:#64748b; line-height:1.7; margin:0">{{ $hStep['desc'] }}</p>
+
+                {{-- Central Icon --}}
+                <div style="width: 72px; height: 72px; border-radius: 22px; background: {{ $st['iconBg'] }}; display: flex; align-items: center; justify-content: center; margin-top: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+                    <i data-lucide="{{ $hStep['icon'] ?? 'layout-grid' }}" style="width: 32px; height: 32px; color: {{ $st['clr'] }};"></i>
+                </div>
+
+                <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0; line-height: 1.3;">
+                    {{ $hStep['title'] }}
+                </h3>
+
+                <p style="font-size: 14px; color: #64748b; line-height: 1.7; margin: 0; font-weight: 500;">
+                    {{ $hStep['desc'] }}
+                </p>
             </div>
+
             @if(!$loop->last)
-            <div class="hiw-connector" style="width:80px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative; z-index:0;">
-                <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
-                    <path d="M 4 10 Q 20 3 40 10 T 76 10" stroke="#a5b4fc" stroke-width="2" stroke-dasharray="5 4" fill="none" stroke-linecap="round"/>
-                    <path d="M 72 7 L 76 10 L 72 13" stroke="#a5b4fc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="hiw-connector" style="width: 70px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; position: relative; z-index: 0;">
+                <svg width="70" height="24" viewBox="0 0 70 24" fill="none">
+                    <path d="M 4 12 Q 35 2 66 12" stroke="#a5b4fc" stroke-width="2.5" stroke-dasharray="6 5" fill="none" stroke-linecap="round"/>
+                    <path d="M 60 7 L 66 12 L 60 17" stroke="#a5b4fc" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             @endif
             @endforeach
         </div>
+
     </div>
 </section>
 
@@ -1131,7 +1190,7 @@
                    style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
-                    {{ $agency->cta_button_text ?? 'Launch Your Business Today' }}
+                    {{ !empty($agency->cta_button_text) && $agency->cta_button_text !== 'Launch Your Business Today' && $agency->cta_button_text !== 'Get Started Free' ? $agency->cta_button_text : 'Enquire Us' }}
                     <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                 </a>
             </div>
@@ -1145,16 +1204,16 @@
 <footer class="site-footer" style="background:#0f172a; padding:60px 0 36px">
     <div style="max-width:1240px;margin:0 auto;padding:0 24px">
 
-        <div style="display:grid;grid-template-columns:220px 1fr 1fr 220px;gap:36px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
+        <div style="display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:36px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
 
-            {{-- Col 1: Brand + Social --}}
+            {{-- Col 1: Brand Info & Socials --}}
             <div style="display:flex;flex-direction:column;gap:16px">
                 <div style="display:flex;align-items:center;gap:12px">
                     @if(!empty($agency->logo_dark))
-                        <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:60px;max-height:64px;width:auto;object-fit:contain">
-                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                        <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="{{ $agencyName }}" class="site-logo-dark" style="height:64px;max-height:68px;width:auto;object-fit:contain">
+                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" class="site-logo-light" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                     @elseif(!empty($agency->logo))
-                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" style="height:60px;max-height:64px;width:auto;object-fit:contain">
+                        <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="{{ $agencyName }}" style="height:64px;max-height:68px;width:auto;object-fit:contain">
                     @else
                         <div class="btn-brand" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                             <i data-lucide="layers" style="width:18px;height:18px;color:#fff"></i>
@@ -1162,8 +1221,8 @@
                         <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;color:#e2e8f0">{{ $agencyName }}</span>
                     @endif
                 </div>
-                <p style="font-size:12.5px;color:#94a3b8;line-height:1.7;max-width:210px">
-                    {{ $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.' }}
+                <p style="font-size:12.5px;color:#94a3b8;line-height:1.7;max-width:240px">
+                    {{ $agency->footer_content ?? 'Your technology partner in building profitable digital and white-label SaaS businesses.' }}
                 </p>
                 <div style="display:flex;gap:10px;margin-top:4px">
                     <a href="{{ $agency->facebook_url ?? '#' }}" class="footer-social-btn" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i data-lucide="facebook" style="width:15px;height:15px"></i></a>
@@ -1173,50 +1232,52 @@
                 </div>
             </div>
 
-            {{-- Col 2: Products --}}
+            {{-- Col 2: Quick Links (Screenshot 5 Match) --}}
             <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Solutions</h4>
-                <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
-                    @foreach($services as $s)
-                        <li>
-                            <a href="#products" style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">
-                                <i data-lucide="chevron-right" style="width:12px;height:12px;flex-shrink:0"></i>
-                                {{ $s['title'] }}
-                            </a>
-                        </li>
-                    @endforeach
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Quick Links</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
+                    <li><a href="/" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
+                    <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
+                    <li><a href="#about-section" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
+                    <li><a href="#how-it-works" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">How It Works</a></li>
+                    <li><a href="#testimonials" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>
+                    <li><a href="#faq" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">FAQ</a></li>
                 </ul>
             </div>
 
-            {{-- Col 3: Legal Policies --}}
+            {{-- Col 3: Our Products (Screenshot 5 Match) --}}
             <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Legal</h4>
-                <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
-                    <li><a href="{{ route('agency.about') }}" style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'"><i data-lucide="chevron-right" style="width:12px;height:12px"></i> About Us</a></li>
-                    <li><a href="{{ route('agency.contact') }}" style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'"><i data-lucide="chevron-right" style="width:12px;height:12px"></i> Contact Us</a></li>
-                    <li><a href="{{ route('agency.privacy') }}" style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'"><i data-lucide="chevron-right" style="width:12px;height:12px"></i> Privacy Policy</a></li>
-                    <li><a href="{{ route('agency.terms') }}" style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'"><i data-lucide="chevron-right" style="width:12px;height:12px"></i> Terms &amp; Conditions</a></li>
-                    <li><a href="{{ route('agency.refund') }}" style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#94a3b8;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'"><i data-lucide="chevron-right" style="width:12px;height:12px"></i> Refund Policy</a></li>
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Our Products</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
+                    <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Ecombuilder</a></li>
+                    <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Website Builder</a></li>
+                    <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">WhatsApp Bulk</a></li>
                 </ul>
             </div>
 
-            {{-- Col 4: Contact / Enquire --}}
+            {{-- Col 4: Policies / Legal (policy.md Column) --}}
             <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Quick Connect</h4>
-                <p style="font-size:12.5px;color:#94a3b8;line-height:1.7">
-                    Have questions about our products or want a live demo? Reach our team directly.
-                </p>
-                <a href="https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services" target="_blank" class="btn-brand" style="text-align:center;padding:10px 16px;border-radius:10px;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:6px;">
-                    <i data-lucide="message-circle" style="width:14px;height:14px"></i>
-                    <span>Chat on WhatsApp</span>
-                </a>
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Policies</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
+                    <li><a href="{{ route('agency.privacy') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Privacy Policy</a></li>
+                    <li><a href="{{ route('agency.terms') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Terms &amp; Conditions</a></li>
+                    <li><a href="{{ route('agency.refund') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Refund Policy</a></li>
+                    <li><a href="{{ route('agency.contact') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
+                </ul>
             </div>
 
         </div>
 
+        {{-- Bottom Bar Matching Screenshot 5 --}}
         <div style="padding-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
             <p style="font-size:12px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
-            <p style="font-size:12px;color:#64748b;margin:0">Powered by {{ $agencyName }} Technology</p>
+            <div style="display:flex;align-items:center;gap:14px;font-size:12px;color:#64748b">
+                <a href="{{ route('agency.privacy') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
+                <span>|</span>
+                <a href="{{ route('agency.terms') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Terms &amp; Conditions</a>
+                <span>|</span>
+                <a href="{{ route('agency.refund') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Refund Policy</a>
+            </div>
         </div>
 
     </div>
