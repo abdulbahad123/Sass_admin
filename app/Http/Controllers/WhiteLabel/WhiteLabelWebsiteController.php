@@ -21,6 +21,25 @@ class WhiteLabelWebsiteController extends Controller
         return null;
     }
 
+    protected function makeImageValidationRule(int $maxKb, array $allowed = ['jpeg', 'png', 'jpg', 'webp', 'svg'])
+    {
+        if (extension_loaded('fileinfo')) {
+            return 'nullable|image|mimes:' . implode(',', $allowed) . '|max:' . $maxKb;
+        }
+
+        return ['nullable', 'file', function ($attr, $val, $fail) use ($maxKb, $allowed) {
+            if (!$val) return;
+            if ($val->getSize() > $maxKb * 1024) {
+                $fail(ucfirst(str_replace('_', ' ', $attr)) . ' must not exceed ' . round($maxKb / 1024, 1) . 'MB.');
+                return;
+            }
+            $ext = strtolower($val->getClientOriginalExtension() ?: pathinfo($val->getClientOriginalName(), PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowed, true)) {
+                $fail(ucfirst(str_replace('_', ' ', $attr)) . ' must be a valid file (' . implode(', ', $allowed) . ').');
+            }
+        }];
+    }
+
     protected function saveSecureUpload($file, string $prefix, string $subDir = 'uploads/agency'): ?string
     {
         if (!$file || !$file->isValid()) {
@@ -28,7 +47,18 @@ class WhiteLabelWebsiteController extends Controller
         }
 
         $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'ico'];
-        $ext = strtolower($file->guessExtension() ?: pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION));
+
+        $ext = '';
+        if (extension_loaded('fileinfo')) {
+            try {
+                $ext = strtolower($file->guessExtension() ?: '');
+            } catch (\Throwable $e) {
+                $ext = '';
+            }
+        }
+        if (empty($ext)) {
+            $ext = strtolower($file->getClientOriginalExtension() ?: pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION));
+        }
 
         if (!in_array($ext, $allowedExts, true)) {
             return null;
@@ -97,11 +127,11 @@ class WhiteLabelWebsiteController extends Controller
             'youtube_url'      => 'nullable|string|max:500',
             'linkedin_url'     => 'nullable|string|max:500',
             'twitter_url'      => 'nullable|string|max:500',
-            'logo'             => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:4096',
-            'favicon'          => 'nullable|mimes:ico,png,jpg,svg|max:2048',
-            'hero_image'       => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:8192',
-            'about_image'      => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:8192',
-            'cta_image'        => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:8192',
+            'logo'             => $this->makeImageValidationRule(4096, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
+            'favicon'          => $this->makeImageValidationRule(2048, ['ico', 'png', 'jpg', 'svg']),
+            'hero_image'       => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
+            'about_image'      => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
+            'cta_image'        => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
         ]);
 
         if ($request->hasFile('logo')) {
@@ -243,6 +273,7 @@ class WhiteLabelWebsiteController extends Controller
             'about_title'   => 'nullable|string',
             'about_mission' => 'nullable|string',
             'about_content' => 'required|string',
+            'about_image'   => $this->makeImageValidationRule(8192, ['jpeg', 'png', 'jpg', 'webp', 'svg']),
         ]);
 
         if ($request->hasFile('about_image')) {

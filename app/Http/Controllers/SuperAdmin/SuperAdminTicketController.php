@@ -187,10 +187,20 @@ class SuperAdminTicketController extends Controller
 
     protected function getAttachmentValidationRules(): array
     {
+        $allowed = ['jpeg', 'jpg', 'png', 'pdf', 'webp', 'doc', 'docx', 'zip'];
+        $rule = extension_loaded('fileinfo')
+            ? 'file|mimes:' . implode(',', $allowed) . '|max:10240'
+            : ['file', function($attr, $val, $fail) use ($allowed) {
+                if (!$val) return;
+                if ($val->getSize() > 10240 * 1024) { $fail('Attachment file must not exceed 10MB.'); return; }
+                $ext = strtolower($val->getClientOriginalExtension() ?: pathinfo($val->getClientOriginalName(), PATHINFO_EXTENSION));
+                if (!in_array($ext, $allowed, true)) { $fail('Invalid file type. Allowed: ' . implode(', ', $allowed)); }
+            }];
+
         return [
             'attachments'   => 'nullable|array|max:5',
-            'attachments.*' => 'file|mimes:jpeg,jpg,png,pdf,webp,doc,docx,zip|max:10240',
-            'attachment'    => 'nullable|file|mimes:jpeg,jpg,png,pdf,webp,doc,docx,zip|max:10240',
+            'attachments.*' => $rule,
+            'attachment'    => is_array($rule) ? array_merge(['nullable'], $rule) : 'nullable|' . $rule,
         ];
     }
 }
