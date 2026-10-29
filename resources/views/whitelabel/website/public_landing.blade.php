@@ -466,6 +466,190 @@
             0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
             50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.6; }
         }
+
+        /* ═══════════════════════════════════════════════════════════════
+           COMPREHENSIVE MOBILE RESPONSIVE STYLES (Screen widths <= 900px & <= 640px)
+           ═══════════════════════════════════════════════════════════════ */
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+
+        @media (max-width: 900px) {
+            /* Header */
+            .header-inner {
+                height: 76px !important;
+                padding: 0 16px !important;
+            }
+            .site-logo-light, .site-logo-dark {
+                height: 52px !important;
+                max-height: 56px !important;
+                max-width: 190px !important;
+            }
+
+            /* Section 1: Hero */
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+                gap: 36px !important;
+                text-align: center !important;
+            }
+            .hero-grid > div:first-child {
+                align-items: center !important;
+                text-align: center !important;
+            }
+            .hero-grid h1 {
+                font-size: clamp(1.85rem, 6.5vw, 2.5rem) !important;
+            }
+            .hero-grid p {
+                max-width: 100% !important;
+                text-align: center !important;
+                font-size: 14.5px !important;
+            }
+            .hero-grid div[style*="display:flex; gap:14px"] {
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            .hero-grid div[style*="display:flex; gap:14px"] a {
+                width: 100% !important;
+                justify-content: center !important;
+                max-width: 320px !important;
+            }
+            .hero-grid div[style*="display:flex; flex-wrap:wrap; gap:12px"] {
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            .hero-float-badge {
+                display: none !important;
+            }
+
+            /* Section 2: About Us */
+            .about-grid {
+                grid-template-columns: 1fr !important;
+                gap: 32px !important;
+            }
+            .about-section div[style*="padding: 48px"] {
+                padding: 28px 20px !important;
+                border-radius: 22px !important;
+            }
+            .about-grid h2 {
+                font-size: clamp(1.7rem, 5.5vw, 2.2rem) !important;
+            }
+
+            /* Section 3: Trust Bar */
+            .trust-bar-section {
+                padding: 36px 0 !important;
+            }
+            .trust-bar-section span[style*="font-size: 16px"] {
+                font-size: 12px !important;
+                letter-spacing: .04em !important;
+            }
+
+            /* Section 4: Why Choose Us */
+            .feat-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+            }
+
+            /* Section 5: Products */
+            .pricing-cards-outer {
+                grid-template-columns: 1fr !important;
+                gap: 24px !important;
+            }
+            .pricing-left-panel {
+                padding: 24px 20px 18px !important;
+            }
+            .pricing-right-panel {
+                padding: 22px 20px 26px !important;
+            }
+
+            /* Section 6: How It Works */
+            .steps-row {
+                flex-direction: column !important;
+                gap: 40px !important;
+            }
+            .hiw-connector {
+                display: none !important;
+            }
+            .step-card-2 {
+                width: 100% !important;
+                flex: none !important;
+                padding: 40px 22px 32px !important;
+            }
+
+            /* Section 7: Testimonials */
+            .testi-card {
+                flex: 0 0 88% !important;
+                min-width: 270px !important;
+                padding: 24px 20px !important;
+            }
+
+            /* Section 8: FAQ */
+            .faq-grid-2col {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            /* Section 8.5: Contact Us Container */
+            .contact-grid-wrap {
+                grid-template-columns: 1fr !important;
+                gap: 28px !important;
+            }
+            .form-row-2 {
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+            }
+            #contact {
+                padding: 56px 0 64px !important;
+            }
+            #contact div[style*="padding: 36px 32px"] {
+                padding: 24px 18px !important;
+                border-radius: 20px !important;
+            }
+
+            /* Section 9: CTA Banner */
+            .cta-band {
+                flex-direction: column !important;
+                text-align: center !important;
+                padding: 36px 20px !important;
+                gap: 24px !important;
+            }
+            .cta-band > div:first-child {
+                max-width: 100% !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            .cta-band > div:first-child h2 {
+                text-align: center !important;
+                font-size: 1.45rem !important;
+            }
+            .cta-band > div:first-child p {
+                text-align: center !important;
+            }
+            .cta-band div[style*="display:flex; flex-wrap:wrap"] {
+                justify-content: center !important;
+            }
+            .cta-band img {
+                display: none !important;
+            }
+            .cta-band a {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+
+            /* Section 10: Footer */
+            .footer-grid {
+                grid-template-columns: 1fr !important;
+                gap: 32px !important;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 32px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -615,7 +799,7 @@
                      style="position:relative;z-index:2;width:100%;max-width:850px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15)); margin-right:-20px;">
 
                 {{-- Floating Element 1: AI Powered --}}
-                <div style="position:absolute; top:20px; right:-25px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
+                <div class="hero-float-badge" style="position:absolute; top:20px; right:-25px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #7c3aed, #4f46e5); display:flex; align-items:center; justify-content:center;">
                         <i data-lucide="sparkles" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
@@ -626,7 +810,7 @@
                 </div>
 
                 {{-- Floating Element 2: Growth Ready --}}
-                <div style="position:absolute; bottom:40px; left:-20px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
+                <div class="hero-float-badge" style="position:absolute; bottom:40px; left:-20px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #10b981, #059669); display:flex; align-items:center; justify-content:center;">
                         <i data-lucide="trending-up" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
