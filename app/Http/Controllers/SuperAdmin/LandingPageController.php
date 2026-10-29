@@ -341,11 +341,20 @@ class LandingPageController extends Controller
             if ($curWhyTag === 'WHY CHOOSE NOORYAK?') {
                 Setting::set('lp_why_choose_tag', 'WHY CHOOSE SAASRESELLING?');
             }
+            $defaultFaqs = [
+                ['question' => '1. WHAT IS SAASRESELLING?', 'answer' => 'SaaSReselling is an All-In-One White Label SaaS Platform that empowers agencies, freelancers, and entrepreneurs to launch, market, and scale their own branded software business. You get access to 3 turnkey, high-demand SaaS products that you can sell to unlimited clients under your own custom domain, brand identity, and pricing—keeping 100% of your subscription revenue without managing any backend code or servers.'],
+                ['question' => '2. WHAT SAAS PRODUCTS ARE INCLUDED?', 'answer' => "SaaSReselling includes 3 powerful SaaS products ready to sell immediately under your brand:\n• Ecom Builder (Launchshop): Complete e-commerce store platform with product catalogs, shopping cart, online payment gateways, and order management.\n• Website Builder: Dynamic drag-and-drop website and sales funnel builder with responsive designer templates and fast hosting.\n• WhatsApp Bulk Automation: Enterprise-grade WhatsApp marketing suite for bulk broadcasting, automated campaigns, chatbot flows, and contact list management."],
+                ['question' => '3. CAN I LAUNCH THE PLATFORM UNDER MY OWN BRAND?', 'answer' => 'Yes, 100%. The entire platform is completely white-labeled. Your clients will only see your custom domain, your logo, your company colors, and your branding across all dashboards, client portals, system emails, and notification templates. There is zero reference to SaaSReselling anywhere.'],
+                ['question' => '4. CAN I USE MY OWN CUSTOM DOMAIN?', 'answer' => 'Yes! You can connect your own domain (e.g. app.youragency.com or yourbrand.com) with automated free SSL certificate provisioning. All client login URLs, storefronts, and automated links will operate completely under your verified domain name.'],
+                ['question' => '5. CAN I SELL UNLIMITED SUBSCRIPTIONS TO MY CUSTOMERS?', 'answer' => 'Yes. You have the freedom to onboard and sell to unlimited businesses and clients. You establish your own pricing packages (monthly, annual, or one-time setup fees) and collect 100% of customer payments directly through your own payment gateway or bank account.'],
+                ['question' => '6. DO I NEED CODING OR TECHNICAL KNOWLEDGE TO START?', 'answer' => 'Not at all. SaaSReselling is fully turnkey and zero-code. Our engineering team handles all server hosting, infrastructure scaling, database backups, security maintenance, and software updates so you can focus 100% on marketing, sales, and client relationships.'],
+                ['question' => '7. WHAT IS THE WHITE LABEL SAAS PARTNER MODEL?', 'answer' => 'The White Label SaaS Partner Model allows you to license a ready-made, fully developed software ecosystem as your own intellectual property. Instead of spending months and millions of rupees on engineering, you launch immediately with verified product-market fit and generate predictable recurring monthly revenue (MRR).'],
+                ['question' => '8. CAN I CREATE AND MANAGE MULTIPLE WHITE LABEL PARTNERS?', 'answer' => 'Yes! You have full administrative control to provision, monitor, manage, and configure client workspaces and user accounts directly from your central administrative dashboard.'],
+                ['question' => '9. HOW DO I GET STARTED WITH SAASRESELLING?', 'answer' => 'Getting started takes less than 24 hours: choose your plan, book your 1:1 onboarding walkthrough, connect your custom domain and brand assets, and your white-labeled SaaS suite will be launched and ready to onboard paying customers immediately!']
+            ];
             $curFaqs = Setting::get('lp_faqs_items');
-            if (!empty($curFaqs) && stripos($curFaqs, 'Nooryak') !== false) {
-                $curFaqs = str_ireplace('Nooryak.in', 'saasreselling.com', $curFaqs);
-                $curFaqs = str_ireplace('Nooryak', 'SaaSReselling', $curFaqs);
-                Setting::set('lp_faqs_items', $curFaqs);
+            if (empty($curFaqs) || stripos($curFaqs, 'Ecom Builder') === false || stripos($curFaqs, 'Nooryak') !== false || stripos($curFaqs, 'WHAT IS SAAS YAARI') !== false) {
+                Setting::set('lp_faqs_items', json_encode($defaultFaqs));
             }
             $curTestTitle = Setting::get('lp_testimonials_title');
             if (empty($curTestTitle) || $curTestTitle === 'What Our Partners Say') {
@@ -377,8 +386,8 @@ class LandingPageController extends Controller
                 ],
                 [
                     'name' => 'Cockroach Studio',
-                    'domain' => 'cockroach.in',
-                    'url' => 'https://cockroach.in',
+                    'domain' => 'cockroachjantaparty.top',
+                    'url' => 'https://cockroachjantaparty.top/',
                     'role' => 'Digital Services & Studio',
                     'location' => 'Delhi',
                     'badge' => 'White Label Agency',
@@ -389,7 +398,7 @@ class LandingPageController extends Controller
                 [
                     'name' => 'BullionX Academy',
                     'domain' => 'bullionxacademy.com',
-                    'url' => 'https://bullionxacademy.com',
+                    'url' => 'http://bullionxacademy.com/',
                     'role' => 'Technology & Business Solutions',
                     'location' => 'Hyderabad',
                     'badge' => 'FinTech & EduTech',
@@ -400,7 +409,7 @@ class LandingPageController extends Controller
                 [
                     'name' => 'TapNow India',
                     'domain' => 'tapnow.in',
-                    'url' => 'https://tapnow.in',
+                    'url' => '', // Disabled: should not open
                     'role' => 'Digital Marketing & Automation',
                     'location' => 'Chandigarh',
                     'badge' => 'Active Reseller Partner',
@@ -420,7 +429,7 @@ class LandingPageController extends Controller
                     'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
                 ]
             ];
-            if (empty($curTestimonials) || stripos($curTestimonials, 'youverse.in') === false || stripos($curTestimonials, 'Rohit Sharma') !== false || stripos($curTestimonials, '1tap') !== false || stripos($curTestimonials, 'saasreselling.com') !== false || stripos($curTestimonials, 'Nooryak Technology') === false) {
+            if (empty($curTestimonials) || stripos($curTestimonials, 'youverse.in') === false || stripos($curTestimonials, 'cockroachjantaparty') === false || stripos($curTestimonials, 'Rohit Sharma') !== false || stripos($curTestimonials, '1tap') !== false || stripos($curTestimonials, 'saasreselling.com') !== false || stripos($curTestimonials, 'Nooryak Technology') === false) {
                 Setting::set('lp_testimonials_items', json_encode($genuinePartners));
             }
         } catch (\Exception $e) {
@@ -663,13 +672,7 @@ class LandingPageController extends Controller
             'lp_faqs_tag' => Setting::get('lp_faqs_tag', 'FAQ'),
             'lp_faqs_title' => Setting::get('lp_faqs_title', 'Frequently Asked Questions'),
             'lp_faqs_subtitle' => Setting::get('lp_faqs_subtitle', 'Still have questions? We\'re here to help.'),
-            'lp_faqs_items' => json_decode(Setting::get('lp_faqs_items', json_encode([
-                ['question' => 'What is SaaSReselling?', 'answer' => 'SaaSReselling is an All-In-One White Label SaaS Platform that allows you to launch and scale your own SaaS business under your own brand.'],
-                ['question' => 'How does the pricing work?', 'answer' => 'We offer simple, transparent monthly pricing with no hidden fees. You keep 100% of the revenue you generate from your clients.'],
-                ['question' => 'Can I use my own domain and branding?', 'answer' => 'Yes! You can connect your custom domain, upload your logo, select your color scheme, and customize all client-facing branding.'],
-                ['question' => 'Is technical knowledge required?', 'answer' => 'No technical or coding knowledge is required. We handle hosting, security, product updates, and infrastructure.'],
-                ['question' => 'Do you provide support?', 'answer' => 'Yes, we provide 24/7 technical and platform support to ensure your SaaS business runs smoothly.']
-            ])), true),
+            'lp_faqs_items' => json_decode(Setting::get('lp_faqs_items', json_encode($defaultFaqs)), true),
 
             // CTA Banner & Footer
             'lp_cta_banner_title' => Setting::get('lp_cta_banner_title', 'Ready to Launch Your SaaS Business?'),

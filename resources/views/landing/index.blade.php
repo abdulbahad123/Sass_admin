@@ -1330,8 +1330,9 @@
             
             <!-- Section Header -->
             <div class="text-center max-w-2xl mx-auto mb-10">
-                <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide bg-[#fff2ec] dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-[#fed7aa]/60 mx-auto mb-3">
-                    {{ $data['lp_pricing_tag'] ?? 'PRICING' }}
+                <span class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-orange-200/80 dark:border-orange-900/60 shadow-sm mx-auto mb-3">
+                    <i class="fas fa-tag text-xs text-[#ff3d00]"></i>
+                    <span>{{ $data['lp_pricing_tag'] ?? 'PRICING' }}</span>
                 </span>
                 <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[42px] text-slate-900 dark:text-white tracking-tight mt-2">
                     {{ $data['lp_pricing_title'] ?? 'Transparent Pricing for Every Stage' }}
@@ -1342,9 +1343,9 @@
             <div class="flex flex-col items-center justify-center mb-10">
                 <div class="flex items-center space-x-4">
                     <div class="bg-white dark:bg-[#0B0F19] p-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
-                        <div id="pricingToggleBg" class="absolute left-1.5 top-1.5 bottom-1.5 w-[100px] btn-gradient rounded-full transition-all duration-300 ease-in-out"></div>
-                        <button type="button" id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="window.setPricingPlan('monthly')">Monthly</button>
-                        <button type="button" id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('yearly')">Yearly</button>
+                        <div id="pricingToggleBg" class="absolute left-1.5 top-1.5 bottom-1.5 w-[100px] btn-gradient rounded-full transition-all duration-300 ease-in-out" style="transform: translateX(100px);"></div>
+                        <button type="button" id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('monthly')">Monthly</button>
+                        <button type="button" id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="window.setPricingPlan('yearly')">Yearly</button>
                     </div>
                     <div class="text-xs font-extrabold text-[#ff3d00] flex items-center gap-1 bg-orange-100 dark:bg-orange-950/60 px-3 py-1 rounded-full border border-orange-200 dark:border-orange-800 shadow-xs">
                         <i class="fas fa-reply fa-flip-vertical text-xs"></i>
@@ -1354,7 +1355,7 @@
                 
                 <div id="pricingSubtextContainer" class="mt-4 bg-orange-50 dark:bg-orange-950/30 px-5 py-2 rounded-full border border-orange-200/80 dark:border-orange-800/50 shadow-sm flex items-center space-x-2 transition-all">
                     <i id="pricingSubtextIcon" class="far fa-calendar-alt text-[#ff3d00] text-xs"></i>
-                    <span id="pricingSubtext" class="text-xs font-bold text-[#c2410c] dark:text-orange-300">Monthly Plan Selected — Switch to Yearly for ₹35,000/year (Save over 27%)</span>
+                    <span id="pricingSubtext" class="text-xs font-bold text-[#c2410c] dark:text-orange-300">Yearly Plan Selected — Pay ₹35,000/year (Save ₹13,000 annually!)</span>
                 </div>
             </div>
 
@@ -1389,8 +1390,8 @@
 
                         <!-- Price Box -->
                         <div class="pt-2 pb-1 flex items-baseline space-x-2">
-                            <span id="priceMainAmount" class="font-heading font-black text-4xl sm:text-5xl lg:text-[54px] text-slate-900 dark:text-white tracking-tight">₹{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}</span>
-                            <span id="priceMainPeriod" class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400">/ month</span>
+                            <span id="priceMainAmount" class="font-heading font-black text-4xl sm:text-5xl lg:text-[54px] text-slate-900 dark:text-white tracking-tight">₹{{ (!empty($data['lp_pricing_yearly']) && $data['lp_pricing_yearly'] != '799') ? $data['lp_pricing_yearly'] : '35,000' }}</span>
+                            <span id="priceMainPeriod" class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400">/ year (~₹2,916/month)</span>
                         </div>
 
                         <!-- CTA Button -->
@@ -1436,12 +1437,14 @@
 
                 <!-- Lower Section: Everything You Get Checklist (Trophy Box Removed) -->
                 <div class="pt-8 mt-8 border-t border-slate-200 dark:border-slate-800 text-left">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                    <div class="mb-6 space-y-2.5">
                         <h4 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white">Everything You Get</h4>
-                        <span class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-xs sm:text-sm font-extrabold text-[#c2410c] dark:text-orange-300 shadow-xs self-start sm:self-auto">
-                            <i class="fas fa-check-circle text-[#ff3d00]"></i>
-                            <span id="pricingIncludedPlanText">All features included in monthly plan</span>
-                        </span>
+                        <div>
+                            <span class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-xs sm:text-sm font-extrabold text-[#c2410c] dark:text-orange-300 shadow-xs">
+                                <i class="fas fa-check-circle text-[#ff3d00]"></i>
+                                <span id="pricingIncludedPlanText">All features included in yearly plan</span>
+                            </span>
+                        </div>
                     </div>
 
                     <!-- 6 Feature Checklist in 2 Columns -->
@@ -1643,7 +1646,7 @@
                     </p>
                 </div>
 
-                <!-- 6 Dark Partner Cards Grid (Screenshot 2 Pixel-Perfect) -->
+                <!-- 6 Dark Partner Cards Grid (Task 3: Clickable Container, Pure White Text, Distinct Highlight Colors, Live Domains) -->
                 @php
                     $partnersList = (isset($data['lp_testimonials_items']) && is_array($data['lp_testimonials_items']) && count($data['lp_testimonials_items']) >= 4)
                         ? $data['lp_testimonials_items']
@@ -1670,8 +1673,8 @@
                             ],
                             [
                                 'name' => 'Cockroach Studio',
-                                'domain' => 'cockroach.in',
-                                'url' => 'https://cockroach.in',
+                                'domain' => 'cockroachjantaparty.top',
+                                'url' => 'https://cockroachjantaparty.top/',
                                 'role' => 'Digital Services & Studio',
                                 'location' => 'Delhi',
                                 'icon' => 'fas fa-layer-group',
@@ -1681,7 +1684,7 @@
                             [
                                 'name' => 'BullionX Academy',
                                 'domain' => 'bullionxacademy.com',
-                                'url' => 'https://bullionxacademy.com',
+                                'url' => 'http://bullionxacademy.com/',
                                 'role' => 'Technology & Business Solutions',
                                 'location' => 'Hyderabad',
                                 'icon' => 'fas fa-coins',
@@ -1691,7 +1694,7 @@
                             [
                                 'name' => 'TapNow India',
                                 'domain' => 'tapnow.in',
-                                'url' => 'https://tapnow.in',
+                                'url' => '', // Disabled: should not open
                                 'role' => 'Digital Marketing & Automation',
                                 'location' => 'Chandigarh',
                                 'icon' => 'fas fa-mobile-screen',
@@ -1713,12 +1716,29 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
                     @foreach($partnersList as $partner)
-                    <div class="rounded-3xl p-6 sm:p-8 bg-[#090E23] border border-slate-800 hover:border-orange-500/50 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
-                        
-                        <!-- Partner Review Quote -->
+                    @php
+                        $pColor = $partner['color'] ?? '#ff3d00';
+                        $isTapNow = (stripos($partner['name'] ?? '', 'TapNow') !== false);
+                        $canOpen = !empty($partner['url']) && !$isTapNow;
+                    @endphp
+                    <div 
+                        @if($canOpen)
+                        onclick="window.open('{{ $partner['url'] }}', '_blank', 'noopener,noreferrer')" 
+                        class="rounded-3xl p-6 sm:p-8 bg-[#090E23] border border-slate-800 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group cursor-pointer relative overflow-hidden"
+                        role="link"
+                        tabindex="0"
+                        title="Open {{ $partner['name'] ?? 'partner' }} site"
+                        @else
+                        class="rounded-3xl p-6 sm:p-8 bg-[#090E23] border border-slate-800 shadow-xl flex flex-col justify-between group cursor-default relative overflow-hidden"
+                        @endif
+                    >
+                        <!-- Top Ambient Brand Highlight Line -->
+                        <div class="absolute top-0 left-0 right-0 h-1.5 transition-all duration-300 opacity-90 group-hover:h-2" style="background: {{ $pColor }};"></div>
+
+                        <!-- Partner Review Quote (Pure White & Increased Font Size) -->
                         <div>
-                            <div class="text-orange-500/40 text-2xl font-serif leading-none mb-3">“</div>
-                            <p class="text-xs sm:text-[13px] text-slate-300 leading-relaxed font-normal mb-6">
+                            <div class="text-2xl sm:text-3xl font-serif leading-none mb-3" style="color: {{ $pColor }};">“</div>
+                            <p class="text-sm sm:text-[15px] lg:text-base text-white leading-relaxed font-medium mb-6">
                                 "{{ $partner['quote'] ?? '' }}"
                             </p>
                         </div>
@@ -1726,31 +1746,27 @@
                         <!-- Bottom Partner Identity Bar -->
                         <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
                             <div class="flex items-center space-x-3 min-w-0">
-                                <!-- Logo Icon -->
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-base shadow-md flex-shrink-0" style="background: {{ $partner['color'] ?? '#ff3d00' }};">
+                                <!-- Logo Icon Box with Brand Color -->
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-base shadow-md flex-shrink-0" style="background: {{ $pColor }};">
                                     <i class="{{ $partner['icon'] ?? 'fas fa-globe' }}"></i>
                                 </div>
                                 <div class="min-w-0">
                                     <div class="flex items-center space-x-1.5">
-                                        <h5 class="font-heading font-extrabold text-sm text-white truncate">{{ $partner['name'] ?? '' }}</h5>
-                                        @if(!empty($partner['url']))
-                                        <a href="{{ $partner['url'] }}" target="_blank" rel="noopener noreferrer" class="text-orange-400 hover:text-orange-300 text-xs inline-flex items-center transition-colors" title="Visit {{ $partner['domain'] ?? 'website' }}">
-                                            <i class="fas fa-external-link-alt text-[10px]"></i>
-                                        </a>
-                                        @endif
+                                        <h5 class="font-heading font-extrabold text-sm sm:text-base text-white truncate">{{ $partner['name'] ?? '' }}</h5>
+                                        {{-- Open click button hidden as requested --}}
                                     </div>
-                                    <p class="text-[11px] text-slate-400 truncate mt-0.5">
-                                        {{ $partner['role'] ?? 'Partner' }} • <span class="text-slate-300">{{ $partner['location'] ?? 'India' }}</span>
+                                    <p class="text-[11px] sm:text-xs text-slate-400 truncate mt-0.5">
+                                        <span style="color: {{ $pColor }}; font-weight: 700;">{{ $partner['role'] ?? 'Partner' }}</span> • <span class="text-slate-300">{{ $partner['location'] ?? 'India' }}</span>
                                     </p>
                                 </div>
                             </div>
 
-                            <!-- Clickable Live Domain Pill -->
+                            <!-- Live Domain Badge with Company's Highlight Color -->
                             @if(!empty($partner['domain']))
-                            <a href="{{ $partner['url'] ?? '#' }}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-full bg-slate-800/90 hover:bg-orange-500/20 text-orange-400 hover:text-orange-300 border border-slate-700/80 hover:border-orange-500/50 text-[10px] font-bold font-mono transition-all flex items-center space-x-1 flex-shrink-0 shadow-sm" title="Open live site">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <div class="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold font-mono transition-all flex items-center space-x-1.5 flex-shrink-0 shadow-sm" style="background: {{ $pColor }}18; color: {{ $pColor }}; border: 1px solid {{ $pColor }}40;">
+                                <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: {{ $pColor }};"></span>
                                 <span>{{ $partner['domain'] }}</span>
-                            </a>
+                            </div>
                             @endif
                         </div>
 
@@ -1762,48 +1778,100 @@
         </div>
     </section>
 
-    <!-- SECTION 10: FAQ ACCORDION -->
-    <section id="faq" class="py-14 lg:py-20 bg-slate-50 dark:bg-[#151c2c]/60 border-t border-slate-200 dark:border-slate-700/60 reveal">
+    <!-- SECTION 10: FAQ ACCORDION (Task 4: Reference Images 4 & 5 - 2-Column Responsive Grid, Custom SaaSReselling copy) -->
+    <section id="faq" class="py-16 sm:py-20 lg:py-24 bg-[#060A17] border-t border-slate-800/80 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            
+            <!-- Centered Header (Matching Reference Image 4) -->
+            <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[42px] text-white tracking-tight leading-tight">
+                    Frequently Asked Questions
+                </h2>
+            </div>
+
+            @php
+                $leftFaqs = [
+                    [
+                        'question' => '1. WHAT IS SAASRESELLING?',
+                        'answer' => 'SaaSReselling is an All-In-One White Label SaaS Platform that empowers agencies, freelancers, and entrepreneurs to launch, market, and scale their own branded software business. You get access to 3 turnkey, high-demand SaaS products that you can sell to unlimited clients under your own custom domain, brand identity, and pricing—keeping 100% of your subscription revenue without managing any backend code or servers.'
+                    ],
+                    [
+                        'question' => '3. CAN I LAUNCH THE PLATFORM UNDER MY OWN BRAND?',
+                        'answer' => 'Yes, 100%. The entire platform is completely white-labeled. Your clients will only see your custom domain, your logo, your company colors, and your branding across all dashboards, client portals, system emails, and notification templates. There is zero reference to SaaSReselling anywhere.'
+                    ],
+                    [
+                        'question' => '5. CAN I SELL UNLIMITED SUBSCRIPTIONS TO MY CUSTOMERS?',
+                        'answer' => 'Yes. You have the freedom to onboard and sell to unlimited businesses and clients. You establish your own pricing packages (monthly, annual, or one-time setup fees) and collect 100% of customer payments directly through your own payment gateway or bank account.'
+                    ],
+                    [
+                        'question' => '7. WHAT IS THE WHITE LABEL SAAS PARTNER MODEL?',
+                        'answer' => 'The White Label SaaS Partner Model allows you to license a ready-made, fully developed software ecosystem as your own intellectual property. Instead of spending months and millions of rupees on engineering, you launch immediately with verified product-market fit and generate predictable recurring monthly revenue (MRR).'
+                    ],
+                    [
+                        'question' => '9. CAN I CREATE AND MANAGE MULTIPLE WHITE LABEL PARTNERS?',
+                        'answer' => 'Yes! You have full administrative control to provision, monitor, manage, and configure client workspaces and user accounts directly from your central administrative dashboard.'
+                    ]
+                ];
+
+                $rightFaqs = [
+                    [
+                        'question' => '2. WHAT SAAS PRODUCTS ARE INCLUDED?',
+                        'answer' => "SaaSReselling includes 3 powerful SaaS products ready to sell immediately under your brand:\n• Ecom Builder (Launchshop): Complete e-commerce store platform with product catalogs, shopping cart, online payment gateways, and live order tracking.\n• Website Builder: Dynamic drag-and-drop website and funnel creator with modern business templates, responsive designs, and fast cloud hosting.\n• WhatsApp Bulk Automation: Enterprise-grade WhatsApp marketing suite for bulk broadcasting, automated campaigns, chatbot flows, and contact list management."
+                    ],
+                    [
+                        'question' => '4. CAN I USE MY OWN CUSTOM DOMAIN?',
+                        'answer' => 'Yes! You can connect your own domain (e.g. app.youragency.com or yourbrand.com) with automated free SSL certificate provisioning. All client login URLs, storefronts, and automated links will operate completely under your verified domain name.'
+                    ],
+                    [
+                        'question' => '6. DO I NEED CODING OR TECHNICAL KNOWLEDGE TO START?',
+                        'answer' => 'Not at all. SaaSReselling is fully turnkey and zero-code. Our engineering team handles all server hosting, infrastructure scaling, database backups, security maintenance, and software updates so you can focus 100% on marketing, sales, and client relationships.'
+                    ],
+                    [
+                        'question' => '8. HOW DO I GET STARTED WITH SAASRESELLING?',
+                        'answer' => 'Getting started takes less than 24 hours: choose your plan, book your 1:1 onboarding walkthrough, connect your custom domain and brand assets, and your white-labeled SaaS suite will be launched and ready to onboard paying customers immediately!'
+                    ]
+                ];
+            @endphp
+
+            <!-- 2-Column Responsive Grid (Reference Image 4 & 5 Layout) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 items-start">
                 
-                <!-- Left FAQ Header (4 Cols) -->
-                <div class="lg:col-span-4 text-left space-y-4">
-                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-900/30 text-[#ff3d00] border border-orange-200">
-                        {{ $data['lp_faqs_tag'] }}
-                    </span>
-                    <h2 class="font-space font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight leading-tight">
-                        {{ $data['lp_faqs_title'] }}
-                    </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {{ $data['lp_faqs_subtitle'] }}
-                    </p>
-                    <div class="pt-2">
-                        <a href="#contact" class="inline-flex items-center text-xs font-bold text-[#ff3d00] hover:text-orange-700 dark:text-indigo-300 space-x-1">
-                            <span>View All FAQs</span>
-                            <i class="fas fa-arrow-right text-[10px]"></i>
-                        </a>
+                <!-- Left Column (Odd: 1, 3, 5, 7, 9) -->
+                <div class="space-y-4">
+                    @foreach($leftFaqs as $faq)
+                    <div class="rounded-2xl bg-[#090E23] border border-slate-800/90 hover:border-slate-700/80 transition-colors p-4 sm:p-5 shadow-lg">
+                        <button type="button" class="faq-toggle w-full text-left flex items-center justify-between gap-4 focus:outline-none group">
+                            <span class="font-heading font-extrabold text-xs sm:text-[13px] md:text-sm text-white group-hover:text-orange-400 uppercase tracking-wide leading-snug">
+                                {{ $faq['question'] }}
+                            </span>
+                            <i class="fas fa-chevron-down text-xs text-slate-400 group-hover:text-orange-400 transition-transform duration-300 flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-content hidden pt-3.5 mt-3.5 border-t border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                            {!! nl2br(e($faq['answer'])) !!}
+                        </div>
                     </div>
+                    @endforeach
                 </div>
 
-                <!-- Right FAQ Accordion Card (8 Cols) -->
-                <div class="lg:col-span-8 bg-white dark:bg-[#0B0F19] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700/80 space-y-3">
-                    @if(is_array($data['lp_faqs_items']))
-                        @foreach($data['lp_faqs_items'] as $fIndex => $faq)
-                        <div class="border-b border-slate-100 dark:border-slate-800 last:border-0 pb-3 last:pb-0">
-                            <button class="faq-toggle w-full py-3.5 text-left font-space font-bold text-sm text-slate-900 dark:text-white bg-white dark:bg-[#0B0F19] hover:text-[#ff3d00] flex items-center justify-between focus:outline-none transition-colors">
-                                <span class="pr-4">{{ str_ireplace(['Nooryak.in', 'nooryak.in', 'Nooryak', 'nooryak'], ['saasreselling.com', 'saasreselling.com', 'SaaSReselling', 'SaaSReselling'], $faq['question'] ?? '') }}</span>
-                                <i class="fas fa-plus text-xs text-slate-400 font-normal transition-transform duration-200 ml-2 flex-shrink-0"></i>
-                            </button>
-                            <div class="faq-content hidden pt-1 pb-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                {{ str_ireplace(['Nooryak.in', 'nooryak.in', 'Nooryak', 'nooryak'], ['saasreselling.com', 'saasreselling.com', 'SaaSReselling', 'SaaSReselling'], $faq['answer'] ?? '') }}
-                            </div>
+                <!-- Right Column (Even: 2, 4, 6, 8) -->
+                <div class="space-y-4">
+                    @foreach($rightFaqs as $faq)
+                    <div class="rounded-2xl bg-[#090E23] border border-slate-800/90 hover:border-slate-700/80 transition-colors p-4 sm:p-5 shadow-lg">
+                        <button type="button" class="faq-toggle w-full text-left flex items-center justify-between gap-4 focus:outline-none group">
+                            <span class="font-heading font-extrabold text-xs sm:text-[13px] md:text-sm text-white group-hover:text-orange-400 uppercase tracking-wide leading-snug">
+                                {{ $faq['question'] }}
+                            </span>
+                            <i class="fas fa-chevron-down text-xs text-slate-400 group-hover:text-orange-400 transition-transform duration-300 flex-shrink-0"></i>
+                        </button>
+                        <div class="faq-content hidden pt-3.5 mt-3.5 border-t border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                            {!! nl2br(e($faq['answer'])) !!}
                         </div>
-                        @endforeach
-                    @endif
+                    </div>
+                    @endforeach
                 </div>
 
             </div>
+
         </div>
     </section>
 
