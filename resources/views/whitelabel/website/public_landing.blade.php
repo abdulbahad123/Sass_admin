@@ -759,7 +759,7 @@
                            style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:14px; padding:15px 24px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span style="color:#ffffff !important; font-weight:800; font-size:14px;">{{ !empty($plan['cta_text']) && $plan['cta_text'] !== 'Get Started Free' && $plan['cta_text'] !== 'Start 14-Day Free Trial' ? $plan['cta_text'] : 'Explore Product &rarr;</span>
+                            <span style="color:#ffffff !important; font-weight:800; font-size:14px;">{{ !empty($plan['cta_text']) && $plan['cta_text'] !== 'Get Started Free' && $plan['cta_text'] !== 'Start 14-Day Free Trial' ? $plan['cta_text'] : 'Explore Product &rarr;' }}</span>
                         </a>
                         @if(!empty($plan['trust_count']))
                         <div style="text-align:center; font-size:11.5px; color:#64748b; font-weight:700; margin-top:8px; display:flex; align-items:center; justify-content:center; gap:5px;">
