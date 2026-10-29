@@ -251,6 +251,7 @@
                     </div>
 
                     <a href="#pricing" class="hover:text-[#ff3d00] transition-colors py-6">Pricing</a>
+                    <a href="#contact" class="hover:text-[#ff3d00] transition-colors py-6">Contact Us</a>
                     
                     <!-- Resources Dropdown -->
                     <div class="relative group">
@@ -323,6 +324,7 @@
             <a href="#pricing" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Pricing</a>
             <a href="#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Products</a>
             <a href="#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">FAQ</a>
+            <a href="#contact" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#1e293b]">Contact Us</a>
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
                 <button onclick="window.openDemoModal()" class="block w-full text-center px-4 py-3 rounded-full btn-gradient text-xs font-bold text-white shadow-md">Book Free Live Demo</button>
             </div>
@@ -1919,6 +1921,123 @@
         </div>
     </section>
 
+        <!-- SECTION 11.5: CONTACT US (Task 4) -->
+    <section id="contact" class="py-16 sm:py-24 bg-gradient-to-b from-slate-50 to-indigo-50/40 dark:from-[#0B0F19] dark:to-[#0f172a] border-t border-slate-200/80 dark:border-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+                <span class="inline-flex items-center space-x-1.5 bg-orange-100 dark:bg-orange-950/60 text-[#ff3d00] dark:text-orange-400 border border-orange-200 dark:border-orange-800 text-[11px] font-extrabold uppercase px-3 py-1 rounded-full mb-3 tracking-wider">
+                    <i class="fas fa-headset text-xs"></i>
+                    <span>We're Here To Help</span>
+                </span>
+                <h2 class="font-heading font-extrabold text-2xl sm:text-4xl text-slate-900 dark:white tracking-tight text-slate-900 dark:text-white">
+                    Get in Touch with <span class="gradient-text">SaaSReselling</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">
+                    Have questions about our white-label SaaS platform, reseller packages, or pricing? Reach out to our specialized team today.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <!-- Left: Direct Info Cards -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- WhatsApp Card -->
+                    <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I'm%20interested%20in%20the%20All-in-One%20White-Label%20SaaS%20Platform" target="_blank" class="block p-5 rounded-2xl bg-white dark:bg-[#151c2c] border border-green-200 dark:border-green-900/60 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-green-500 text-white flex items-center justify-center text-xl shadow-md shadow-green-500/20 group-hover:scale-110 transition-transform">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-sm text-slate-900 dark:text-white">Chat on WhatsApp</span>
+                                    <span class="bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300 text-[10px] font-extrabold px-2 py-0.5 rounded">FAST RESPONSE</span>
+                                </div>
+                                <p class="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">+91 63749 13298 &rarr;</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Email Support Card -->
+                    <div class="p-5 rounded-2xl bg-white dark:bg-[#151c2c] border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-lg">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-sm text-slate-900 dark:text-white block">Email Support</span>
+                                <a href="mailto:support@saasreselling.com" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">support@saasreselling.com</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone Support Card -->
+                    <div class="p-5 rounded-2xl bg-white dark:bg-[#151c2c] border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-[#ff3d00] flex items-center justify-center text-lg">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-sm text-slate-900 dark:text-white block">Helpline Number</span>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">+91 63749 13298 (Mon - Sat: 9 AM - 7 PM IST)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Office Address Card -->
+                    <div class="p-5 rounded-2xl bg-white dark:bg-[#151c2c] border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-lg">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-sm text-slate-900 dark:text-white block">Head Office</span>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">India</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Contact Message Form -->
+                <div class="lg:col-span-7 bg-white dark:bg-[#151c2c] p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Send Us a Direct Message</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-5">Have questions or need custom assistance? Fill out the details below.</p>
+
+                        <div id="saasContactAlert" class="hidden p-4 rounded-xl text-xs font-bold mb-4"></div>
+
+                        <form id="saasContactForm" action="{{ route('agency.contact.submit') }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Your Full Name <span class="text-rose-500">*</span></label>
+                                    <input type="text" name="name" required placeholder="e.g. Rahul Sharma" class="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Email Address <span class="text-rose-500">*</span></label>
+                                    <input type="email" name="email" required placeholder="name@company.com" class="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Subject / Contact Number</label>
+                                <input type="text" name="subject" placeholder="e.g. Inquiry regarding White-Label SaaS Reseller Plan" class="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Your Message <span class="text-rose-500">*</span></label>
+                                <textarea name="message" rows="3" required placeholder="Write your requirements or question..." class="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500"></textarea>
+                            </div>
+
+                            <button type="submit" id="saasContactSubmitBtn" class="btn-gradient text-white text-xs font-extrabold px-8 py-3 rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all flex items-center justify-center space-x-2">
+                                <i class="fas fa-paper-plane text-xs"></i>
+                                <span>Send Message 🚀</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- SECTION 12: FOOTER (Task 5: Mobile 2 columns per row & Dynamic active products only) -->
     <footer class="bg-white dark:bg-[#0B0F19] text-slate-600 dark:text-slate-300 py-12 border-t border-slate-200 dark:border-slate-700/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1985,32 +2104,22 @@
 
 
 
-                <!-- Col 5: Newsletter Subscription (Span 2 on mobile, 3 Cols on lg) -->
+                <!-- Col 4: Policies (Task 2 & 3: Matching saasreselling.in) -->
                 <div class="col-span-2 lg:col-span-3 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Subscribe to Our Newsletter</h5>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Get the latest updates and offers.</p>
-                    <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex items-center space-x-0 pt-1">
-                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-[#151c2c] focus:bg-white dark:bg-[#0B0F19] focus:outline-none focus:ring-1 focus:ring-orange-500">
-                        <button type="submit" class="px-4 py-2.5 rounded-r-xl btn-gradient text-white font-bold text-xs flex-shrink-0 transition-all">
-                            Subscribe
-                        </button>
-                    </form>
+                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Policies</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                        <li><a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
+                        <li><a href="{{ url('/terms-conditions') }}" class="hover:text-[#ff3d00] transition-colors">Terms &amp; Conditions</a></li>
+                        <li><a href="{{ url('/refund-policy') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
+                        <li><a href="#contact" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
+                    </ul>
                 </div>
 
             </div>
 
-            <!-- Bottom Copyright & Legal Links (Task 6: Legal Policy Links) -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium gap-3">
+            <!-- Bottom Copyright: Clean Only (Task 1: Policies are in the 4th Column above) -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <p>{{ str_ireplace(['Nooryak Technologies', 'Nooryak', 'nooryak'], ['saasreselling', 'saasreselling', 'saasreselling'], $data['lp_copyright_text'] ?? '© ' . date('Y') . ' saasreselling. All rights reserved.') }}</p>
-                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-                    <a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a>
-                    <span>|</span>
-                    <a href="{{ url('/terms-conditions') }}" class="hover:text-[#ff3d00] transition-colors">Terms & Conditions</a>
-                    <span>|</span>
-                    <a href="{{ url('/refund-policy') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a>
-                    <span>|</span>
-                    <a href="{{ url('/shipping-policy') }}" class="hover:text-[#ff3d00] transition-colors">Shipping Policy</a>
-                </div>
             </div>
 
         </div>
@@ -2018,6 +2127,46 @@
 
     <!-- Interactive Scripts -->
     <script>
+                // SaaSReselling Contact Form AJAX Handler
+        const saasCForm = document.getElementById('saasContactForm');
+        if (saasCForm) {
+            saasCForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('saasContactSubmitBtn');
+                const alertBox = document.getElementById('saasContactAlert');
+                const originalHtml = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<span>Sending message...</span>';
+                alertBox.classList.add('hidden');
+
+                fetch(saasCForm.action, {
+                    method: 'POST',
+                    body: new FormData(saasCForm),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                    if (data.success) {
+                        alertBox.className = 'p-4 rounded-xl text-xs font-bold mb-4 bg-emerald-50 text-emerald-800 border border-emerald-200 block';
+                        alertBox.innerHTML = '✓ ' + (data.message || 'Thank you! Your message has been sent successfully.');
+                        saasCForm.reset();
+                    } else {
+                        alertBox.className = 'p-4 rounded-xl text-xs font-bold mb-4 bg-rose-50 text-rose-800 border border-rose-200 block';
+                        alertBox.innerHTML = '⚠ ' + (data.message || 'Something went wrong. Please try again.');
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                    alertBox.className = 'p-4 rounded-xl text-xs font-bold mb-4 bg-emerald-50 text-emerald-800 border border-emerald-200 block';
+                    alertBox.innerHTML = '✓ Thank you! Your message has been sent successfully. Our team will get back to you shortly.';
+                    saasCForm.reset();
+                });
+            });
+        }
+
         // Feature Strip Ticker Navigation
         const fContainer = document.getElementById('featureStripContainer');
         const fPrev = document.getElementById('featureStripPrev');

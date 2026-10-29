@@ -332,32 +332,22 @@
                     </ul>
                 </div>
 
-                <!-- Col 4: Newsletter Subscription -->
+                <!-- Col 4: Policies (Task 2 & 3: Matching saasreselling.in) -->
                 <div class="col-span-2 lg:col-span-4 space-y-3">
-                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Subscribe to Our Newsletter</h5>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Get the latest updates, releases, and partner offers.</p>
-                    <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex items-center space-x-0 pt-1">
-                        <input type="email" placeholder="Enter your email" required class="w-full px-3.5 py-2.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-[#151c2c] focus:bg-white dark:focus:bg-[#0B0F19] focus:outline-none focus:ring-1 focus:ring-orange-500">
-                        <button type="submit" class="px-4 py-2.5 rounded-r-xl btn-gradient text-white font-bold text-xs flex-shrink-0 transition-all">
-                            Subscribe
-                        </button>
-                    </form>
+                    <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Policies</h5>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                        <li><a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'privacy' ? 'text-orange-500 font-bold' : '' }}">Privacy Policy</a></li>
+                        <li><a href="{{ url('/terms-conditions') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'terms' ? 'text-orange-500 font-bold' : '' }}">Terms &amp; Conditions</a></li>
+                        <li><a href="{{ url('/refund-policy') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'refund' ? 'text-orange-500 font-bold' : '' }}">Refund Policy</a></li>
+                        <li><a href="{{ url('/') }}#contact" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
+                    </ul>
                 </div>
 
             </div>
 
-            <!-- Bottom Copyright & Legal Links -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium gap-3">
+            <!-- Bottom Copyright: Clean Only (Task 1) -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <p>© {{ date('Y') }} saasreselling. All rights reserved.</p>
-                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-                    <a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'privacy' ? 'text-orange-500 font-bold' : '' }}">Privacy Policy</a>
-                    <span>|</span>
-                    <a href="{{ url('/terms-conditions') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'terms' ? 'text-orange-500 font-bold' : '' }}">Terms & Conditions</a>
-                    <span>|</span>
-                    <a href="{{ url('/refund-policy') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'refund' ? 'text-orange-500 font-bold' : '' }}">Refund Policy</a>
-                    <span>|</span>
-                    <a href="{{ url('/shipping-policy') }}" class="hover:text-[#ff3d00] transition-colors {{ $type === 'shipping' ? 'text-orange-500 font-bold' : '' }}">Shipping Policy</a>
-                </div>
             </div>
 
         </div>

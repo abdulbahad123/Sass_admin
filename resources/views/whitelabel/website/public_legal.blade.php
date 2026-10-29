@@ -358,7 +358,7 @@
                 <a href="{{ url('/') }}" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Home</a>
                 <a href="{{ url('/') }}#products" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Products</a>
                 <a href="{{ url('/') }}#about-section" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">About Us</a>
-                <a href="{{ url('/') }}#how-it-works" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">How It Works</a>
+                <a href="{{ url('/') }}#contact" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Contact Us</a>
                 <a href="{{ url('/') }}#testimonials" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Reviews</a>
                 <a href="{{ url('/') }}#faq" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">FAQ</a>
             </nav>
@@ -394,7 +394,7 @@
             <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</a>
             <a href="{{ url('/') }}#products" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Products</a>
             <a href="{{ url('/') }}#about-section" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">About Us</a>
-            <a href="{{ url('/') }}#how-it-works" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">How It Works</a>
+            <a href="{{ url('/') }}#contact" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Contact Us</a>
             <a href="{{ url('/') }}#testimonials" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Reviews</a>
             <a href="{{ url('/') }}#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
             
@@ -884,7 +884,7 @@
                         <li><a href="{{ url('/') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
                         <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
                         <li><a href="{{ url('/#about-section') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
-                        <li><a href="{{ url('/#how-it-works') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">How It Works</a></li>
+                        <li><a href="{{ url('/#contact') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                         <li><a href="{{ url('/#testimonials') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>
                         <li><a href="{{ url('/#faq') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">FAQ</a></li>
                     </ul>
@@ -913,16 +913,9 @@
 
             </div>
 
-            {{-- Bottom Bar Matching Screenshot 5 --}}
-            <div style="padding-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-                <p style="font-size:12px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
-                <div style="display:flex;align-items:center;gap:14px;font-size:12px;color:#64748b">
-                    <a href="{{ route('agency.privacy') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
-                    <span>|</span>
-                    <a href="{{ route('agency.terms') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Terms &amp; Conditions</a>
-                    <span>|</span>
-                    <a href="{{ route('agency.refund') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Refund Policy</a>
-                </div>
+            {{-- Bottom Bar: Clean Copyright Only (Policies are in the 4th Column above) --}}
+            <div style="padding-top:28px;text-align:center;">
+                <p style="font-size:12.5px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
             </div>
 
         </div>

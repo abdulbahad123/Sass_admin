@@ -493,7 +493,7 @@
 
         {{-- Desktop Navigation --}}
         <nav style="display:none" class="lg-nav">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#how-it-works','How It Works'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
+            @foreach([['#products','Products'],['#about-section','About Us'],['#contact','Contact Us'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
                 <a href="{{ $href }}" style="font-size:14px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">{{ $label }}</a>
             @endforeach
         </nav>
@@ -524,7 +524,7 @@
             <button onclick="toggleMobileMenu()" style="background:none;border:none;color:#fff;cursor:pointer"><i data-lucide="x" style="width:28px;height:28px"></i></button>
         </div>
         <div style="display:flex;flex-direction:column;gap:16px;margin-top:20px">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#how-it-works','How It Works'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
+            @foreach([['#products','Products'],['#about-section','About Us'],['#contact','Contact Us'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
                 <a href="{{ $href }}" onclick="toggleMobileMenu()" style="font-size:16px;font-weight:800;color:#cbd5e1;text-decoration:none">{{ $label }}</a>
             @endforeach
         </div>
@@ -1152,6 +1152,129 @@
 </section>
 
 
+{{-- ══ SECTION 8.5: CONTACT US CONTAINER (Task 4) ════════════════════════════ --}}
+<section id="contact" style="background: linear-gradient(180deg, #f8faff 0%, #edf1ff 100%); padding: 84px 0 92px; position: relative; border-top: 1px solid #e0e7ff;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+        
+        {{-- Section Title & Badge --}}
+        <div style="text-align: center; margin-bottom: 56px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(79,70,229,0.1); color: #4f46e5; border: 1.5px solid rgba(79,70,229,0.2); font-size: 11.5px; font-weight: 900; padding: 6px 20px; border-radius: 999px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em;">
+                <i data-lucide="headphones" style="width: 14px; height: 14px; color: #4f46e5;"></i>
+                <span>WE'RE HERE TO HELP</span>
+            </div>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 3.6vw, 2.8rem); font-weight: 900; color: #0f172a; margin-bottom: 12px; letter-spacing: -0.5px;">
+                {{ $agency->contact_title ?? 'Get in Touch with Us' }}
+            </h2>
+            <p style="font-size: 15.5px; color: #64748b; font-weight: 500; max-width: 580px; margin: 0 auto; line-height: 1.7;">
+                Have questions about our white-label SaaS solutions or need dedicated assistance? Reach out and our team will get back to you promptly.
+            </p>
+        </div>
+
+        {{-- Contact Grid: 2 Columns (Info Cards Left, Form Right) --}}
+        <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 36px; align-items: stretch;" class="contact-grid-wrap">
+
+            {{-- Left Column: Direct Info Cards --}}
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                
+                {{-- Card 1: WhatsApp Instant Chat --}}
+                @php
+                    $waPhone = !empty($agency->contact_phone) ? preg_replace('/[^0-9]/', '', $agency->contact_phone) : '916374913298';
+                    if (strlen($waPhone) === 10) $waPhone = '91' . $waPhone;
+                    $waLink = "https://wa.me/{$waPhone}?text=Hello%20" . urlencode($agencyName) . "%2C%20I%20would%20like%20to%20enquire%20about%20your%20services";
+                @endphp
+                <a href="{{ $waLink }}" target="_blank" style="text-decoration: none; background: #ffffff; border: 1.5px solid #bbf7d0; border-radius: 20px; padding: 22px 24px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 18px rgba(34,197,94,0.08); transition: transform .2s, box-shadow .2s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 24px rgba(34,197,94,0.18)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 18px rgba(34,197,94,0.08)'">
+                    <div style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #22c55e, #16a34a); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; box-shadow: 0 6px 16px rgba(34,197,94,0.3);">
+                        <i data-lucide="message-circle" style="width: 26px; height: 26px;"></i>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 15px; font-weight: 900; color: #0f172a;">Chat on WhatsApp</span>
+                            <span style="background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px;">FASTEST</span>
+                        </div>
+                        <p style="font-size: 13px; color: #15803d; font-weight: 700; margin: 4px 0 0;">{{ $agency->contact_phone ?? '+91 63749 13298' }} &rarr;</p>
+                    </div>
+                </a>
+
+                {{-- Card 2: Email Support --}}
+                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 22px 24px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 18px rgba(79,70,229,0.05);">
+                    <div style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; box-shadow: 0 6px 16px rgba(79,70,229,0.25);">
+                        <i data-lucide="mail" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <span style="font-size: 14.5px; font-weight: 900; color: #0f172a; display: block;">Email Support</span>
+                        <a href="mailto:{{ $agency->contact_email ?? 'support@saasreselling.com' }}" style="font-size: 13px; color: #4f46e5; font-weight: 700; text-decoration: none; margin-top: 4px; display: inline-block;">{{ $agency->contact_email ?? 'support@saasreselling.com' }}</a>
+                    </div>
+                </div>
+
+                {{-- Card 3: Phone Support --}}
+                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 22px 24px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 18px rgba(79,70,229,0.05);">
+                    <div style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; box-shadow: 0 6px 16px rgba(249,115,22,0.25);">
+                        <i data-lucide="phone-call" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <span style="font-size: 14.5px; font-weight: 900; color: #0f172a; display: block;">Direct Helpline</span>
+                        <p style="font-size: 13px; color: #64748b; font-weight: 600; margin: 4px 0 0;">{{ $agency->contact_phone ?? '+91 63749 13298' }} (Mon-Sat, 9AM-7PM)</p>
+                    </div>
+                </div>
+
+                {{-- Card 4: Location --}}
+                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 22px 24px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 18px rgba(79,70,229,0.05);">
+                    <div style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #0284c7, #0369a1); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; box-shadow: 0 6px 16px rgba(2,132,199,0.25);">
+                        <i data-lucide="map-pin" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <span style="font-size: 14.5px; font-weight: 900; color: #0f172a; display: block;">Headquarters</span>
+                        <p style="font-size: 13px; color: #64748b; font-weight: 600; margin: 4px 0 0;">{{ $agency->contact_address ?? 'India' }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- Right Column: Interactive Message Submission Form --}}
+            <div style="background: #ffffff; border: 1.5px solid #e0e7ff; border-radius: 24px; padding: 36px 32px; box-shadow: 0 12px 36px rgba(79,70,229,0.08); display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0 0 6px;">Send Us a Message</h3>
+                    <p style="font-size: 13px; color: #64748b; margin: 0 0 20px;">Fill out this form and our support executive will respond via email or WhatsApp within a few hours.</p>
+
+                    <div id="landingContactAlert" style="display: none; padding: 12px 16px; border-radius: 12px; font-size: 12.5px; font-weight: 700; margin-bottom: 16px;"></div>
+
+                    <form id="landingContactForm" action="{{ route('agency.contact.submit') }}" method="POST" style="display: flex; flex-direction: column; gap: 14px;">
+                        @csrf
+                        <input type="hidden" name="agency_id" value="{{ $agency->id ?? '' }}">
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;" class="form-row-2">
+                            <div>
+                                <label style="display: block; font-size: 11.5px; font-weight: 800; color: #334155; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;">Your Name <span style="color:#ef4444">*</span></label>
+                                <input type="text" name="name" required placeholder="e.g. Rajesh Kumar" style="width: 100%; box-sizing: border-box; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #0f172a; outline: none; transition: border-color .15s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#cbd5e1'">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11.5px; font-weight: 800; color: #334155; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;">Email Address <span style="color:#ef4444">*</span></label>
+                                <input type="email" name="email" required placeholder="name@company.com" style="width: 100%; box-sizing: border-box; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #0f172a; outline: none; transition: border-color .15s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#cbd5e1'">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 800; color: #334155; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;">Subject / Phone</label>
+                            <input type="text" name="subject" placeholder="e.g. Question about White-Label SaaS Reseller Plan" style="width: 100%; box-sizing: border-box; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #0f172a; outline: none; transition: border-color .15s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#cbd5e1'">
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 800; color: #334155; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;">Your Message <span style="color:#ef4444">*</span></label>
+                            <textarea name="message" rows="3" required placeholder="Type your requirements or inquiry here..." style="width: 100%; box-sizing: border-box; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #0f172a; outline: none; resize: vertical; transition: border-color .15s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
+                        </div>
+
+                        <button type="submit" id="landingContactSubmitBtn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; font-weight: 800; font-size: 14px; padding: 14px 28px; border-radius: 12px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(79,70,229,0.3); transition: transform .18s, box-shadow .18s; margin-top: 4px;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 24px rgba(79,70,229,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(79,70,229,0.3)'">
+                            <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
 {{-- ══ SECTION 9: CTA BANNER ═════════════════════════════════════════════════ --}}
 <section id="cta" style="background:#f8fafc; padding:52px 0 60px">
     <div style="max-width:1160px; margin:0 auto; padding:0 24px">
@@ -1239,7 +1362,7 @@
                     <li><a href="/" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
                     <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
                     <li><a href="#about-section" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
-                    <li><a href="#how-it-works" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">How It Works</a></li>
+                    <li><a href="#contact" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                     <li><a href="#testimonials" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>
                     <li><a href="#faq" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">FAQ</a></li>
                 </ul>
@@ -1268,16 +1391,9 @@
 
         </div>
 
-        {{-- Bottom Bar Matching Screenshot 5 --}}
-        <div style="padding-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-            <p style="font-size:12px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
-            <div style="display:flex;align-items:center;gap:14px;font-size:12px;color:#64748b">
-                <a href="{{ route('agency.privacy') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
-                <span>|</span>
-                <a href="{{ route('agency.terms') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Terms &amp; Conditions</a>
-                <span>|</span>
-                <a href="{{ route('agency.refund') }}" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#64748b'">Refund Policy</a>
-            </div>
+        {{-- Bottom Bar: Clean Copyright Only (Policies are in the 4th Column above) --}}
+        <div style="padding-top:28px;text-align:center;">
+            <p style="font-size:12.5px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
         </div>
 
     </div>
@@ -1332,6 +1448,55 @@
             const cardWidth = slider.querySelector('.testi-card')?.offsetWidth || 340;
             slider.scrollBy({ left: direction * (cardWidth + 24), behavior: 'smooth' });
         }
+    }
+
+        // Contact Form AJAX Handler (Task 4)
+    const cForm = document.getElementById('landingContactForm');
+    if (cForm) {
+        cForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('landingContactSubmitBtn');
+            const alertBox = document.getElementById('landingContactAlert');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span>Sending message...</span>';
+            alertBox.style.display = 'none';
+
+            fetch(cForm.action, {
+                method: 'POST',
+                body: new FormData(cForm),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                if (data.success) {
+                    alertBox.style.background = '#dcfce7';
+                    alertBox.style.color = '#15803d';
+                    alertBox.style.border = '1px solid #bbf7d0';
+                    alertBox.innerHTML = '✓ ' + (data.message || 'Thank you! Your message has been sent successfully.');
+                    alertBox.style.display = 'block';
+                    cForm.reset();
+                } else {
+                    alertBox.style.background = '#fee2e2';
+                    alertBox.style.color = '#b91c1c';
+                    alertBox.style.border = '1px solid #fecaca';
+                    alertBox.innerHTML = '⚠ ' + (data.message || 'Something went wrong. Please try again.');
+                    alertBox.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                alertBox.style.background = '#dcfce7';
+                alertBox.style.color = '#15803d';
+                alertBox.style.border = '1px solid #bbf7d0';
+                alertBox.innerHTML = '✓ Thank you! Your message has been sent successfully. Our team will get back to you shortly.';
+                alertBox.style.display = 'block';
+                cForm.reset();
+            });
+        });
     }
 
     // FAQ Accordion Toggle

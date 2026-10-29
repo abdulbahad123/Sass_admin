@@ -252,6 +252,31 @@ class WhiteLabelWebsiteController extends Controller
             $validated['sections_enabled'] = json_encode($request->input('sections'));
         }
 
+        // Auto-safeguard for logo_dark & about_section_badge if migration has not run on production DB yet
+        try {
+            if (isset($validated['logo_dark']) && !\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'logo_dark')) {
+                \Illuminate\Support\Facades\Schema::table('agencies', function ($table) {
+                    $table->string('logo_dark')->nullable()->after('logo');
+                });
+            }
+        } catch (\Throwable $e) {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'logo_dark')) {
+                unset($validated['logo_dark']);
+            }
+        }
+
+        try {
+            if (isset($validated['about_section_badge']) && !\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'about_section_badge')) {
+                \Illuminate\Support\Facades\Schema::table('agencies', function ($table) {
+                    $table->string('about_section_badge')->nullable()->after('about_title');
+                });
+            }
+        } catch (\Throwable $e) {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'about_section_badge')) {
+                unset($validated['about_section_badge']);
+            }
+        }
+
         $agency->update($validated);
 
         AuditLog::create([
