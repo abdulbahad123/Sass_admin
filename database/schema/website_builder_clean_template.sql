@@ -155,9 +155,11 @@ CREATE TABLE IF NOT EXISTS `wb_templates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `wb_templates` (`id`, `name`, `slug`, `category`, `description`, `price`, `is_free`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
-(1, 'Business Classic', 'business-classic', 'Agency', 'Professional business website template with clean design.', 0.00, 1, 1, 1, NOW(), NOW()),
-(2, 'Startup Launch', 'startup-launch', 'Startup', 'Modern startup template with problem-solution structure.', 49.00, 0, 1, 2, NOW(), NOW()),
-(3, 'Creative Agency', 'creative-agency', 'Portfolio', 'Bold and creative template for digital agencies and studios.', 27.00, 0, 1, 3, NOW(), NOW())
+(1, 'Digital Agency', 'digital_agency', 'Agency / Portfolio', 'Creative digital solutions agency multipage template with dynamic hero, services, portfolio, team, and contact form.', 499.00, 0, 1, 1, NOW(), NOW()),
+(2, 'InteriorCRAFT', 'interior', 'Architecture & Design', 'Luxury architecture & interior design template with serif typography, bespoke spatial gallery, project portfolio, and consultation booking.', 499.00, 0, 1, 2, NOW(), NOW()),
+(3, 'TaxiGo Mobility', 'texigo', 'Transport & Mobility', 'Taxi & cab booking mobility template with dynamic hero, fleet vehicles, trip services, customer testimonials, and quick booking.', 499.00, 0, 1, 3, NOW(), NOW()),
+(4, 'BuildCraft Construction', 'construction', 'Construction & Engineering', 'Premium construction company template with dynamic hero, services, project portfolio, team, client testimonials, and contact form.', 499.00, 0, 1, 4, NOW(), NOW()),
+(5, 'Evently', 'evently', 'Events & Celebrations', 'Luxury event management & celebration template with vibrant hero, countdown, speaker highlights, and consultation booking.', 499.00, 0, 1, 5, NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- Table 3: wb_packages
