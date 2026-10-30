@@ -201,6 +201,33 @@ class DatabaseProvisioningService
                 DB::purge('target_tenant_db');
             }
         }
+
+        // Automatically ensure Website Builder settings table supports dynamic theme assignment
+        if ($isWb) {
+            try {
+                config(['database.connections.target_tenant_db' => $this->tenantConnectionConfig($dbName)]);
+                DB::purge('target_tenant_db');
+                $tenantDb = DB::connection('target_tenant_db');
+
+                // 1. Ensure template_type column exists on wb_agency_settings
+                $hasCol = $tenantDb->select("SHOW COLUMNS FROM `wb_agency_settings` LIKE 'template_type'");
+                if (empty($hasCol)) {
+                    $tenantDb->statement("ALTER TABLE `wb_agency_settings` ADD COLUMN `template_type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'digital_agency' AFTER `customer_id`");
+                }
+
+                // 2. Ensure customer_id column exists on wb_template_purchases
+                $hasPurchCol = $tenantDb->select("SHOW COLUMNS FROM `wb_template_purchases` LIKE 'customer_id'");
+                if (empty($hasPurchCol)) {
+                    $tenantDb->statement("ALTER TABLE `wb_template_purchases` ADD COLUMN `customer_id` bigint(20) UNSIGNED NULL AFTER `id`");
+                }
+
+                Log::info("Verified dynamic theme columns on {$dbName}");
+            } catch (\Throwable $e) {
+                Log::warning("Could not finalize Website Builder configuration for {$dbName}: " . $e->getMessage());
+            } finally {
+                DB::purge('target_tenant_db');
+            }
+        }
     }
 
     /**

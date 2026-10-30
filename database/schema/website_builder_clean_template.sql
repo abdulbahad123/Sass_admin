@@ -288,6 +288,7 @@ ON DUPLICATE KEY UPDATE `status` = 1;
 CREATE TABLE IF NOT EXISTS `wb_agency_settings` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `template_type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'digital_agency',
   `site_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'DesignAGENCY',
   `site_logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `top_announcement` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'We help businesses grow with creative digital solutions.',
