@@ -13,7 +13,7 @@ class WhiteLabelTicketController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $agency = $user->agency;
+        $agency = \App\Models\Agency::resolveCurrent($request, $user);
 
         if (!$agency) {
             return redirect()->route('whitelabel.dashboard')->with('error', 'Agency profile not found.');
@@ -62,7 +62,7 @@ class WhiteLabelTicketController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        $agency = $user->agency;
+        $agency = \App\Models\Agency::resolveCurrent($request, $user);
 
         if (!$agency) {
             return redirect()->back()->with('error', 'Agency profile not found.');
@@ -113,7 +113,7 @@ class WhiteLabelTicketController extends Controller
     public function show($id)
     {
         $user = auth()->user();
-        $agency = $user->agency;
+        $agency = \App\Models\Agency::resolveCurrent(request(), $user);
 
         $ticket = Ticket::with(['agency', 'product', 'user', 'assignedStaff', 'replies.user'])
             ->where('agency_id', $agency->id)
@@ -125,7 +125,7 @@ class WhiteLabelTicketController extends Controller
     public function reply(Request $request, $id)
     {
         $user = auth()->user();
-        $agency = $user->agency;
+        $agency = \App\Models\Agency::resolveCurrent($request, $user);
 
         $ticket = Ticket::where('agency_id', $agency->id)->findOrFail($id);
 

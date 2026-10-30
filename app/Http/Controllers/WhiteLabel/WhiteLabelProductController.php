@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class WhiteLabelProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
         $agencyProducts = null;
         if ($agency) {
             $agencyProducts = $agency->products()

@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Hash;
 
 class WhiteLabelClientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? ($user->agency_id ? Agency::find($user->agency_id) : null);
+        $agency = Agency::resolveCurrent($request, $user);
         if (!$agency) {
             return redirect()->route('whitelabel.dashboard')->with('error', 'Agency profile not found.');
         }
@@ -154,7 +154,7 @@ class WhiteLabelClientController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',

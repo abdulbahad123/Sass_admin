@@ -60,7 +60,7 @@ class WhiteLabelWhatsAppGatewayController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
 
         if (!$agency) {
             return redirect()->route('whitelabel.dashboard')->with('error', 'Agency profile not found.');
@@ -105,7 +105,7 @@ class WhiteLabelWhatsAppGatewayController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
 
         if (!$agency) {
             return back()->with('error', 'Agency not found.');
@@ -193,7 +193,7 @@ class WhiteLabelWhatsAppGatewayController extends Controller
         ]);
 
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
         $systemDefaults = self::getSystemDefaults();
 
         $autoDb = self::getAgencyDefaultDb($agency);

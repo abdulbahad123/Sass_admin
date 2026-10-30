@@ -7,7 +7,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h2 class="text-xl font-bold text-slate-900 font-heading">Billing & Client Invoices</h2>
-            <p class="text-xs text-slate-500">Automated recurring invoices issued under {{ $agency->name ?? 'Apex Digital Agency' }}</p>
+            <p class="text-xs text-slate-500">Automated recurring invoices issued under {{ $agency->name ?? 'Agency' }}</p>
         </div>
         <button class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/30">Create Custom Invoice</button>
     </div>

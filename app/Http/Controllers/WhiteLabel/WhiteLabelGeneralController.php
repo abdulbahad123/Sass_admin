@@ -16,7 +16,7 @@ class WhiteLabelGeneralController extends Controller
     public function team()
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent(request(), $user);
 
         $team = User::where('agency_id', $agency->id ?? 0)
             ->whereIn('role', ['team_member', 'white_label_agency'])
@@ -28,7 +28,7 @@ class WhiteLabelGeneralController extends Controller
     public function activityLogs()
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent(request(), $user);
 
         $activities = AuditLog::latest()->take(30)->get();
 
@@ -38,7 +38,7 @@ class WhiteLabelGeneralController extends Controller
     public function billing()
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent(request(), $user);
 
         $subClients = User::where('agency_id', $agency->id ?? 0)->where('role', 'client')->get();
 
@@ -59,7 +59,7 @@ class WhiteLabelGeneralController extends Controller
     public function branding()
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent(request(), $user);
 
         return view('whitelabel.branding.index', compact('user', 'agency'));
     }
@@ -67,7 +67,7 @@ class WhiteLabelGeneralController extends Controller
     public function updateBranding(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
 
         if (!$agency) {
             return back()->with('error', 'Agency profile not found in database.');
@@ -241,7 +241,7 @@ class WhiteLabelGeneralController extends Controller
     public function aiSettings(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
         $clients = $this->getRealAgencyClients($agency);
 
         $selectedClientId = $request->query('client_id', 'global');
@@ -294,7 +294,7 @@ class WhiteLabelGeneralController extends Controller
     public function updateAiSettings(Request $request)
     {
         $user = Auth::user();
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
+        $agency = Agency::resolveCurrent($request, $user);
 
         if (!$agency) {
             return back()->with('error', 'Agency profile not found in database.');

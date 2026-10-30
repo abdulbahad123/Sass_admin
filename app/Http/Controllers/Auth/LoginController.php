@@ -88,29 +88,13 @@ class LoginController extends Controller
                 // Database fallback
             }
         } else {
-            // Resolve white-label agency for custom agency domain (e.g. maturednature.com)
-            $agency = Agency::whereNotNull('custom_domain')
-                ->where(function ($q) use ($host, $cleanHost) {
-                    $q->where('custom_domain', $host)
-                      ->orWhere('custom_domain', $cleanHost)
-                      ->orWhere('custom_domain', 'like', "%{$cleanHost}%");
-                })->first();
-
-            $isPlatformSubdomain = false;
-            foreach (['launchshop.in', 'saasreselling.com'] as $pHost) {
-                if (str_contains($host, $pHost) || str_contains($cleanHost, $pHost)) {
-                    $isPlatformSubdomain = true;
-                    break;
-                }
-            }
-
-            if (!$agency && !$isPlatformSubdomain) {
-                $agency = null;
-            }
+            // Resolve white-label agency for custom agency domain (e.g. cockroachjantaparty.top, bullionxacademy.com)
+            $agency = Agency::resolveCurrent($request);
 
             $agencyUser = null;
             if ($agency) {
-                $agencyUser = \App\Models\User::where('agency_id', $agency->id)->first();
+                $agencyUser = \App\Models\User::where('agency_id', $agency->id)->first()
+                    ?? \App\Models\User::where('email', $agency->email)->first();
             }
 
             $isAgencyPortal = ($agency !== null);
@@ -191,10 +175,23 @@ class LoginController extends Controller
 
             $isAgencyPortal = $request->boolean('is_agency_portal') || (!$isMainDomain);
 
-            // On agency domains (e.g. maturednature.com), restrict login strictly to White Label Agency users
-            if ($isAgencyPortal && !$user->isWhiteLabelAgency()) {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please log in via saasreselling.com']);
+            if ($isAgencyPortal) {
+                // On agency domains (e.g. cockroachjantaparty.top, bullionxacademy.com), restrict login strictly to White Label Agency users
+                if (!$user->isWhiteLabelAgency()) {
+                    Auth::logout();
+                    return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please log in via saasreselling.com']);
+                }
+
+                $domainAgency = Agency::resolveCurrent($request, $user);
+                if ($domainAgency) {
+                    if ($user->agency_id !== $domainAgency->id) {
+                        if ($user->email === $domainAgency->email || empty($user->agency_id) || str_contains(strtolower($user->email), strtolower($domainAgency->slug))) {
+                            $user->agency_id = $domainAgency->id;
+                            $user->save();
+                        }
+                    }
+                    session(['current_agency_id' => $domainAgency->id]);
+                }
             }
 
             if (!$user->isSuperAdmin() && !$user->isMasterAgency() && !$user->isWhiteLabelAgency()) {

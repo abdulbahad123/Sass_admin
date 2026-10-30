@@ -17,12 +17,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Agency Name</label>
-                    <input type="text" name="agency_name" value="{{ $agency->name ?? 'Apex Digital Agency' }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-900 focus:outline-none">
+                    <input type="text" name="agency_name" value="{{ $agency->name ?? '' }}" placeholder="Enter Agency Name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold text-slate-900 focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Custom CNAME Domain</label>
-                    <input type="text" name="custom_domain" value="{{ $agency->custom_domain ?? 'app.apexdigital.com' }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-mono font-bold text-blue-600 focus:outline-none">
+                    <input type="text" name="custom_domain" value="{{ $agency->custom_domain ?? '' }}" placeholder="e.g. app.youragency.com" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-mono font-bold text-blue-600 focus:outline-none">
                 </div>
             </div>
         </div>

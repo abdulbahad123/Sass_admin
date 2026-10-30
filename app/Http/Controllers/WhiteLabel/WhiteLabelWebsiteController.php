@@ -12,13 +12,7 @@ class WhiteLabelWebsiteController extends Controller
 {
     protected function getAgency()
     {
-        $user = Auth::user();
-        if (!$user) return null;
-        if ($user->agency) return $user->agency;
-        if (!empty($user->agency_id)) {
-            return Agency::find($user->agency_id);
-        }
-        return null;
+        return Agency::resolveCurrent(request(), Auth::user());
     }
 
     protected function makeImageValidationRule(int $maxKb, array $allowed = ['jpeg', 'png', 'jpg', 'webp', 'svg'])
@@ -673,14 +667,7 @@ class WhiteLabelWebsiteController extends Controller
             $agency = \App\Models\Agency::find($request->agency_id);
         }
         if (!$agency) {
-            $host = $request->getHost();
-            $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
-            $agency = \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")
-                ->orWhere('custom_domain', 'LIKE', "%{$host}%")
-                ->orWhere('slug', 'LIKE', "%{$cleanHost}%")
-                ->first()
-                ?? \App\Models\Agency::where('type', 'white_label')->first()
-                ?? \App\Models\Agency::first();
+            $agency = \App\Models\Agency::resolveCurrent($request);
         }
 
         if (!$agency) {

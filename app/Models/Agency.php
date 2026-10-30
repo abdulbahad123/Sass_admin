@@ -206,8 +206,10 @@ class Agency extends Model
         if (empty($this->custom_domain)) {
             return 'saasreselling.com';
         }
-        $domain = preg_replace('#^https?://#', '', trim($this->custom_domain));
-        return rtrim($domain, '/');
+        $domain = preg_replace('#^https?://#i', '', trim($this->custom_domain));
+        $domain = explode('/', $domain)[0];
+        $domain = explode(':', $domain)[0];
+        return strtolower(trim($domain));
     }
 
     public function getWhitelabelLoginUrlAttribute()
@@ -230,7 +232,88 @@ class Agency extends Model
             return "https://whatsappbulk.{$rootDomain}";
         }
 
+        if ($cleanProductSlug === 'launchshop' || str_contains($cleanProductSlug, 'ecom') || str_contains($cleanProductSlug, 'shop')) {
+            return "https://launchshop.{$rootDomain}";
+        }
+
         return "https://{$cleanProductSlug}.{$rootDomain}";
+    }
+
+    /**
+     * Resolve the active Agency strictly from the incoming request domain first,
+     * then fall back to the authenticated user's assigned agency or impersonated agency.
+     */
+    public static function resolveCurrent($request = null, $user = null): ?self
+    {
+        $req = $request ?: (function_exists('request') ? request() : null);
+        $usr = $user ?: (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user() : null);
+
+        // 1. Resolve strictly by incoming HTTP host if accessed via custom agency domain
+        if ($req && method_exists($req, 'getHost')) {
+            $host = strtolower($req->getHost());
+            $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', $host);
+
+            $mainSuperAdminHosts = [
+                'saasreselling.com',
+                'www.saasreselling.com',
+                'localhost',
+                '127.0.0.1',
+            ];
+            $configuredAdminHost = strtolower((string) env('MAIN_ADMIN_HOST', 'saasreselling.com'));
+            if (!empty($configuredAdminHost)) {
+                $mainSuperAdminHosts[] = $configuredAdminHost;
+                $mainSuperAdminHosts[] = 'www.' . $configuredAdminHost;
+            }
+
+            $isMainDomain = in_array($cleanHost, $mainSuperAdminHosts, true) || in_array($host, $mainSuperAdminHosts, true);
+            if (!$isMainDomain) {
+                foreach ($mainSuperAdminHosts as $pHost) {
+                    if ($pHost !== 'localhost' && $pHost !== '127.0.0.1' && str_ends_with($host, '.' . $pHost)) {
+                        $isMainDomain = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$isMainDomain && !empty($cleanHost)) {
+                $domainAgency = static::where(function ($q) use ($cleanHost, $host) {
+                    $q->where('custom_domain', $cleanHost)
+                      ->orWhere('custom_domain', $host)
+                      ->orWhere('custom_domain', 'www.' . $cleanHost)
+                      ->orWhere('custom_domain', 'https://' . $cleanHost)
+                      ->orWhere('custom_domain', 'http://' . $cleanHost)
+                      ->orWhere('custom_domain', 'LIKE', "%{$cleanHost}%")
+                      ->orWhere('custom_domain', 'LIKE', "%{$host}%")
+                      ->orWhere('slug', $cleanHost);
+                })->first();
+
+                if ($domainAgency) {
+                    return $domainAgency;
+                }
+            }
+        }
+
+        // 2. Resolve by impersonated agency if active
+        if (session()->has('impersonated_agency_id')) {
+            $impAgency = static::find(session('impersonated_agency_id'));
+            if ($impAgency) return $impAgency;
+        }
+
+        // 3. Resolve by authenticated user
+        if ($usr) {
+            if ($usr->agency) {
+                return $usr->agency;
+            }
+            if (!empty($usr->agency_id)) {
+                $uAgency = static::find($usr->agency_id);
+                if ($uAgency) return $uAgency;
+            }
+        }
+
+        // 4. Fallback to active white label agency or first available
+        return static::where('type', 'white_label')->where('status', 'active')->first()
+            ?? static::where('type', 'white_label')->first()
+            ?? static::first();
     }
 
     // Master agency has sub-agencies

@@ -65,14 +65,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
         return app(\App\Http\Controllers\SuperAdmin\LandingPageController::class)->show();
     }
 
-    $agency = \App\Models\Agency::where(function ($q) use ($cleanHost, $host) {
-        $q->where('custom_domain', $cleanHost)
-          ->orWhere('custom_domain', $host)
-          ->orWhere('custom_domain', 'www.' . $cleanHost)
-          ->orWhere('custom_domain', 'https://' . $cleanHost)
-          ->orWhere('custom_domain', 'http://' . $cleanHost)
-          ->orWhere('custom_domain', 'LIKE', "%{$cleanHost}%");
-    })->first();
+    $agency = \App\Models\Agency::resolveCurrent($request);
 
     if ($agency) {
         return view('whitelabel.website.public_landing', compact('agency'));
@@ -82,12 +75,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
 })->name('agency.public_home');
 
 $getAgencyForRoute = function (\Illuminate\Http\Request $request) {
-    $host = strtolower($request->getHost());
-    $cleanHost = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $host);
-    return \App\Models\Agency::where('custom_domain', 'LIKE', "%{$cleanHost}%")
-        ->orWhere('custom_domain', 'LIKE', "%{$host}%")
-        ->orWhere('slug', 'LIKE', "%{$cleanHost}%")
-        ->first();
+    return \App\Models\Agency::resolveCurrent($request);
 };
 
 $getLandingData = function() {
@@ -329,6 +317,8 @@ Route::prefix($adminLoginSlug)->name('admin.')->middleware([SuperAdminMiddleware
         if (session()->has('impersonator_user_id')) {
             $adminId = session('impersonator_user_id');
             session()->forget('impersonator_user_id');
+            session()->forget('impersonated_agency_id');
+            session()->forget('current_agency_id');
             \Illuminate\Support\Facades\Auth::loginUsingId($adminId);
             return redirect()->route('admin.agencies.index')->with('success', 'Returned to Super Admin panel.');
         }

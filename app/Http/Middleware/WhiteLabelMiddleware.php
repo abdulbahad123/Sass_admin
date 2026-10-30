@@ -22,6 +22,13 @@ class WhiteLabelMiddleware
             return redirect()->route('login')->with('error', 'Access Denied: White Label Agency permissions required.');
         }
 
+        // Accurately resolve agency based on incoming host domain first, then user
+        $agency = \App\Models\Agency::resolveCurrent($request, $user);
+        if ($agency) {
+            $request->attributes->set('agency', $agency);
+            view()->share('agency', $agency);
+        }
+
         return $next($request);
     }
 }

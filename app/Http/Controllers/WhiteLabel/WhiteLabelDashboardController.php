@@ -538,10 +538,7 @@ class WhiteLabelDashboardController extends Controller
     {
         $user = Auth::user();
 
-        $agency = $user->agency ?? Agency::where('type', 'white_label')->first();
-        if (!$agency) {
-            $agency = Agency::first();
-        }
+        $agency = Agency::resolveCurrent($request, $user);
 
         $clientsData = $this->getAgencyClientsData($agency);
         $rawClients   = $clientsData['clients'];

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'White Label Dashboard') - {{ $agency->name ?? 'Apex Digital Agency' }}</title>
+    <title>@yield('title', 'White Label Dashboard') - {{ $agency->name ?? 'Agency Portal' }}</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -84,7 +84,7 @@
                         </div>
                         <div>
                             <h2 class="font-extrabold text-white font-heading text-base leading-snug tracking-tight">
-                                {{ $agency->name ?? 'Apex Digital Agency' }}
+                                {{ $agency->name ?? 'Agency Portal' }}
                             </h2>
                             <div class="flex items-center text-[11px] text-slate-400 font-semibold cursor-pointer hover:text-slate-200 transition">
                                 <span>White Label Dashboard</span>

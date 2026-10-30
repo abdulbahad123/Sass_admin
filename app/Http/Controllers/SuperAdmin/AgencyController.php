@@ -378,7 +378,12 @@ class AgencyController extends Controller
         $agencyUser = User::where('agency_id', $agency->id)->first() 
             ?? User::where('email', $agency->email)->first();
 
-        if (!$agencyUser) {
+        if ($agencyUser) {
+            if ($agencyUser->agency_id !== $agency->id) {
+                $agencyUser->agency_id = $agency->id;
+                $agencyUser->save();
+            }
+        } else {
             $agencyUser = User::create([
                 'name' => $agency->owner_name,
                 'email' => $agency->email,
@@ -397,8 +402,11 @@ class AgencyController extends Controller
             'details'   => ['agency_id' => $agency->id, 'owner' => $agency->owner_name],
         ]);
 
-        // Store impersonator ID so Super Admin can return with 1 click
-        session(['impersonator_user_id' => auth()->id()]);
+        // Store impersonator ID and impersonated agency ID so Super Admin can return with 1 click
+        session([
+            'impersonator_user_id' => auth()->id(),
+            'impersonated_agency_id' => $agency->id,
+        ]);
         Auth::login($agencyUser);
 
         if ($agency->type === 'master') {

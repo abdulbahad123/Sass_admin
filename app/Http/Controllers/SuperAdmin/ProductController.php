@@ -160,8 +160,13 @@ class ProductController extends Controller
 
     public function launchAdmin(Request $request, Product $product)
     {
-        $currentHost = $request->getHost();
-        $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
+        $agency = \App\Models\Agency::resolveCurrent($request, auth()->user());
+        if ($agency && !empty($agency->custom_domain)) {
+            $rootDomain = preg_replace('/^(app|www)\./i', '', $agency->clean_domain);
+        } else {
+            $currentHost = $request->getHost();
+            $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
+        }
         $slug = $product->slug ?? Str::slug($product->name);
         $scheme = $request->getScheme() ?: 'https';
 
