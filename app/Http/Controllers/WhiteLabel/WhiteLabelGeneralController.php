@@ -101,6 +101,41 @@ class WhiteLabelGeneralController extends Controller
             $updateData['is_openai_active'] = $request->has('is_openai_active') ? (int)$request->input('is_openai_active') : (!empty($request->input('openai_api_key')) ? 1 : 0);
         }
 
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            if ($file->isValid()) {
+                $ext = $file->getClientOriginalExtension() ?: 'png';
+                $filename = 'logo_' . time() . '_' . uniqid() . '.' . $ext;
+                $file->move(public_path('uploads/agency'), $filename);
+                $updateData['logo'] = 'uploads/agency/' . $filename;
+            }
+        }
+
+        if ($request->hasFile('logo_dark')) {
+            $file = $request->file('logo_dark');
+            if ($file->isValid()) {
+                $ext = $file->getClientOriginalExtension() ?: 'png';
+                $filename = 'logo_dark_' . time() . '_' . uniqid() . '.' . $ext;
+                $file->move(public_path('uploads/agency'), $filename);
+                $updateData['logo_dark'] = 'uploads/agency/' . $filename;
+            }
+        }
+
+        if ($request->hasFile('footer_logo')) {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'footer_logo')) {
+                \Illuminate\Support\Facades\Schema::table('agencies', function ($table) {
+                    $table->string('footer_logo')->nullable()->after('logo_dark');
+                });
+            }
+            $file = $request->file('footer_logo');
+            if ($file->isValid()) {
+                $ext = $file->getClientOriginalExtension() ?: 'png';
+                $filename = 'footer_logo_' . time() . '_' . uniqid() . '.' . $ext;
+                $file->move(public_path('uploads/agency'), $filename);
+                $updateData['footer_logo'] = 'uploads/agency/' . $filename;
+            }
+        }
+
         try {
             if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'is_gemini_active')) {
                 \Illuminate\Support\Facades\DB::statement("ALTER TABLE agencies ADD COLUMN is_gemini_active TINYINT(1) NOT NULL DEFAULT 0");

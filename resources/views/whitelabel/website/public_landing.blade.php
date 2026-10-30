@@ -290,6 +290,31 @@
         }
         .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,70,229,.4); }
 
+        .footer-social-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all .2s ease;
+        }
+        .footer-social-btn:hover {
+            background: #334155;
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        .footer-social-btn svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+
         .site-header {
             background: #ffffff;
             border-bottom: 1px solid #f1f5f9;
@@ -733,9 +758,9 @@
             {{-- Left: Text, Badges, CTAs --}}
             <div style="display:flex; flex-direction:column; gap:24px;">
 
-                {{-- Pill badge --}}
-                <span style="display:inline-flex; align-items:center; gap:8px; background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:12px; font-weight:800; padding:6px 18px; border-radius:999px; width:fit-content; letter-spacing:.04em;">
-                    <i data-lucide="zap" style="width:14px;height:14px"></i>
+                {{-- Pill badge (Task 3: increased font size & prominent design) --}}
+                <span style="display:inline-flex; align-items:center; gap:10px; background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:15px; font-weight:800; padding:8px 22px; border-radius:999px; width:fit-content; letter-spacing:.03em; box-shadow:0 4px 14px rgba(109,40,217,0.12);">
+                    <i data-lucide="zap" style="width:17px;height:17px;color:#7c3aed;"></i>
                     <span>All-In-One Growth Platform for Indian Businesses</span>
                 </span>
 
@@ -907,7 +932,7 @@
 
 
 {{-- ══ SECTION 4: WHY CHOOSE US ════════════════════════════════════════════════ --}}
-<section id="features" style="background: linear-gradient(180deg, #f5f4ff 0%, #faf8ff 100%); padding: 84px 0; border-bottom: 1px solid #f1f5f9;">
+<section id="features" style="background: linear-gradient(180deg, #f5f4ff 0%, #faf8ff 100%); padding: 64px 0 24px; border-bottom: 1px solid #f1f5f9;">
     <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px;">
         <div style="text-align: center; margin-bottom: 56px;">
             <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(249,115,22,0.12)); color: #7c3aed; border: 1.5px solid rgba(124,58,237,0.25); font-size: 13px; font-weight: 900; padding: 8px 24px; border-radius: 999px; margin-bottom: 16px; letter-spacing: .06em; text-transform: uppercase;">
@@ -948,23 +973,23 @@
 </section>
 
 
-{{-- ══ SECTION 5: FLAGSHIP PRODUCTS SHOWCASE (3 Products, Launch Product CTA) ══ --}}
-<section id="products" class="products-section" style="padding:80px 0 36px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
+{{-- ══ SECTION 5: FLAGSHIP PRODUCTS SHOWCASE (Task 1: tight gap & enlarged badge) ══ --}}
+<section id="products" class="products-section" style="padding:28px 0 36px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
     <div id="pricing"></div>
     <div style="max-width:1240px; margin:0 auto; padding:0 24px;">
 
         {{-- Section Header --}}
-        <div style="text-align:center; margin-bottom:56px; display:flex; flex-direction:column; align-items:center; gap:12px; position:relative;">
-            <span style="background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:12px; font-weight:800; padding:6px 20px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:7px;">
-                <i data-lucide="layers" style="width:14px;height:14px"></i>
+        <div style="text-align:center; margin-bottom:32px; display:flex; flex-direction:column; align-items:center; gap:14px; position:relative;">
+            <span style="background:#ede9fe; color:#6d28d9; border:1.5px solid #ddd6fe; font-size:15px; font-weight:800; padding:9px 26px; border-radius:999px; width:fit-content; letter-spacing:.04em; display:inline-flex; align-items:center; gap:9px; box-shadow:0 4px 16px rgba(109,40,217,0.14);">
+                <i data-lucide="layers" style="width:18px;height:18px;color:#7c3aed;"></i>
                 <span>{{ !empty($agency->products_section_badge) ? $agency->products_section_badge : ($pricingBadgeText ?? 'Our Products') }}</span>
             </span>
 
-            <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,3.8vw,2.9rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.2;">
+            <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2.3rem,4.2vw,3.2rem); font-weight:900; color:#0f172a; letter-spacing:-.6px; margin:0; line-height:1.2;">
                 {{ !empty($agency->products_section_title) ? $agency->products_section_title : ($pricingSectionTitle ?? 'Smart Tools for Smarter Businesses') }}
             </h2>
 
-            <p style="font-size:16px; color:#64748b; max-width:640px; line-height:1.75; margin:0; font-weight:500;">
+            <p style="font-size:16.5px; color:#64748b; max-width:640px; line-height:1.75; margin:0; font-weight:500;">
                 {{ !empty($agency->products_section_subtitle) ? $agency->products_section_subtitle : ($pricingSectionSubtitle ?? 'A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.') }}
             </p>
         </div>
@@ -1208,8 +1233,8 @@
 </section>
 
 
-{{-- ══ SECTION 7: WHAT OUR CLIENTS SAY (Screenshot 3 Reference Layout) ════════ --}}
-<section id="testimonials" style="background: radial-gradient(ellipse at 50% 20%, #172554 0%, #090e1a 75%, #050811 100%); padding: 84px 0 92px; position: relative; overflow: hidden;">
+{{-- ══ SECTION 7: WHAT OUR CLIENTS SAY (Task 2: balanced bottom spacing) ════════ --}}
+<section id="testimonials" style="background: radial-gradient(ellipse at 50% 20%, #172554 0%, #090e1a 75%, #050811 100%); padding: 64px 0 20px; position: relative; overflow: hidden;">
     {{-- Subtle ambient stars background effect --}}
     <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);background-size:32px 32px;opacity:0.25;pointer-events:none;"></div>
 
@@ -1275,12 +1300,12 @@
 </section>
 
 
-{{-- ══ SECTION 8: FREQUENTLY ASKED QUESTIONS (Screenshot 4 Reference 2-Col) ═══ --}}
-<section id="faq" style="background: #080d1a; padding: 84px 0 92px; border-top: 1px solid rgba(255,255,255,0.06);">
+{{-- ══ SECTION 8: FREQUENTLY ASKED QUESTIONS (Task 2: whitespace removed) ═══════ --}}
+<section id="faq" style="background: #080d1a; padding: 24px 0 68px; border-top: 1px solid rgba(255,255,255,0.06);">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
         
         {{-- Section Title (Pure White, Centered) --}}
-        <div style="text-align: center; margin-bottom: 56px;">
+        <div style="text-align: center; margin-bottom: 28px;">
             <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 3.8vw, 3rem); font-weight: 900; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 12px;">
                 Frequently Asked Questions
             </h2>
@@ -1531,13 +1556,27 @@
                     @endif
                 </div>
                 <p style="font-size:12.5px;color:#94a3b8;line-height:1.7;max-width:240px">
-                    {{ $agency->footer_content ?? 'Your technology partner in building profitable digital and white-label SaaS businesses.' }}
+                    {{ $agency->footer_content ?? 'Powering the growth of Indian local businesses with smart digital solutions.' }}
                 </p>
-                <div style="display:flex;gap:10px;margin-top:4px">
-                    <a href="{{ $agency->facebook_url ?? '#' }}" class="footer-social-btn" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i data-lucide="facebook" style="width:15px;height:15px"></i></a>
-                    <a href="{{ $agency->instagram_url ?? '#' }}" class="footer-social-btn" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i data-lucide="instagram" style="width:15px;height:15px"></i></a>
-                    <a href="{{ $agency->youtube_url ?? '#' }}" class="footer-social-btn" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i data-lucide="youtube" style="width:15px;height:15px"></i></a>
-                    <a href="{{ $agency->linkedin_url ?? '#' }}" class="footer-social-btn" style="width:34px;height:34px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;text-decoration:none;"><i data-lucide="linkedin" style="width:15px;height:15px"></i></a>
+                {{-- Task 3: Footer social icons displayed with reliable SVG markup --}}
+                <div style="display:flex;gap:10px;margin-top:4px" class="footer-socials">
+                    <a href="{{ !empty($agency->facebook_url) ? $agency->facebook_url : '#' }}" class="footer-social-btn" title="Facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="{{ !empty($agency->instagram_url) ? $agency->instagram_url : '#' }}" class="footer-social-btn" title="Instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                    </a>
+                    <a href="{{ !empty($agency->youtube_url) ? $agency->youtube_url : '#' }}" class="footer-social-btn" title="YouTube" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <a href="{{ !empty($agency->linkedin_url) ? $agency->linkedin_url : '#' }}" class="footer-social-btn" title="LinkedIn" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.53 1.53 0 0 1 0-3.06 1.53 1.53 0 0 1 0 3.06m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+                    </a>
+                    @if(!empty($agency->twitter_url))
+                    <a href="{{ $agency->twitter_url }}" class="footer-social-btn" title="Twitter / X" aria-label="Twitter / X" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    @endif
                 </div>
             </div>
 

@@ -9,7 +9,7 @@
         <p class="text-xs text-slate-500">Personalize your agency branding, logos, color scheme, and custom CNAME domain</p>
     </div>
 
-    <form action="{{ route('whitelabel.branding.update') }}" method="POST" class="card-white rounded-2xl p-6 space-y-6">
+    <form action="{{ route('whitelabel.branding.update') }}" method="POST" enctype="multipart/form-data" class="card-white rounded-2xl p-6 space-y-6">
         @csrf
         <div class="space-y-4">
             <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Agency Identity</h3>
@@ -37,7 +37,43 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Secondary Color Accent</label>
-                    <input type="color" name="secondary_color" value="#8b5cf6" class="w-full h-10 rounded-xl cursor-pointer">
+                    <input type="color" name="secondary_color" value="{{ $agency->secondary_color ?? '#8b5cf6' }}" class="w-full h-10 rounded-xl cursor-pointer">
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">Logos & Assets</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Agency Main Logo</label>
+                    <input type="file" name="logo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    @if(!empty($agency->logo))
+                        <div class="mt-2 p-2 bg-slate-50 border border-slate-200 rounded-xl inline-block">
+                            <img src="{{ asset(ltrim($agency->logo, '/')) }}" alt="Logo" class="h-8 object-contain">
+                        </div>
+                    @endif
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Dark Mode Logo (Optional)</label>
+                    <input type="file" name="logo_dark" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    @if(!empty($agency->logo_dark))
+                        <div class="mt-2 p-2 bg-slate-900 rounded-xl inline-block">
+                            <img src="{{ asset(ltrim($agency->logo_dark, '/')) }}" alt="Dark Logo" class="h-8 object-contain">
+                        </div>
+                    @endif
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Footer Logo (Optional)</label>
+                    <input type="file" name="footer_logo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    @if(!empty($agency->footer_logo))
+                        <div class="mt-2 p-2 bg-slate-900 rounded-xl inline-block">
+                            <img src="{{ asset(ltrim($agency->footer_logo, '/')) }}" alt="Footer Logo" class="h-8 object-contain">
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

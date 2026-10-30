@@ -102,6 +102,15 @@
                         </div>
                     @endif
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Footer Logo (Optional)</label>
+                    <input type="file" name="footer_logo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    @if(!empty($agency->footer_logo))
+                        <div class="bg-slate-900 p-2 rounded-xl mt-2 inline-block">
+                            <img src="{{ asset(ltrim($agency->footer_logo, '/')) }}" alt="Footer Logo" class="h-8 object-contain">
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -403,6 +412,25 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Contact Phone</label>
                     <input type="text" name="contact_phone" value="{{ old('contact_phone', $agency->contact_phone ?? $agency->phone ?? '') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                </div>
+                <div class="md:col-span-2 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <i data-lucide="image" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Footer Logo</p>
+                            <p class="text-[11px] text-slate-500">Upload or change your dedicated footer logo in the Brand & Color Settings section above</p>
+                        </div>
+                    </div>
+                    @if(!empty($agency->footer_logo))
+                        <div class="bg-slate-900 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                            <img src="{{ asset(ltrim($agency->footer_logo, '/')) }}" alt="Footer Logo" class="h-6 object-contain">
+                            <span class="text-[10px] text-emerald-400 font-semibold">Active</span>
+                        </div>
+                    @else
+                        <span class="text-[11px] text-slate-400 italic">Using fallback logo</span>
+                    @endif
                 </div>
             </div>
         </div>
