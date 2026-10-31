@@ -283,7 +283,7 @@ class Agency extends Model
                 $resolvedByHost = true;
             } elseif (!empty($cleanHost)) {
                 // Use ONLY precise matches — no broad LIKE substring matching to prevent cross-domain bleed
-                // (e.g. "cockroach" matching inside "bullionxcockroach" or similar)
+                // (e.g. "agency1" matching inside "subagency1" or similar)
                 $domainAgency = static::where(function ($q) use ($cleanHost, $host) {
                     $q->where('custom_domain', $cleanHost)
                       ->orWhere('custom_domain', $host)

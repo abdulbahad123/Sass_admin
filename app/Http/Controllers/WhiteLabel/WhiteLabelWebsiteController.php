@@ -597,12 +597,13 @@ class WhiteLabelWebsiteController extends Controller
 
                 $mailer = new \Symfony\Component\Mailer\Mailer($transport);
                 $fromAddress = !empty($smtp['smtp_from_address']) ? $smtp['smtp_from_address'] : $smtp['smtp_username'];
-                $fromName    = !empty($smtp['smtp_from_name']) ? $smtp['smtp_from_name'] : ($agency->name ?? 'Youverse');
+                $defaultAgencyName = $agency->name ?? 'White Label Agency';
+                $fromName    = !empty($smtp['smtp_from_name']) ? $smtp['smtp_from_name'] : $defaultAgencyName;
 
                 $email = (new \Symfony\Component\Mime\Email())
                     ->from(new \Symfony\Component\Mime\Address($fromAddress, $fromName))
                     ->to(new \Symfony\Component\Mime\Address($recipient))
-                    ->subject("SMTP Test Email from " . ($agency->name ?? 'Youverse'))
+                    ->subject("SMTP Test Email from " . $defaultAgencyName)
                     ->html("<h3>SMTP Connected Successfully!</h3><p>This is a test email sent from your white-label dashboard at " . date('Y-m-d H:i:s') . ".</p>");
 
                 $mailer->send($email);
@@ -774,7 +775,7 @@ class WhiteLabelWebsiteController extends Controller
 
                     $mailer = new \Symfony\Component\Mailer\Mailer($transport);
                     $fromAddress = !empty($smtp['smtp_from_address']) ? $smtp['smtp_from_address'] : $smtp['smtp_username'];
-                    $fromName    = !empty($smtp['smtp_from_name']) ? $smtp['smtp_from_name'] : ($agency->name ?? 'Youverse Contact');
+                    $fromName    = !empty($smtp['smtp_from_name']) ? $smtp['smtp_from_name'] : (!empty($agency->name) ? $agency->name . ' Contact' : 'Contact Support');
 
                     $email = (new \Symfony\Component\Mime\Email())
                         ->from(new \Symfony\Component\Mime\Address($fromAddress, $fromName))

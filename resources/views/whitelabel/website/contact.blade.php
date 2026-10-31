@@ -460,7 +460,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">From Name</label>
-                        <input type="text" name="smtp_from_name" value="{{ $smtpSettings['smtp_from_name'] ?? ($agency->name ?? 'Youverse') }}" placeholder="{{ $agency->name ?? 'Youverse' }}" 
+                        <input type="text" name="smtp_from_name" value="{{ $smtpSettings['smtp_from_name'] ?? ($agency->name ?? 'White Label Agency') }}" placeholder="{{ $agency->name ?? 'White Label Agency' }}" 
                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-blue-500">
                     </div>
                 </div>

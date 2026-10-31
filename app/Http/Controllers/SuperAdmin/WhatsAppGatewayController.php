@@ -116,14 +116,14 @@ class WhatsAppGatewayController extends Controller
             $template = $settings['whatsapp_credentials_template'];
             $message = str_replace(
                 ['{user_name}', '{store_name}', '{email}', '{password}', '{store_url}', '{login_url}', '{product_name}', '{plan_name}'],
-                ['John Doe', 'Super Store', 'john@example.com', 'Pass@1234', 'https://superstore.launchshop.in', 'https://launchshop.in/login', $productName, 'Enterprise Plan'],
+                ['John Doe', 'Super Store', 'john@example.com', 'Pass@1234', 'https://store.saasreselling.com', 'https://saasreselling.com/login', $productName, 'Enterprise Plan'],
                 $template
             );
         } elseif ($type === 'invoice') {
             $template = $settings['whatsapp_invoice_template'];
             $message = str_replace(
                 ['{user_name}', '{invoice_id}', '{amount}', '{plan_title}', '{payment_method}', '{invoice_url}', '{product_name}'],
-                ['John Doe', 'INV-2026-8801', '₹2,499', 'Annual Unlimited Store', 'Razorpay Online', 'https://launchshop.in/invoice', $productName],
+                ['John Doe', 'INV-2026-8801', '₹2,499', 'Annual Unlimited Store', 'Razorpay Online', 'https://saasreselling.com/invoice', $productName],
                 $template
             );
         } else {

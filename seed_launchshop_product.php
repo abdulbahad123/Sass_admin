@@ -16,7 +16,7 @@ if ($existing) {
         'tagline'     => 'E-Commerce Store Builder',
         'description' => 'White-label SaaS e-commerce platform for agencies',
         'icon'        => 'fas fa-store',
-        'app_url'     => 'https://launchshop.in',
+        'app_url'     => 'https://saasreselling.com',
         'is_active'   => 1,
         'is_featured' => 1,
         'api_key'     => 'pk_' . bin2hex(random_bytes(12)),

@@ -34,7 +34,7 @@ class DatabaseProvisioningService
 
         $cpanelUser = env('CPANEL_USER', 'nooryak');
         
-        // Derive clean agency slug (strip domain extensions like .in, .com so youverse.in -> youverse)
+        // Derive clean agency slug (strip domain extensions like .in, .com so agency.in -> agency)
         $rawAgencyName = !empty($agency->slug) ? $agency->slug : ($agency->name ?? 'agency');
         $cleanAgencyName = preg_replace('/\.(in|com|org|net|co\.in|top|dev)$/i', '', strtolower(trim($rawAgencyName)));
         $cleanAgencyName = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $cleanAgencyName);

@@ -21,7 +21,7 @@
             'contact' => 'Contact Us',
         ];
         $data = $data ?? [];
-        $agencyName = $agency->name ?? 'Youverse';
+        $agencyName = $agency->name ?? 'White Label Agency';
         $pageTitle = $titles[$type] ?? 'Legal Policy';
         $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('/assets/images/about_right.png');
         $dbProds = $data['db_products'] ?? collect();

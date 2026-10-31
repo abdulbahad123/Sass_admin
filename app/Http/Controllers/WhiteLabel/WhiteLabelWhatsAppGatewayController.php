@@ -222,7 +222,7 @@ class WhiteLabelWhatsAppGatewayController extends Controller
         }
 
         $type = $request->input('test_type');
-        $message = '';
+        $demoDomain = !empty($agency->custom_domain) ? $agency->clean_domain : ($request->getHost() ?: 'saasreselling.com');
 
         if ($type === 'otp') {
             $template = !empty($agency->whatsapp_otp_template) ? $agency->whatsapp_otp_template : $systemDefaults['whatsapp_otp_template'];
@@ -235,14 +235,14 @@ class WhiteLabelWhatsAppGatewayController extends Controller
             $template = !empty($agency->whatsapp_credentials_template) ? $agency->whatsapp_credentials_template : $systemDefaults['whatsapp_credentials_template'];
             $message = str_replace(
                 ['{user_name}', '{store_name}', '{email}', '{password}', '{store_url}', '{login_url}', '{product_name}', '{plan_name}'],
-                ['Alex Morgan', 'Demo Fashion Hub', 'alex@example.com', 'Pass@1234', 'https://demostore.' . ($agency->custom_domain ?: 'youverse.in'), 'https://' . ($agency->custom_domain ?: 'youverse.in') . '/login', $productName, 'Pro Store Plan'],
+                ['Alex Morgan', 'Demo Fashion Hub', 'alex@example.com', 'Pass@1234', 'https://demostore.' . $demoDomain, 'https://' . $demoDomain . '/login', $productName, 'Pro Store Plan'],
                 $template
             );
         } elseif ($type === 'invoice') {
             $template = !empty($agency->whatsapp_invoice_template) ? $agency->whatsapp_invoice_template : $systemDefaults['whatsapp_invoice_template'];
             $message = str_replace(
                 ['{user_name}', '{invoice_id}', '{amount}', '{plan_title}', '{payment_method}', '{invoice_url}', '{product_name}'],
-                ['Alex Morgan', 'INV-2026-9481', '₹1,999', 'Ecom Premium Yearly', 'Online Payment (Razorpay)', 'https://' . ($agency->custom_domain ?: 'youverse.in') . '/invoice', $productName],
+                ['Alex Morgan', 'INV-2026-9481', '₹1,999', 'Ecom Premium Yearly', 'Online Payment (Razorpay)', 'https://' . $demoDomain . '/invoice', $productName],
                 $template
             );
         } else {

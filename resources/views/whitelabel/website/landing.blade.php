@@ -264,7 +264,7 @@
                     <i data-lucide="check-circle" class="w-4 h-4 text-purple-600"></i>
                     <span>Why Choose Us Section (4 Cards)</span>
                 </span>
-                <span class="text-[11px] text-slate-400 font-normal">Controls "Why Choose Youverse"</span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls "Why Choose Agency"</span>
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

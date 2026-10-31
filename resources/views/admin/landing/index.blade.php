@@ -443,7 +443,7 @@
         <div x-show="activeTab === 'faqs'" class="card-white p-6 rounded-2xl space-y-8">
             <div>
                 <h3 class="font-extrabold text-slate-900 text-base border-b pb-3 font-heading">White Label Partner Testimonials</h3>
-                <p class="text-xs text-slate-500 mt-1">Manage partner reviews, live domains (youverse.in, nooryak.in, cockroach.in, bullionxacademy.com), and locations.</p>
+                <p class="text-xs text-slate-500 mt-1">Manage partner reviews, live domains (e.g. saasreselling.in), and locations.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -476,7 +476,7 @@
                                 <input type="text" name="lp_testimonials_items[{{ $pIdx }}][name]" value="{{ $partner['name'] ?? '' }}" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Live Domain (e.g. youverse.in)</label>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Live Domain (e.g. saasreselling.in)</label>
                                 <input type="text" name="lp_testimonials_items[{{ $pIdx }}][domain]" value="{{ $partner['domain'] ?? '' }}" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-mono">
                             </div>
                         </div>

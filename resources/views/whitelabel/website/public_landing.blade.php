@@ -1027,9 +1027,9 @@
 
                 // Dynamic Link Resolution
                 if ($isEcom) {
-                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecom.youverse.in';
+                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecom.saasreselling.in';
                 } elseif ($isWeb) {
-                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.youverse.in';
+                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.saasreselling.in';
                 } else {
                     $prodLink = !empty($plan['cta_url']) && $plan['cta_url'] !== '/login' ? $plan['cta_url'] : (isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : 'https://wa.me/916374913298?text=I%20am%20interested%20in%20' . urlencode($plan['product_name'] ?? 'Product'));
                 }

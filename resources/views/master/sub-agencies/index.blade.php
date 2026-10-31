@@ -91,7 +91,7 @@
 
                 <!-- Footer Actions -->
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <a href="https://launchshop.in/X9_AdMiN-Portal_V7" target="_blank" 
+                    <a href="https://saasreselling.com/X9_AdMiN-Portal_V7" target="_blank" 
                        class="py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl flex items-center space-x-1.5 shadow-sm">
                         <i data-lucide="key" class="w-3.5 h-3.5"></i>
                         <span>Admin Access</span>
@@ -155,7 +155,7 @@
                                         <button onclick="openViewModal({{ json_encode($sub) }})" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">
                                             View
                                         </button>
-                                        <a href="https://launchshop.in/X9_AdMiN-Portal_V7" target="_blank" 
+                                        <a href="https://saasreselling.com/X9_AdMiN-Portal_V7" target="_blank" 
                                            class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs">
                                             Admin
                                         </a>

@@ -1654,64 +1654,34 @@
                         ? $data['lp_testimonials_items']
                         : [
                             [
-                                'name' => 'Nooryak Technology',
-                                'domain' => 'nooryak.in',
-                                'url' => 'https://nooryak.in',
-                                'role' => 'Digital Tech & SaaS Agency',
-                                'location' => 'Bangalore',
-                                'icon' => 'fas fa-laptop-code',
-                                'color' => '#ff3d00',
-                                'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our own domain (nooryak.in) has completely transformed our business model. Our clients log in with our custom branding, and we keep 100% of our recurring subscription revenue without dealing with server maintenance or coding.'
-                            ],
-                            [
-                                'name' => 'Youverse Tech',
-                                'domain' => 'youverse.in',
-                                'url' => 'https://youverse.in',
-                                'role' => 'Digital Marketing / IT',
-                                'location' => 'Chennai',
-                                'icon' => 'fas fa-globe',
-                                'color' => '#3b82f6',
-                                'quote' => 'We connected our custom domain and immediately launched all 3 white-label SaaS tools to our client roster. The ability to offer our own branded ecom store builder, website creator, and WhatsApp marketing platform under one roof has doubled our client retention and given us stable monthly recurring income.'
-                            ],
-                            [
-                                'name' => 'Cockroach Studio',
-                                'domain' => 'cockroachjantaparty.top',
-                                'url' => 'https://cockroachjantaparty.top/',
-                                'role' => 'Digital Services & Studio',
-                                'location' => 'Delhi',
-                                'icon' => 'fas fa-layer-group',
-                                'color' => '#ef4444',
-                                'quote' => 'Instead of spending months and millions developing software ourselves, SaaSReselling gave us a complete, ready-to-sell 3-in-1 software suite. Our clients love building stores and running bulk campaigns on our domain, and the automated client provisioning lets us focus purely on growth and client acquisition.'
-                            ],
-                            [
-                                'name' => 'BullionX Academy',
-                                'domain' => 'bullionxacademy.com',
-                                'url' => 'http://bullionxacademy.com/',
-                                'role' => 'Technology & Business Solutions',
-                                'location' => 'Hyderabad',
-                                'icon' => 'fas fa-coins',
-                                'color' => '#8b5cf6',
-                                'quote' => 'Offering the 3 SaaS platforms—ecommerce builder, website creator, and WhatsApp bulk tools—under our own domain gave our brand incredible authority. Our trainees and clients use the platforms daily, giving us predictable subscription cash flow every month without managing any backend tech.'
-                            ],
-                            [
-                                'name' => 'TapNow India',
-                                'domain' => 'tapnow.in',
-                                'url' => '', // Disabled: should not open
-                                'role' => 'Digital Marketing & Automation',
-                                'location' => 'Chandigarh',
-                                'icon' => 'fas fa-mobile-screen',
-                                'color' => '#06b6d4',
-                                'quote' => 'Having all 3 high-demand SaaS products operating smoothly under our own branded domain has been a huge competitive advantage. Businesses trust our software because our brand is on every portal, notification, and dashboard. It is by far the most profitable agency addition we have made.'
-                            ],
-                            [
-                                'name' => 'SaaSReselling India',
+                                'name' => 'SaaSReselling Agency Network',
                                 'domain' => 'saasreselling.in',
                                 'url' => 'https://saasreselling.in',
-                                'role' => 'White Label SaaS Network',
+                                'role' => 'White Label Agency Portal',
                                 'location' => 'Bangalore',
                                 'icon' => 'fas fa-shield-alt',
                                 'color' => '#10b981',
                                 'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
+                            ],
+                            [
+                                'name' => 'White Label SaaS Agency',
+                                'domain' => 'saasreselling.in',
+                                'url' => 'https://saasreselling.in',
+                                'role' => 'Digital Tech & Automation Agency',
+                                'location' => 'Mumbai',
+                                'icon' => 'fas fa-laptop-code',
+                                'color' => '#3b82f6',
+                                'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our custom domain has completely transformed our business model. Our clients log in with our custom branding, and we keep 100% of our recurring subscription revenue.'
+                            ],
+                            [
+                                'name' => 'Cloud Reseller Partner',
+                                'domain' => 'saasreselling.in',
+                                'url' => 'https://saasreselling.in',
+                                'role' => 'Software & Growth Solutions',
+                                'location' => 'Delhi',
+                                'icon' => 'fas fa-layer-group',
+                                'color' => '#8b5cf6',
+                                'quote' => 'Instead of spending months developing software from scratch, SaaSReselling gave us a complete, ready-to-sell 3-in-1 software suite. Our clients love building stores and running bulk campaigns on our portal, and automated client provisioning lets us focus purely on growth.'
                             ]
                         ];
                 @endphp
@@ -1720,8 +1690,7 @@
                     @foreach($partnersList as $partner)
                     @php
                         $pColor = $partner['color'] ?? '#ff3d00';
-                        $isTapNow = (stripos($partner['name'] ?? '', 'TapNow') !== false);
-                        $canOpen = !empty($partner['url']) && !$isTapNow;
+                        $canOpen = !empty($partner['url']);
                     @endphp
                     <div 
                         @if($canOpen)

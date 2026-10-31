@@ -48,7 +48,7 @@
         <input type="hidden" name="is_whatsapp_credentials_active" value="1">
         <input type="hidden" name="is_whatsapp_invoice_active" value="1">
         <input type="hidden" name="whatsapp_gateway_url" value="{{ $autoGateway ?? 'http://127.0.0.1:8000' }}">
-        <input type="hidden" name="whatsapp_database" value="{{ $autoDb ?? 'nooryak_ps_youverse_whatsapp' }}">
+        <input type="hidden" name="whatsapp_database" value="{{ $autoDb ?? '' }}">
 
         <!-- 1. Gateway Connection & API Keys Card -->
         <div class="card-white rounded-2xl p-6 space-y-6">

@@ -25,11 +25,6 @@ class LoginController extends Controller
 
         $host = strtolower($request->getHost());
 
-        // Disconnect launchshop.in from Sass_admin — redirect to standalone launchshop.in app
-        if (str_contains($host, 'launchshop.in')) {
-            return redirect()->away('https://launchshop.in' . $request->getRequestUri(), 301);
-        }
-
         $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder)\./i', '', $host);
 
         $mainSuperAdminHosts = [
@@ -88,7 +83,7 @@ class LoginController extends Controller
                 // Database fallback
             }
         } else {
-            // Resolve white-label agency for custom agency domain (e.g. cockroachjantaparty.top, bullionxacademy.com)
+            // Resolve white-label agency for custom agency domain
             $agency = Agency::resolveCurrent($request);
 
             $agencyUser = null;
@@ -176,20 +171,38 @@ class LoginController extends Controller
             $isAgencyPortal = $request->boolean('is_agency_portal') || (!$isMainDomain);
 
             if ($isAgencyPortal) {
-                // On agency domains (e.g. cockroachjantaparty.top, bullionxacademy.com), restrict login strictly to White Label Agency users
+                // On agency domains, restrict login strictly to White Label Agency users
                 if (!$user->isWhiteLabelAgency()) {
                     Auth::logout();
                     return back()->withErrors(['email' => 'Access Denied: Super Admin and Master Label accounts cannot log into the White Label Agency Portal. Please log in via saasreselling.com']);
                 }
 
-                $domainAgency = Agency::resolveCurrent($request, $user);
+                $domainAgency = Agency::resolveCurrent($request);
                 if ($domainAgency) {
-                    if ($user->agency_id !== $domainAgency->id) {
-                        if ($user->email === $domainAgency->email || empty($user->agency_id) || str_contains(strtolower($user->email), strtolower($domainAgency->slug))) {
-                            $user->agency_id = $domainAgency->id;
-                            $user->save();
-                        }
+                    // ─── STRICT DOMAIN OWNERSHIP CHECK ───────────────────────────────────────
+                    // Ensure the logging-in user BELONGS to THIS domain's agency.
+                    // If user credentials belong to a different agency domain → deny access.
+                    $userAgencyId   = (int) ($user->agency_id ?? 0);
+                    $domainAgencyId = (int) $domainAgency->id;
+
+                    $belongsToDomain = ($userAgencyId === $domainAgencyId)
+                        || ($user->email === $domainAgency->email); // owner email match as fallback
+
+                    if (!$belongsToDomain) {
+                        Auth::logout();
+                        $domainName = $domainAgency->name ?? $request->getHost();
+                        return back()->withErrors([
+                            'email' => "Access Denied: These credentials do not belong to the \"{$domainName}\" portal. Please use the correct login credentials for this domain.",
+                        ])->onlyInput('email');
                     }
+                    // ─────────────────────────────────────────────────────────────────────────
+
+                    // Keep agency_id in sync if it was somehow unset
+                    if (empty($user->agency_id) && $domainAgencyId) {
+                        $user->agency_id = $domainAgencyId;
+                        $user->save();
+                    }
+
                     session(['current_agency_id' => $domainAgency->id]);
                 }
             }
