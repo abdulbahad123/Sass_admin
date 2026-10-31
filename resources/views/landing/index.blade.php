@@ -2332,22 +2332,20 @@
             </button>
             
             <!-- Left Side (Clean White Panel) -->
-            <div class="w-full md:w-1/2 p-4 sm:p-8 lg:p-10 pb-3 sm:pb-8 flex flex-col justify-between bg-white text-left">
+            <div class="w-full md:w-1/2 p-3.5 sm:p-8 lg:p-10 pb-2.5 sm:pb-8 flex flex-col justify-between bg-white text-left">
                 <div>
                     <!-- Top Tag -->
-                    <span class="inline-block text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#ff3d00] mb-2 font-heading bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200/60">
+                    <span class="inline-block text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#ff3d00] mb-1.5 sm:mb-2 font-heading bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200/60">
                         SAASRESELLING · WHITE-LABEL PLATFORM
                     </span>
                     
-                    <!-- Headline -->
-                    <h3 class="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[34px] text-slate-900 leading-[1.12] tracking-tight mt-1">
-                        All-in-One <br>
-                        <span class="text-[#ff3d00]">White-Label</span> <br>
-                        SaaS Panel
+                    <!-- Headline (Full Width on Mobile) -->
+                    <h3 class="font-heading font-extrabold text-xl sm:text-3xl lg:text-[34px] text-slate-900 leading-snug sm:leading-[1.12] tracking-tight mt-0.5 sm:mt-1 w-full">
+                        All-in-One <br class="hidden md:inline"><span class="text-[#ff3d00]">White-Label</span> <br class="hidden md:inline">SaaS Panel
                     </h3>
                     
-                    <!-- Description -->
-                    <p class="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-normal">
+                    <!-- Description (Hidden on mobile to save vertical space) -->
+                    <p class="hidden md:block text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-normal">
                         Launch your own software brand with 3 integrated SaaS solutions—managed from one unified dashboard, under your brand.
                     </p>
                     
