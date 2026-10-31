@@ -104,6 +104,9 @@ class AgencyController extends Controller
             'hero_subtitle' => 'The most powerful SaaS platform for local businesses to get more customers, save time and grow faster.',
             'cta_text' => 'Start Free Today',
             'cta_url' => '/login',
+            'hero_image' => 'assets/landing_page/herobanner_dashboard.png',
+            'about_image' => 'assets/landing_page/features_leftside.png',
+            'cta_image' => 'assets/landing_page/footer_card.png',
             'contact_email' => $validated['email'],
             'contact_phone' => $validated['phone'] ?? null,
         ]);

@@ -150,19 +150,25 @@
                         <label class="block text-xs font-bold text-slate-800">1. Hero Dashboard Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 900×600px PNG/JPG</p>
                         <input type="file" name="hero_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset(ltrim($agency->hero_image ?? 'assets/images/agency_herobanner.png', '/')) }}" alt="Hero" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->hero_image ?? 'assets/landing_page/herobanner_dashboard.png', '/')) }}" alt="Hero"
+                             onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/herobanner_dashboard.png') }}';"
+                             class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                     <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
                         <label class="block text-xs font-bold text-slate-800">2. About / Features Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 800×600px PNG/JPG</p>
                         <input type="file" name="about_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset(ltrim($agency->about_image ?? 'assets/images/about_right.png', '/')) }}" alt="About" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->about_image ?? 'assets/landing_page/features_leftside.png', '/')) }}" alt="About"
+                             onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/features_leftside.png') }}';"
+                             class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                     <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
                         <label class="block text-xs font-bold text-slate-800">3. CTA Banner Image</label>
                         <p class="text-[10px] text-slate-400">Recommended: 400×500px PNG/JPG</p>
                         <input type="file" name="cta_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <img src="{{ asset(ltrim($agency->cta_image ?? 'assets/landing_page/footer_card.png', '/')) }}" alt="CTA" class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
+                        <img src="{{ asset(ltrim($agency->cta_image ?? 'assets/landing_page/footer_card.png', '/')) }}" alt="CTA"
+                             onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/footer_card.png') }}';"
+                             class="h-20 w-full object-cover rounded-xl border border-slate-200 mt-2">
                     </div>
                 </div>
             </div>

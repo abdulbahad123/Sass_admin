@@ -4,10 +4,31 @@
     $primaryColor = $agency->primary_color ?? '#4f46e5';
     $secondaryColor = $agency->secondary_color ?? '#7c3aed';
 
-    // Image fallbacks
-    $heroImg = !empty($agency->hero_image) ? asset(ltrim($agency->hero_image, '/')) : asset('assets/landing_page/header_image.png');
-    $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/features_leftside.png');
-    $ctaImg = !empty($agency->cta_image) ? asset(ltrim($agency->cta_image, '/')) : asset('assets/landing_page/cta_image.png');
+    // Dynamic Image Resolution with robust fallbacks for all whitelabel domains
+    $defaultHero = asset('assets/landing_page/herobanner_dashboard.png');
+    $defaultAbout = asset('assets/landing_page/features_leftside.png');
+    $defaultCta = asset('assets/landing_page/footer_card.png');
+
+    $resolveLandingImg = function ($path, $defaultUrl) {
+        if (empty($path)) {
+            return $defaultUrl;
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        $clean = ltrim($path, '/');
+        if (str_contains($clean, 'header_image.png')) {
+            return asset('assets/landing_page/herobanner_dashboard.png');
+        }
+        if (str_contains($clean, 'cta_image.png')) {
+            return asset('assets/landing_page/footer_card.png');
+        }
+        return asset($clean);
+    };
+
+    $heroImg  = $resolveLandingImg($agency->hero_image ?? null, $defaultHero);
+    $aboutImg = $resolveLandingImg($agency->about_image ?? null, $defaultAbout);
+    $ctaImg   = $resolveLandingImg($agency->cta_image ?? null, $defaultCta);
 
     // Dynamic Collections from Database
     $aboutFeatures = is_array($agency->about_features_data ?? null) 
@@ -821,6 +842,7 @@
                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:500px; height:500px; border:1px solid rgba(167,139,250,0.15); border-radius:50%; animation: pulseCircle 4s infinite ease-in-out 1s;"></div>
                 
                 <img src="{{ $heroImg }}" alt="{{ $agencyName }} Dashboard"
+                     onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/herobanner_dashboard.png') }}';"
                      style="position:relative;z-index:2;width:100%;max-width:850px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15)); margin-right:-20px;">
 
                 {{-- Floating Element 1: AI Powered --}}
@@ -893,7 +915,9 @@
 
                 {{-- RIGHT SIDE: Image --}}
                 <div style="display:flex; justify-content:flex-end;">
-                    <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}" style="width:100%; max-width:520px; height:auto; border-radius:20px; object-fit:contain; filter:drop-shadow(0 20px 35px rgba(0,0,0,0.4));">
+                    <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}"
+                         onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/features_leftside.png') }}';"
+                         style="width:100%; max-width:520px; height:auto; border-radius:20px; object-fit:contain; filter:drop-shadow(0 20px 35px rgba(0,0,0,0.4));">
                 </div>
 
             </div>
@@ -1048,7 +1072,9 @@
                         {{-- Product Logo --}}
                         <div style="margin-bottom:14px; min-height:48px; display:flex; align-items:center;">
                             @if(!empty($logoImgPath))
-                            <img src="{{ $logoImgPath }}" alt="{{ $plan['product_name'] ?? 'Product' }}" style="height:48px; max-width:200px; object-fit:contain;">
+                            <img src="{{ $logoImgPath }}" alt="{{ $plan['product_name'] ?? 'Product' }}"
+                                 onerror="this.style.display='none';"
+                                 style="height:48px; max-width:200px; object-fit:contain;">
                             @else
                             <h3 style="font-family:'Outfit',sans-serif; font-size:24px; font-weight:900; color:#0f172a; margin:0;">
                                 {{ $plan['product_name'] ?? 'Product' }}
@@ -1077,8 +1103,12 @@
 
                         {{-- Mockup Image --}}
                         @if(!empty($mockupImgPath))
+                        @php
+                            $mockupFallback = $isEcom ? asset('assets/landing_page/ecombuilder_image.png') : ($isWeb ? asset('assets/landing_page/websitebuilder_image.png') : asset('assets/landing_page/whatsapp_image.png'));
+                        @endphp
                         <div style="margin-top:20px; text-align:center;">
                             <img src="{{ $mockupImgPath }}" alt="{{ $plan['product_name'] ?? '' }}"
+                                 onerror="this.onerror=null; this.src='{{ $mockupFallback }}';"
                                  style="width:100%; max-height:210px; object-fit:contain; border-radius:14px; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.12));">
                         </div>
                         @endif
@@ -1513,7 +1543,7 @@
             <div style="position:relative; z-index:2; flex-shrink:0; align-self:flex-end; margin-bottom:-44px;">
                 <img src="{{ $ctaImg }}" alt="Grow with {{ $agencyName }}"
                      style="height:220px; width:auto; object-fit:contain; filter:drop-shadow(0 8px 24px rgba(0,0,0,.28)); display:block;"
-                     onerror="this.style.display='none'">
+                     onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/footer_card.png') }}';">
             </div>
 
             {{-- Right Button --}}

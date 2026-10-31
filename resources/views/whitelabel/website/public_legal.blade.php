@@ -23,7 +23,7 @@
         $data = $data ?? [];
         $agencyName = $agency->name ?? 'White Label Agency';
         $pageTitle = $titles[$type] ?? 'Legal Policy';
-        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('/assets/images/about_right.png');
+        $aboutImg = !empty($agency->about_image) ? asset(ltrim($agency->about_image, '/')) : asset('assets/landing_page/features_leftside.png');
         $dbProds = $data['db_products'] ?? collect();
     @endphp
     <title>{{ $pageTitle }} — {{ $data['lp_meta_title'] ?? $agencyName }}</title>
@@ -471,7 +471,9 @@
                                 @endif
                             </div>
                             <div class="lg:col-span-5">
-                                <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}" class="w-full h-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl object-cover">
+                                <img src="{{ $aboutImg }}" alt="About {{ $agencyName }}"
+                                     onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/features_leftside.png') }}';"
+                                     class="w-full h-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl object-cover">
                             </div>
                         </div>
 
