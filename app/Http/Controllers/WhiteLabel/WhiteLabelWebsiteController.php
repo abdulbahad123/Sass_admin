@@ -369,6 +369,11 @@ class WhiteLabelWebsiteController extends Controller
     {
         $user = Auth::user();
         $agency = $this->getAgency();
+        if (!$agency) {
+            return redirect()->route('whitelabel.dashboard')->with('error', 'Agency profile not found. Please contact your administrator.');
+        }
+        // Reload from DB to ensure we get the latest saved state (not cached model)
+        $agency->refresh();
         $testimonials = $agency->parsed_testimonials;
         return view('whitelabel.website.testimonials', compact('user', 'agency', 'testimonials'));
     }
@@ -377,6 +382,9 @@ class WhiteLabelWebsiteController extends Controller
     {
         $agency = $this->getAgency();
         if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        // Reload fresh from DB to avoid stale model state (important on first save after fresh launch)
+        $agency = $agency->fresh();
 
         $names = $request->input('name', []);
         $roles = $request->input('role', []);
@@ -387,10 +395,10 @@ class WhiteLabelWebsiteController extends Controller
         for ($i = 0; $i < count($names); $i++) {
             if (!empty($names[$i])) {
                 $testimonialsData[] = [
-                    'name' => $names[$i],
-                    'role' => $roles[$i] ?? '',
+                    'name'    => $names[$i],
+                    'role'    => $roles[$i] ?? '',
                     'comment' => $comments[$i] ?? '',
-                    'rating' => (int)($ratings[$i] ?? 5),
+                    'rating'  => (int)($ratings[$i] ?? 5),
                 ];
             }
         }

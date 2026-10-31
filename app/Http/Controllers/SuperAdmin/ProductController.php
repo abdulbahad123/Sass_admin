@@ -161,7 +161,11 @@ class ProductController extends Controller
     public function launchAdmin(Request $request, Product $product)
     {
         $agency = \App\Models\Agency::resolveCurrent($request, auth()->user());
-        if ($agency && !empty($agency->custom_domain)) {
+        // Use the agency's custom domain only if it actually has one set.
+        // If agency is null or has no custom_domain, fall back to the actual request host.
+        // This prevents the super admin from inheriting a white_label agency's domain (e.g. youverse.in)
+        // when launching products from saasreselling.com.
+        if ($agency && !empty(trim((string) $agency->custom_domain))) {
             $rootDomain = preg_replace('/^(app|www)\./i', '', $agency->clean_domain);
         } else {
             $currentHost = $request->getHost();

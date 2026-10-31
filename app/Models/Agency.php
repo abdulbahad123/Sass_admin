@@ -249,8 +249,10 @@ class Agency extends Model
         $usr = $user ?: (\Illuminate\Support\Facades\Auth::check() ? \Illuminate\Support\Facades\Auth::user() : null);
 
         // 1. Resolve strictly by incoming HTTP host if accessed via custom agency domain
+        $resolvedByHost = false;
         if ($req && method_exists($req, 'getHost')) {
             $host = strtolower($req->getHost());
+            // Strip common infrastructure subdomains so the agency root domain is what we match on
             $cleanHost = preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', $host);
 
             $mainSuperAdminHosts = [
@@ -275,21 +277,28 @@ class Agency extends Model
                 }
             }
 
-            if (!$isMainDomain && !empty($cleanHost)) {
+            if ($isMainDomain) {
+                // On the main super admin domain — skip the white_label fallback in step 4.
+                // User/impersonation resolution (steps 2 & 3) will still run below.
+                $resolvedByHost = true;
+            } elseif (!empty($cleanHost)) {
+                // Use ONLY precise matches — no broad LIKE substring matching to prevent cross-domain bleed
+                // (e.g. "cockroach" matching inside "bullionxcockroach" or similar)
                 $domainAgency = static::where(function ($q) use ($cleanHost, $host) {
                     $q->where('custom_domain', $cleanHost)
                       ->orWhere('custom_domain', $host)
                       ->orWhere('custom_domain', 'www.' . $cleanHost)
                       ->orWhere('custom_domain', 'https://' . $cleanHost)
                       ->orWhere('custom_domain', 'http://' . $cleanHost)
-                      ->orWhere('custom_domain', 'LIKE', "%{$cleanHost}%")
-                      ->orWhere('custom_domain', 'LIKE', "%{$host}%")
+                      ->orWhere('custom_domain', 'https://www.' . $cleanHost)
+                      ->orWhere('custom_domain', 'http://www.' . $cleanHost)
                       ->orWhere('slug', $cleanHost);
                 })->first();
 
                 if ($domainAgency) {
                     return $domainAgency;
                 }
+                $resolvedByHost = true; // We attempted host resolution but found no match
             }
         }
 
@@ -310,7 +319,13 @@ class Agency extends Model
             }
         }
 
-        // 4. Fallback to active white label agency or first available
+        // 4. Fallback — only if we are NOT on a custom-domain request that resolved to nothing.
+        // When $resolvedByHost is true it means we came in on a non-main-domain but found no DB match:
+        // returning null prevents the wrong agency's domain from leaking into SSO URLs or whitelabel panels.
+        if ($resolvedByHost) {
+            return null;
+        }
+
         return static::where('type', 'white_label')->where('status', 'active')->first()
             ?? static::where('type', 'white_label')->first()
             ?? static::first();
