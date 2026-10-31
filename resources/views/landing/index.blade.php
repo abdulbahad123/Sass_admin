@@ -2332,7 +2332,7 @@
             </button>
             
             <!-- Left Side (Clean White Panel) -->
-            <div class="w-full md:w-1/2 p-5 sm:p-8 lg:p-10 flex flex-col justify-between bg-white text-left">
+            <div class="w-full md:w-1/2 p-4 sm:p-8 lg:p-10 pb-3 sm:pb-8 flex flex-col justify-between bg-white text-left">
                 <div>
                     <!-- Top Tag -->
                     <span class="inline-block text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#ff3d00] mb-2 font-heading bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200/60">
@@ -2351,8 +2351,8 @@
                         Launch your own software brand with 3 integrated SaaS solutions—managed from one unified dashboard, under your brand.
                     </p>
                     
-                    <!-- 4 Feature Bullets -->
-                    <div class="space-y-2.5 sm:space-y-3 mt-4 sm:mt-5">
+                    <!-- 4 Feature Bullets (Hidden on mobile to keep popup compact and fully visible) -->
+                    <div class="hidden md:block space-y-2.5 sm:space-y-3 mt-4 sm:mt-5">
                         <div class="flex items-center space-x-3 text-xs sm:text-[13px] font-bold text-slate-800">
                             <div class="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 text-[#ff3d00] flex items-center justify-center text-xs flex-shrink-0 shadow-sm">
                                 <i class="fas fa-chart-line"></i>
@@ -2380,8 +2380,8 @@
                     </div>
                 </div>
                 
-                <!-- Bottom 3 Product Cards with interactive hover -->
-                <div class="grid grid-cols-3 gap-2 sm:gap-2.5 pt-5 sm:pt-6 mt-4 border-t border-slate-100">
+                <!-- Bottom 3 Product Cards (Hidden on mobile to preserve screen height) -->
+                <div class="hidden md:grid grid-cols-3 gap-2 sm:gap-2.5 pt-5 sm:pt-6 mt-4 border-t border-slate-100">
                     <div class="bg-slate-50 hover:bg-orange-50/50 border border-slate-200/80 hover:border-orange-300 rounded-xl p-2 sm:p-2.5 text-center flex flex-col items-center justify-center space-y-1 transition-all">
                         <i class="far fa-window-maximize text-[#ff3d00] text-sm sm:text-base"></i>
                         <span class="text-[9px] sm:text-[11px] font-bold text-slate-800 leading-tight">Website Builder</span>
@@ -2398,7 +2398,7 @@
             </div>
             
             <!-- Right Side (Deep Navy with Subtle Animated Glow & Big Timer) -->
-            <div class="w-full md:w-1/2 bg-[#080E24] p-5 sm:p-8 lg:p-10 flex flex-col justify-between text-left relative overflow-hidden">
+            <div class="w-full md:w-1/2 bg-[#080E24] p-4 sm:p-8 lg:p-10 flex flex-col justify-between text-left relative overflow-hidden">
                 <!-- Background subtle glow -->
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/15 via-transparent to-orange-500/15 pointer-events-none"></div>
                 
