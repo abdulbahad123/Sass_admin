@@ -279,6 +279,13 @@
         html.dark .feat-card h3 { color: #ffffff !important; }
         html.dark .feat-card p { color: #94a3b8 !important; }
         html.dark .products-section { background: #0b0f19 !important; border-top-color: #1e293b !important; }
+        html.dark .pricing-section { background: #080d1a !important; border-top-color: #1e293b !important; }
+        html.dark .pricing-tier-card { background: #131b2e !important; border-color: #334155 !important; }
+        html.dark .pricing-tier-card h3 { color: #ffffff !important; }
+        html.dark .pricing-tier-card p { color: #94a3b8 !important; }
+        html.dark .pricing-tier-card li { color: #cbd5e1 !important; }
+        html.dark .pricing-card-amount { color: #ffffff !important; }
+        html.dark .pricing-toggle-wrap { background: #131b2e !important; border-color: #334155 !important; }
         html.dark .pricing-card-item { background: #1e293b !important; border-color: #334155 !important; }
         html.dark .pricing-left-panel { background: #141e33 !important; }
         html.dark .pricing-left-panel h4 { color: #ffffff !important; }
@@ -723,7 +730,7 @@
 
         {{-- Desktop Navigation --}}
         <nav style="display:none" class="lg-nav">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#contact','Contact Us'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
+            @foreach([['#products','Products'],['#pricing','Pricing'],['#about-section','About Us'],['#contact','Contact Us'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
                 <a href="{{ $href }}" style="font-size:14px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">{{ $label }}</a>
             @endforeach
         </nav>
@@ -754,7 +761,7 @@
             <button onclick="toggleMobileMenu()" style="background:none;border:none;color:#fff;cursor:pointer"><i data-lucide="x" style="width:28px;height:28px"></i></button>
         </div>
         <div style="display:flex;flex-direction:column;gap:16px;margin-top:20px">
-            @foreach([['#products','Products'],['#about-section','About Us'],['#contact','Contact Us'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
+            @foreach([['#products','Products'],['#pricing','Pricing'],['#about-section','About Us'],['#contact','Contact Us'],['#testimonials','Reviews'],['#faq','FAQ']] as [$href,$label])
                 <a href="{{ $href }}" onclick="toggleMobileMenu()" style="font-size:16px;font-weight:800;color:#cbd5e1;text-decoration:none">{{ $label }}</a>
             @endforeach
         </div>
@@ -999,7 +1006,6 @@
 
 {{-- ══ SECTION 5: FLAGSHIP PRODUCTS SHOWCASE (Task 1: tight gap & enlarged badge) ══ --}}
 <section id="products" class="products-section" style="padding:28px 0 36px; background:#fafbff; border-top:1px solid #f1f5f9; position:relative; overflow:hidden;">
-    <div id="pricing"></div>
     <div style="max-width:1240px; margin:0 auto; padding:0 24px;">
 
         {{-- Section Header --}}
@@ -1172,6 +1178,194 @@
 
     </div>
 </section>
+
+
+{{-- ══ SECTION 5.5: DEDICATED PRODUCTS PRICING SECTION (Task 2: Dynamic SaaS Tiers, Monthly/Yearly Toggle, Distinct UI/UX) ══ --}}
+<section id="pricing" class="pricing-section" style="padding: 70px 0 90px; background: #ffffff; border-top: 1px solid #e2e8f0; position: relative;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px;">
+
+        {{-- Section Header & Interactive Toggle --}}
+        <div style="text-align: center; margin-bottom: 50px; display: flex; flex-direction: column; align-items: center; gap: 14px;">
+            <span style="background: #eef2ff; color: #4f46e5; border: 1.5px solid #c7d2fe; font-size: 13px; font-weight: 800; padding: 8px 24px; border-radius: 999px; letter-spacing: .06em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px;">
+                <i data-lucide="tag" style="width: 15px; height: 15px; color: #4f46e5;"></i>
+                <span>{{ $agency->pricing_badge_text ?? 'FLEXIBLE PRICING' }}</span>
+            </span>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 3.8vw, 3rem); font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px;">
+                {{ $agency->pricing_section_title ?? 'Simple & Transparent Pricing Plans' }}
+            </h2>
+            <p style="font-size: 16px; color: #64748b; font-weight: 500; max-width: 650px; margin: 0 auto; line-height: 1.6;">
+                {{ $agency->pricing_section_subtitle ?? 'Choose the right software solution for your growth. Cancel or upgrade anytime.' }}
+            </p>
+
+            {{-- Interactive Monthly / Yearly Toggle --}}
+            <div style="margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 6px; border-radius: 999px; border: 1.5px solid #e2e8f0;" class="pricing-toggle-wrap">
+                <button type="button" id="btnMonthlyToggle" onclick="switchPricingCycle('monthly')" style="padding: 10px 24px; border-radius: 999px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; transition: all .2s; background: #4f46e5; color: #ffffff; box-shadow: 0 4px 12px rgba(79,70,229,.3);">
+                    Monthly Billing
+                </button>
+                <button type="button" id="btnYearlyToggle" onclick="switchPricingCycle('yearly')" style="padding: 10px 24px; border-radius: 999px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; transition: all .2s; background: transparent; color: #64748b; display: inline-flex; align-items: center; gap: 8px;">
+                    <span>Yearly Billing</span>
+                    <span style="background: #10b981; color: #ffffff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 999px; text-transform: uppercase;">
+                        {{ $agency->pricing_yearly_discount ?? 'Save 20%' }}
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        {{-- 3 Distinct SaaS Pricing Cards Grid --}}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; align-items: stretch;">
+            @foreach($pricingPlans as $pIndex => $plan)
+                @php
+                    $isPop = !empty($plan['is_popular']) || ($plan['product_slug'] ?? '') === 'websitebuilder' || $pIndex === 1;
+                    $pColor = $plan['color'] ?? ($pIndex === 0 ? '#ea580c' : ($pIndex === 1 ? '#2563eb' : '#10b981'));
+                    $pGrad = $plan['gradient'] ?? "linear-gradient(135deg, {$pColor} 0%, #0f172a 100%)";
+                    $pMonthly = $plan['price_monthly'] ?? ($pIndex === 0 ? '499' : ($pIndex === 1 ? '1499' : '999'));
+                    $pYearly = $plan['price_yearly'] ?? ($pIndex === 0 ? '4999' : ($pIndex === 1 ? '14999' : '9999'));
+                    $pName = $plan['plan_name'] ?? ($plan['product_name'] ?? 'Growth Plan');
+                    $pSubtitle = $plan['plan_subtitle'] ?? ($plan['product_subtitle'] ?? 'Complete business tools to grow faster.');
+                    $pBadge = $plan['plan_badge'] ?? ($plan['product_tagline'] ?? 'POWERFUL SOLUTION');
+                    $pFeatures = !empty($plan['features']) && is_array($plan['features']) ? $plan['features'] : [];
+                    $pCtaUrl = $plan['cta_url'] ?? ($agency->products_cta_url ?? 'https://wa.me/916374913298?text=I%20am%20interested%20in%20' . urlencode($plan['product_name'] ?? 'Product'));
+                @endphp
+
+                <div class="pricing-tier-card" style="background: #ffffff; border-radius: 24px; border: {{ $isPop ? '2.5px solid #2563eb' : '1.5px solid #e2e8f0' }}; padding: 36px 30px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: {{ $isPop ? '0 20px 45px -10px rgba(37,99,235,0.2)' : '0 10px 30px rgba(15,23,42,0.04)' }}; transition: all .25s ease;"
+                     onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 24px 50px rgba(15,23,42,0.12)'"
+                     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='{{ $isPop ? '0 20px 45px -10px rgba(37,99,235,0.2)' : '0 10px 30px rgba(15,23,42,0.04)' }}'">
+                    
+                    @if($isPop)
+                    <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #2563eb, #4f46e5); color: #ffffff; font-size: 11px; font-weight: 900; letter-spacing: .08em; padding: 5px 18px; border-radius: 999px; text-transform: uppercase; box-shadow: 0 4px 14px rgba(37,99,235,0.4);">
+                        ★ MOST POPULAR
+                    </div>
+                    @endif
+
+                    <div>
+                        {{-- Top Product Category Pill --}}
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                            <span style="background: {{ $pColor }}15; color: {{ $pColor }}; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: .05em;">
+                                {{ $pBadge }}
+                            </span>
+                            <span style="font-size: 11.5px; font-weight: 700; color: #94a3b8;">
+                                {{ $plan['product_name'] ?? 'Product' }}
+                            </span>
+                        </div>
+
+                        {{-- Plan Heading & Description --}}
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #0f172a; margin: 0 0 8px;">
+                            {{ $pName }}
+                        </h3>
+                        <p style="font-size: 13.5px; color: #64748b; margin: 0 0 24px; line-height: 1.5; min-height: 40px;">
+                            {{ $pSubtitle }}
+                        </p>
+
+                        {{-- Price Container --}}
+                        <div style="background: #f8fafc; border-radius: 18px; padding: 20px; margin-bottom: 24px; border: 1px solid #e2e8f0; text-align: center;">
+                            <div style="display: flex; align-items: baseline; justify-content: center; gap: 4px;">
+                                <span style="font-size: 22px; font-weight: 900; color: {{ $pColor }};">₹</span>
+                                <span class="pricing-card-amount" data-monthly="{{ $pMonthly }}" data-yearly="{{ $pYearly }}" style="font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 900; color: #0f172a; letter-spacing: -1px;">
+                                    {{ number_format((float)str_replace(',', '', (string)$pMonthly)) }}
+                                </span>
+                                <span class="pricing-card-period" style="font-size: 14px; font-weight: 700; color: #64748b;">
+                                    / month
+                                </span>
+                            </div>
+                            <div class="pricing-card-billed-note" style="font-size: 11.5px; font-weight: 600; color: #94a3b8; margin-top: 4px;">
+                                Billed monthly, cancel anytime
+                            </div>
+                        </div>
+
+                        {{-- Features Checklist --}}
+                        <div style="margin-bottom: 28px;">
+                            <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: .08em; margin-bottom: 14px;">
+                                What's Included:
+                            </div>
+                            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                                @foreach($pFeatures as $feat)
+                                <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: #334155; font-weight: 600; line-height: 1.4;">
+                                    <div style="width: 18px; height: 18px; border-radius: 50%; background: {{ $pColor }}18; color: {{ $pColor }}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">
+                                        <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                    </div>
+                                    <span>{{ $feat }}</span>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
+                    {{-- CTA Button --}}
+                    <div>
+                        <a href="{{ $pCtaUrl }}" target="_blank"
+                           style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: {{ $pGrad }}; color: #ffffff !important; font-weight: 800; font-size: 14px; padding: 14px 20px; border-radius: 14px; text-decoration: none; box-shadow: 0 6px 18px -4px {{ $pColor }}55; transition: transform .2s; border: none; text-align: center;"
+                           onmouseover="this.style.transform='scale(1.02)'"
+                           onmouseout="this.style.transform='scale(1)'">
+                            <span>Get Started With {{ $plan['product_name'] ?? 'Product' }} &rarr;</span>
+                        </a>
+                        <div style="text-align: center; font-size: 11.5px; color: #94a3b8; font-weight: 600; margin-top: 8px;">
+                            ⚡ Instant Activation • Zero Setup Fees
+                        </div>
+                    </div>
+
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Bottom Trust Bar --}}
+        <div style="margin-top: 48px; text-align: center; padding: 18px 24px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; font-size: 13.5px; font-weight: 700; color: #475569; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <span>{{ $agency->pricing_trust_bar ?? '🔒 100% Secure Checkout | ⚡ Instant Account Setup | 📞 24/7 Dedicated Support | 🔄 7-Day Money-Back Guarantee' }}</span>
+        </div>
+
+    </div>
+</section>
+
+<script>
+function switchPricingCycle(cycle) {
+    var btnM = document.getElementById('btnMonthlyToggle');
+    var btnY = document.getElementById('btnYearlyToggle');
+    var amounts = document.querySelectorAll('.pricing-card-amount');
+    var periods = document.querySelectorAll('.pricing-card-period');
+    var notes = document.querySelectorAll('.pricing-card-billed-note');
+
+    if (cycle === 'yearly') {
+        if (btnY) {
+            btnY.style.background = '#4f46e5';
+            btnY.style.color = '#ffffff';
+            btnY.style.boxShadow = '0 4px 12px rgba(79,70,229,.3)';
+        }
+        if (btnM) {
+            btnM.style.background = 'transparent';
+            btnM.style.color = '#64748b';
+            btnM.style.boxShadow = 'none';
+        }
+        amounts.forEach(function(el) {
+            var yVal = el.getAttribute('data-yearly');
+            if (yVal) {
+                var num = parseFloat(yVal.toString().replace(/,/g, ''));
+                el.textContent = isNaN(num) ? yVal : num.toLocaleString();
+            }
+        });
+        periods.forEach(function(el) { el.textContent = ' / year'; });
+        notes.forEach(function(el) { el.textContent = 'Billed annually (Save up to 20%)'; });
+    } else {
+        if (btnM) {
+            btnM.style.background = '#4f46e5';
+            btnM.style.color = '#ffffff';
+            btnM.style.boxShadow = '0 4px 12px rgba(79,70,229,.3)';
+        }
+        if (btnY) {
+            btnY.style.background = 'transparent';
+            btnY.style.color = '#64748b';
+            btnY.style.boxShadow = 'none';
+        }
+        amounts.forEach(function(el) {
+            var mVal = el.getAttribute('data-monthly');
+            if (mVal) {
+                var num = parseFloat(mVal.toString().replace(/,/g, ''));
+                el.textContent = isNaN(num) ? mVal : num.toLocaleString();
+            }
+        });
+        periods.forEach(function(el) { el.textContent = ' / month'; });
+        notes.forEach(function(el) { el.textContent = 'Billed monthly, cancel anytime'; });
+    }
+}
+</script>
 
 
 {{-- ══ SECTION 6: HOW IT WORKS (Enhanced Attractive UI/UX) ═════════════════ --}}
@@ -1616,6 +1810,7 @@
                 <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                     <li><a href="/" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
                     <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
+                    <li><a href="#pricing" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Pricing Plans</a></li>
                     <li><a href="#about-section" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
                     <li><a href="#contact" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                     <li><a href="#testimonials" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>

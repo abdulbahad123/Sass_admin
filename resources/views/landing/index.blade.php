@@ -196,10 +196,10 @@
                         <a href="#about" class="hover:text-[#ff3d00] transition-colors flex items-center py-6 cursor-pointer">
                             Solutions <i class="fas fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180"></i>
                         </a>
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[420px] bg-[#0f172a] rounded-2xl border border-slate-700/50 shadow-2xl shadow-slate-900/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[420px] bg-[#0f172a] rounded-2xl border border-slate-700/60 shadow-2xl shadow-slate-950/80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
                             <div class="p-4 flex flex-col space-y-2">
                                 <!-- Bundle -->
-                                <a href="#" class="flex items-start space-x-4 p-4 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors group/item">
+                                <a href="#pricing" class="flex items-start space-x-4 p-4 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/item">
                                     <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <i class="fas fa-bolt"></i>
                                     </div>
@@ -208,41 +208,41 @@
                                             <span class="text-white font-bold text-sm group-hover/item:text-indigo-400 transition-colors">All-in-one-SaaS Bundle</span>
                                             <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full tracking-wider shadow-md">BEST VALUE</span>
                                         </div>
-                                        <p class="text-xs text-slate-400 leading-relaxed">Access to all 5 SaaS applications at a single subscription price.</p>
+                                        <p class="text-xs text-slate-300 leading-relaxed">Access to all 5 SaaS applications at a single subscription price.</p>
                                     </div>
                                 </a>
                                 
                                 <div class="w-full h-px bg-slate-800/80 my-2"></div>
                                 
                                 <div class="grid grid-cols-2 gap-2">
-                                    <!-- Product 1 -->
-                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
-                                        <div class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <!-- Product 1: Ecom Builder -->
+                                    <a href="https://launchshop.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p1">
+                                        <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-shopping-cart"></i>
                                         </div>
                                         <div>
-                                            <span class="block text-white font-bold text-[13px] mb-0.5">Ecom Builder</span>
-                                            <span class="block text-[10px] text-slate-400">Launch e-commerce stores easily.</span>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5 group-hover/p1:text-orange-400 transition-colors">Ecom Builder</span>
+                                            <span class="block text-[10px] text-slate-300">Launch e-commerce stores easily.</span>
                                         </div>
                                     </a>
-                                    <!-- Product 2 -->
-                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <!-- Product 2: Website Builder -->
+                                    <a href="https://websitebuilder.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p2">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-globe"></i>
                                         </div>
                                         <div>
-                                            <span class="block text-white font-bold text-[13px] mb-0.5">Website Builder</span>
-                                            <span class="block text-[10px] text-slate-400">Create sites with AI & templates.</span>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5 group-hover/p2:text-blue-400 transition-colors">Website Builder</span>
+                                            <span class="block text-[10px] text-slate-300">Create sites with AI & templates.</span>
                                         </div>
                                     </a>
-                                    <!-- Product 3 -->
-                                    <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors col-span-2">
-                                        <div class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <!-- Product 3: WhatsApp Automation -->
+                                    <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all col-span-2 group/p3">
+                                        <div class="w-8 h-8 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fab fa-whatsapp"></i>
                                         </div>
                                         <div>
-                                            <span class="block text-white font-bold text-[13px] mb-0.5">WhatsApp Automation</span>
-                                            <span class="block text-[10px] text-slate-400">Automate messaging & marketing.</span>
+                                            <span class="block text-white font-bold text-[13px] mb-0.5 group-hover/p3:text-green-400 transition-colors">WhatsApp Automation</span>
+                                            <span class="block text-[10px] text-slate-300">Automate messaging & marketing.</span>
                                         </div>
                                     </a>
                                 </div>
@@ -258,34 +258,34 @@
                         <a href="#products" class="hover:text-[#ff3d00] transition-colors flex items-center py-6 cursor-pointer">
                             Resources <i class="fas fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180"></i>
                         </a>
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[380px] bg-[#0f172a] rounded-2xl border border-slate-700/50 shadow-2xl shadow-slate-900/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[380px] bg-[#0f172a] rounded-2xl border border-slate-700/60 shadow-2xl shadow-slate-950/80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
                             <div class="p-4 grid grid-cols-2 gap-2">
-                                <a href="#" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
+                                <a href="https://www.youtube.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/r1">
                                     <i class="fab fa-youtube text-red-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
-                                        <span class="block text-white font-bold text-sm mb-0.5">YouTube</span>
-                                        <span class="block text-xs text-slate-400">Tutorials & demos</span>
+                                        <span class="block text-white font-bold text-sm mb-0.5 group-hover/r1:text-red-400 transition-colors">YouTube</span>
+                                        <span class="block text-xs text-slate-300">Tutorials & demos</span>
                                     </div>
                                 </a>
-                                <a href="mailto:{{ $data['lp_contact_email'] ?? '' }}" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
+                                <a href="mailto:{{ $data['lp_contact_email'] ?? 'support@saasreselling.com' }}" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/r2">
                                     <i class="far fa-envelope text-sky-400 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
-                                        <span class="block text-white font-bold text-sm mb-0.5">Contact Us</span>
-                                        <span class="block text-xs text-slate-400">Get in touch</span>
+                                        <span class="block text-white font-bold text-sm mb-0.5 group-hover/r2:text-sky-400 transition-colors">Contact Us</span>
+                                        <span class="block text-xs text-slate-300">Get in touch</span>
                                     </div>
                                 </a>
-                                <a href="#faq" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
+                                <a href="#faq" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/r3">
                                     <i class="far fa-question-circle text-sky-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
-                                        <span class="block text-white font-bold text-sm mb-0.5">FAQ</span>
-                                        <span class="block text-xs text-slate-400">Common questions</span>
+                                        <span class="block text-white font-bold text-sm mb-0.5 group-hover/r3:text-sky-400 transition-colors">FAQ</span>
+                                        <span class="block text-xs text-slate-300">Common questions</span>
                                     </div>
                                 </a>
-                                <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20All-in-One%20White-Label%20SaaS%20Panel.%20Please%20share%20details%20about%20the%2015%25%20offer%20on%20the%202-year%20plan,%20setup,%20branding,%20and%20the%203%20SaaS%20solutions." target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-white dark:bg-[#0B0F19]/5 transition-colors">
+                                <a href="https://wa.me/916374913298?text=Hi%20SaaSReselling,%20I%27m%20interested%20in%20the%20All-in-One%20White-Label%20SaaS%20Panel.%20Please%20share%20details%20about%20the%2015%25%20offer%20on%20the%202-year%20plan,%20setup,%20branding,%20and%20the%203%20SaaS%20solutions." target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/r4">
                                     <i class="fab fa-whatsapp text-green-500 text-lg mt-0.5 w-6 text-center"></i>
                                     <div>
-                                        <span class="block text-white font-bold text-sm mb-0.5">WhatsApp</span>
-                                        <span class="block text-xs text-slate-400">Chat with us</span>
+                                        <span class="block text-white font-bold text-sm mb-0.5 group-hover/r4:text-green-400 transition-colors">WhatsApp</span>
+                                        <span class="block text-xs text-slate-300">Chat with us</span>
                                     </div>
                                 </a>
                             </div>
