@@ -1268,16 +1268,16 @@
 
                     <div>
                         {{-- Top Product Category Pill & Logo Row (Left: Product Logo, Right: Category Badge) --}}
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; min-height: 38px;">
-                            {{-- LEFT: Product Logo instead of text --}}
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; min-height: 48px;">
+                            {{-- LEFT: Product Logo instead of text (Larger Prominent Size) --}}
                             <div style="display: flex; align-items: center;">
                                 <img src="{{ $cardLogoUrl }}" 
                                      alt="{{ $plan['product_name'] ?? 'Product' }}" 
-                                     style="height: 30px; width: auto; max-width: 140px; object-fit: contain;">
+                                     style="height: 44px; max-height: 48px; width: auto; max-width: 175px; object-fit: contain;">
                             </div>
 
                             {{-- RIGHT: Category Pill Badge (e.g. ALL-IN-ONE ECOMMERCE) --}}
-                            <span style="background: {{ $pColor }}15; color: {{ $pColor }}; font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: .05em;">
+                            <span style="background: {{ $pColor }}15; color: {{ $pColor }}; font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap;">
                                 {{ $pBadge }}
                             </span>
                         </div>

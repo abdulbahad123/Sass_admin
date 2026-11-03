@@ -111,14 +111,9 @@
                     <p class="px-4 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Manage</p>
                     
                     <a href="{{ route('whitelabel.clients.index') }}" 
-                       class="flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.clients.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
-                        <div class="flex items-center space-x-3">
-                            <i data-lucide="users" class="w-4 h-4"></i>
-                            <span>Clients</span>
-                        </div>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold {{ request()->routeIs('whitelabel.clients.*') ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-300' }}">
-                            {{ \App\Models\User::where('agency_id', $agency->id ?? 0)->where('role', 'client')->count() }}
-                        </span>
+                       class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('whitelabel.clients.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }}">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        <span>Clients</span>
                     </a>
 
                     <a href="{{ route('whitelabel.products.index') }}" 
