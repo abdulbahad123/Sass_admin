@@ -170,7 +170,7 @@
         $pricingPlans = [
             [
                 'product_slug'    => 'launchshop',
-                'product_name'    => 'EcomBuilder',
+                'product_name'    => 'Ecombuilder',
                 'color'           => '#ea580c',
                 'gradient'        => 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
                 'left_bg'         => '#fff5ee',
@@ -181,9 +181,13 @@
                 'product_subtitle'=> 'Launch your online store, manage products, payments, and customers — all in one place.',
                 'plan_badge'      => 'ALL-IN-ONE ECOMMERCE',
                 'plan_subbadge'   => 'Instant Setup',
-                'features'        => ['Online Store & Product Catalog', 'Up to Unlimited Orders & Customers', 'Inventory & Order Tracking', 'Integrated UPI & Card Payments', 'Custom Domain & Free SSL', 'Mobile Responsive Dashboard'],
+                'plan_name'       => 'Starter Growth',
+                'plan_subtitle'   => 'Everything you need to start your online business.',
+                'price_monthly'   => '499',
+                'price_yearly'    => '4999',
+                'features'        => ['1 Online Store (Product Module)', 'Up to 1,000 Orders / Customers', 'Inventory & Order Management', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Domain Setup'],
                 'trust_count'     => 'Trusted by 10,000+ Sellers',
-                'cta_text'        => 'Launch Product &rarr;',
+                'cta_text'        => 'Get Started With Ecombuilder &rarr;',
             ],
             [
                 'product_slug'    => 'websitebuilder',
@@ -196,15 +200,20 @@
                 'product_tagline' => 'DESIGN • BUILD • GROW',
                 'product_title'   => 'Professional Website Solution',
                 'product_subtitle'=> 'Create stunning, lightning-fast websites with ease, no coding required.',
-                'plan_badge'      => 'NO-CODE BUILDER',
-                'plan_subbadge'   => 'Drag & Drop',
-                'features'        => ['Unlimited Pages & Sections', 'Drag & Drop Visual Builder', 'Custom Domain & SSL Included', 'SEO Tools & Speed Optimization', 'AI Templates & Custom Widgets', 'Lead Capture & Contact Forms'],
+                'plan_badge'      => 'DRAG & DROP BUILDER',
+                'plan_subbadge'   => 'No Coding Needed',
+                'plan_name'       => 'Professional Pro',
+                'plan_subtitle'   => 'All the tools to create, manage, and grow your professional website.',
+                'price_monthly'   => '1499',
+                'price_yearly'    => '14999',
+                'is_popular'      => true,
+                'features'        => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
                 'trust_count'     => 'Trusted by 50,000+ Creators',
-                'cta_text'        => 'Launch Product &rarr;',
+                'cta_text'        => 'Get Started With Website Builder &rarr;',
             ],
             [
                 'product_slug'    => 'whatsappbulk',
-                'product_name'    => 'WhatsApp Automation',
+                'product_name'    => 'WhatsApp Bulk',
                 'color'           => '#10b981',
                 'gradient'        => 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                 'left_bg'         => '#f0fdf4',
@@ -213,11 +222,15 @@
                 'product_tagline' => 'CHAT • AUTOMATE • SCALE',
                 'product_title'   => 'AI WhatsApp & Growth Suite',
                 'product_subtitle'=> 'Automate customer support, broadcast offers, and drive repeat sales with smart messaging.',
-                'plan_badge'      => 'MARKETING AUTOMATION',
-                'plan_subbadge'   => 'High Conversion',
-                'features'        => ['Multi-Device WhatsApp Connect', 'Bulk Messaging Campaigns', 'AI Chatbot & Flow Builder', 'Abandoned Cart Alerts', 'Contact Lists & CSV Import', 'Real-Time Delivery Analytics'],
+                'plan_badge'      => '⚡ AUTOMATION PRO',
+                'plan_subbadge'   => 'High ROI',
+                'plan_name'       => 'WhatsApp Enterprise',
+                'plan_subtitle'   => 'Unlimited WhatsApp messaging, AI chatbot builder, contact management & auto-responder.',
+                'price_monthly'   => '1999',
+                'price_yearly'    => '19999',
+                'features'        => ['Multi-Device WhatsApp Connect', 'Bulk Messaging Campaigns', 'AI Chatbot & Flow Builder', 'Auto Responder & Keywords', 'Contact Lists & CSV Import', 'API & Webhook Integrations'],
                 'trust_count'     => 'Trusted by 25,000+ Businesses',
-                'cta_text'        => 'Launch Product &rarr;',
+                'cta_text'        => 'Get Started With WhatsApp Bulk &rarr;',
             ],
         ];
     }
@@ -1237,14 +1250,35 @@
                     </div>
                     @endif
 
+                    @php
+                        $pSlugLower = strtolower($plan['product_slug'] ?? \Illuminate\Support\Str::slug($plan['product_name'] ?? ''));
+                        $isEcomPlan = ($pIndex === 0) || str_contains($pSlugLower, 'launch') || str_contains($pSlugLower, 'ecom') || str_contains($pSlugLower, 'shop');
+                        $isWebPlan  = str_contains($pSlugLower, 'web');
+                        $isWaPlan   = str_contains($pSlugLower, 'whatsapp') || str_contains($pSlugLower, 'bulk');
+
+                        if ($isEcomPlan) {
+                            $cardLogo = !empty($plan['product_logo']) ? $plan['product_logo'] : 'assets/landing_page/ecom_logo.png';
+                        } elseif ($isWebPlan) {
+                            $cardLogo = !empty($plan['product_logo']) ? $plan['product_logo'] : 'assets/landing_page/websitebuilder_logo.png';
+                        } else {
+                            $cardLogo = !empty($plan['product_logo']) ? $plan['product_logo'] : 'assets/landing_page/whatsapp_logo.png';
+                        }
+                        $cardLogoUrl = str_starts_with($cardLogo, 'http') ? $cardLogo : asset(ltrim($cardLogo, '/'));
+                    @endphp
+
                     <div>
-                        {{-- Top Product Category Pill --}}
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <span style="background: {{ $pColor }}15; color: {{ $pColor }}; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: .05em;">
+                        {{-- Top Product Category Pill & Logo Row (Left: Product Logo, Right: Category Badge) --}}
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; min-height: 38px;">
+                            {{-- LEFT: Product Logo instead of text --}}
+                            <div style="display: flex; align-items: center;">
+                                <img src="{{ $cardLogoUrl }}" 
+                                     alt="{{ $plan['product_name'] ?? 'Product' }}" 
+                                     style="height: 30px; width: auto; max-width: 140px; object-fit: contain;">
+                            </div>
+
+                            {{-- RIGHT: Category Pill Badge (e.g. ALL-IN-ONE ECOMMERCE) --}}
+                            <span style="background: {{ $pColor }}15; color: {{ $pColor }}; font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: .05em;">
                                 {{ $pBadge }}
-                            </span>
-                            <span style="font-size: 11.5px; font-weight: 700; color: #94a3b8;">
-                                {{ $plan['product_name'] ?? 'Product' }}
                             </span>
                         </div>
 
@@ -1290,9 +1324,23 @@
                         </div>
                     </div>
 
-                    {{-- CTA Button --}}
+                    {{-- CTA Button: Dynamically links to the product landing page --}}
+                    @php
+                        if ($isEcomPlan) {
+                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://launchshop.' . preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
+                        } elseif ($isWebPlan) {
+                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.' . preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
+                        } elseif ($isWaPlan) {
+                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('whatsappbulk') : 'https://whatsappbulk.' . preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
+                        } else {
+                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : '#';
+                        }
+
+                        // Strictly bypass /login and user dashboard; open product landing page dynamically
+                        $activeCtaUrl = (!empty($plan['cta_url']) && $plan['cta_url'] !== '/login' && !str_contains($plan['cta_url'], 'dashboard') && !str_contains($plan['cta_url'], 'wa.me')) ? $plan['cta_url'] : $planLandingUrl;
+                    @endphp
                     <div>
-                        <a href="{{ $pCtaUrl }}" target="_blank"
+                        <a href="{{ $activeCtaUrl }}" target="_blank"
                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: {{ $pGrad }}; color: #ffffff !important; font-weight: 800; font-size: 14px; padding: 14px 20px; border-radius: 14px; text-decoration: none; box-shadow: 0 6px 18px -4px {{ $pColor }}55; transition: transform .2s; border: none; text-align: center;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">

@@ -221,8 +221,14 @@ class Agency extends Model
     public function getProductSubdomainUrl($productSlug)
     {
         $domain = $this->clean_domain;
+        if (empty($domain) || $domain === 'saasreselling.com') {
+            $currentHost = function_exists('request') && request() ? strtolower(request()->getHost()) : '';
+            if ($currentHost && !in_array($currentHost, ['127.0.0.1', 'localhost'])) {
+                $domain = $currentHost;
+            }
+        }
         $cleanProductSlug = Str::slug($productSlug);
-        $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
+        $rootDomain = preg_replace('/^(app|www|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', $domain);
 
         if ($cleanProductSlug === 'website-builder' || $cleanProductSlug === 'websitebuilder') {
             return "https://websitebuilder.{$rootDomain}";
@@ -560,11 +566,11 @@ class Agency extends Model
                 'product_tagline'  => $prod->tagline ?? 'Smart Business Tool',
                 'product_subtitle' => $prod->description ?? 'Powerful tools to grow your business.',
                 'cta_text'         => 'View Details →',
-                'cta_url'          => $this->cta_url ?? '/login',
+                'cta_url'          => $this->getProductSubdomainUrl($slug),
             ], $def);
         }
 
-        // Fallback to 2 hardcoded plans matching 3rd reference image if no products configured
+        // Fallback to 3 flagship products if no products configured
         if (empty($plans)) {
             $plans = [
                 [
@@ -592,11 +598,11 @@ class Agency extends Model
                     'features' => ['1 Online Store (Product Module)', 'Up to 1,000 Orders / Customers', 'Inventory & Order Management', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Domain Setup'],
                     'cta_text' => 'Launch Product &rarr;',
                     'cta_subnote' => 'No credit card required • Setup in minutes',
-                    'cta_url' => $this->cta_url ?? '/login',
+                    'cta_url' => $this->getProductSubdomainUrl('launchshop'),
                 ],
                 [
                     'product_name' => 'Website Builder',
-                    'product_slug' => 'website-builder',
+                    'product_slug' => 'websitebuilder',
                     'product_logo' => 'assets/landing_page/websitebuilder_logo.png',
                     'product_image' => 'assets/landing_page/websitebuilder_image.png',
                     'product_tagline' => 'Design • Build • Grow',
@@ -619,7 +625,34 @@ class Agency extends Model
                     'features' => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
                     'cta_text' => 'Launch Product &rarr;',
                     'cta_subnote' => 'No credit card required • Cancel anytime',
-                    'cta_url' => $this->cta_url ?? '/login',
+                    'cta_url' => $this->getProductSubdomainUrl('websitebuilder'),
+                ],
+                [
+                    'product_name' => 'WhatsApp Enterprise',
+                    'product_slug' => 'whatsappbulk',
+                    'product_logo' => 'assets/landing_page/whatsapp_logo.png',
+                    'product_image' => 'assets/landing_page/whatsapp_image.png',
+                    'product_tagline' => 'Automate • Broadcast • Convert',
+                    'product_title' => 'WhatsApp Automation & Bulk Marketing',
+                    'product_subtitle' => 'Scale your business with AI WhatsApp chatbots, bulk sender & autoresponder.',
+                    'left_bg' => '#f0fdf4',
+                    'color' => '#25d366',
+                    'gradient' => 'linear-gradient(135deg,#25d366,#128c7e)',
+                    'icon' => 'message-square',
+                    'plan_badge' => '⚡ AUTOMATION PRO',
+                    'plan_subbadge' => 'High ROI',
+                    'plan_badge_bg' => '#dcfce7',
+                    'plan_badge_color' => '#15803d',
+                    'plan_name' => 'WhatsApp Enterprise',
+                    'plan_subtitle' => 'Unlimited WhatsApp messaging, AI chatbot builder, contact management & auto-responder.',
+                    'price_monthly' => '1999',
+                    'price_yearly' => '19999',
+                    'trust_count' => '',
+                    'is_popular' => false,
+                    'features' => ['Multi-Device WhatsApp Connect', 'Bulk Messaging Campaigns', 'AI Chatbot & Flow Builder', 'Auto Responder & Keywords', 'Contact Lists & CSV Import', 'API & Webhook Integrations'],
+                    'cta_text' => 'Launch Product &rarr;',
+                    'cta_subnote' => 'Safe interval delays • High inbox rate',
+                    'cta_url' => $this->getProductSubdomainUrl('whatsappbulk'),
                 ],
             ];
         }

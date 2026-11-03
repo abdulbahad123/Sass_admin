@@ -356,12 +356,27 @@ class LandingPageController extends Controller
             if (empty($curFaqs) || stripos($curFaqs, 'Ecom Builder') === false || stripos($curFaqs, 'Nooryak') !== false || stripos($curFaqs, 'WHAT IS SAAS YAARI') !== false) {
                 Setting::set('lp_faqs_items', json_encode($defaultFaqs));
             }
+            $curTag = Setting::get('lp_testimonials_tag');
+            if (empty($curTag) || $curTag === 'TESTIMONIALS') {
+                Setting::set('lp_testimonials_tag', 'TRUSTED BY GROWING AGENCIES');
+            }
             $curTestTitle = Setting::get('lp_testimonials_title');
             if (empty($curTestTitle) || $curTestTitle === 'What Our Partners Say') {
                 Setting::set('lp_testimonials_title', 'WHAT OUR WHITE LABEL PARTNERS SAY');
             }
             $curTestimonials = Setting::get('lp_testimonials_items');
             $genuinePartners = [
+                [
+                    'name' => 'Nooryak Technologies',
+                    'domain' => 'nooryak.in',
+                    'url' => null, // Explicitly non-clickable
+                    'role' => 'Founding Tech Architecture',
+                    'location' => 'Bangalore',
+                    'badge' => 'Core Engineering',
+                    'icon' => 'fas fa-laptop-code',
+                    'color' => '#0ea5e9',
+                    'quote' => 'As the core engineering architecture behind SaaSReselling, delivering 3 turnkey software modules—Launchshop E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation Suite—empowers digital agencies to deploy high-scale white-labeled solutions under their own branding with zero dev overhead.'
+                ],
                 [
                     'name' => 'SaaSReselling Agency Network',
                     'domain' => 'saasreselling.in',
@@ -371,33 +386,45 @@ class LandingPageController extends Controller
                     'badge' => 'Official White Label Agency',
                     'icon' => 'fas fa-shield-alt',
                     'color' => '#10b981',
-                    'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
+                    'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—Launchshop E-commerce, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
                 ],
                 [
-                    'name' => 'White Label SaaS Agency',
-                    'domain' => 'saasreselling.in',
-                    'url' => 'https://saasreselling.in',
-                    'role' => 'Digital Tech & Automation Agency',
-                    'location' => 'Mumbai',
-                    'badge' => 'Active White Label Partner',
-                    'icon' => 'fas fa-laptop-code',
-                    'color' => '#3b82f6',
-                    'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our custom domain has completely transformed our business model. Our clients log in with our custom branding, and we keep 100% of our recurring subscription revenue.'
-                ],
-                [
-                    'name' => 'Cloud Reseller Partner',
-                    'domain' => 'saasreselling.in',
-                    'url' => 'https://saasreselling.in',
-                    'role' => 'Software & Growth Solutions',
-                    'location' => 'Delhi',
-                    'badge' => 'Verified Agency Reseller',
-                    'icon' => 'fas fa-layer-group',
+                    'name' => 'Youverse Digital',
+                    'domain' => 'youverse.in',
+                    'url' => 'https://youverse.in',
+                    'role' => 'Creative Agency & Growth Partner',
+                    'location' => 'Hyderabad',
+                    'badge' => 'Active Growth Partner',
+                    'icon' => 'fas fa-wand-magic-sparkles',
                     'color' => '#8b5cf6',
-                    'quote' => 'Instead of spending months developing software from scratch, SaaSReselling gave us a complete, ready-to-sell 3-in-1 software suite. Our clients love building stores and running bulk campaigns on our portal, and automated client provisioning lets us focus purely on growth.'
+                    'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our custom domain has completely transformed our business model. Our clients love building stores and running bulk campaigns on our portal, and we keep 100% of our recurring subscription revenue.'
+                ],
+                [
+                    'name' => 'BullionX Academy',
+                    'domain' => 'bullionxacademy.com',
+                    'url' => 'http://bullionxacademy.com/',
+                    'role' => 'EdTech & Financial Trading Academy',
+                    'location' => 'Delhi NCR',
+                    'badge' => 'Verified EdTech Partner',
+                    'icon' => 'fas fa-chart-line',
+                    'color' => '#f59e0b',
+                    'quote' => 'BullionX Academy relies on the dynamic Website Builder for launching high-converting education portals and landing pages, paired with the WhatsApp Automation suite to deliver instant webinar reminders, trading alerts, and automated student broadcasts seamlessly.'
+                ],
+                [
+                    'name' => 'Cockroach Janta Party',
+                    'domain' => 'cockroachjantaparty.top',
+                    'url' => 'http://cockroachjantaparty.top/',
+                    'role' => 'Digital Campaign & Grassroots Media',
+                    'location' => 'Mumbai',
+                    'badge' => 'Grassroots Media Partner',
+                    'icon' => 'fas fa-bullhorn',
+                    'color' => '#ec4899',
+                    'quote' => 'Managing large-scale digital campaigns requires bulletproof infrastructure. The dynamic Website Builder lets our team publish campaign hubs in minutes, while the WhatsApp Bulk Marketing tool and automated chatbot connect with thousands of active community members simultaneously across India.'
                 ]
             ];
-            if (empty($curTestimonials) || stripos($curTestimonials, 'cockroach') !== false || stripos($curTestimonials, 'youverse') !== false || stripos($curTestimonials, 'bullionx') !== false || stripos($curTestimonials, 'nooryak') !== false || stripos($curTestimonials, 'tapnow') !== false) {
+            if (empty($curTestimonials) || Setting::get('lp_testimonials_version') !== 'v5' || count(json_decode($curTestimonials, true) ?: []) < 5) {
                 Setting::set('lp_testimonials_items', json_encode($genuinePartners));
+                Setting::set('lp_testimonials_version', 'v5');
             }
         } catch (\Exception $e) {
             // Safe fallback if DB is temporarily unreachable

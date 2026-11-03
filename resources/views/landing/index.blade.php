@@ -1638,7 +1638,7 @@
                 <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
                     <span class="inline-flex items-center space-x-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-orange-50 dark:bg-orange-950/40 text-[#c2410c] dark:text-orange-300 border border-orange-200/80 dark:border-orange-900/60 shadow-sm mx-auto mb-3">
                         <i class="fas fa-comments text-xs"></i>
-                        <span>{{ $data['lp_testimonials_tag'] ?? 'TESTIMONIALS' }}</span>
+                        <span>{{ $data['lp_testimonials_tag'] ?? 'TRUSTED BY GROWING AGENCIES' }}</span>
                     </span>
                     <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] text-slate-900 dark:text-white tracking-tight uppercase mt-2 leading-tight">
                         {{ $data['lp_testimonials_title'] ?? 'WHAT OUR WHITE LABEL PARTNERS SAY' }}
@@ -1648,11 +1648,21 @@
                     </p>
                 </div>
 
-                <!-- 6 Dark Partner Cards Grid (Task 3: Clickable Container, Pure White Text, Distinct Highlight Colors, Live Domains) -->
+                <!-- 5 Dark Partner Cards Grid (Clickable Container for all except nooryak.in, Pure White Text, Distinct Highlight Colors, Live Domains) -->
                 @php
-                    $partnersList = (isset($data['lp_testimonials_items']) && is_array($data['lp_testimonials_items']) && count($data['lp_testimonials_items']) >= 4)
+                    $partnersList = (isset($data['lp_testimonials_items']) && is_array($data['lp_testimonials_items']) && count($data['lp_testimonials_items']) >= 5)
                         ? $data['lp_testimonials_items']
                         : [
+                            [
+                                'name' => 'Nooryak Technologies',
+                                'domain' => 'nooryak.in',
+                                'url' => null,
+                                'role' => 'Founding Tech Architecture',
+                                'location' => 'Bangalore',
+                                'icon' => 'fas fa-laptop-code',
+                                'color' => '#0ea5e9',
+                                'quote' => 'As the core engineering architecture behind SaaSReselling, delivering 3 turnkey software modules—Launchshop E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation Suite—empowers digital agencies to deploy high-scale white-labeled solutions under their own branding with zero dev overhead.'
+                            ],
                             [
                                 'name' => 'SaaSReselling Agency Network',
                                 'domain' => 'saasreselling.in',
@@ -1661,27 +1671,37 @@
                                 'location' => 'Bangalore',
                                 'icon' => 'fas fa-shield-alt',
                                 'color' => '#10b981',
-                                'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—E-commerce Builder, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
+                                'quote' => 'Operating on saasreselling.in with the full white-label agency architecture proves how powerful this ecosystem is. Delivering 3 turnkey software solutions—Launchshop E-commerce, Dynamic Website Builder, and WhatsApp Automation—under your own domain with full SSO and client management is the fastest way to build real enterprise value.'
                             ],
                             [
-                                'name' => 'White Label SaaS Agency',
-                                'domain' => 'saasreselling.in',
-                                'url' => 'https://saasreselling.in',
-                                'role' => 'Digital Tech & Automation Agency',
-                                'location' => 'Mumbai',
-                                'icon' => 'fas fa-laptop-code',
-                                'color' => '#3b82f6',
-                                'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our custom domain has completely transformed our business model. Our clients log in with our custom branding, and we keep 100% of our recurring subscription revenue.'
-                            ],
-                            [
-                                'name' => 'Cloud Reseller Partner',
-                                'domain' => 'saasreselling.in',
-                                'url' => 'https://saasreselling.in',
-                                'role' => 'Software & Growth Solutions',
-                                'location' => 'Delhi',
-                                'icon' => 'fas fa-layer-group',
+                                'name' => 'Youverse Digital',
+                                'domain' => 'youverse.in',
+                                'url' => 'https://youverse.in',
+                                'role' => 'Creative Agency & Growth Partner',
+                                'location' => 'Hyderabad',
+                                'icon' => 'fas fa-wand-magic-sparkles',
                                 'color' => '#8b5cf6',
-                                'quote' => 'Instead of spending months developing software from scratch, SaaSReselling gave us a complete, ready-to-sell 3-in-1 software suite. Our clients love building stores and running bulk campaigns on our portal, and automated client provisioning lets us focus purely on growth.'
+                                'quote' => 'Selling all 3 products—Launchshop E-commerce, Website Builder, and WhatsApp Bulk Automation—under our custom domain has completely transformed our business model. Our clients love building stores and running bulk campaigns on our portal, and we keep 100% of our recurring subscription revenue.'
+                            ],
+                            [
+                                'name' => 'BullionX Academy',
+                                'domain' => 'bullionxacademy.com',
+                                'url' => 'http://bullionxacademy.com/',
+                                'role' => 'EdTech & Financial Trading Academy',
+                                'location' => 'Delhi NCR',
+                                'icon' => 'fas fa-chart-line',
+                                'color' => '#f59e0b',
+                                'quote' => 'BullionX Academy relies on the dynamic Website Builder for launching high-converting education portals and landing pages, paired with the WhatsApp Automation suite to deliver instant webinar reminders, trading alerts, and automated student broadcasts seamlessly.'
+                            ],
+                            [
+                                'name' => 'Cockroach Janta Party',
+                                'domain' => 'cockroachjantaparty.top',
+                                'url' => 'http://cockroachjantaparty.top/',
+                                'role' => 'Digital Campaign & Grassroots Media',
+                                'location' => 'Mumbai',
+                                'icon' => 'fas fa-bullhorn',
+                                'color' => '#ec4899',
+                                'quote' => 'Managing large-scale digital campaigns requires bulletproof infrastructure. The dynamic Website Builder lets our team publish campaign hubs in minutes, while the WhatsApp Bulk Marketing tool and automated chatbot connect with thousands of active community members simultaneously across India.'
                             ]
                         ];
                 @endphp
@@ -1690,7 +1710,9 @@
                     @foreach($partnersList as $partner)
                     @php
                         $pColor = $partner['color'] ?? '#ff3d00';
-                        $canOpen = !empty($partner['url']);
+                        $domainStr = strtolower($partner['domain'] ?? '');
+                        $isNooryak = (stripos($domainStr, 'nooryak.in') !== false);
+                        $canOpen = !empty($partner['url']) && !$isNooryak;
                     @endphp
                     <div 
                         @if($canOpen)
