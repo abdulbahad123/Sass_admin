@@ -54,6 +54,7 @@ class Agency extends Model
         'products_section_badge',
         'products_section_title',
         'products_section_subtitle',
+        'products_showcase_data',
         'products_cta_text',
         'products_cta_url',
         'how_it_works_title',
@@ -520,142 +521,181 @@ class Agency extends Model
                 : (json_decode($this->pricing_plans_data, true) ?: []);
             if (!empty($decoded)) {
                 foreach ($decoded as $idx => &$plan) {
-                    $slug = strtolower(trim($plan['product_slug'] ?? Str::slug($plan['product_name'] ?? '')));
+                    $slug = strtolower(trim($plan['product_slug'] ?? Str::slug($plan['product_name'] ?? ($plan['plan_name'] ?? ''))));
                     if (empty($slug)) {
-                        $slug = ($idx === 0) ? 'launchshop' : (($idx === 1) ? 'websitebuilder' : 'product');
+                        $slug = ($idx === 0) ? 'launchshop' : (($idx === 1) ? 'websitebuilder' : 'whatsappbulk');
                     }
-                    $isEcom = ($slug === 'launchshop' || str_contains($slug, 'ecom') || str_contains(strtolower($plan['product_name'] ?? ''), 'ecom'));
+                    $isEcom = ($slug === 'launchshop' || str_contains($slug, 'ecom') || str_contains(strtolower($plan['plan_name'] ?? ($plan['product_name'] ?? '')), 'ecom'));
+                    $isWeb  = ($slug === 'websitebuilder' || str_contains($slug, 'web') || str_contains(strtolower($plan['plan_name'] ?? ($plan['product_name'] ?? '')), 'web'));
+                    $isWa   = ($slug === 'whatsappbulk' || str_contains($slug, 'whatsapp') || str_contains($slug, 'bulk') || str_contains(strtolower($plan['plan_name'] ?? ($plan['product_name'] ?? '')), 'whatsapp'));
+
                     if (empty($plan['product_logo'])) {
-                        $plan['product_logo'] = $isEcom ? 'assets/landing_page/ecom_logo.png' : 'assets/landing_page/websitebuilder_logo.png';
+                        $plan['product_logo'] = $isEcom ? 'assets/landing_page/ecom_logo.png' : ($isWeb ? 'assets/landing_page/websitebuilder_logo.png' : 'assets/landing_page/whatsapp_logo.png');
                     }
-                    if (empty($plan['product_image'])) {
-                        $plan['product_image'] = $isEcom ? 'assets/landing_page/ecombuilder_image.png' : 'assets/landing_page/websitebuilder_image.png';
+                    if (empty($plan['plan_name'])) {
+                        $plan['plan_name'] = $isEcom ? 'Ecom Basic Plan' : ($isWeb ? 'Web builder Basic Plan' : 'WhatsApp Plan');
                     }
-                    if (empty($plan['left_bg'])) {
-                        $plan['left_bg'] = $isEcom ? '#fff5ee' : '#f0f6ff';
+                    if (empty($plan['plan_badge'])) {
+                        $plan['plan_badge'] = $isEcom ? 'ALL-IN-ONE ECOMMERCE' : ($isWeb ? 'WEB BUILDER' : 'SEND MSG');
                     }
-                    if (empty($plan['product_tagline'])) {
-                        $plan['product_tagline'] = $isEcom ? 'Build • Sell • Grow' : 'Design • Build • Grow';
+                    if (empty($plan['cta_text']) || $plan['cta_text'] === 'Launch Product &rarr;' || $plan['cta_text'] === 'Get Started Free' || $plan['cta_text'] === 'Get Started') {
+                        $plan['cta_text'] = 'View More Plans &rarr;';
                     }
-                    if (empty($plan['product_title'])) {
-                        $plan['product_title'] = $isEcom ? 'Complete E-Commerce Solution' : 'Professional Website Solution';
-                    }
-                    if (empty($plan['cta_text']) || $plan['cta_text'] === 'Get Started Free' || $plan['cta_text'] === 'Get Started') {
-                        $plan['cta_text'] = 'View Details →';
+                    if (empty($plan['cta_subnote'])) {
+                        $plan['cta_subnote'] = '⚡ Instant Activation • Zero Setup Fees';
                     }
                 }
                 return $decoded;
             }
         }
 
-        $enabledProds = $this->enabled_products;
-        $plans = [];
-        foreach ($enabledProds->take(4) as $prod) {
-            $slug = strtolower(trim($prod->slug ?? Str::slug($prod->name)));
-            $def  = $productDefaults[$slug] ?? [
-                'color' => '#6366f1', 'gradient' => 'linear-gradient(135deg,#6366f1,#4f46e5)', 'icon' => 'layers',
-                'plan_badge' => 'PRO PLAN', 'plan_badge_bg' => '#e0e7ff', 'plan_badge_color' => '#4f46e5',
-                'plan_name' => 'Growth Plan', 'price_monthly' => '799', 'price_yearly' => '7999',
-                'trust_count' => '',
-                'is_popular' => false,
-                'features' => ['Full Product Access', 'Priority Support', 'Advanced Analytics', 'Custom Branding', 'Dedicated Manager'],
-            ];
-            $plans[] = array_merge([
-                'product_name'     => $prod->name,
-                'product_slug'     => $slug,
-                'product_tagline'  => $prod->tagline ?? 'Smart Business Tool',
-                'product_subtitle' => $prod->description ?? 'Powerful tools to grow your business.',
-                'cta_text'         => 'View Details →',
-                'cta_url'          => $this->getProductSubdomainUrl($slug),
-            ], $def);
+        // Default 3 Flagship Pricing Plans
+        return [
+            [
+                'plan_name'     => 'Ecom Basic Plan',
+                'product_name'  => 'Ecom Basic Plan',
+                'product_slug'  => 'launchshop',
+                'product_logo'  => 'assets/landing_page/ecom_logo.png',
+                'plan_badge'    => 'ALL-IN-ONE ECOMMERCE',
+                'plan_subtitle' => 'Everything you need to start your online business.',
+                'price_monthly' => '250',
+                'price_yearly'  => '2400',
+                'color'         => '#ea580c',
+                'gradient'      => 'linear-gradient(135deg,#f97316,#ea580c)',
+                'is_popular'    => false,
+                'features'      => [
+                    '1 Online Store (Product Module)',
+                    'Up to 1,000 Orders / Customers',
+                    'Inventory & Order Management',
+                    'Basic Analytics & Reports',
+                    'Standard Email Support',
+                    'Custom Domain Setup'
+                ],
+                'cta_text'      => 'View More Plans &rarr;',
+                'cta_subnote'   => '⚡ Instant Activation • Zero Setup Fees',
+                'cta_url'       => rtrim($this->getProductSubdomainUrl('launchshop'), '/') . '/#pricing',
+            ],
+            [
+                'plan_name'     => 'Web builder Basic Plan',
+                'product_name'  => 'Web builder Basic Plan',
+                'product_slug'  => 'websitebuilder',
+                'product_logo'  => 'assets/landing_page/websitebuilder_logo.png',
+                'plan_badge'    => 'WEB BUILDER',
+                'plan_subtitle' => 'All the tools to create, manage, and grow your professional website.',
+                'price_monthly' => '350',
+                'price_yearly'  => '3500',
+                'color'         => '#2563eb',
+                'gradient'      => 'linear-gradient(135deg,#2563eb,#1d4ed8)',
+                'is_popular'    => true,
+                'features'      => [
+                    'Unlimited Pages & Websites',
+                    'Custom Domain & SSL',
+                    'SEO Tools & Analytics',
+                    'Priority Email & Live Support',
+                    'AI Templates & Widgets'
+                ],
+                'cta_text'      => 'View More Plans &rarr;',
+                'cta_subnote'   => '⚡ Instant Activation • Zero Setup Fees',
+                'cta_url'       => rtrim($this->getProductSubdomainUrl('websitebuilder'), '/') . '/#pricing',
+            ],
+            [
+                'plan_name'     => 'WhatsApp Plan',
+                'product_name'  => 'WhatsApp Plan',
+                'product_slug'  => 'whatsappbulk',
+                'product_logo'  => 'assets/landing_page/whatsapp_logo.png',
+                'plan_badge'    => 'SEND MSG',
+                'plan_subtitle' => 'Unlimited WhatsApp messaging, AI chatbot builder, contact management & auto-responder.',
+                'price_monthly' => '650',
+                'price_yearly'  => '6500',
+                'color'         => '#059669',
+                'gradient'      => 'linear-gradient(135deg,#059669,#047857)',
+                'is_popular'    => false,
+                'features'      => [
+                    'Multi-Device WhatsApp Connect',
+                    'Bulk Messaging Campaigns',
+                    'AI Chatbot & Flow Builder',
+                    'Auto Responder & Keywords',
+                    'Contact Lists & CSV Import',
+                    'API & Webhook Integrations'
+                ],
+                'cta_text'      => 'View More Plans &rarr;',
+                'cta_subnote'   => '⚡ Instant Activation • Zero Setup Fees',
+                'cta_url'       => rtrim($this->getProductSubdomainUrl('whatsappbulk'), '/') . '/#pricing',
+            ],
+        ];
+    }
+
+    public function getParsedProductsShowcaseAttribute()
+    {
+        if (isset($this->attributes['products_showcase_data']) && !empty($this->attributes['products_showcase_data'])) {
+            $decoded = is_array($this->attributes['products_showcase_data'])
+                ? $this->attributes['products_showcase_data']
+                : (json_decode($this->attributes['products_showcase_data'], true) ?: []);
+            if (!empty($decoded)) {
+                return $decoded;
+            }
         }
 
-        // Fallback to 3 flagship products if no products configured
-        if (empty($plans)) {
-            $plans = [
-                [
-                    'product_name' => 'ECOM BUILDER',
-                    'product_slug' => 'launchshop',
-                    'product_logo' => 'assets/landing_page/ecom_logo.png',
-                    'product_image' => 'assets/landing_page/ecombuilder_image.png',
-                    'product_tagline' => 'Build • Sell • Grow',
-                    'product_title' => 'Complete E-Commerce Solution',
-                    'product_subtitle' => 'Launch your online store, manage products, payments, and customers — all in one place.',
-                    'left_bg' => '#fff5ee',
-                    'color' => '#ea580c',
-                    'gradient' => 'linear-gradient(135deg,#f97316,#ea580c)',
-                    'icon' => 'shopping-bag',
-                    'plan_badge' => 'ALL-IN-ONE ECOMMERCE',
-                    'plan_subbadge' => 'Instant Setup',
-                    'plan_badge_bg' => '#ffedd5',
-                    'plan_badge_color' => '#c2410c',
-                    'plan_name' => 'Starter Growth',
-                    'plan_subtitle' => 'Everything you need to start your online business.',
-                    'price_monthly' => '499',
-                    'price_yearly' => '4999',
-                    'trust_count' => '',
-                    'is_popular' => false,
-                    'features' => ['1 Online Store (Product Module)', 'Up to 1,000 Orders / Customers', 'Inventory & Order Management', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Domain Setup'],
-                    'cta_text' => 'Launch Product &rarr;',
-                    'cta_subnote' => 'No credit card required • Setup in minutes',
-                    'cta_url' => $this->getProductSubdomainUrl('launchshop'),
-                ],
-                [
-                    'product_name' => 'Website Builder',
-                    'product_slug' => 'websitebuilder',
-                    'product_logo' => 'assets/landing_page/websitebuilder_logo.png',
-                    'product_image' => 'assets/landing_page/websitebuilder_image.png',
-                    'product_tagline' => 'Design • Build • Grow',
-                    'product_title' => 'Professional Website Solution',
-                    'product_subtitle' => 'Create stunning websites with ease, no coding required.',
-                    'left_bg' => '#f0f6ff',
-                    'color' => '#2563eb',
-                    'gradient' => 'linear-gradient(135deg,#2563eb,#1d4ed8)',
-                    'icon' => 'monitor',
-                    'plan_badge' => 'DRAG & DROP BUILDER',
-                    'plan_subbadge' => 'No Coding Needed',
-                    'plan_badge_bg' => '#dbeafe',
-                    'plan_badge_color' => '#1d4ed8',
-                    'plan_name' => 'Professional Pro',
-                    'plan_subtitle' => 'All the tools to create, manage, and grow your professional website.',
-                    'price_monthly' => '1499',
-                    'price_yearly' => '14999',
-                    'trust_count' => '',
-                    'is_popular' => true,
-                    'features' => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
-                    'cta_text' => 'Launch Product &rarr;',
-                    'cta_subnote' => 'No credit card required • Cancel anytime',
-                    'cta_url' => $this->getProductSubdomainUrl('websitebuilder'),
-                ],
-                [
-                    'product_name' => 'WhatsApp Enterprise',
-                    'product_slug' => 'whatsappbulk',
-                    'product_logo' => 'assets/landing_page/whatsapp_logo.png',
-                    'product_image' => 'assets/landing_page/whatsapp_image.png',
-                    'product_tagline' => 'Automate • Broadcast • Convert',
-                    'product_title' => 'WhatsApp Automation & Bulk Marketing',
-                    'product_subtitle' => 'Scale your business with AI WhatsApp chatbots, bulk sender & autoresponder.',
-                    'left_bg' => '#f0fdf4',
-                    'color' => '#25d366',
-                    'gradient' => 'linear-gradient(135deg,#25d366,#128c7e)',
-                    'icon' => 'message-square',
-                    'plan_badge' => '⚡ AUTOMATION PRO',
-                    'plan_subbadge' => 'High ROI',
-                    'plan_badge_bg' => '#dcfce7',
-                    'plan_badge_color' => '#15803d',
-                    'plan_name' => 'WhatsApp Enterprise',
-                    'plan_subtitle' => 'Unlimited WhatsApp messaging, AI chatbot builder, contact management & auto-responder.',
-                    'price_monthly' => '1999',
-                    'price_yearly' => '19999',
-                    'trust_count' => '',
-                    'is_popular' => false,
-                    'features' => ['Multi-Device WhatsApp Connect', 'Bulk Messaging Campaigns', 'AI Chatbot & Flow Builder', 'Auto Responder & Keywords', 'Contact Lists & CSV Import', 'API & Webhook Integrations'],
-                    'cta_text' => 'Launch Product &rarr;',
-                    'cta_subnote' => 'Safe interval delays • High inbox rate',
-                    'cta_url' => $this->getProductSubdomainUrl('whatsappbulk'),
-                ],
-            ];
-        }
+        // Fallback to the 3 flagship products showcase with laptop mockups and taglines
+        return [
+            [
+                'product_name'     => 'ECOM BUILDER',
+                'product_slug'     => 'launchshop',
+                'product_logo'     => 'assets/landing_page/ecom_logo.png',
+                'product_image'    => 'assets/landing_page/ecombuilder_image.png',
+                'product_tagline'  => 'Build • Sell • Grow',
+                'product_title'    => 'Complete E-Commerce Solution',
+                'product_subtitle' => 'Launch your online store, manage products, payments, and customers — all in one place.',
+                'left_bg'          => '#fff5ee',
+                'color'            => '#ea580c',
+                'gradient'         => 'linear-gradient(135deg,#f97316,#ea580c)',
+                'icon'             => 'shopping-bag',
+                'solution_badge'   => 'ALL-IN-ONE ECOMMERCE',
+                'solution_subbadge'=> 'Instant Setup',
+                'features'         => ['Unlimited Store Products', 'Razorpay & UPI Payment Gateways', 'Inventory & Order Tracking', 'Discount Coupons & Abandoned Cart Recovery', 'Custom Domain & Free SSL Certificate', 'Mobile Friendly Storefront & Fast Checkout'],
+                'cta_text'         => 'Launch Product &rarr;',
+                'cta_url'          => $this->getProductSubdomainUrl('launchshop'),
+                'trust_count'      => 'Trusted by 10,000+ Sellers',
+            ],
+            [
+                'product_name'     => 'Website Builder',
+                'product_slug'     => 'websitebuilder',
+                'product_logo'     => 'assets/landing_page/websitebuilder_logo.png',
+                'product_image'    => 'assets/landing_page/websitebuilder_image.png',
+                'product_tagline'  => 'Design • Build • Grow',
+                'product_title'    => 'Professional Website Solution',
+                'product_subtitle' => 'Create stunning websites with ease, no coding required.',
+                'left_bg'          => '#f0f6ff',
+                'color'            => '#2563eb',
+                'gradient'         => 'linear-gradient(135deg,#2563eb,#1d4ed8)',
+                'icon'             => 'monitor',
+                'solution_badge'   => 'DRAG & DROP BUILDER',
+                'solution_subbadge'=> 'No Coding Needed',
+                'features'         => ['Visual Drag & Drop Block Editor', '50+ Niche Business & Portfolio Templates', 'Custom Domain Mapping with Automatic SSL', 'Built-in Lead Generation & Contact Forms', 'Lightning-Fast CDN & Mobile-Responsive Design', 'SEO Metadata & Google Analytics Integration'],
+                'cta_text'         => 'Launch Product &rarr;',
+                'cta_url'          => $this->getProductSubdomainUrl('websitebuilder'),
+                'trust_count'      => 'Trusted by 50,000+ Creators',
+            ],
+            [
+                'product_name'     => 'WhatsApp Enterprise',
+                'product_slug'     => 'whatsappbulk',
+                'product_logo'     => 'assets/landing_page/whatsapp_logo.png',
+                'product_image'    => 'assets/landing_page/whatsapp_image.png',
+                'product_tagline'  => 'Automate • Broadcast • Convert',
+                'product_title'    => 'WhatsApp Automation & Bulk Marketing',
+                'product_subtitle' => 'Scale your business with AI WhatsApp chatbots, bulk sender & autoresponder.',
+                'left_bg'          => '#f0fdf4',
+                'color'            => '#25d366',
+                'gradient'         => 'linear-gradient(135deg,#25d366,#128c7e)',
+                'icon'             => 'message-square',
+                'solution_badge'   => 'MARKETING AUTOMATION',
+                'solution_subbadge'=> 'High ROI',
+                'features'         => ['Multi-Device WhatsApp Web Connection', 'High-Speed Automated Bulk Messaging Campaigns', 'Visual AI Chatbot & Conversational Flow Builder', 'Instant Auto-Responder with Keyword Triggers', 'Contact Group Segmentation & CSV Bulk Import', 'Advanced Delivery Analytics & Message Tracking'],
+                'cta_text'         => 'Launch Product &rarr;',
+                'cta_url'          => $this->getProductSubdomainUrl('whatsappbulk'),
+                'trust_count'      => 'Safe Interval delays • High Inbox',
+            ],
+        ];
 
         return $plans;
     }

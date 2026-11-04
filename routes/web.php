@@ -510,6 +510,9 @@ Route::prefix('whitelabel')->name('whitelabel.')->middleware([\App\Http\Middlewa
         Route::get('/pricing', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'pricing'])->name('pricing');
         Route::post('/pricing', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updatePricing'])->name('pricing.update');
 
+        Route::get('/products', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'productsShowcase'])->name('products');
+        Route::post('/products', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'updateProductsShowcase'])->name('products.update');
+
         Route::get('/preview', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'preview'])->name('preview');
     });
 });

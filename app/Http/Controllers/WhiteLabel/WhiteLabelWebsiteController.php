@@ -922,11 +922,11 @@ class WhiteLabelWebsiteController extends Controller
         $agency = $this->getAgency();
         if (!$agency) return back()->with('error', 'Agency profile not found.');
 
-        $sectionTitle    = $request->input('pricing_section_title', 'Choose Your Perfect Plan');
-        $sectionSubtitle = $request->input('pricing_section_subtitle', 'Scale seamlessly with zero hidden fees.');
+        $sectionTitle    = $request->input('pricing_section_title', 'Simple & Transparent Pricing Plans');
+        $sectionSubtitle = $request->input('pricing_section_subtitle', 'Choose the right software solution for your growth. Cancel or upgrade anytime.');
         $badgeText       = $request->input('pricing_badge_text', 'Flexible Pricing Plans');
         $yearlyDiscount  = $request->input('pricing_yearly_discount', 'Save 20%');
-        $trustBar        = $request->input('pricing_trust_bar', '🔒 Secure & Reliable,📞 24/7 Support,❤️ Trusted by 10,000+ Businesses');
+        $trustBar        = $request->input('pricing_trust_bar', '🔒 100% Secure Checkout | ⚡ Instant Account Setup | 📞 24/7 Dedicated Support | 🔄 7-Day Money-Back Guarantee');
 
         // Parse Trust Elements (3 cards below pricing)
         $trustIcons   = $request->input('trust_item_icon', []);
@@ -947,24 +947,15 @@ class WhiteLabelWebsiteController extends Controller
             }
         }
 
-        // Build per-product plan array from repeater inputs
-        $productNames     = $request->input('product_name', []);
-        $productLogos     = $request->input('product_logo', []);
-        $productImages    = $request->input('product_image', []);
-        $productTaglines  = $request->input('product_tagline', []);
-        $productTitles    = $request->input('product_title', []);
-        $productSubtitles = $request->input('product_subtitle', []);
-        $leftBgs          = $request->input('left_bg', []);
-        $productColors    = $request->input('product_color', []);
-        $productGrads     = $request->input('product_gradient', []);
-        $productIcons     = $request->input('product_icon', []);
-        $planBadges       = $request->input('plan_badge', []);
-        $planSubbadges    = $request->input('plan_subbadge', []);
+        // Build per-plan pricing array from repeater inputs
         $planNames        = $request->input('plan_name', []);
+        $productLogos     = $request->input('product_logo', []);
+        $planBadges       = $request->input('plan_badge', []);
         $planSubtitles    = $request->input('plan_subtitle', []);
         $pricesMonthly    = $request->input('price_monthly', []);
         $pricesYearly     = $request->input('price_yearly', []);
-        $trustCounts      = $request->input('trust_count', []);
+        $productColors    = $request->input('product_color', []);
+        $productGrads     = $request->input('product_gradient', []);
         $ctaTexts         = $request->input('cta_text', []);
         $ctaSubnotes      = $request->input('cta_subnote', []);
         $ctaUrls          = $request->input('cta_url', []);
@@ -977,48 +968,34 @@ class WhiteLabelWebsiteController extends Controller
         }
 
         $plans = [];
-        for ($i = 0; $i < count($productNames); $i++) {
-            if (!empty($productNames[$i])) {
+        for ($i = 0; $i < count($planNames); $i++) {
+            if (!empty($planNames[$i])) {
                 $featureLines = array_filter(
                     array_map('trim', explode("\n", $featuresRaw[$i] ?? ''))
                 );
 
-                // Handle product_logo file upload if provided
-                // Handle product_logo file upload if provided
                 $logoPath = $productLogos[$i] ?? '';
                 if ($request->hasFile("product_logo_file.{$i}")) {
                     $saved = $this->saveSecureUpload($request->file("product_logo_file.{$i}"), 'logo_' . $i, 'uploads/agency_pricing');
                     if ($saved) $logoPath = $saved;
                 }
 
-                // Handle product_image mockup file upload if provided
-                $imagePath = $productImages[$i] ?? '';
-                if ($request->hasFile("product_image_file.{$i}")) {
-                    $saved = $this->saveSecureUpload($request->file("product_image_file.{$i}"), 'mockup_' . $i, 'uploads/agency_pricing');
-                    if ($saved) $imagePath = $saved;
-                }
+                $slug = ($i === 0) ? 'launchshop' : (($i === 1) ? 'websitebuilder' : 'whatsappbulk');
 
                 $plans[] = [
-                    'product_name'     => $productNames[$i],
+                    'plan_name'        => $planNames[$i],
+                    'product_name'     => $planNames[$i],
+                    'product_slug'     => $slug,
                     'product_logo'     => $logoPath,
-                    'product_image'    => $imagePath,
-                    'product_tagline'  => $productTaglines[$i]  ?? '',
-                    'product_title'    => $productTitles[$i]    ?? '',
-                    'product_subtitle' => $productSubtitles[$i] ?? '',
-                    'left_bg'          => $leftBgs[$i]          ?? '#fff5ee',
-                    'color'            => $productColors[$i]    ?? '#ea580c',
-                    'gradient'         => $productGrads[$i]     ?? 'linear-gradient(135deg,#f97316,#ea580c)',
-                    'icon'             => $productIcons[$i]     ?? 'layers',
-                    'plan_badge'       => $planBadges[$i]       ?? 'PRO PLAN',
-                    'plan_subbadge'    => $planSubbadges[$i]    ?? '',
-                    'plan_name'        => $planNames[$i]        ?? '',
+                    'plan_badge'       => $planBadges[$i]       ?? ($i === 0 ? 'ALL-IN-ONE ECOMMERCE' : ($i === 1 ? 'WEB BUILDER' : 'SEND MSG')),
                     'plan_subtitle'    => $planSubtitles[$i]    ?? '',
                     'price_monthly'    => $pricesMonthly[$i]    ?? '0',
                     'price_yearly'     => $pricesYearly[$i]     ?? '0',
-                    'trust_count'      => $trustCounts[$i]      ?? '',
-                    'cta_text'         => $ctaTexts[$i]         ?? 'Get Started',
-                    'cta_subnote'      => $ctaSubnotes[$i]      ?? '',
-                    'cta_url'          => $ctaUrls[$i]          ?? ($agency->cta_url ?? '/login'),
+                    'color'            => $productColors[$i]    ?? ($i === 0 ? '#ea580c' : ($i === 1 ? '#2563eb' : '#059669')),
+                    'gradient'         => $productGrads[$i]     ?? "linear-gradient(135deg, " . ($productColors[$i] ?? '#059669') . " 0%, #0f172a 100%)",
+                    'cta_text'         => !empty($ctaTexts[$i]) ? $ctaTexts[$i] : 'View More Plans &rarr;',
+                    'cta_subnote'      => $ctaSubnotes[$i]      ?? '⚡ Instant Activation • Zero Setup Fees',
+                    'cta_url'          => !empty($ctaUrls[$i])  ? $ctaUrls[$i]  : rtrim($agency->getProductSubdomainUrl($slug), '/') . '/#pricing',
                     'is_popular'       => !empty($isPopulars[$i]),
                     'features'         => array_values($featureLines),
                 ];
@@ -1026,10 +1003,12 @@ class WhiteLabelWebsiteController extends Controller
         }
 
         $agency->update([
-            'pricing_plans_data'     => json_encode($plans),
-            'pricing_section_title'  => $sectionTitle,
+            'pricing_plans_data'       => json_encode($plans),
+            'pricing_section_title'    => $sectionTitle,
             'pricing_section_subtitle' => $sectionSubtitle,
-            'pricing_trust_bar'      => $trustBar,
+            'pricing_badge_text'       => $badgeText,
+            'pricing_yearly_discount'  => $yearlyDiscount,
+            'pricing_trust_bar'        => $trustBar,
         ]);
 
         AuditLog::create([
@@ -1040,6 +1019,107 @@ class WhiteLabelWebsiteController extends Controller
         ]);
 
         return back()->with('success', 'Pricing plans updated successfully!');
+    }
+
+    public function productsShowcase()
+    {
+        $user = Auth::user();
+        $agency = $this->getAgency();
+        $productsShowcase = $agency ? $agency->parsed_products_showcase : [];
+        return view('whitelabel.website.products_showcase', compact('user', 'agency', 'productsShowcase'));
+    }
+
+    public function updateProductsShowcase(Request $request)
+    {
+        $agency = $this->getAgency();
+        if (!$agency) return back()->with('error', 'Agency profile not found.');
+
+        $sectionTitle    = $request->input('products_section_title', 'Smart Tools for Smarter Businesses');
+        $sectionSubtitle = $request->input('products_section_subtitle', 'A complete suite of business growth tools designed for Indian entrepreneurs and local businesses.');
+        $badgeText       = $request->input('products_section_badge', 'Our Products');
+
+        $productNames     = $request->input('product_name', []);
+        $productLogos     = $request->input('product_logo', []);
+        $productImages    = $request->input('product_image', []);
+        $productTaglines  = $request->input('product_tagline', []);
+        $productTitles    = $request->input('product_title', []);
+        $productSubtitles = $request->input('product_subtitle', []);
+        $leftBgs          = $request->input('left_bg', []);
+        $productColors    = $request->input('product_color', []);
+        $productGrads     = $request->input('product_gradient', []);
+        $solutionBadges   = $request->input('solution_badge', []);
+        $solutionSubbadges= $request->input('solution_subbadge', []);
+        $trustCounts      = $request->input('trust_count', []);
+        $ctaTexts         = $request->input('cta_text', []);
+        $ctaUrls          = $request->input('cta_url', []);
+        $featuresRaw      = $request->input('features', []);
+
+        $uploadDir = public_path('uploads/agency_products');
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
+
+        $items = [];
+        for ($i = 0; $i < count($productNames); $i++) {
+            if (!empty($productNames[$i])) {
+                $featureLines = array_filter(
+                    array_map('trim', explode("\n", $featuresRaw[$i] ?? ''))
+                );
+
+                $logoPath = $productLogos[$i] ?? '';
+                if ($request->hasFile("product_logo_file.{$i}")) {
+                    $saved = $this->saveSecureUpload($request->file("product_logo_file.{$i}"), 'logo_' . $i, 'uploads/agency_products');
+                    if ($saved) $logoPath = $saved;
+                }
+
+                $imagePath = $productImages[$i] ?? '';
+                if ($request->hasFile("product_image_file.{$i}")) {
+                    $saved = $this->saveSecureUpload($request->file("product_image_file.{$i}"), 'mockup_' . $i, 'uploads/agency_products');
+                    if ($saved) $imagePath = $saved;
+                }
+
+                $slug = ($i === 0) ? 'launchshop' : (($i === 1) ? 'websitebuilder' : 'whatsappbulk');
+
+                $items[] = [
+                    'product_name'     => $productNames[$i],
+                    'product_slug'     => $slug,
+                    'product_logo'     => $logoPath,
+                    'product_image'    => $imagePath,
+                    'product_tagline'  => $productTaglines[$i]  ?? '',
+                    'product_title'    => $productTitles[$i]    ?? '',
+                    'product_subtitle' => $productSubtitles[$i] ?? '',
+                    'left_bg'          => $leftBgs[$i]          ?? ($i === 0 ? '#fff5ee' : ($i === 1 ? '#f0f6ff' : '#f0fdf4')),
+                    'color'            => $productColors[$i]    ?? ($i === 0 ? '#ea580c' : ($i === 1 ? '#2563eb' : '#25d366')),
+                    'gradient'         => $productGrads[$i]     ?? "linear-gradient(135deg, " . ($productColors[$i] ?? '#ea580c') . " 0%, #1e1b4b 100%)",
+                    'solution_badge'   => $solutionBadges[$i]   ?? ($i === 0 ? 'ALL-IN-ONE ECOMMERCE' : ($i === 1 ? 'DRAG & DROP BUILDER' : 'MARKETING AUTOMATION')),
+                    'solution_subbadge'=> $solutionSubbadges[$i] ?? ($i === 0 ? 'Instant Setup' : ($i === 1 ? 'No Coding Needed' : 'High ROI')),
+                    'trust_count'      => $trustCounts[$i]      ?? '',
+                    'cta_text'         => $ctaTexts[$i]         ?? 'Launch Product &rarr;',
+                    'cta_url'          => !empty($ctaUrls[$i])  ? $ctaUrls[$i]  : $agency->getProductSubdomainUrl($slug),
+                    'features'         => array_values($featureLines),
+                ];
+            }
+        }
+
+        $updateData = [
+            'products_section_badge'    => $badgeText,
+            'products_section_title'    => $sectionTitle,
+            'products_section_subtitle' => $sectionSubtitle,
+        ];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'products_showcase_data')) {
+            $updateData['products_showcase_data'] = json_encode($items);
+        }
+
+        $agency->update($updateData);
+
+        AuditLog::create([
+            'user_id'   => auth()->id(),
+            'user_name' => auth()->user()->name ?? 'Agency Owner',
+            'action'    => "Updated products showcase for {$agency->name}",
+            'ip_address'=> $request->ip(),
+        ]);
+
+        return back()->with('success', 'Products showcase updated successfully!');
     }
 
     public function preview()

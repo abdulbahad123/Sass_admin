@@ -223,8 +223,14 @@
                                 <span>Refund & Cancellation</span>
                             </a>
 
+                            <a href="{{ route('whitelabel.website.products') }}" 
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.products*') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                                <i data-lucide="package" class="w-3.5 h-3.5"></i>
+                                <span>Products Showcase</span>
+                            </a>
+
                             <a href="{{ route('whitelabel.website.pricing') }}" 
-                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.pricing') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                               class="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('whitelabel.website.pricing*') ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                                 <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
                                 <span>Pricing Plans</span>
                             </a>

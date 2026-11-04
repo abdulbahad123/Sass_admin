@@ -166,6 +166,13 @@
         ? $agency->parsed_pricing_plans
         : [];
 
+    $productsShowcase = ($agency && method_exists($agency, 'getParsedProductsShowcaseAttribute'))
+        ? $agency->parsed_products_showcase
+        : [];
+    if (empty($productsShowcase)) {
+        $productsShowcase = $pricingPlans;
+    }
+
     if (empty($pricingPlans)) {
         $pricingPlans = [
             [
@@ -1039,7 +1046,7 @@
 
         {{-- Product Showcase Cards Grid (NO prices, NO monthly/yearly toggle) --}}
         <div class="pricing-cards-outer">
-            @foreach($pricingPlans as $plan)
+            @foreach($productsShowcase as $plan)
             @php
                 $planColor    = $plan['color'] ?? '#ea580c';
                 $leftBg       = $plan['left_bg'] ?? ($loop->first ? '#fff5ee' : '#f0f6ff');
@@ -1054,15 +1061,15 @@
                 if ($isEcom) {
                     $rawLogo   = !empty($plan['product_logo']) ? $plan['product_logo'] : 'assets/landing_page/ecom_logo.png';
                     $rawMockup = !empty($plan['product_image']) ? $plan['product_image'] : 'assets/landing_page/ecombuilder_image.png';
-                    $solutionBadge = 'ALL-IN-ONE ECOMMERCE';
+                    $solutionBadge = !empty($plan['solution_badge']) ? $plan['solution_badge'] : (!empty($plan['plan_badge']) ? $plan['plan_badge'] : 'ALL-IN-ONE ECOMMERCE');
                 } elseif ($isWeb) {
                     $rawLogo   = !empty($plan['product_logo']) ? $plan['product_logo'] : 'assets/landing_page/websitebuilder_logo.png';
                     $rawMockup = !empty($plan['product_image']) ? $plan['product_image'] : 'assets/landing_page/websitebuilder_image.png';
-                    $solutionBadge = 'DRAG & DROP BUILDER';
+                    $solutionBadge = !empty($plan['solution_badge']) ? $plan['solution_badge'] : (!empty($plan['plan_badge']) ? $plan['plan_badge'] : 'DRAG & DROP BUILDER');
                 } else {
                     $rawLogo   = !empty($plan['product_logo']) ? $plan['product_logo'] : 'assets/landing_page/whatsapp_logo.png';
                     $rawMockup = !empty($plan['product_image']) ? $plan['product_image'] : 'assets/landing_page/whatsapp_image.png';
-                    $solutionBadge = 'MARKETING AUTOMATION';
+                    $solutionBadge = !empty($plan['solution_badge']) ? $plan['solution_badge'] : (!empty($plan['plan_badge']) ? $plan['plan_badge'] : 'MARKETING AUTOMATION');
                 }
 
                 $logoImgPath   = str_starts_with($rawLogo, 'http')   ? $rawLogo   : asset(ltrim($rawLogo, '/'));
