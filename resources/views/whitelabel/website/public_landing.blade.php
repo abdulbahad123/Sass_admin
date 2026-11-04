@@ -187,7 +187,7 @@
                 'price_yearly'    => '4999',
                 'features'        => ['1 Online Store (Product Module)', 'Up to 1,000 Orders / Customers', 'Inventory & Order Management', 'Basic Analytics & Reports', 'Standard Email Support', 'Custom Domain Setup'],
                 'trust_count'     => 'Trusted by 10,000+ Sellers',
-                'cta_text'        => 'Get Started With Ecombuilder &rarr;',
+                'cta_text'        => 'View More Plans &rarr;',
             ],
             [
                 'product_slug'    => 'websitebuilder',
@@ -209,7 +209,7 @@
                 'is_popular'      => true,
                 'features'        => ['Unlimited Pages & Websites', 'Drag & Drop Website Builder', 'Custom Domain & SSL', 'SEO Tools & Analytics', 'Priority Email & Live Support', 'AI Templates & Widgets'],
                 'trust_count'     => 'Trusted by 50,000+ Creators',
-                'cta_text'        => 'Get Started With Website Builder &rarr;',
+                'cta_text'        => 'View More Plans &rarr;',
             ],
             [
                 'product_slug'    => 'whatsappbulk',
@@ -230,7 +230,7 @@
                 'price_yearly'    => '19999',
                 'features'        => ['Multi-Device WhatsApp Connect', 'Bulk Messaging Campaigns', 'AI Chatbot & Flow Builder', 'Auto Responder & Keywords', 'Contact Lists & CSV Import', 'API & Webhook Integrations'],
                 'trust_count'     => 'Trusted by 25,000+ Businesses',
-                'cta_text'        => 'Get Started With WhatsApp Bulk &rarr;',
+                'cta_text'        => 'View More Plans &rarr;',
             ],
         ];
     }
@@ -1168,13 +1168,13 @@
                         </ul>
                     </div>
 
-                    {{-- CTA Button ("Launch Product ->") --}}
+                    {{-- CTA Button ("Launch Product ->" or Dynamic Dashboard Text) --}}
                     <div>
                         <a href="{{ $prodLink }}" target="_blank"
                            style="display:flex; align-items:center; justify-content:center; gap:8px; background:{{ $btnGradient }}; color:#ffffff !important; font-weight:800; font-size:14.5px; padding:15px 24px; border-radius:12px; text-decoration:none; box-shadow:0 6px 18px -4px {{ $planColor }}55; transition:transform .2s; border:none;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span>Launch Product &rarr;</span>
+                            <span>{!! !empty($plan['cta_text']) ? $plan['cta_text'] : 'Launch Product &rarr;' !!}</span>
                         </a>
                         @if(!empty($plan['trust_count']))
                         <div style="text-align:center; font-size:11.5px; color:#64748b; font-weight:700; margin-top:8px; display:flex; align-items:center; justify-content:center; gap:5px;">
@@ -1336,15 +1336,16 @@
                             $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl($pSlugLower) : '#';
                         }
 
-                        // Strictly bypass /login and user dashboard; open product landing page dynamically
-                        $activeCtaUrl = (!empty($plan['cta_url']) && $plan['cta_url'] !== '/login' && !str_contains($plan['cta_url'], 'dashboard') && !str_contains($plan['cta_url'], 'wa.me')) ? $plan['cta_url'] : $planLandingUrl;
+                        // Strictly bypass /login and user dashboard; open product landing page or dedicated pricing dynamically
+                        $defaultPlanPricingUrl = rtrim($planLandingUrl, '/') . '/#pricing';
+                        $activeCtaUrl = (!empty($plan['cta_url']) && $plan['cta_url'] !== '/login' && !str_contains($plan['cta_url'], 'dashboard') && !str_contains($plan['cta_url'], 'wa.me')) ? $plan['cta_url'] : $defaultPlanPricingUrl;
                     @endphp
                     <div>
                         <a href="{{ $activeCtaUrl }}" target="_blank"
                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: {{ $pGrad }}; color: #ffffff !important; font-weight: 800; font-size: 14px; padding: 14px 20px; border-radius: 14px; text-decoration: none; box-shadow: 0 6px 18px -4px {{ $pColor }}55; transition: transform .2s; border: none; text-align: center;"
                            onmouseover="this.style.transform='scale(1.02)'"
                            onmouseout="this.style.transform='scale(1)'">
-                            <span>Get Started With {{ $plan['product_name'] ?? 'Product' }} &rarr;</span>
+                            <span>{!! !empty($plan['cta_text']) ? $plan['cta_text'] : ('View More Plans &rarr;') !!}</span>
                         </a>
                         <div style="text-align: center; font-size: 11.5px; color: #94a3b8; font-weight: 600; margin-top: 8px;">
                             ⚡ Instant Activation • Zero Setup Fees
