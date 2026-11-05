@@ -765,13 +765,21 @@ class WhiteLabelWebsiteController extends Controller
 
         // Optional reCAPTCHA verification if enabled
         $recaptcha = is_array($agency->recaptcha_settings) ? $agency->recaptcha_settings : (json_decode($agency->recaptcha_settings ?? '[]', true) ?: []);
-        if (!empty($recaptcha['recaptcha_enabled']) && !empty($recaptcha['recaptcha_secret_key'])) {
+        $isRecaptchaActive = !empty($recaptcha['recaptcha_enabled'])
+            || (!empty($agency->is_recaptcha) && $agency->is_recaptcha == 1)
+            || (!empty($agency->enable_recaptcha) && $agency->enable_recaptcha == 1);
+        $secretKey = trim($recaptcha['recaptcha_secret_key'] ?? ($agency->recaptcha_secret_key ?? ''));
+        if (empty($secretKey) && class_exists('\App\Models\Setting')) {
+            $secretKey = trim(\App\Models\Setting::get('recaptcha_secret_key', ''));
+        }
+
+        if ($isRecaptchaActive && !empty($secretKey)) {
             $token = $request->input('g-recaptcha-response');
             if (empty($token)) {
                 return response()->json(['success' => false, 'message' => 'Please complete the reCAPTCHA challenge.'], 422);
             }
             try {
-                $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptcha['recaptcha_secret_key']}&response={$token}");
+                $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$token}");
                 $resp = json_decode($verify, true);
                 if (empty($resp['success'])) {
                     return response()->json(['success' => false, 'message' => 'reCAPTCHA validation failed. Please try again.'], 422);

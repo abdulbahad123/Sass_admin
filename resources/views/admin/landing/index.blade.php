@@ -360,10 +360,14 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Monthly Price (₹)</label>
                         <input type="text" name="lp_pricing_monthly" value="{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Midterm Price (₹)</label>
+                        <input type="text" name="lp_pricing_midterm" value="{{ (!empty($data['lp_pricing_midterm']) && $data['lp_pricing_midterm'] != '2,700') ? $data['lp_pricing_midterm'] : '27,000' }}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold text-indigo-600">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Yearly Price (₹ / year)</label>

@@ -1755,6 +1755,26 @@ function switchPricingCycle(cycle) {
                             <textarea name="message" rows="3" required placeholder="Type your requirements or inquiry here..." style="width: 100%; box-sizing: border-box; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #0f172a; outline: none; resize: vertical; transition: border-color .15s;" onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
                         </div>
 
+                        @php
+                            $recaptchaData = is_array($agency->recaptcha_settings ?? null)
+                                ? $agency->recaptcha_settings
+                                : (json_decode($agency->recaptcha_settings ?? '[]', true) ?: []);
+                            $isRecaptchaActive = !empty($recaptchaData['recaptcha_enabled'])
+                                || (!empty($agency->is_recaptcha) && $agency->is_recaptcha == 1)
+                                || (!empty($agency->enable_recaptcha) && $agency->enable_recaptcha == 1);
+                            $landingRecaptchaSiteKey = trim($recaptchaData['recaptcha_site_key'] ?? ($agency->recaptcha_site_key ?? ''));
+                            if (empty($landingRecaptchaSiteKey) && class_exists('\App\Models\Setting')) {
+                                $landingRecaptchaSiteKey = trim(\App\Models\Setting::get('recaptcha_site_key', ''));
+                            }
+                        @endphp
+
+                        @if($isRecaptchaActive && !empty($landingRecaptchaSiteKey))
+                            <div style="margin: 4px 0 6px;">
+                                <div class="g-recaptcha" data-sitekey="{{ $landingRecaptchaSiteKey }}"></div>
+                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                            </div>
+                        @endif
+
                         <button type="submit" id="landingContactSubmitBtn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; font-weight: 800; font-size: 14px; padding: 14px 28px; border-radius: 12px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(79,70,229,0.3); transition: transform .18s, box-shadow .18s; margin-top: 4px;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 24px rgba(79,70,229,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(79,70,229,0.3)'">
                             <i data-lucide="send" style="width: 16px; height: 16px;"></i>
                             <span>Send Message</span>
@@ -1966,6 +1986,23 @@ function switchPricingCycle(cycle) {
             e.preventDefault();
             const btn = document.getElementById('landingContactSubmitBtn');
             const alertBox = document.getElementById('landingContactAlert');
+
+            // Verify Google reCAPTCHA if enabled
+            if (typeof grecaptcha !== 'undefined') {
+                const recaptchaEl = cForm.querySelector('.g-recaptcha');
+                if (recaptchaEl) {
+                    const token = grecaptcha.getResponse();
+                    if (!token) {
+                        alertBox.style.background = '#fee2e2';
+                        alertBox.style.color = '#b91c1c';
+                        alertBox.style.border = '1px solid #fecaca';
+                        alertBox.innerHTML = '⚠ Please complete the "I\'m not a robot" reCAPTCHA challenge.';
+                        alertBox.style.display = 'block';
+                        return false;
+                    }
+                }
+            }
+
             const originalHtml = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<span>Sending message...</span>';
@@ -1980,6 +2017,9 @@ function switchPricingCycle(cycle) {
             .then(data => {
                 btn.disabled = false;
                 btn.innerHTML = originalHtml;
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+                    try { grecaptcha.reset(); } catch(err) {}
+                }
                 if (data.success) {
                     alertBox.style.background = '#dcfce7';
                     alertBox.style.color = '#15803d';
@@ -1998,12 +2038,14 @@ function switchPricingCycle(cycle) {
             .catch(() => {
                 btn.disabled = false;
                 btn.innerHTML = originalHtml;
-                alertBox.style.background = '#dcfce7';
-                alertBox.style.color = '#15803d';
-                alertBox.style.border = '1px solid #bbf7d0';
-                alertBox.innerHTML = '✓ Thank you! Your message has been sent successfully. Our team will get back to you shortly.';
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+                    try { grecaptcha.reset(); } catch(err) {}
+                }
+                alertBox.style.background = '#fee2e2';
+                alertBox.style.color = '#b91c1c';
+                alertBox.style.border = '1px solid #fecaca';
+                alertBox.innerHTML = '⚠ Something went wrong. Please check your submission and try again.';
                 alertBox.style.display = 'block';
-                cForm.reset();
             });
         });
     }

@@ -2634,7 +2634,7 @@
     <script>
         // Pricing Plan Toggle (Monthly, Midterm, Yearly)
         const pMonthly = '{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}';
-        const pMidterm = '2,700';
+        const pMidterm = '{{ (!empty($data['lp_pricing_midterm']) && $data['lp_pricing_midterm'] != '2,700') ? $data['lp_pricing_midterm'] : '27,000' }}';
         const pYearly = '{{ (!empty($data['lp_pricing_yearly']) && $data['lp_pricing_yearly'] != '799') ? $data['lp_pricing_yearly'] : '35,000' }}';
 
         window.setPricingPlan = function(plan) {
@@ -2662,7 +2662,7 @@
                 }
                 if (priceAmount) priceAmount.textContent = '₹' + pMonthly;
                 if (pricePeriod) pricePeriod.textContent = '/ month';
-                if (subtext) subtext.textContent = 'Monthly Plan Selected — Switch to Yearly for ₹35,000/year (Save over 27%)';
+                if (subtext) subtext.textContent = 'Monthly Plan Selected — Switch to Yearly for ₹' + pYearly + '/year (Save over 27%)';
                 if (includedText) includedText.textContent = 'All features included in monthly plan';
             } else if (plan === 'midterm') {
                 if (toggleBg) toggleBg.style.transform = 'translateX(95px)';
@@ -2672,7 +2672,7 @@
                 }
                 if (priceAmount) priceAmount.textContent = '₹' + pMidterm;
                 if (pricePeriod) pricePeriod.textContent = '/ midterm';
-                if (subtext) subtext.textContent = 'Midterm Plan Selected — Special rate ₹2,700 for multi-month access!';
+                if (subtext) subtext.textContent = 'Midterm Plan Selected — Special rate ₹' + pMidterm + ' for multi-month access!';
                 if (includedText) includedText.textContent = 'All features included in midterm plan';
             } else {
                 if (toggleBg) toggleBg.style.transform = 'translateX(190px)';
