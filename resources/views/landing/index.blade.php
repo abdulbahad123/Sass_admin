@@ -1341,13 +1341,14 @@
                 </h2>
             </div>
 
-            <!-- Monthly / Yearly Toggle with Save 27% curved badge -->
-            <div class="flex flex-col items-center justify-center mb-10">
+            <!-- Monthly / Midterm / Yearly Toggle with Save 27% curved badge -->
+            <div class="flex flex-col items-center justify-center mb-8">
                 <div class="flex items-center space-x-4">
                     <div class="bg-white dark:bg-[#0B0F19] p-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center relative">
-                        <div id="pricingToggleBg" class="absolute left-1.5 top-1.5 bottom-1.5 w-[100px] btn-gradient rounded-full transition-all duration-300 ease-in-out" style="transform: translateX(100px);"></div>
-                        <button type="button" id="toggleMonthlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('monthly')">Monthly</button>
-                        <button type="button" id="toggleYearlyBtn" class="relative z-10 w-[100px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="window.setPricingPlan('yearly')">Yearly</button>
+                        <div id="pricingToggleBg" class="absolute left-1.5 top-1.5 bottom-1.5 w-[95px] btn-gradient rounded-full transition-all duration-300 ease-in-out" style="transform: translateX(190px);"></div>
+                        <button type="button" id="toggleMonthlyBtn" class="relative z-10 w-[95px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('monthly')">Monthly</button>
+                        <button type="button" id="toggleMidtermBtn" class="relative z-10 w-[95px] py-2 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300" onclick="window.setPricingPlan('midterm')">Midterm</button>
+                        <button type="button" id="toggleYearlyBtn" class="relative z-10 w-[95px] py-2 text-xs sm:text-sm font-bold text-white transition-colors duration-300" onclick="window.setPricingPlan('yearly')">Yearly</button>
                     </div>
                     <div class="text-xs font-extrabold text-[#ff3d00] flex items-center gap-1 bg-orange-100 dark:bg-orange-950/60 px-3 py-1 rounded-full border border-orange-200 dark:border-orange-800 shadow-xs">
                         <i class="fas fa-reply fa-flip-vertical text-xs"></i>
@@ -1362,7 +1363,7 @@
             </div>
 
             <!-- Main High-Converting Pricing Card (Wider, Balanced, No Awkward Side Margins) -->
-            <div class="bg-white dark:bg-[#0B0F19] rounded-[2.5rem] p-6 sm:p-10 lg:p-12 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
+            <div class="bg-white dark:bg-[#0B0F19] rounded-[2.5rem] p-6 sm:p-8 lg:p-9 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
                 
                 <!-- Upper Split: Plan Info (Left) & Screen Preview (Right) -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -1393,7 +1394,7 @@
                         <!-- Price Box -->
                         <div class="pt-2 pb-1 flex items-baseline space-x-2">
                             <span id="priceMainAmount" class="font-heading font-black text-4xl sm:text-5xl lg:text-[54px] text-slate-900 dark:text-white tracking-tight">₹{{ (!empty($data['lp_pricing_yearly']) && $data['lp_pricing_yearly'] != '799') ? $data['lp_pricing_yearly'] : '35,000' }}</span>
-                            <span id="priceMainPeriod" class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400">/ year (~₹2,916/month)</span>
+                            <span id="priceMainPeriod" class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400">/ year</span>
                         </div>
 
                         <!-- CTA Button -->
@@ -1404,16 +1405,14 @@
                             </a>
                         </div>
 
-                        <!-- 3 Trust Badges below button (High Contrast, Perfectly Aligned) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-4 sm:pt-5 border-t border-slate-200/80 dark:border-slate-800">
+                        <!-- 2 Trust Badges below button (No Credit Card removed, 100% Free Demo renamed to 100% Full Free Training) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 sm:pt-5 border-t border-slate-200/80 dark:border-slate-800">
                             @php
-                                $trustBadges = (isset($data['lp_pricing_trust_badges']) && is_array($data['lp_pricing_trust_badges']) && count($data['lp_pricing_trust_badges']) > 0)
-                                    ? $data['lp_pricing_trust_badges']
-                                    : ['1:1 Demo on Google Meet', 'No Credit Card Required', '100% Free Demo Access'];
-                                $tIcons = ['fas fa-video text-blue-500', 'far fa-credit-card text-emerald-500', 'fas fa-shield-alt text-[#ff3d00]'];
+                                $trustBadges = ['1:1 Demo on Google Meet', '100% Full Free Training'];
+                                $tIcons = ['fas fa-video text-blue-500', 'fas fa-shield-alt text-[#ff3d00]'];
                             @endphp
                             @foreach($trustBadges as $bIdx => $badge)
-                            <div class="flex items-center justify-center space-x-2 py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs">
+                            <div class="flex items-center justify-center space-x-2 py-2 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs">
                                 <i class="{{ $tIcons[$bIdx % count($tIcons)] }} text-sm"></i>
                                 <span class="whitespace-nowrap">{{ $badge }}</span>
                             </div>
@@ -1438,8 +1437,8 @@
                 </div>
 
                 <!-- Lower Section: Everything You Get Checklist (Trophy Box Removed) -->
-                <div class="pt-8 mt-8 border-t border-slate-200 dark:border-slate-800 text-left">
-                    <div class="mb-6 space-y-2.5">
+                <div class="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800 text-left">
+                    <div class="mb-5 space-y-2">
                         <h4 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white">Everything You Get</h4>
                         <div>
                             <span class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-xs sm:text-sm font-extrabold text-[#c2410c] dark:text-orange-300 shadow-xs">
@@ -1449,22 +1448,23 @@
                         </div>
                     </div>
 
-                    <!-- 6 Feature Checklist in 2 Columns -->
+                    <!-- 9 Feature Checklist in 3 Columns (Extra Column Added & Whitespace Reduced) -->
                     @php
-                        $pricingFeatures = (isset($data['lp_pricing_features']) && is_array($data['lp_pricing_features']) && count($data['lp_pricing_features']) > 0)
-                            ? $data['lp_pricing_features']
-                            : [
-                                '1 White-Label Platform',
-                                'Unlimited End-Customers',
-                                '3 White-Label SaaS Products Included',
-                                'Full Partner Dashboard Access',
-                                'Custom Domain & Logo',
-                                'Lifetime Updates & Support'
-                            ];
+                        $pricingFeatures = [
+                            '1 White-Label Platform',
+                            'Unlimited End-Customers',
+                            'High-Speed Cloud Infrastructure',
+                            '3 White-Label SaaS Products Included',
+                            'Full Partner Dashboard Access',
+                            'Priority 24/7 Technical Support',
+                            'Custom Domain & Logo',
+                            'Lifetime Updates & Support',
+                            'Free Regular System Updates'
+                        ];
                     @endphp
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                         @foreach($pricingFeatures as $feat)
-                        <div class="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
+                        <div class="flex items-center space-x-2.5 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
                             <div class="w-5 h-5 rounded-full bg-[#ff3d00] text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-sm">
                                 <i class="fas fa-check"></i>
                             </div>
@@ -2632,18 +2632,27 @@
 
     <!-- GLOBAL SCRIPTS FOR PRICING TOGGLE & BOOK FREE LIVE DEMO MODAL -->
     <script>
-        // Pricing Plan Toggle (Task 1: Updated to 4,000 Monthly and 35,000 Yearly)
+        // Pricing Plan Toggle (Monthly, Midterm, Yearly)
         const pMonthly = '{{ (!empty($data['lp_pricing_monthly']) && $data['lp_pricing_monthly'] != '999') ? $data['lp_pricing_monthly'] : '4,000' }}';
+        const pMidterm = '2,700';
         const pYearly = '{{ (!empty($data['lp_pricing_yearly']) && $data['lp_pricing_yearly'] != '799') ? $data['lp_pricing_yearly'] : '35,000' }}';
 
         window.setPricingPlan = function(plan) {
             const toggleBg = document.getElementById('pricingToggleBg');
             const btnMonthly = document.getElementById('toggleMonthlyBtn');
+            const btnMidterm = document.getElementById('toggleMidtermBtn');
             const btnYearly = document.getElementById('toggleYearlyBtn');
             const priceAmount = document.getElementById('priceMainAmount');
             const pricePeriod = document.getElementById('priceMainPeriod');
             const subtext = document.getElementById('pricingSubtext');
             const includedText = document.getElementById('pricingIncludedPlanText');
+
+            [btnMonthly, btnMidterm, btnYearly].forEach(b => {
+                if (b) {
+                    b.classList.remove('text-white');
+                    b.classList.add('text-slate-600', 'dark:text-slate-300');
+                }
+            });
 
             if (plan === 'monthly') {
                 if (toggleBg) toggleBg.style.transform = 'translateX(0)';
@@ -2651,26 +2660,28 @@
                     btnMonthly.classList.remove('text-slate-600', 'dark:text-slate-300');
                     btnMonthly.classList.add('text-white');
                 }
-                if (btnYearly) {
-                    btnYearly.classList.remove('text-white');
-                    btnYearly.classList.add('text-slate-600', 'dark:text-slate-300');
-                }
                 if (priceAmount) priceAmount.textContent = '₹' + pMonthly;
                 if (pricePeriod) pricePeriod.textContent = '/ month';
                 if (subtext) subtext.textContent = 'Monthly Plan Selected — Switch to Yearly for ₹35,000/year (Save over 27%)';
                 if (includedText) includedText.textContent = 'All features included in monthly plan';
+            } else if (plan === 'midterm') {
+                if (toggleBg) toggleBg.style.transform = 'translateX(95px)';
+                if (btnMidterm) {
+                    btnMidterm.classList.remove('text-slate-600', 'dark:text-slate-300');
+                    btnMidterm.classList.add('text-white');
+                }
+                if (priceAmount) priceAmount.textContent = '₹' + pMidterm;
+                if (pricePeriod) pricePeriod.textContent = '/ midterm';
+                if (subtext) subtext.textContent = 'Midterm Plan Selected — Special rate ₹2,700 for multi-month access!';
+                if (includedText) includedText.textContent = 'All features included in midterm plan';
             } else {
-                if (toggleBg) toggleBg.style.transform = 'translateX(100px)';
+                if (toggleBg) toggleBg.style.transform = 'translateX(190px)';
                 if (btnYearly) {
                     btnYearly.classList.remove('text-slate-600', 'dark:text-slate-300');
                     btnYearly.classList.add('text-white');
                 }
-                if (btnMonthly) {
-                    btnMonthly.classList.remove('text-white');
-                    btnMonthly.classList.add('text-slate-600', 'dark:text-slate-300');
-                }
                 if (priceAmount) priceAmount.textContent = '₹' + pYearly;
-                if (pricePeriod) pricePeriod.textContent = '/ year (~₹2,916/month)';
+                if (pricePeriod) pricePeriod.textContent = '/ year';
                 if (subtext) subtext.textContent = 'Yearly Plan Selected — Pay ₹35,000/year (Save ₹13,000 annually!)';
                 if (includedText) includedText.textContent = 'All features included in yearly plan';
             }
