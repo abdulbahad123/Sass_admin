@@ -93,6 +93,15 @@ class WhiteLabelWebsiteController extends Controller
             'hero_title'       => 'nullable|string',
             'hero_subtitle'    => 'nullable|string',
             'hero_description' => 'nullable|string',
+            'hero_secondary_cta_text' => 'nullable|string|max:255',
+            'hero_secondary_cta_url'  => 'nullable|string|max:500',
+            'hero_stat1_text'  => 'nullable|string|max:255',
+            'hero_stat2_text'  => 'nullable|string|max:255',
+            'hero_stat3_text'  => 'nullable|string|max:255',
+            'hero_float1_title'=> 'nullable|string|max:255',
+            'hero_float1_subtitle' => 'nullable|string|max:255',
+            'hero_float2_title'=> 'nullable|string|max:255',
+            'hero_float2_subtitle' => 'nullable|string|max:255',
             'cta_text'         => 'nullable|string|max:255',
             'cta_url'          => 'nullable|string|max:255',
             'meta_title'       => 'nullable|string|max:255',
@@ -251,6 +260,69 @@ class WhiteLabelWebsiteController extends Controller
         if ($request->has('sections')) {
             $validated['sections_enabled'] = json_encode($request->input('sections'));
         }
+
+        // 5. Hero Metrics Badges (3 Badges)
+        if ($request->has('hero_stat1_text') || $request->has('hero_stat2_text') || $request->has('hero_stat3_text')) {
+            $validated['hero_metrics_data'] = json_encode([
+                ['icon' => 'package',    'text' => trim($request->input('hero_stat1_text', '3 Products') ?: '3 Products'),   'border' => '#e0e7ff', 'bg' => 'linear-gradient(135deg,#6366f1,#4f46e5)', 'textColor' => '#1e1b4b'],
+                ['icon' => 'activity',   'text' => trim($request->input('hero_stat2_text', '99.9% Uptime') ?: '99.9% Uptime'), 'border' => '#d1fae5', 'bg' => 'linear-gradient(135deg,#10b981,#059669)', 'textColor' => '#064e3b'],
+                ['icon' => 'headphones', 'text' => trim($request->input('hero_stat3_text', '24/7 Support') ?: '24/7 Support'), 'border' => '#ffedd5', 'bg' => 'linear-gradient(135deg,#f97316,#ea580c)', 'textColor' => '#7c2d12'],
+            ]);
+        }
+
+        // 6. Hero Floating Badges (AI Powered / Growth Ready)
+        if ($request->has('hero_float1_title') || $request->has('hero_float2_title')) {
+            $validated['hero_floating_badges'] = json_encode([
+                'float1' => [
+                    'title' => trim($request->input('hero_float1_title', 'AI Powered') ?: 'AI Powered'),
+                    'subtitle' => trim($request->input('hero_float1_subtitle', 'Smart automation') ?: 'Smart automation'),
+                    'icon' => 'sparkles'
+                ],
+                'float2' => [
+                    'title' => trim($request->input('hero_float2_title', 'Growth Ready') ?: 'Growth Ready'),
+                    'subtitle' => trim($request->input('hero_float2_subtitle', 'Scale instantly') ?: 'Scale instantly'),
+                    'icon' => 'trending-up'
+                ],
+            ]);
+        }
+
+        // Auto-safeguard for hero_secondary_cta_text, hero_secondary_cta_url, hero_metrics_data, hero_floating_badges
+        $extraHeroCols = [
+            'hero_secondary_cta_text' => 'string',
+            'hero_secondary_cta_url'  => 'string',
+            'hero_metrics_data'       => 'text',
+            'hero_floating_badges'    => 'text',
+        ];
+        foreach ($extraHeroCols as $colName => $colType) {
+            try {
+                if (isset($validated[$colName]) && !\Illuminate\Support\Facades\Schema::hasColumn('agencies', $colName)) {
+                    \Illuminate\Support\Facades\Schema::table('agencies', function ($table) use ($colName, $colType) {
+                        if ($colType === 'string') {
+                            $table->string($colName)->nullable();
+                        } else {
+                            $table->text($colName)->nullable();
+                        }
+                    });
+                }
+            } catch (\Throwable $e) {
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', $colName)) {
+                    unset($validated[$colName]);
+                }
+            }
+        }
+
+        // Also backup into trust_elements_data
+        try {
+            $trustElements = [];
+            if (!empty($agency->trust_elements_data)) {
+                $trustElements = is_array($agency->trust_elements_data) ? $agency->trust_elements_data : (json_decode($agency->trust_elements_data, true) ?: []);
+            }
+            if (isset($validated['hero_secondary_cta_text'])) $trustElements['hero_secondary_cta_text'] = $validated['hero_secondary_cta_text'];
+            if (isset($validated['hero_secondary_cta_url'])) $trustElements['hero_secondary_cta_url'] = $validated['hero_secondary_cta_url'];
+            if (isset($validated['hero_metrics_data'])) $trustElements['hero_metrics_data'] = $validated['hero_metrics_data'];
+            if (isset($validated['hero_floating_badges'])) $trustElements['hero_floating_badges'] = $validated['hero_floating_badges'];
+            $validated['trust_elements_data'] = json_encode($trustElements);
+        } catch (\Throwable $te) {}
 
         // Auto-safeguard for logo_dark, footer_logo & about_section_badge if migration has not run on production DB yet
         try {

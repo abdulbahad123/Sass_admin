@@ -809,7 +809,7 @@
                 {{-- Pill badge (Task 3: increased font size & prominent design) --}}
                 <span style="display:inline-flex; align-items:center; gap:10px; background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; font-size:15px; font-weight:800; padding:8px 22px; border-radius:999px; width:fit-content; letter-spacing:.03em; box-shadow:0 4px 14px rgba(109,40,217,0.12);">
                     <i data-lucide="zap" style="width:17px;height:17px;color:#7c3aed;"></i>
-                    <span>All-In-One Growth Platform for Indian Businesses</span>
+                    <span>{{ !empty($agency->hero_badge) ? $agency->hero_badge : 'All-In-One Growth Platform for global Businesses' }}</span>
                 </span>
 
                 {{-- Headline --}}
@@ -819,47 +819,44 @@
 
                 {{-- Subtitle --}}
                 <p style="font-size:15.5px; color:#475569; line-height:1.8; max-width:480px; margin:0;">
-                    {{ $agency->hero_subtitle ?? ($agencyName . ' helps Indian businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation — all in one place.') }}
+                    {{ $agency->hero_subtitle ?? ($agencyName . ' helps businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation — all in one place.') }}
                 </p>
 
-                {{-- CTA Buttons (View Plans -> #products, How It Works -> #how-it-works) --}}
+                {{-- CTA Buttons (View Products -> #products, How It Works -> #how-it-works) --}}
                 <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-                    <a href="#products"
+                    <a href="{{ $agency->cta_url ?? '#products' }}"
                        style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14.5px; padding:15px 32px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
                        onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
                        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
-                        <span>View Products</span>
+                        <span>{{ $agency->cta_text ?? 'View Products' }}</span>
                         <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                     </a>
-                    <a href="#how-it-works" class="btn-outline"
+                    <a href="{{ $agency->hero_secondary_cta_url ?? '#how-it-works' }}" class="btn-outline"
                        style="display:inline-flex; align-items:center; gap:10px; background:#fff; color:#1e293b; font-weight:700; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; border:1.5px solid #e2e8f0; transition:all .2s; white-space:nowrap;"
                        onmouseover="this.style.borderColor='#a5b4fc';this.style.background='#fafafa'"
                        onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#fff'">
                         <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--brand-primary);"><i data-lucide="play" style="width:10px;height:10px;color:#fff;margin-left:2px"></i></span>
-                        <span>How It Works</span>
+                        <span>{{ $agency->hero_secondary_cta_text ?? 'How It Works' }}</span>
                     </a>
                 </div>
 
-                {{-- Metrics Badges (3 Products, 99.9% Uptime, 24/7 Support) --}}
+                {{-- Metrics Badges (Dynamic 3 Badges) --}}
+                @php
+                    $heroMetrics = $agency->parsed_hero_metrics ?? [
+                        ['icon' => 'package',    'text' => '3 Products',   'border' => '#e0e7ff', 'bg' => 'linear-gradient(135deg,#6366f1,#4f46e5)', 'textColor' => '#1e1b4b'],
+                        ['icon' => 'activity',   'text' => '99.9% Uptime', 'border' => '#d1fae5', 'bg' => 'linear-gradient(135deg,#10b981,#059669)', 'textColor' => '#064e3b'],
+                        ['icon' => 'headphones', 'text' => '24/7 Support', 'border' => '#ffedd5', 'bg' => 'linear-gradient(135deg,#f97316,#ea580c)', 'textColor' => '#7c2d12'],
+                    ];
+                @endphp
                 <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:4px;">
-                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid #e0e7ff; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(79,70,229,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;color:#fff;">
-                            <i data-lucide="package" style="width:15px;height:15px"></i>
+                    @foreach($heroMetrics as $hm)
+                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid {{ $hm['border'] ?? '#e0e7ff' }}; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(79,70,229,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="width:28px;height:28px;border-radius:8px;background:{{ $hm['bg'] ?? 'linear-gradient(135deg,#6366f1,#4f46e5)' }};display:flex;align-items:center;justify-content:center;color:#fff;">
+                            <i data-lucide="{{ $hm['icon'] ?? 'check-circle' }}" style="width:15px;height:15px"></i>
                         </div>
-                        <span style="font-size:13.5px;font-weight:900;color:#1e1b4b;letter-spacing:-0.2px;">3 Products</span>
+                        <span style="font-size:13.5px;font-weight:900;color:{{ $hm['textColor'] ?? '#1e1b4b' }};letter-spacing:-0.2px;">{{ $hm['text'] ?? '' }}</span>
                     </div>
-                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid #d1fae5; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(16,185,129,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;color:#fff;">
-                            <i data-lucide="activity" style="width:15px;height:15px"></i>
-                        </div>
-                        <span style="font-size:13.5px;font-weight:900;color:#064e3b;letter-spacing:-0.2px;">99.9% Uptime</span>
-                    </div>
-                    <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); border:1.5px solid #ffedd5; padding:8px 18px; border-radius:14px; box-shadow:0 4px 14px rgba(249,115,22,0.08); transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;color:#fff;">
-                            <i data-lucide="headphones" style="width:15px;height:15px"></i>
-                        </div>
-                        <span style="font-size:13.5px;font-weight:900;color:#7c2d12;letter-spacing:-0.2px;">24/7 Support</span>
-                    </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -872,25 +869,31 @@
                      onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/herobanner_dashboard.png') }}';"
                      style="position:relative;z-index:2;width:100%;max-width:850px;height:auto;object-fit:contain; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15)); margin-right:-20px;">
 
+                @php
+                    $heroFloating = $agency->parsed_hero_floating_badges ?? [
+                        'float1' => ['title' => 'AI Powered',   'subtitle' => 'Smart automation', 'icon' => 'sparkles'],
+                        'float2' => ['title' => 'Growth Ready', 'subtitle' => 'Scale instantly',   'icon' => 'trending-up'],
+                    ];
+                @endphp
                 {{-- Floating Element 1: AI Powered --}}
                 <div class="hero-float-badge" style="position:absolute; top:20px; right:-25px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #7c3aed, #4f46e5); display:flex; align-items:center; justify-content:center;">
-                        <i data-lucide="sparkles" style="width:18px; height:18px; color:#fff;"></i>
+                        <i data-lucide="{{ $heroFloating['float1']['icon'] ?? 'sparkles' }}" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
                     <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:14px; font-weight:800; color:#fff;">AI Powered</span>
-                        <span style="font-size:12px; font-weight:600; color:#a78bfa;">Smart automation</span>
+                        <span style="font-size:14px; font-weight:800; color:#fff;">{{ $heroFloating['float1']['title'] ?? 'AI Powered' }}</span>
+                        <span style="font-size:12px; font-weight:600; color:#a78bfa;">{{ $heroFloating['float1']['subtitle'] ?? 'Smart automation' }}</span>
                     </div>
                 </div>
 
                 {{-- Floating Element 2: Growth Ready --}}
                 <div class="hero-float-badge" style="position:absolute; bottom:40px; left:-20px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out 1.5s infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #10b981, #059669); display:flex; align-items:center; justify-content:center;">
-                        <i data-lucide="trending-up" style="width:18px; height:18px; color:#fff;"></i>
+                        <i data-lucide="{{ $heroFloating['float2']['icon'] ?? 'trending-up' }}" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
                     <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:14px; font-weight:800; color:#fff;">Growth Ready</span>
-                        <span style="font-size:12px; font-weight:600; color:#34d399;">Scale instantly</span>
+                        <span style="font-size:14px; font-weight:800; color:#fff;">{{ $heroFloating['float2']['title'] ?? 'Growth Ready' }}</span>
+                        <span style="font-size:12px; font-weight:600; color:#34d399;">{{ $heroFloating['float2']['subtitle'] ?? 'Scale instantly' }}</span>
                     </div>
                 </div>
             </div>

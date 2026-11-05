@@ -34,6 +34,10 @@ class Agency extends Model
         'hero_title',
         'hero_subtitle',
         'hero_description',
+        'hero_secondary_cta_text',
+        'hero_secondary_cta_url',
+        'hero_metrics_data',
+        'hero_floating_badges',
         'cta_text',
         'cta_url',
         'hero_image',
@@ -200,6 +204,35 @@ class Agency extends Model
         }
         $decoded = is_array($this->sections_enabled) ? $this->sections_enabled : (json_decode($this->sections_enabled, true) ?: []);
         return array_merge($defaults, $decoded);
+    }
+
+    public function getParsedHeroMetricsAttribute()
+    {
+        if (!empty($this->hero_metrics_data)) {
+            $val = is_array($this->hero_metrics_data) ? $this->hero_metrics_data : json_decode($this->hero_metrics_data, true);
+            if (is_array($val) && count($val) > 0) {
+                return $val;
+            }
+        }
+        return [
+            ['icon' => 'package',    'text' => '3 Products',   'border' => '#e0e7ff', 'bg' => 'linear-gradient(135deg,#6366f1,#4f46e5)', 'textColor' => '#1e1b4b'],
+            ['icon' => 'activity',   'text' => '99.9% Uptime', 'border' => '#d1fae5', 'bg' => 'linear-gradient(135deg,#10b981,#059669)', 'textColor' => '#064e3b'],
+            ['icon' => 'headphones', 'text' => '24/7 Support', 'border' => '#ffedd5', 'bg' => 'linear-gradient(135deg,#f97316,#ea580c)', 'textColor' => '#7c2d12'],
+        ];
+    }
+
+    public function getParsedHeroFloatingBadgesAttribute()
+    {
+        if (!empty($this->hero_floating_badges)) {
+            $val = is_array($this->hero_floating_badges) ? $this->hero_floating_badges : json_decode($this->hero_floating_badges, true);
+            if (is_array($val) && !empty($val['float1']['title'])) {
+                return $val;
+            }
+        }
+        return [
+            'float1' => ['title' => 'AI Powered',   'subtitle' => 'Smart automation', 'icon' => 'sparkles'],
+            'float2' => ['title' => 'Growth Ready', 'subtitle' => 'Scale instantly',   'icon' => 'trending-up'],
+        ];
     }
 
     public function getCleanDomainAttribute()

@@ -123,7 +123,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hero Pill Badge</label>
-                    <input type="text" name="hero_badge" value="{{ old('hero_badge', $agency->hero_badge ?? '⚡ All-in-One Growth Platform for Indian Businesses') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+                    <input type="text" name="hero_badge" value="{{ old('hero_badge', $agency->hero_badge ?? '⚡ All-in-One Growth Platform for global Businesses') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Hero Main Heading</label>
@@ -135,12 +135,82 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button Text</label>
-                        <input type="text" name="cta_text" value="{{ old('cta_text', $agency->cta_text ?? 'Get Started Free') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary CTA Button Text</label>
+                        <input type="text" name="cta_text" value="{{ old('cta_text', $agency->cta_text ?? 'View Products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button URL</label>
-                        <input type="text" name="cta_url" value="{{ old('cta_url', $agency->cta_url ?? '/login') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary CTA Button URL</label>
+                        <input type="text" name="cta_url" value="{{ old('cta_url', $agency->cta_url ?? '#products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary CTA Button Text</label>
+                        <input type="text" name="hero_secondary_cta_text" value="{{ old('hero_secondary_cta_text', $agency->hero_secondary_cta_text ?? 'How It Works') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary CTA Button URL</label>
+                        <input type="text" name="hero_secondary_cta_url" value="{{ old('hero_secondary_cta_url', $agency->hero_secondary_cta_url ?? '#how-it-works') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    </div>
+                </div>
+
+                {{-- Hero Metric Badges (3 Badges) --}}
+                @php
+                    $mStats = $agency->parsed_hero_metrics ?? [];
+                @endphp
+                <div class="pt-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Hero Metric Badges (Below CTAs)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold block mb-1">Badge 1</span>
+                            <input type="text" name="hero_stat1_text" value="{{ old('hero_stat1_text', $mStats[0]['text'] ?? '3 Products') }}" placeholder="3 Products" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                        </div>
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold block mb-1">Badge 2</span>
+                            <input type="text" name="hero_stat2_text" value="{{ old('hero_stat2_text', $mStats[1]['text'] ?? '99.9% Uptime') }}" placeholder="99.9% Uptime" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                        </div>
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold block mb-1">Badge 3</span>
+                            <input type="text" name="hero_stat3_text" value="{{ old('hero_stat3_text', $mStats[2]['text'] ?? '24/7 Support') }}" placeholder="24/7 Support" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Hero Floating Badges on Mockup --}}
+                @php
+                    $hFloats = $agency->parsed_hero_floating_badges ?? [];
+                @endphp
+                <div class="pt-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Floating Cards (On Right Hero Mockup)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50/70 border border-slate-200 rounded-xl p-3 space-y-2">
+                            <span class="text-[11px] font-bold text-purple-700 block">Top Floating Card (AI Powered)</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <span class="text-[10px] text-slate-500 block mb-0.5">Title</span>
+                                    <input type="text" name="hero_float1_title" value="{{ old('hero_float1_title', $hFloats['float1']['title'] ?? 'AI Powered') }}" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-slate-500 block mb-0.5">Subtitle</span>
+                                    <input type="text" name="hero_float1_subtitle" value="{{ old('hero_float1_subtitle', $hFloats['float1']['subtitle'] ?? 'Smart automation') }}" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50/70 border border-slate-200 rounded-xl p-3 space-y-2">
+                            <span class="text-[11px] font-bold text-emerald-700 block">Bottom Floating Card (Growth Ready)</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <span class="text-[10px] text-slate-500 block mb-0.5">Title</span>
+                                    <input type="text" name="hero_float2_title" value="{{ old('hero_float2_title', $hFloats['float2']['title'] ?? 'Growth Ready') }}" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-slate-500 block mb-0.5">Subtitle</span>
+                                    <input type="text" name="hero_float2_subtitle" value="{{ old('hero_float2_subtitle', $hFloats['float2']['subtitle'] ?? 'Scale instantly') }}" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
