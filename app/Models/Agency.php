@@ -262,7 +262,7 @@ class Agency extends Model
             }
         }
         $cleanProductSlug = Str::slug($productSlug);
-        $rootDomain = preg_replace('/^(app|www|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', $domain);
+        $rootDomain = preg_replace('/^(app|www|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', $domain);
 
         if ($cleanProductSlug === 'website-builder' || $cleanProductSlug === 'websitebuilder') {
             return "https://websitebuilder.{$rootDomain}";
@@ -272,8 +272,8 @@ class Agency extends Model
             return "https://whatsappbulk.{$rootDomain}";
         }
 
-        if ($cleanProductSlug === 'launchshop' || str_contains($cleanProductSlug, 'ecom') || str_contains($cleanProductSlug, 'shop')) {
-            return "https://launchshop.{$rootDomain}";
+        if ($cleanProductSlug === 'launchshop' || $cleanProductSlug === 'ecombuilder' || str_contains($cleanProductSlug, 'ecom') || str_contains($cleanProductSlug, 'shop')) {
+            return "https://ecombuilder.{$rootDomain}";
         }
 
         return "https://{$cleanProductSlug}.{$rootDomain}";

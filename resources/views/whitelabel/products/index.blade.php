@@ -31,7 +31,10 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($orderedProducts as $prod)
             @php
-                $subdomainUrl = isset($agency) && $agency ? $agency->getProductSubdomainUrl($prod->slug ?? $prod->name) : "https://" . \Illuminate\Support\Str::slug($prod->name) . ".saasreselling.com";
+                $pIdent = strtolower(trim(($prod->slug ?? '') . ' ' . ($prod->name ?? '')));
+                $isEcomFallback = str_contains($pIdent, 'ecom') || str_contains($pIdent, 'launchshop') || str_contains($pIdent, 'store') || str_contains($pIdent, 'shop');
+                $fallbackSub = $isEcomFallback ? 'ecombuilder' : \Illuminate\Support\Str::slug($prod->name);
+                $subdomainUrl = isset($agency) && $agency ? $agency->getProductSubdomainUrl($prod->slug ?? $prod->name) : "https://{$fallbackSub}.saasreselling.com";
             @endphp
             <div class="card-white rounded-2xl p-6 flex flex-col justify-between space-y-4 hover:shadow-md transition">
                 <div class="flex items-center space-x-3">

@@ -31,7 +31,7 @@ class Product extends Model
         $domain = $domain ? preg_replace('#^https?://#', '', trim($domain)) : request()->getHost();
         $domain = rtrim($domain, '/');
         
-        $rootDomain = preg_replace('/^(app|www)\./i', '', $domain);
+        $rootDomain = preg_replace('/^(app|www|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', $domain);
         $slug = $this->slug ?? \Illuminate\Support\Str::slug($this->name);
 
         if ($slug === 'website-builder' || $slug === 'websitebuilder') {
@@ -40,6 +40,10 @@ class Product extends Model
 
         if ($slug === 'whatsappbulk' || $slug === 'whatsapp-bulk' || $slug === 'whatsapp') {
             return "https://whatsappbulk.{$rootDomain}";
+        }
+
+        if ($slug === 'launchshop' || $slug === 'ecombuilder' || $slug === 'ecom-builder' || str_contains($slug, 'ecom') || str_contains($slug, 'shop')) {
+            return "https://ecombuilder.{$rootDomain}";
         }
 
         return "https://{$slug}.{$rootDomain}";

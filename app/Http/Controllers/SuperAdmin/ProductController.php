@@ -166,10 +166,10 @@ class ProductController extends Controller
         // This prevents the super admin from inheriting a white_label agency's domain
         // when launching products from saasreselling.com.
         if ($agency && !empty(trim((string) $agency->custom_domain))) {
-            $rootDomain = preg_replace('/^(app|www)\./i', '', $agency->clean_domain);
+            $rootDomain = preg_replace('/^(app|www|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', $agency->clean_domain);
         } else {
             $currentHost = $request->getHost();
-            $rootDomain = preg_replace('/^(app|www)\./i', '', $currentHost);
+            $rootDomain = preg_replace('/^(app|www|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', $currentHost);
         }
         $slug = $product->slug ?? Str::slug($product->name);
         $scheme = $request->getScheme() ?: 'https';
@@ -192,7 +192,8 @@ class ProductController extends Controller
         } elseif ($slug === 'whatsappbulk' || $slug === 'whatsapp-bulk' || $slug === 'whatsapp') {
             $ssoUrl = "https://whatsappbulk.{$rootDomain}/admin/sso-login";
         } else {
-            $baseUrl = "https://{$slug}.{$rootDomain}";
+            $launchSlug = ($slug === 'launchshop' || $slug === 'ecombuilder' || $slug === 'ecom-builder' || str_contains($slug, 'ecom') || str_contains($slug, 'shop')) ? 'ecombuilder' : $slug;
+            $baseUrl = "https://{$launchSlug}.{$rootDomain}";
             $ssoUrl = "{$baseUrl}/X9_AdMiN-Portal_V7/sso-login?" . http_build_query([
                 'user' => $targetUser,
                 'expires' => $timestamp,

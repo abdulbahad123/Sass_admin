@@ -1337,7 +1337,7 @@
                     {{-- CTA Button: Dynamically links to the product landing page --}}
                     @php
                         if ($isEcomPlan) {
-                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://launchshop.' . preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
+                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecombuilder.' . preg_replace('/^(www|app|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
                         } elseif ($isWebPlan) {
                             $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.' . preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
                         } elseif ($isWaPlan) {
