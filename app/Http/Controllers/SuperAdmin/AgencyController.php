@@ -368,7 +368,7 @@ class AgencyController extends Controller
             'ip_address' => $request->ip(),
         ]);
 
-        return redirect()->route('admin.agencies.index')->with('success', "Agency '{$name}' removed.");
+        return redirect()->route('admin.agencies.index')->with('success', "White-label agency '{$name}' has been successfully deleted.");
     }
 
     public function loginAsAgency(Request $request, Agency $agency)
