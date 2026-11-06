@@ -119,6 +119,30 @@
             </a>
             @endif
 
+            @if(auth()->user()->canAccessMenu(['view-agencies', 'view-subscriptions']))
+            <a href="{{ route('admin.agencies.expiring') }}" 
+               class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.agencies.expiring*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 mr-3 text-amber-400"></i>
+                    <span>Expire</span>
+                </div>
+                @php
+                    $navExpiringCount = 0;
+                    try {
+                        $navExpiringCount = \App\Models\Agency::where('type', '!=', 'master')
+                            ->whereHas('subscription', function($q) {
+                                $q->whereNotNull('ends_at')->where('ends_at', '<=', now()->addDays(30));
+                            })->count();
+                    } catch (\Throwable $e) {}
+                @endphp
+                @if($navExpiringCount > 0)
+                    <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-amber-500 text-slate-950">
+                        {{ $navExpiringCount }}
+                    </span>
+                @endif
+            </a>
+            @endif
+
             @if(auth()->user()->canAccessMenu(['view-settings', 'manage-settings']))
             <a href="{{ route('admin.profile.edit') }}" 
                class="flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('admin.profile.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">

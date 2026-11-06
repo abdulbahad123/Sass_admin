@@ -292,6 +292,12 @@ Route::prefix($adminLoginSlug)->name('admin.')->middleware([SuperAdminMiddleware
     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::patch('/subscriptions/{subscription}/status', [SubscriptionController::class, 'updateStatus'])->name('subscriptions.update-status');
 
+    // White-Label Expiry & Storage Tracking & Recurring Daily Alerts
+    Route::get('/agencies/expiring', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'index'])->name('agencies.expiring');
+    Route::post('/agencies/{agency}/send-expiry-alert', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'sendAlert'])->name('agencies.send-expiry-alert');
+    Route::post('/agencies/trigger-daily-alerts', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'triggerDailyAlerts'])->name('agencies.trigger-daily-alerts');
+    Route::post('/agencies/{agency}/update-storage-limit', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'updateStorageLimit'])->name('agencies.update-storage-limit');
+
     // Direct One-Click Admin Access (Credential-Free Login)
     Route::get('/agencies/{agency}/admin-login', [AgencyController::class, 'loginAsAgency'])->name('agencies.admin-login');
     Route::get('/stop-impersonating', function () {
