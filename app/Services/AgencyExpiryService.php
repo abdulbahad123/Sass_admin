@@ -119,6 +119,14 @@ class AgencyExpiryService
     /**
      * Compute real-time storage consumption (DB + File Uploads) for an Agency.
      */
+    public function calculateStorageConsumption(Agency $agency): array
+    {
+        return $this->calculateAgencyStorage($agency);
+    }
+
+    /**
+     * Compute real-time storage consumption (DB + File Uploads) for an Agency.
+     */
     public function calculateAgencyStorage(Agency $agency): array
     {
         $cpanelUser = env('CPANEL_USER', 'nooryak');
@@ -601,3 +609,4 @@ class AgencyExpiryService
         return number_format($mb, 0) . ' MB';
     }
 }
+
