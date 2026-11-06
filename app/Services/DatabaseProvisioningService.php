@@ -519,6 +519,92 @@ class DatabaseProvisioningService
     }
 
     /**
+     * Permanently drop / delete a tenant database from MySQL and cPanel.
+     */
+    public function dropDatabase(string $dbName): bool
+    {
+        $dropped = false;
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $dbSuffix = str_starts_with($dbName, $cpanelUser . '_') ? substr($dbName, strlen($cpanelUser) + 1) : $dbName;
+
+        // 1. Direct MySQL DROP DATABASE
+        try {
+            DB::statement("DROP DATABASE IF EXISTS `{$dbName}`;");
+            $dropped = true;
+            Log::info("Direct MySQL DROP DATABASE `{$dbName}` executed successfully.");
+        } catch (\Throwable $e) {
+            Log::warning("Direct DROP DATABASE for {$dbName} notice: " . $e->getMessage());
+        }
+
+        // 2. cPanel CLI delete_database
+        foreach (array_unique([$dbSuffix, $dbName]) as $nameToDelete) {
+            try {
+                $this->runCpanelCli('Mysql', 'delete_database', ['name' => $nameToDelete]);
+            } catch (\Throwable $ex) {}
+        }
+
+        // 3. cPanel HTTP UAPI delete_database
+        foreach (array_unique([$dbSuffix, $dbName]) as $nameToDelete) {
+            try {
+                $res = $this->cpanelMysqlRequest('delete_database', ['name' => $nameToDelete]);
+                if ($res) {
+                    $dropped = true;
+                    Log::info("cPanel UAPI delete_database ({$nameToDelete}) response: " . $res);
+                }
+            } catch (\Throwable $ex) {
+                Log::warning("cPanel HTTP UAPI delete_database warning for {$nameToDelete}: " . $ex->getMessage());
+            }
+        }
+
+        return $dropped;
+    }
+
+    /**
+     * Identify and permanently drop all dedicated tenant databases belonging to an agency.
+     */
+    public function dropAgencyDatabases(Agency $agency): array
+    {
+        $cpanelUser = env('CPANEL_USER', 'nooryak');
+        $rawAgencyName = !empty($agency->slug) ? $agency->slug : ($agency->name ?? 'agency');
+        $cleanAgencyName = preg_replace('/\.(in|com|org|net|co\.in|top|dev)$/i', '', strtolower(trim($rawAgencyName)));
+        $cleanAgencyName = preg_replace('/^(www|app|checkout|launchshop)\./i', '', $cleanAgencyName);
+        $cleanAgencySlug = str_replace('-', '_', Str::slug($cleanAgencyName));
+        $cleanAgencySlug = preg_replace('/[^a-z0-9_]/', '', $cleanAgencySlug);
+
+        $dbsToDrop = [];
+
+        // 1. From agency_products pivot table
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('agency_products') && \Illuminate\Support\Facades\Schema::hasColumn('agency_products', 'db_name')) {
+                $pivotDbs = DB::table('agency_products')
+                    ->where('agency_id', $agency->id)
+                    ->whereNotNull('db_name')
+                    ->where('db_name', '!=', '')
+                    ->pluck('db_name')
+                    ->toArray();
+                $dbsToDrop = array_merge($dbsToDrop, $pivotDbs);
+            }
+        } catch (\Throwable $e) {}
+
+        // 2. Standard convention database names
+        if (!empty($cleanAgencySlug)) {
+            $dbsToDrop[] = "{$cpanelUser}_ps_{$cleanAgencySlug}_launchshop";
+            $dbsToDrop[] = "{$cpanelUser}_ps_{$cleanAgencySlug}_webbuild";
+            $dbsToDrop[] = "{$cpanelUser}_ps_{$cleanAgencySlug}_whatsapp";
+        }
+
+        $dbsToDrop = array_values(array_unique(array_filter($dbsToDrop)));
+        $results = [];
+
+        foreach ($dbsToDrop as $dbName) {
+            $results[$dbName] = $this->dropDatabase($dbName);
+        }
+
+        Log::info("Dropped databases for agency #{$agency->id} ({$agency->name}): " . json_encode($results));
+        return $results;
+    }
+
+    /**
      * cPanel creates the empty DB under the account, but Laravel connects as
      * DB_USERNAME (e.g. bazaarwa_sass_admindb). That user must be assigned
      * ALL PRIVILEGES on the new database or import fails with SQLSTATE 1044.

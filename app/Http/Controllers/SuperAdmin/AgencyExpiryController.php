@@ -111,6 +111,19 @@ class AgencyExpiryController extends Controller
             'total_storage_formatted' => $totalStorageFormatted,
         ];
 
+        // Paginate enriched agencies (10 per page) preserving filter and search parameters
+        $perPage = 10;
+        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
+        $totalItems = count($enrichedAgencies);
+        $currentPageItems = array_slice($enrichedAgencies, ($currentPage - 1) * $perPage, $perPage);
+        $enrichedAgencies = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            $totalItems,
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+        );
+
         return view('admin.agencies.expiring', compact('enrichedAgencies', 'metrics', 'filter', 'search'));
     }
 

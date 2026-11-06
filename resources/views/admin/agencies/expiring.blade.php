@@ -366,6 +366,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if($enrichedAgencies instanceof \Illuminate\Pagination\LengthAwarePaginator && $enrichedAgencies->hasPages())
+            <div class="px-6 py-4 border-t border-slate-100">
+                {{ $enrichedAgencies->links() }}
+            </div>
+        @endif
     </div>
 </div>
 

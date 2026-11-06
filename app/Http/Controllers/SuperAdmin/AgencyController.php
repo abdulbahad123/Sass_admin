@@ -31,7 +31,7 @@ class AgencyController extends Controller
             $query->where('type', 'white_label');
         }
 
-        $agencies = $query->latest()->get();
+        $agencies = $query->latest()->paginate(10)->withQueryString();
         $masterAgencies = Agency::where('type', 'master')->where('status', 'active')->get();
         $plans = Plan::where('is_active', true)->get();
         $products = Product::where('is_active', true)->get();
@@ -176,6 +176,22 @@ class AgencyController extends Controller
             'ip_address' => $request->ip(),
             'details' => ['agency_id' => $agency->id, 'type' => $agency->type, 'owner' => $agency->owner_name],
         ]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            if ($provisionErrors) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Agency '{$agency->name}' was created, but Launchshop tables were not imported: ".implode(' | ', $provisionErrors),
+                    'redirect_url' => route('admin.agencies.index')
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Agency '{$agency->name}' onboarded successfully with cloud infrastructure & Launchshop tables!",
+                'redirect_url' => route('admin.agencies.index')
+            ]);
+        }
 
         if ($provisionErrors) {
             return redirect()->route('admin.agencies.index')->with(
@@ -359,16 +375,28 @@ class AgencyController extends Controller
         }
 
         $name = $agency->name;
+
+        // Permanently drop dedicated tenant MySQL databases and cPanel records
+        $droppedDatabases = [];
+        try {
+            $dbProvisioningService = new \App\Services\DatabaseProvisioningService();
+            $droppedDatabases = $dbProvisioningService->dropAgencyDatabases($agency);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("Failed dropping databases for agency {$name}: " . $e->getMessage());
+        }
+
         $agency->delete();
+
+        $droppedList = !empty($droppedDatabases) ? implode(', ', array_keys($droppedDatabases)) : 'none';
 
         AuditLog::create([
             'user_id' => auth()->id(),
             'user_name' => auth()->user()->name,
-            'action' => "Deleted Agency: {$name}",
+            'action' => "Deleted Agency: {$name} (Tenant DBs dropped: {$droppedList})",
             'ip_address' => $request->ip(),
         ]);
 
-        return redirect()->route('admin.agencies.index')->with('success', "White-label agency '{$name}' has been successfully deleted.");
+        return redirect()->route('admin.agencies.index')->with('success', "White-label agency '{$name}' and its tenant cloud databases have been permanently removed.");
     }
 
     public function loginAsAgency(Request $request, Agency $agency)

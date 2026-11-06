@@ -33,7 +33,7 @@
         </div>
     @endif
 
-    <!-- Tabs & Filter Header -->
+    <!-- Tabs & Filter Header + View Mode Switcher (Task 2) -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div class="flex items-center space-x-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
             <a href="{{ route('admin.agencies.index') }}" 
@@ -45,10 +45,24 @@
                 White Label Resellers
             </a>
         </div>
+
+        <!-- Grid / List Switcher Button Group (Task 2) -->
+        <div class="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 self-end sm:self-auto">
+            <button type="button" id="btnGridView" onclick="switchView('grid')" title="Grid View"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all bg-white text-indigo-600 shadow-sm">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Grid</span>
+            </button>
+            <button type="button" id="btnListView" onclick="switchView('list')" title="List View"
+                    class="px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all text-slate-500 hover:text-slate-800">
+                <i data-lucide="list" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">List</span>
+            </button>
+        </div>
     </div>
 
-    <!-- Agencies Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Agencies Grid View -->
+    <div id="agenciesGridView" class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach($agencies as $agency)
             <div class="card-white rounded-2xl p-6 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
                 
@@ -158,27 +172,7 @@
                     </a>
 
                     <div class="flex items-center space-x-2">
-                        <!-- Re-import DB Tables button -->
-                        @if(auth()->user()->hasPermission(['edit-agencies', 'create-agencies']))
-                        <form action="{{ route('admin.agencies.reprovision-db', $agency) }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" 
-                                    title="Import Launchshop tables into database"
-                                    class="px-2.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 transition-colors flex items-center space-x-1">
-                                <i data-lucide="database" class="w-3.5 h-3.5"></i>
-                                <span>Import Tables</span>
-                            </button>
-                        </form>
-                        @endif
-
-                                                <a href="{{ route('admin.website-builder-limits.index', ['agency_id' => $agency->id]) }}" 
-                           class="px-2.5 py-2 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 font-bold border border-violet-200 transition-colors flex items-center space-x-1"
-                           title="Configure Website Builder Limits">
-                            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-                            <span>Limits</span>
-                        </a>
-
-                        <!-- Edit Agency Button (Task 3) -->
+                        <!-- Edit Agency Button -->
                         @if(auth()->user()->hasPermission('edit-agencies'))
                         <button onclick="openEditAgencyModal({{ json_encode($agency) }})" 
                                 class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-indigo-700 font-bold border border-slate-200 transition-colors flex items-center space-x-1">
@@ -201,6 +195,146 @@
             </div>
         @endforeach
     </div>
+
+    <!-- Agencies List View (Task 2) -->
+    <div id="agenciesListView" class="card-white rounded-2xl overflow-hidden border border-slate-200 hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        <th class="py-3.5 px-4">Whitelabel Agency</th>
+                        <th class="py-3.5 px-4">Owner & Contact</th>
+                        <th class="py-3.5 px-4">Plan & Capacity</th>
+                        <th class="py-3.5 px-4">Authorized SaaS Products</th>
+                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs">
+                    @forelse($agencies as $agency)
+                        <tr class="hover:bg-slate-50/70 transition-colors">
+                            <td class="py-4 px-4 align-top">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center shrink-0 text-sm">
+                                        {{ substr($agency->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center space-x-1.5 flex-wrap">
+                                            <span class="font-bold text-slate-900 text-sm leading-tight">{{ $agency->name }}</span>
+                                            @if($agency->type === 'master')
+                                                <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-violet-100 text-violet-700 uppercase">Master</span>
+                                            @else
+                                                <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-sky-100 text-sky-700 uppercase">White Label</span>
+                                            @endif
+                                        </div>
+                                        @if(!empty($agency->custom_domain))
+                                            <a href="https://{{ $agency->custom_domain }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-[11px] font-semibold mt-1 flex items-center gap-1">
+                                                <span>{{ $agency->custom_domain }}</span>
+                                                <i data-lucide="external-link" class="w-3 h-3"></i>
+                                            </a>
+                                        @else
+                                            <span class="text-slate-400 text-[10px] block mt-0.5 font-mono">No custom domain</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="py-4 px-4 align-top">
+                                <div class="space-y-1">
+                                    <div class="font-bold text-slate-800">{{ $agency->owner_name }}</div>
+                                    <div class="text-slate-500 text-[11px] flex items-center gap-1">
+                                        <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>{{ $agency->email }}</span>
+                                    </div>
+                                    @if(!empty($agency->phone))
+                                        <div class="text-slate-600 text-[11px] flex items-center gap-1">
+                                            <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                                            <span>{{ $agency->phone }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
+
+                            <td class="py-4 px-4 align-top">
+                                <div class="space-y-1">
+                                    <div class="font-bold text-slate-900 flex items-center gap-1">
+                                        <i data-lucide="tag" class="w-3.5 h-3.5 text-violet-600"></i>
+                                        <span>{{ \App\Models\Setting::getCurrencySymbol() }}{{ number_format($agency->subscription?->amount ?? 0) }}/{{ $agency->subscription?->billing_cycle === 'yearly' ? 'yr' : 'mo' }}</span>
+                                    </div>
+                                    <div class="text-slate-600 text-[11px] flex items-center gap-1">
+                                        <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                        <span>{{ $agency->max_clients >= 99999 ? 'Unlimited' : number_format($agency->max_clients) . ' Clients' }}</span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="py-4 px-4 align-top">
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach($products as $prod)
+                                        @php
+                                            $assigned = $agency->products->firstWhere('id', $prod->id);
+                                            $isEnabled = $assigned && $assigned->pivot->status === 'enabled';
+                                        @endphp
+                                        <span class="px-2 py-0.5 rounded-lg text-[10px] font-semibold flex items-center space-x-1 border {{ $isEnabled ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-slate-50 text-slate-400 border-slate-200 opacity-60' }}">
+                                            <i data-lucide="{{ $isEnabled ? 'check-circle-2' : 'circle' }}" class="w-3 h-3"></i>
+                                            <span>{{ $prod->name }}</span>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </td>
+
+                            <td class="py-4 px-4 align-top">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold {{ $agency->status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' }}">
+                                    {{ ucfirst($agency->status) }}
+                                </span>
+                            </td>
+
+                            <td class="py-4 px-4 align-top text-right whitespace-nowrap">
+                                <div class="flex items-center justify-end space-x-1.5">
+                                    <a href="{{ route('admin.agencies.admin-login', $agency) }}" target="_blank"
+                                       class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-center shadow-sm text-xs transition-all flex items-center space-x-1"
+                                       title="Login as Whitelabel Admin">
+                                        <i data-lucide="key" class="w-3.5 h-3.5"></i>
+                                        <span>Admin Access</span>
+                                    </a>
+
+                                    @if(auth()->user()->hasPermission('edit-agencies'))
+                                    <button onclick="openEditAgencyModal({{ json_encode($agency) }})" 
+                                            class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-indigo-700 font-bold border border-slate-200 transition-colors"
+                                            title="Edit Agency">
+                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    @endif
+
+                                    @if(auth()->user()->hasPermission('delete-agencies'))
+                                    <button type="button" 
+                                            onclick="openDeleteAgencyModal({{ $agency->id }}, '{{ addslashes($agency->name) }}', '{{ route('admin.agencies.destroy', $agency) }}')"
+                                            class="p-1.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-500 hover:text-rose-700 border border-slate-200 transition-colors"
+                                            title="Delete Whitelabel">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-slate-400">
+                                No agencies found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination (Task 2) -->
+    @if($agencies->hasPages())
+        <div class="pt-4">
+            {{ $agencies->links() }}
+        </div>
+    @endif
 </div>
 @endsection
 
@@ -226,7 +360,12 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.agencies.store') }}" method="POST" class="space-y-4">
+        <div id="onboardClientErrors" class="hidden mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-1">
+            <p class="font-bold flex items-center text-rose-900"><i data-lucide="alert-circle" class="w-4 h-4 mr-1 text-rose-600 shrink-0"></i> Please fix the following errors:</p>
+            <ul id="onboardClientErrorsList" class="list-disc list-inside space-y-0.5 text-rose-700 font-medium pl-1"></ul>
+        </div>
+
+        <form id="createAgencyForm" action="{{ route('admin.agencies.store') }}" method="POST" class="space-y-4">
             @csrf
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -490,6 +629,69 @@
     </div>
 </div>
 
+<!-- Full-Screen Onboarding & Cloud Provisioning Loader Modal (Task 1) -->
+<div id="onboardingLoaderOverlay" class="fixed inset-0 z-[200] hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-indigo-500/30 rounded-3xl p-6 sm:p-10 max-w-lg w-full shadow-2xl text-center relative overflow-hidden animate-in fade-in zoom-in duration-300">
+        
+        <!-- Glowing Ambient Lighting Effects -->
+        <div class="absolute -top-24 -left-24 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Animated Centerpiece: Orbital Spinner & Cloud DB Icon -->
+        <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+            <!-- Pulsing ring -->
+            <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 opacity-25 animate-ping"></div>
+            <!-- Outer spinning gradient border -->
+            <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-indigo-500 border-r-cyan-400 animate-spin"></div>
+            <!-- Inner glowing circle -->
+            <div class="w-16 h-16 rounded-full bg-slate-800 border border-indigo-500/40 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <i data-lucide="database" class="w-8 h-8 text-indigo-400 animate-pulse"></i>
+            </div>
+        </div>
+
+        <!-- Header Titles -->
+        <h3 class="text-xl sm:text-2xl font-black text-white font-heading tracking-tight mb-2">
+            Provisioning Agency Infrastructure
+        </h3>
+        <p class="text-xs text-slate-300 mb-6 leading-relaxed">
+            Allocating cloud database schemas, creating tenant tables, and configuring security credentials.
+        </p>
+
+        <!-- Prominent Safety Warning Alert Banner -->
+        <div class="mb-6 p-4 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-200 text-xs font-semibold flex items-start space-x-3 text-left">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5 animate-bounce"></i>
+            <div>
+                <span class="font-extrabold text-amber-300 block uppercase tracking-wider text-[11px]">⚠️ Critical Notice:</span>
+                <span>Please <strong>do NOT close, refresh, or leave this page</strong>! Database provisioning is in progress and interrupting will result in incomplete schema setup.</span>
+            </div>
+        </div>
+
+        <!-- Real-Time Progress Bar & Percentage Counter (Task 1) -->
+        <div class="space-y-2 mb-6">
+            <div class="flex items-center justify-between text-xs font-bold">
+                <span id="onboardPhaseBadge" class="text-indigo-300 bg-indigo-950/80 px-2.5 py-1 rounded-lg border border-indigo-800/60 uppercase tracking-wider text-[10px]">
+                    Phase 1 of 6
+                </span>
+                <span id="onboardPercentText" class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-emerald-400">
+                    0%
+                </span>
+            </div>
+
+            <div class="w-full bg-slate-800 rounded-full h-3.5 overflow-hidden p-0.5 border border-slate-700/80 shadow-inner">
+                <div id="onboardProgressBar" class="h-full rounded-full bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 transition-all duration-300 ease-out" style="width: 2%;"></div>
+            </div>
+        </div>
+
+        <!-- Dynamic Phase Step Indicator -->
+        <div class="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 flex items-center justify-center space-x-2.5">
+            <div id="onboardPulseDot" class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping shrink-0"></div>
+            <p id="onboardPhaseStatus" class="text-xs text-slate-200 font-medium truncate">
+                Initializing agency configuration...
+            </p>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Whitelabel Confirmation Modal (Task 2) -->
 <div id="deleteAgencyModal" class="fixed inset-0 z-[110] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200">
@@ -511,7 +713,7 @@
                 Target Whitelabel: <strong id="delete_agency_name" class="text-slate-950 font-bold underline"></strong>
             </p>
             <p class="text-[11px] text-slate-500">
-                Warning: Removing this whitelabel will immediately terminate agency access, suspend client logins, and unlink reseller domain routing.
+                ⚠️ Warning: Removing this whitelabel will immediately terminate agency access, suspend client logins, unlink reseller domain routing, and permanently drop all dedicated MySQL tenant databases from the server to reclaim disk space.
             </p>
         </div>
 
@@ -532,6 +734,204 @@
 
 @push('scripts')
 <script>
+    // ── Task 2: View Switcher (Grid vs List) ──────────────────────
+    function switchView(mode) {
+        const gridView = document.getElementById('agenciesGridView');
+        const listView = document.getElementById('agenciesListView');
+        const btnGrid = document.getElementById('btnGridView');
+        const btnList = document.getElementById('btnListView');
+
+        if (!gridView || !listView) return;
+
+        if (mode === 'list') {
+            gridView.classList.add('hidden');
+            listView.classList.remove('hidden');
+
+            btnGrid.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm');
+            btnGrid.classList.add('text-slate-500');
+
+            btnList.classList.add('bg-white', 'text-indigo-600', 'shadow-sm');
+            btnList.classList.remove('text-slate-500');
+
+            localStorage.setItem('agencies_view_mode', 'list');
+        } else {
+            listView.classList.add('hidden');
+            gridView.classList.remove('hidden');
+
+            btnList.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm');
+            btnList.classList.add('text-slate-500');
+
+            btnGrid.classList.add('bg-white', 'text-indigo-600', 'shadow-sm');
+            btnGrid.classList.remove('text-slate-500');
+
+            localStorage.setItem('agencies_view_mode', 'grid');
+        }
+
+        if (window.lucide) lucide.createIcons();
+    }
+
+    // Restore saved view on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        const savedView = localStorage.getItem('agencies_view_mode') || 'grid';
+        switchView(savedView);
+    });
+
+    // ── Task 1: Onboarding Real-time Progress Loader ──────────────
+    let beforeUnloadActive = false;
+    function handleBeforeUnload(e) {
+        if (!beforeUnloadActive) return;
+        e.preventDefault();
+        e.returnValue = 'Provisioning is in progress! Closing now may corrupt the agency database setup.';
+        return e.returnValue;
+    }
+
+    const createAgencyForm = document.getElementById('createAgencyForm');
+    if (createAgencyForm) {
+        createAgencyForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Client-side HTML5 validity check
+            if (!createAgencyForm.checkValidity()) {
+                createAgencyForm.reportValidity();
+                return;
+            }
+
+            const errorBox = document.getElementById('onboardClientErrors');
+            const errorList = document.getElementById('onboardClientErrorsList');
+            if (errorBox) errorBox.classList.add('hidden');
+            if (errorList) errorList.innerHTML = '';
+
+            // Hide form modal, show full screen provisioning loader
+            const createModal = document.getElementById('createAgencyModal');
+            if (createModal) createModal.classList.add('hidden');
+
+            const loaderOverlay = document.getElementById('onboardingLoaderOverlay');
+            if (loaderOverlay) loaderOverlay.classList.remove('hidden');
+
+            // Activate beforeunload browser lock
+            beforeUnloadActive = true;
+            window.addEventListener('beforeunload', handleBeforeUnload);
+
+            const percentText = document.getElementById('onboardPercentText');
+            const progressBar = document.getElementById('onboardProgressBar');
+            const phaseBadge = document.getElementById('onboardPhaseBadge');
+            const phaseStatus = document.getElementById('onboardPhaseStatus');
+
+            let currentProgress = 0;
+            let targetProgress = 15;
+            let currentPhaseIndex = 0;
+
+            const phases = [
+                { target: 15, badge: 'Phase 1 of 6', text: 'Phase 1: Validating agency credentials and DNS...' },
+                { target: 35, badge: 'Phase 2 of 6', text: 'Phase 2: Connecting to cPanel API & allocating resources...' },
+                { target: 60, badge: 'Phase 3 of 6', text: 'Phase 3: Creating dedicated MySQL tenant database...' },
+                { target: 82, badge: 'Phase 4 of 6', text: 'Phase 4: Importing SaaS database tables & core schema...' },
+                { target: 94, badge: 'Phase 5 of 6', text: 'Phase 5: Granting secure user privileges & configuring access...' },
+                { target: 98, badge: 'Phase 6 of 6', text: 'Phase 6: Verifying schema integrity & finalizing agency setup...' },
+            ];
+
+            // Animate progress smoothly
+            const progressInterval = setInterval(function () {
+                if (currentProgress < targetProgress) {
+                    currentProgress += Math.random() * 1.5 + 0.4;
+                    if (currentProgress > targetProgress) currentProgress = targetProgress;
+                    
+                    const rounded = Math.floor(currentProgress);
+                    if (percentText) percentText.textContent = rounded + '%';
+                    if (progressBar) progressBar.style.width = Math.max(rounded, 3) + '%';
+                }
+
+                // Advance phases automatically over time if server is working
+                if (currentProgress >= targetProgress && currentPhaseIndex < phases.length - 1) {
+                    currentPhaseIndex++;
+                    targetProgress = phases[currentPhaseIndex].target;
+                    if (phaseBadge) phaseBadge.textContent = phases[currentPhaseIndex].badge;
+                    if (phaseStatus) phaseStatus.textContent = phases[currentPhaseIndex].text;
+                }
+            }, 120);
+
+            // Execute submission via fetch API
+            const formData = new FormData(createAgencyForm);
+            fetch(createAgencyForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async function (response) {
+                const isJson = response.headers.get('content-type')?.includes('application/json');
+                const data = isJson ? await response.json() : null;
+
+                if (!response.ok) {
+                    throw { status: response.status, data: data };
+                }
+
+                return data;
+            })
+            .then(function (data) {
+                clearInterval(progressInterval);
+
+                // Smoothly finish to 100%
+                let finishProgress = currentProgress;
+                const finishInterval = setInterval(function () {
+                    finishProgress += 3;
+                    if (finishProgress >= 100) {
+                        finishProgress = 100;
+                        clearInterval(finishInterval);
+
+                        if (percentText) percentText.textContent = '100%';
+                        if (progressBar) progressBar.style.width = '100%';
+                        if (phaseBadge) phaseBadge.textContent = 'Completed';
+                        if (phaseStatus) phaseStatus.textContent = '✓ Agency Cloud Infrastructure Provisioned Successfully!';
+
+                        beforeUnloadActive = false;
+                        window.removeEventListener('beforeunload', handleBeforeUnload);
+
+                        setTimeout(function () {
+                            window.location.href = (data && data.redirect_url) ? data.redirect_url : window.location.href;
+                        }, 800);
+                    } else {
+                        if (percentText) percentText.textContent = Math.floor(finishProgress) + '%';
+                        if (progressBar) progressBar.style.width = finishProgress + '%';
+                    }
+                }, 30);
+            })
+            .catch(function (err) {
+                clearInterval(progressInterval);
+                beforeUnloadActive = false;
+                window.removeEventListener('beforeunload', handleBeforeUnload);
+
+                if (loaderOverlay) loaderOverlay.classList.add('hidden');
+                if (createModal) createModal.classList.remove('hidden');
+
+                // Render error messages
+                if (errorBox && errorList) {
+                    errorList.innerHTML = '';
+                    if (err.data && err.data.errors) {
+                        Object.values(err.data.errors).flat().forEach(function (msg) {
+                            const li = document.createElement('li');
+                            li.textContent = msg;
+                            errorList.appendChild(li);
+                        });
+                    } else if (err.data && err.data.message) {
+                        const li = document.createElement('li');
+                        li.textContent = err.data.message;
+                        errorList.appendChild(li);
+                    } else {
+                        const li = document.createElement('li');
+                        li.textContent = 'An unexpected server error occurred during provisioning. Please check inputs and try again.';
+                        errorList.appendChild(li);
+                    }
+                    errorBox.classList.remove('hidden');
+                    if (window.lucide) lucide.createIcons();
+                }
+            });
+        });
+    }
+
+    // ── Agency Modals (Delete & Edit) ─────────────────────────────
     function openDeleteAgencyModal(id, name, deleteUrl) {
         document.getElementById('delete_agency_name').textContent = name;
         document.getElementById('deleteAgencyForm').action = deleteUrl;
@@ -559,6 +959,4 @@
         document.getElementById('editAgencyModal').classList.remove('hidden');
     }
 </script>
-
-
 @endpush
