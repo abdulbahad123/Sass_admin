@@ -225,8 +225,11 @@ class AgencyExpiryService
         $dbSizeMb = round($dbTotalBytes / (1024 * 1024), 2);
         $filesSizeMb = round($filesTotalBytes / (1024 * 1024), 2);
 
+        $dbPercent = $totalBytes > 0 ? round(($dbTotalBytes / $totalBytes) * 100, 1) : 0;
+        $filesPercent = $totalBytes > 0 ? round(($filesTotalBytes / $totalBytes) * 100, 1) : 0;
+
         // 4. Quota
-        $quotaMb = (float)($agency->storage_limit_mb ?: 5120); // 5 GB default
+        $quotaMb = (float)($agency->storage_limit_mb ?: 5120); // 5 GB baseline
         $percentUsed = min(100, round(($totalMb / max(1, $quotaMb)) * 100, 1));
 
         $progressColor = 'emerald';
@@ -240,6 +243,8 @@ class AgencyExpiryService
             'db_size_mb'        => $dbSizeMb,
             'files_size_mb'     => $filesSizeMb,
             'total_size_mb'     => $totalMb,
+            'db_percent'        => $dbPercent,
+            'files_percent'     => $filesPercent,
             'total_formatted'   => $this->formatBytes($totalBytes),
             'db_formatted'      => $this->formatBytes($dbTotalBytes),
             'files_formatted'   => $this->formatBytes($filesTotalBytes),
@@ -313,7 +318,7 @@ class AgencyExpiryService
                 . "📦 *Plan:* {$planName} ({$cycleLabel})\n"
                 . "🌐 *Domain:* {$cleanDomain}\n"
                 . "⏳ {$statusLine}\n"
-                . "💾 *Storage Used:* {$storage['total_formatted']} / {$storage['quota_formatted']} ({$storage['percent_used']}%)\n\n"
+                . "💾 *Storage Used:* {$storage['total_formatted']} ({$storage['percent_used']}%)\n\n"
                 . "To avoid service interruption and maintain uninterrupted access for your clients, please renew your subscription now:\n"
                 . "🔗 *Renewal Link:*\n{$renewalUrl}\n\n"
                 . "Need help? Reply directly to this WhatsApp message.\n"
@@ -434,7 +439,7 @@ class AgencyExpiryService
                                 <tr>
                                     <td style='padding: 8px 0; color: #64748b; font-weight: 600;'>Storage Consumed:</td>
                                     <td style='padding: 8px 0; color: #0f172a; font-weight: 700; text-align: right;'>
-                                        {$storage['total_formatted']} / {$storage['quota_formatted']} ({$storage['percent_used']}%)
+                                        {$storage['total_formatted']} ({$storage['percent_used']}%)
                                     </td>
                                 </tr>
                             </table>

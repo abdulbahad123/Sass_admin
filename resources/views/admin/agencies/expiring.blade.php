@@ -290,7 +290,6 @@
                                 <div class="space-y-1.5 min-w-[190px]">
                                     <div class="flex items-center justify-between text-[11px]">
                                         <span class="font-bold text-slate-800">{{ $stg['total_formatted'] }}</span>
-                                        <span class="text-slate-400">/ {{ $stg['quota_formatted'] }}</span>
                                         <span class="font-black text-{{ $stg['progress_color'] }}-600">{{ $stg['percent_used'] }}%</span>
                                     </div>
 
@@ -298,12 +297,12 @@
                                     <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
                                         <div class="h-2 rounded-full transition-all duration-300 
                                             {{ $stg['percent_used'] >= 90 ? 'bg-rose-500' : ($stg['percent_used'] >= 70 ? 'bg-amber-500' : 'bg-emerald-500') }}"
-                                             style="width: {{ $stg['percent_used'] }}%;"></div>
+                                             style="width: {{ max(4, $stg['percent_used']) }}%;"></div>
                                     </div>
 
                                     <div class="flex items-center justify-between text-[10px] text-slate-500">
-                                        <span title="Database Size"><i data-lucide="database" class="w-3 h-3 inline text-slate-400"></i> DB: {{ $stg['db_formatted'] }}</span>
-                                        <span title="Files / Uploads"><i data-lucide="folder" class="w-3 h-3 inline text-slate-400"></i> Files: {{ $stg['files_formatted'] }}</span>
+                                        <span title="Database Size"><i data-lucide="database" class="w-3 h-3 inline text-slate-400"></i> DB: {{ $stg['db_formatted'] }} ({{ $stg['db_percent'] ?? 0 }}%)</span>
+                                        <span title="Files / Uploads"><i data-lucide="folder" class="w-3 h-3 inline text-slate-400"></i> Files: {{ $stg['files_formatted'] }} ({{ $stg['files_percent'] ?? 0 }}%)</span>
                                     </div>
                                 </div>
                             </td>
