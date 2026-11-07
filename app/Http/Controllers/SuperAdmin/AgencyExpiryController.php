@@ -58,6 +58,7 @@ class AgencyExpiryController extends Controller
         foreach ($allAgencies as $agency) {
             $expiry = $this->expiryService->calculateAgencyExpiry($agency);
             $storage = $this->expiryService->calculateStorageConsumption($agency);
+            $pricing = $this->expiryService->calculateAgencyRenewalPrice($agency, $storage);
 
             $totalWhitelabels++;
             if ($expiry['is_expired']) {
@@ -76,6 +77,7 @@ class AgencyExpiryController extends Controller
                 'agency'  => $agency,
                 'expiry'  => $expiry,
                 'storage' => $storage,
+                'pricing' => $pricing,
             ];
         }
 
@@ -124,7 +126,73 @@ class AgencyExpiryController extends Controller
             ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
         );
 
-        return view('admin.agencies.expiring', compact('enrichedAgencies', 'metrics', 'filter', 'search'));
+        $tab = $request->input('tab', 'overview');
+
+        $editorSettings = [
+            'whatsapp_template'     => \App\Models\Setting::get('expiry_alert_whatsapp_template', ''),
+            'email_subject'         => \App\Models\Setting::get('expiry_alert_email_subject', ''),
+            'email_template'        => \App\Models\Setting::get('expiry_alert_email_template', ''),
+            'storage_40_multiplier' => \App\Models\Setting::get('expiry_storage_40_multiplier', '2'),
+            'storage_80_multiplier' => \App\Models\Setting::get('expiry_storage_80_multiplier', '3'),
+        ];
+
+        return view('admin.agencies.expiring', compact('enrichedAgencies', 'metrics', 'filter', 'search', 'tab', 'editorSettings'));
+    }
+
+    /**
+     * Save Expiry Editor template formats and storage dynamic pricing rules.
+     */
+    public function saveSettings(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user->canAccessMenu(['view-agencies', 'manage-agencies']) && !$user->isSuperAdmin()) {
+            abort(403);
+        }
+
+        \App\Models\Setting::set('expiry_alert_whatsapp_template', (string)$request->input('whatsapp_template', ''));
+        \App\Models\Setting::set('expiry_alert_email_subject', (string)$request->input('email_subject', ''));
+        \App\Models\Setting::set('expiry_alert_email_template', (string)$request->input('email_template', ''));
+        \App\Models\Setting::set('expiry_storage_40_multiplier', (string)$request->input('storage_40_multiplier', '2'));
+        \App\Models\Setting::set('expiry_storage_80_multiplier', (string)$request->input('storage_80_multiplier', '3'));
+
+        return redirect()->route('admin.agencies.expiring', ['tab' => 'editor'])->with('success', 'Expiry Alert formats and Dynamic Pricing multipliers updated successfully!');
+    }
+
+    /**
+     * Save custom pricing or custom message for a specific whitelabel agency.
+     */
+    public function saveCustomPricing(Request $request, Agency $agency): JsonResponse
+    {
+        $user = Auth::user();
+        if (!$user->canAccessMenu(['view-agencies', 'manage-agencies']) && !$user->isSuperAdmin()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 403);
+        }
+
+        $customPrice = $request->input('custom_renewal_price');
+        $customMsg = $request->input('custom_expiry_message');
+
+        if ($customPrice !== null) {
+            \App\Models\Setting::set("agency_{$agency->id}_custom_price", $customPrice);
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'custom_renewal_price')) {
+                    $agency->update(['custom_renewal_price' => $customPrice ?: null]);
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        if ($customMsg !== null) {
+            \App\Models\Setting::set("agency_{$agency->id}_custom_message", $customMsg);
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'custom_expiry_message')) {
+                    $agency->update(['custom_expiry_message' => $customMsg ?: null]);
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Custom pricing settings updated for {$agency->name}.",
+        ]);
     }
 
     /**
@@ -141,7 +209,15 @@ class AgencyExpiryController extends Controller
         }
 
         try {
-            $result = $this->expiryService->sendExpiryAlert($agency);
+            $options = [];
+            if ($request->filled('custom_price')) {
+                $options['custom_price'] = (float)$request->input('custom_price');
+            }
+            if ($request->filled('custom_message')) {
+                $options['custom_message'] = trim((string)$request->input('custom_message'));
+            }
+
+            $result = $this->expiryService->sendExpiryAlert($agency, $options);
 
             return response()->json([
                 'success'           => $result['success'],

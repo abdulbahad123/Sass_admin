@@ -257,12 +257,100 @@ class AgencyExpiryService
     }
 
     /**
+     * Calculate usage-based dynamic renewal price for a white-label agency.
+     * Escalation Rules:
+     * - Storage >= 80%: 3x base price
+     * - Storage >= 40%: 2x base price
+     * - Storage < 40%: 1x base price
+     * Supports specific agency custom price override.
+     */
+    public function calculateAgencyRenewalPrice(Agency $agency, ?array $storage = null): array
+    {
+        $subscription = $agency->subscription ?? $agency->subscriptions()->latest('id')->first();
+        $plan = $subscription ? $subscription->plan : null;
+
+        $basePrice = (float)($subscription->amount ?? ($plan->price ?? 0));
+        if ($basePrice <= 0) {
+            $basePrice = 2000.0; // Standard baseline monthly subscription price
+        }
+
+        if (!$storage) {
+            $storage = $this->calculateStorageConsumption($agency);
+        }
+
+        $percentUsed = (float)($storage['percent_used'] ?? 0);
+
+        $mult40 = (float)Setting::get('expiry_storage_40_multiplier', 2.0);
+        $mult80 = (float)Setting::get('expiry_storage_80_multiplier', 3.0);
+        if ($mult40 <= 0) $mult40 = 2.0;
+        if ($mult80 <= 0) $mult80 = 3.0;
+
+        $multiplier = 1.0;
+        $tierLabel = 'Standard Base Plan';
+        $escalationBadge = null;
+        $escalationNote = '';
+
+        if ($percentUsed >= 80) {
+            $multiplier = $mult80;
+            $tierLabel = "Critical Storage (≥80%)";
+            $escalationBadge = "{$multiplier}x Storage (≥80%)";
+            $escalationNote = "Storage consumption is {$percentUsed}% (≥80%), applying {$multiplier}x dynamic rate.";
+        } elseif ($percentUsed >= 40) {
+            $multiplier = $mult40;
+            $tierLabel = "High Storage (≥40%)";
+            $escalationBadge = "{$multiplier}x Storage (≥40%)";
+            $escalationNote = "Storage consumption is {$percentUsed}% (≥40%), applying {$multiplier}x dynamic rate.";
+        }
+
+        $calculatedPrice = round($basePrice * $multiplier, 2);
+
+        // Check for specific whitelabel custom price override
+        $customSettingPrice = Setting::get("agency_{$agency->id}_custom_price");
+        $customColPrice = !empty($agency->custom_renewal_price) ? (float)$agency->custom_renewal_price : null;
+
+        $customPrice = !empty($customSettingPrice) ? (float)$customSettingPrice : $customColPrice;
+        $isCustom = false;
+
+        if (!empty($customPrice) && $customPrice > 0) {
+            $finalPrice = $customPrice;
+            $isCustom = true;
+        } else {
+            $finalPrice = $calculatedPrice;
+        }
+
+        $currencySym = Setting::getCurrencySymbol();
+
+        return [
+            'base_price'        => $basePrice,
+            'multiplier'        => $multiplier,
+            'percent_used'      => $percentUsed,
+            'tier_label'        => $tierLabel,
+            'escalation_badge'  => $escalationBadge,
+            'escalation_note'   => $escalationNote,
+            'calculated_price'  => $calculatedPrice,
+            'final_price'       => $finalPrice,
+            'is_custom'         => $isCustom,
+            'currency_symbol'   => $currencySym,
+            'formatted_final'   => $currencySym . number_format($finalPrice),
+            'formatted_base'    => $currencySym . number_format($basePrice),
+        ];
+    }
+
+    /**
      * Send Multi-Channel Expiry Alert (WhatsApp + Email) to an Agency.
      */
     public function sendExpiryAlert(Agency $agency, array $options = []): array
     {
         $expiry = $this->calculateAgencyExpiry($agency);
         $storage = $this->calculateStorageConsumption($agency);
+        $pricing = $this->calculateAgencyRenewalPrice($agency, $storage);
+
+        // Allow Super Admin manual override for this alert dispatch
+        if (!empty($options['custom_price']) && (float)$options['custom_price'] > 0) {
+            $pricing['final_price'] = (float)$options['custom_price'];
+            $pricing['formatted_final'] = Setting::getCurrencySymbol() . number_format($pricing['final_price']);
+            $pricing['is_custom'] = true;
+        }
 
         // Resolve Contact info
         $ownerName = !empty($agency->owner_name) ? trim($agency->owner_name) : trim($agency->name);
@@ -312,17 +400,36 @@ class AgencyExpiryService
                 $statusLine = "Days Remaining: *{$daysLeft} days* (Ends on: *{$endsAtFormatted}*)";
             }
 
-            $whatsappMessage = "{$urgencyLine}\n\n"
-                . "Hello *{$ownerName}* ({$agency->name}),\n\n"
-                . "This is a recurring daily alert regarding your White-Label SaaS subscription:\n\n"
-                . "📦 *Plan:* {$planName} ({$cycleLabel})\n"
-                . "🌐 *Domain:* {$cleanDomain}\n"
-                . "⏳ {$statusLine}\n"
-                . "💾 *Storage Used:* {$storage['total_formatted']} ({$storage['percent_used']}%)\n\n"
-                . "To avoid service interruption and maintain uninterrupted access for your clients, please renew your subscription now:\n"
-                . "🔗 *Renewal Link:*\n{$renewalUrl}\n\n"
-                . "Need help? Reply directly to this WhatsApp message.\n"
-                . "— *Super Admin Management Team*";
+            $priceFormatted = $pricing['formatted_final'];
+            $basePriceFormatted = $pricing['formatted_base'];
+            $tierLabel = $pricing['tier_label'];
+            $storageNote = !empty($pricing['escalation_note']) ? "({$pricing['escalation_note']})" : "";
+
+            if (!empty($options['custom_message'])) {
+                $whatsappMessage = $options['custom_message'];
+            } else {
+                $customWaTemplate = Setting::get('expiry_alert_whatsapp_template');
+                if (!empty($customWaTemplate)) {
+                    $whatsappMessage = str_replace(
+                        ['{urgency_line}', '{owner_name}', '{agency_name}', '{plan_name}', '{cycle_label}', '{domain}', '{status_line}', '{days_left}', '{storage_formatted}', '{storage_percent}', '{price}', '{base_price}', '{storage_tier_note}', '{renewal_url}'],
+                        [$urgencyLine, $ownerName, $agency->name, $planName, $cycleLabel, $cleanDomain, $statusLine, $daysLeft, $storage['total_formatted'], $storage['percent_used'], $priceFormatted, $basePriceFormatted, $tierLabel, $renewalUrl],
+                        $customWaTemplate
+                    );
+                } else {
+                    $whatsappMessage = "{$urgencyLine}\n\n"
+                        . "Hello *{$ownerName}* ({$agency->name}),\n\n"
+                        . "This is a recurring daily alert regarding your White-Label SaaS subscription:\n\n"
+                        . "📦 *Plan:* {$planName} ({$cycleLabel})\n"
+                        . "🌐 *Domain:* {$cleanDomain}\n"
+                        . "⏳ {$statusLine}\n"
+                        . "💾 *Storage Used:* {$storage['total_formatted']} ({$storage['percent_used']}%)\n"
+                        . "💰 *Renewal Price:* {$priceFormatted} ({$cycleLabel})" . ($storageNote ? " {$storageNote}" : "") . "\n\n"
+                        . "To avoid service interruption and maintain uninterrupted access for your clients, please renew your subscription now:\n"
+                        . "🔗 *Renewal Link:*\n{$renewalUrl}\n\n"
+                        . "Need help? Reply directly to this WhatsApp message.\n"
+                        . "— *Super Admin Management Team*";
+                }
+            }
 
             try {
                 $waSettings = WhatsAppGatewayController::getDefaultSettings();
@@ -391,11 +498,30 @@ class AgencyExpiryService
                 Mail::purge('smtp');
             } catch (\Throwable $cfgEx) {}
 
-            $subject = $expiry['is_expired'] 
+            $defaultSubject = $expiry['is_expired'] 
                 ? "⚠️ Urgent: White-Label Plan Has Expired - {$agency->name}"
                 : "⚠️ Renewal Alert: White-Label Plan Expires in {$daysLeft} Days - {$agency->name}";
 
-            $htmlBody = "
+            $customSubject = Setting::get('expiry_alert_email_subject');
+            if (!empty($customSubject)) {
+                $subject = str_replace(
+                    ['{owner_name}', '{agency_name}', '{plan_name}', '{days_left}', '{price}'],
+                    [$ownerName, $agency->name, $planName, $daysLeft, $priceFormatted],
+                    $customSubject
+                );
+            } else {
+                $subject = $defaultSubject;
+            }
+
+            $customEmailTemplate = Setting::get('expiry_alert_email_template');
+            if (!empty($customEmailTemplate)) {
+                $htmlBody = str_replace(
+                    ['{urgency_line}', '{owner_name}', '{agency_name}', '{plan_name}', '{cycle_label}', '{domain}', '{status_line}', '{days_left}', '{storage_formatted}', '{storage_percent}', '{price}', '{base_price}', '{storage_tier_note}', '{renewal_url}'],
+                    [$urgencyLine, $ownerName, $agency->name, $planName, $cycleLabel, $cleanDomain, $statusLine, $daysLeft, $storage['total_formatted'], $storage['percent_used'], $priceFormatted, $basePriceFormatted, $tierLabel, $renewalUrl],
+                    $customEmailTemplate
+                );
+            } else {
+                $htmlBody = "
                 <div style='font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06);'>
                     <div style='background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); padding: 30px; text-align: center;'>
                         <span style='background: rgba(255,255,255,0.2); color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 12px;'>
@@ -442,6 +568,18 @@ class AgencyExpiryService
                                         {$storage['total_formatted']} ({$storage['percent_used']}%)
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style='padding: 8px 0; color: #64748b; font-weight: 600;'>Usage Rate Tier:</td>
+                                    <td style='padding: 8px 0; font-weight: 700; text-align: right; color: " . ($pricing['multiplier'] > 1 ? '#d97706' : '#059669') . ";'>
+                                        {$pricing['tier_label']} (" . ($pricing['multiplier'] > 1 ? "{$pricing['multiplier']}x applied" : "Base rate") . ")
+                                    </td>
+                                </tr>
+                                <tr style='border-top: 1.5px solid #cbd5e1;'>
+                                    <td style='padding: 12px 0 4px; color: #0f172a; font-weight: 800; font-size: 15px;'>Renewal Price Due:</td>
+                                    <td style='padding: 12px 0 4px; font-weight: 900; font-size: 17px; text-align: right; color: #4f46e5;'>
+                                        {$priceFormatted} / {$cycleLabel}
+                                    </td>
+                                </tr>
                             </table>
                         </div>
 
@@ -463,6 +601,7 @@ class AgencyExpiryService
                     </div>
                 </div>
             ";
+            }
 
             try {
                 Mail::html($htmlBody, function ($msg) use ($toEmail, $subject, $smtpFromAddress, $smtpFromName) {

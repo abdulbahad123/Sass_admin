@@ -297,6 +297,8 @@ Route::prefix($adminLoginSlug)->name('admin.')->middleware([SuperAdminMiddleware
     Route::post('/agencies/{agency}/send-expiry-alert', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'sendAlert'])->name('agencies.send-expiry-alert');
     Route::post('/agencies/trigger-daily-alerts', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'triggerDailyAlerts'])->name('agencies.trigger-daily-alerts');
     Route::post('/agencies/{agency}/update-storage-limit', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'updateStorageLimit'])->name('agencies.update-storage-limit');
+    Route::post('/agencies/expiry/save-settings', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'saveSettings'])->name('agencies.expiry.save-settings');
+    Route::post('/agencies/{agency}/custom-pricing', [\App\Http\Controllers\SuperAdmin\AgencyExpiryController::class, 'saveCustomPricing'])->name('agencies.expiry.save-custom-pricing');
 
     // Direct One-Click Admin Access (Credential-Free Login)
     Route::get('/agencies/{agency}/admin-login', [AgencyController::class, 'loginAsAgency'])->name('agencies.admin-login');
