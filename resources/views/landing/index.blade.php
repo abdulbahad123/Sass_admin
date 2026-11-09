@@ -2110,7 +2110,7 @@
 
             <!-- Bottom Copyright: Clean Only (Task 1: Policies are in the 4th Column above) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 dark:text-slate-400 font-medium">
-                <p>{{ str_ireplace(['Nooryak Technologies', 'Nooryak', 'nooryak'], ['saasreselling', 'saasreselling', 'saasreselling'], $data['lp_copyright_text'] ?? '© ' . date('Y') . ' saasreselling. All rights reserved.') }}</p>
+                <p>&copy; copyrights saasreselling , all rights reserved developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#ff3d00] transition-colors">nooryak technologies</a></p>
             </div>
 
         </div>

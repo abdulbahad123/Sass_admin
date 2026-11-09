@@ -270,7 +270,7 @@
                     <i class="fas fa-arrow-left"></i>
                     <span>Return to SaaSReselling Home</span>
                 </a>
-                <span class="text-slate-500">© {{ date('Y') }} SaaSReselling. All rights reserved.</span>
+                <span class="text-slate-500">&copy; copyrights saasreselling , all rights reserved developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#ff3d00] transition-colors">nooryak technologies</a></span>
             </div>
         </div>
 
@@ -347,7 +347,7 @@
 
             <!-- Bottom Copyright: Clean Only (Task 1) -->
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 dark:text-slate-400 font-medium">
-                <p>© {{ date('Y') }} saasreselling. All rights reserved.</p>
+                <p>&copy; copyrights saasreselling , all rights reserved developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#ff3d00] transition-colors">nooryak technologies</a></p>
             </div>
 
         </div>

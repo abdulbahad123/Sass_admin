@@ -919,7 +919,12 @@
 
             {{-- Bottom Bar: Clean Copyright Only (Policies are in the 4th Column above) --}}
             <div style="padding-top:28px;text-align:center;">
-                <p style="font-size:12.5px;color:#64748b;margin:0">&copy; {{ date('Y') }} {{ $agencyName }}. All rights reserved.</p>
+                <p style="font-size:12.5px;color:#64748b;margin:0">
+                    &copy; copyrights {{ strtolower($agencyName) }} , all rights reserved
+                    @if(empty($agency->hide_developer_attribution) && empty($agency->hide_developer_copyright))
+                        developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">nooryak technologies</a>
+                    @endif
+                </p>
             </div>
 
         </div>
