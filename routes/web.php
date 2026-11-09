@@ -325,6 +325,10 @@ Route::prefix($adminLoginSlug)->name('admin.')->middleware([SuperAdminMiddleware
     Route::post('/landing-page/upload', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'uploadImage'])->name('landing-page.upload');
     Route::post('/landing-page/delete-image', [\App\Http\Controllers\SuperAdmin\LandingPageController::class, 'deleteImage'])->name('landing-page.delete-image');
 
+    // Whitelabel Copyright & Attribution Management
+    Route::get('/copyright', [\App\Http\Controllers\SuperAdmin\CopyrightController::class, 'index'])->name('copyright.index');
+    Route::post('/copyright/{agency}/toggle', [\App\Http\Controllers\SuperAdmin\CopyrightController::class, 'toggleAttribution'])->name('copyright.toggle');
+
     // Demo Requests & Leads Management
     Route::get('/demo-requests', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'index'])->name('demo-requests.index');
     Route::patch('/demo-requests/{demoRequest}/status', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'updateStatus'])->name('demo-requests.update-status');
