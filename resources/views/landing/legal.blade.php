@@ -270,7 +270,12 @@
                     <i class="fas fa-arrow-left"></i>
                     <span>Return to SaaSReselling Home</span>
                 </a>
-                <span class="text-slate-500">&copy; copyrights saasreselling , all rights reserved developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#ff3d00] transition-colors">nooryak technologies</a></span>
+                <span style="color: #ffffff !important; font-size: 13.5px; font-weight: 500;">
+                    &copy; copyrights saasreselling , all rights reserved
+                    @if(empty($data['lp_hide_developer_attribution']))
+                        developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff !important; text-decoration: underline; font-weight: 700;">nooryak technologies</a>
+                    @endif
+                </span>
             </div>
         </div>
 
@@ -346,8 +351,13 @@
             </div>
 
             <!-- Bottom Copyright: Clean Only (Task 1) -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-xs text-slate-500 dark:text-slate-400 font-medium">
-                <p>&copy; copyrights saasreselling , all rights reserved developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#ff3d00] transition-colors">nooryak technologies</a></p>
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-center font-medium" style="color: #ffffff !important; font-size: 14.5px;">
+                <p style="color: #ffffff !important; font-size: 14.5px; font-weight: 500; margin: 0; text-align: center;">
+                    &copy; copyrights saasreselling , all rights reserved
+                    @if(empty($data['lp_hide_developer_attribution']))
+                        developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff !important; text-decoration: underline; font-weight: 700;">nooryak technologies</a>
+                    @endif
+                </p>
             </div>
 
         </div>

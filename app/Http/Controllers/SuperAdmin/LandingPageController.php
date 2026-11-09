@@ -110,6 +110,7 @@ class LandingPageController extends Controller
                 Setting::set($key, $request->input($key));
             }
         }
+        Setting::set('lp_hide_developer_attribution', $request->has('lp_hide_developer_attribution') ? '1' : '0');
 
         // 2. JSON Array Fields
         $jsonKeys = [
@@ -680,6 +681,7 @@ class LandingPageController extends Controller
             'lp_contact_email' => Setting::get('lp_contact_email', 'support@saasreselling.com'),
             'lp_contact_phone' => Setting::get('lp_contact_phone', '+91 63749 13298'),
             'lp_copyright_text' => Setting::get('lp_copyright_text', '© copyrights saasreselling , all rights reserved developed by nooryak technologies'),
+            'lp_hide_developer_attribution' => Setting::get('lp_hide_developer_attribution', '0'),
             'lp_fb_url' => Setting::get('lp_fb_url', '#'),
             'lp_ig_url' => Setting::get('lp_ig_url', '#'),
             'lp_yt_url' => Setting::get('lp_yt_url', '#'),
