@@ -448,6 +448,16 @@
                 </div>
             </div>
 
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox" name="hide_developer_attribution" value="1" class="rounded bg-slate-100 border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+                    <div>
+                        <span class="text-xs font-bold text-slate-800 block">Hide "Developed by Nooryak Technologies"</span>
+                        <span class="text-[11px] text-slate-500 block">Remove developer attribution and Nooryak link from this whitelabel agency's footer.</span>
+                    </div>
+                </label>
+            </div>
+
             <div class="pt-4 flex items-center justify-end space-x-3">
                 <button type="button" onclick="document.getElementById('createAgencyModal').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
                 <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30">Onboard Agency</button>
@@ -539,6 +549,16 @@
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Reset Password (Leave blank to keep existing)</label>
                 <input type="password" id="ea_password" name="password" placeholder="New Password (optional)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900">
+            </div>
+
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox" id="ea_hide_developer_attribution" name="hide_developer_attribution" value="1" class="rounded bg-slate-100 border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+                    <div>
+                        <span class="text-xs font-bold text-slate-800 block">Hide "Developed by Nooryak Technologies"</span>
+                        <span class="text-[11px] text-slate-500 block">Remove developer attribution and Nooryak link from this whitelabel agency's footer.</span>
+                    </div>
+                </label>
             </div>
 
             <div class="pt-4 flex items-center justify-end space-x-3">
@@ -955,6 +975,10 @@
         document.getElementById('ea_max_clients').value = agency.max_clients || 100;
         document.getElementById('ea_price_monthly').value = (agency.subscription && agency.subscription.amount != null) ? agency.subscription.amount : 2999;
         document.getElementById('ea_billing_cycle').value = (agency.subscription && agency.subscription.billing_cycle) ? agency.subscription.billing_cycle : 'monthly';
+        var hideAttrEl = document.getElementById('ea_hide_developer_attribution');
+        if (hideAttrEl) {
+            hideAttrEl.checked = (agency.hide_developer_attribution == 1 || agency.hide_developer_attribution === true);
+        }
 
         document.getElementById('editAgencyModal').classList.remove('hidden');
     }

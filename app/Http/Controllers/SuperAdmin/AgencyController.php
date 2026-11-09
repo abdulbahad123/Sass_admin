@@ -109,6 +109,7 @@ class AgencyController extends Controller
             'cta_image' => 'assets/landing_page/footer_card.png',
             'contact_email' => $validated['email'],
             'contact_phone' => $validated['phone'] ?? null,
+            'hide_developer_attribution' => $request->has('hide_developer_attribution') ? 1 : 0,
         ]);
 
         // Create initial agency user account
@@ -228,6 +229,7 @@ class AgencyController extends Controller
             'openai_api_key' => 'nullable|string|max:255',
             'is_gemini_active' => 'nullable|boolean',
             'is_openai_active' => 'nullable|boolean',
+            'hide_developer_attribution' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -238,6 +240,8 @@ class AgencyController extends Controller
         if (isset($validated['custom_domain'])) {
             $validated['custom_domain'] = $validated['custom_domain'] ? rtrim(preg_replace('#^https?://#', '', trim($validated['custom_domain'])), '/') : null;
         }
+
+        $validated['hide_developer_attribution'] = $request->has('hide_developer_attribution') ? 1 : 0;
 
         $agency->update($validated);
 

@@ -114,7 +114,32 @@ class Agency extends Model
         'trust_elements_data',
         'smtp_settings',
         'recaptcha_settings',
+        'hide_developer_attribution',
     ];
+
+    protected static function booted()
+    {
+        static::retrieved(function ($model) {
+            self::ensureAttributionColumn();
+        });
+        static::saving(function ($model) {
+            self::ensureAttributionColumn();
+        });
+    }
+
+    public static function ensureAttributionColumn()
+    {
+        static $checked = false;
+        if ($checked) return;
+        $checked = true;
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('agencies', 'hide_developer_attribution')) {
+                \Illuminate\Support\Facades\Schema::table('agencies', function ($table) {
+                    $table->tinyInteger('hide_developer_attribution')->default(0);
+                });
+            }
+        } catch (\Throwable $e) {}
+    }
 
     public function getParsedServicesAttribute()
     {
