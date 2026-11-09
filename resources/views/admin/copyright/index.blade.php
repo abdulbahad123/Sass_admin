@@ -252,7 +252,10 @@ function toggleAgencyAttribution(agencyId, isChecked) {
         label.textContent = 'Visible';
     }
 
-    fetch("{{ url('/copyright') }}/" + agencyId + "/toggle", {
+    const toggleUrlTemplate = "{{ route('admin.copyright.toggle', ['agency' => ':id']) }}";
+    const postUrl = toggleUrlTemplate.replace(':id', agencyId);
+
+    fetch(postUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -291,3 +294,4 @@ function toggleAgencyAttribution(agencyId, isChecked) {
 }
 </script>
 @endsection
+
