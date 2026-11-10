@@ -720,8 +720,35 @@
             scroll-behavior: smooth;
         }
 
-        /* Task 3: How It Works Connected Timeline Responsive Controls */
+        /* Task 3: Spacing & How It Works Connected Timeline Responsive Controls */
+        .pricing-section {
+            padding-top: 56px !important;
+            padding-bottom: 24px !important;
+        }
+        .pricing-trust-bar-wrap {
+            margin-top: 26px !important;
+        }
+        #how-it-works {
+            padding-top: 32px !important;
+            padding-bottom: 72px !important;
+        }
         @media (max-width: 900px) {
+            .pricing-section {
+                padding-top: 36px !important;
+                padding-bottom: 14px !important;
+            }
+            .pricing-trust-bar-wrap {
+                margin-top: 18px !important;
+                padding: 12px 14px !important;
+                font-size: 11.5px !important;
+            }
+            #how-it-works {
+                padding-top: 20px !important;
+                padding-bottom: 48px !important;
+            }
+            #how-it-works .hiw-heading-wrap {
+                margin-bottom: 26px !important;
+            }
             .hiw-desktop-timeline { display: none !important; }
             .hiw-mobile-timeline { display: block !important; }
         }
@@ -837,7 +864,7 @@
                        style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14.5px; padding:15px 32px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
                        onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
                        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
-                        <span>{{ $agency->cta_text ?? 'View Products' }}</span>
+                        <span>{{ (!empty($agency->cta_text) && $agency->cta_text !== 'Start Free Today' && $agency->cta_text !== 'View Products') ? $agency->cta_text : 'Get Started Now' }}</span>
                         <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                     </a>
                     <a href="{{ $agency->hero_secondary_cta_url ?? '#how-it-works' }}" class="btn-outline"
@@ -1213,7 +1240,7 @@
 
 
 {{-- ══ SECTION 5.5: DEDICATED PRODUCTS PRICING SECTION (Task 2: Dynamic SaaS Tiers, Monthly/Yearly Toggle, Distinct UI/UX) ══ --}}
-<section id="pricing" class="pricing-section" style="padding: 70px 0 90px; background: #ffffff; border-top: 1px solid #e2e8f0; position: relative;">
+<section id="pricing" class="pricing-section" style="padding: 56px 0 28px; background: #ffffff; border-top: 1px solid #e2e8f0; position: relative;">
     <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px;">
 
         {{-- Section Header & Interactive Toggle --}}
@@ -1376,7 +1403,7 @@
         </div>
 
         {{-- Bottom Trust Bar --}}
-        <div style="margin-top: 48px; text-align: center; padding: 18px 24px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; font-size: 13.5px; font-weight: 700; color: #475569; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+        <div class="pricing-trust-bar-wrap" style="margin-top: 28px; text-align: center; padding: 16px 24px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; font-size: 13px; font-weight: 700; color: #475569; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
             <span>{{ $agency->pricing_trust_bar ?? '🔒 100% Secure Checkout | ⚡ Instant Account Setup | 📞 24/7 Dedicated Support | 🔄 7-Day Money-Back Guarantee' }}</span>
         </div>
 
@@ -1437,11 +1464,11 @@ function switchPricingCycle(cycle) {
 
 
 {{-- ══ SECTION 6: HOW IT WORKS (Task 3: Connected 4-Step Product Timeline) ════ --}}
-<section id="how-it-works" style="background: #ffffff; padding: 68px 0 92px; overflow: visible; position: relative; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
+<section id="how-it-works" style="background: #ffffff; padding: 32px 0 72px; overflow: visible; position: relative; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px">
         
         {{-- Section Title & Badge --}}
-        <div style="text-align: center; margin-bottom: 56px">
+        <div class="hiw-heading-wrap" style="text-align: center; margin-bottom: 40px">
             <div style="display: inline-flex; align-items: center; gap: 8px; background: #fff7ed; color: #ff5500; border: 1.5px solid #fed7aa; font-size: 11.5px; font-weight: 900; padding: 6px 22px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; box-shadow: 0 2px 8px rgba(255,85,0,0.08);">
                 <i data-lucide="sparkles" style="width: 13px; height: 13px; color: #ff5500;"></i>
                 <span>HOW IT WORKS</span>
@@ -1866,13 +1893,13 @@ function switchPricingCycle(cycle) {
                      onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/footer_card.png') }}';">
             </div>
 
-            {{-- Right Button (Task 4: Enquire Us redirects to #contact) --}}
+            {{-- Right Button (Task 1: View Products redirects to #products) --}}
             <div style="position:relative; z-index:2; flex-shrink:0;">
-                <a href="{{ (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me')) ? $agency->cta_button_url : '#contact' }}"
+                <a href="{{ (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me') && $agency->cta_button_url !== '#contact') ? $agency->cta_button_url : '#products' }}"
                    style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
-                    {{ !empty($agency->cta_button_text) && $agency->cta_button_text !== 'Launch Your Business Today' && $agency->cta_button_text !== 'Get Started Free' ? $agency->cta_button_text : 'Enquire Us' }}
+                    {{ !empty($agency->cta_button_text) && $agency->cta_button_text !== 'Launch Your Business Today' && $agency->cta_button_text !== 'Get Started Free' && $agency->cta_button_text !== 'Enquire Us' ? $agency->cta_button_text : 'View Products' }}
                     <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
                 </a>
             </div>
@@ -1968,7 +1995,6 @@ function switchPricingCycle(cycle) {
                     <li><a href="{{ route('agency.privacy') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Privacy Policy</a></li>
                     <li><a href="{{ route('agency.terms') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Terms &amp; Conditions</a></li>
                     <li><a href="{{ route('agency.refund') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Refund Policy</a></li>
-                    <li><a href="{{ route('agency.contact') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                 </ul>
             </div>
 

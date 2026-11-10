@@ -67,8 +67,8 @@ Route::get('/about', function (\Illuminate\Http\Request $request) use ($getAgenc
     return view('whitelabel.website.public_legal', ['type' => 'about', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
 })->name('agency.about');
 
-Route::get('/contact', function (\Illuminate\Http\Request $request) use ($getAgencyForRoute, $getLandingData) {
-    return view('whitelabel.website.public_legal', ['type' => 'contact', 'agency' => $getAgencyForRoute($request), 'data' => $getLandingData()]);
+Route::get('/contact', function (\Illuminate\Http\Request $request) {
+    return redirect('/#contact');
 })->name('agency.contact');
 Route::post('/contact/submit', [\App\Http\Controllers\WhiteLabel\WhiteLabelWebsiteController::class, 'submitContactForm'])->name('agency.contact.submit');
 Route::post('/book-free-live-demo', [\App\Http\Controllers\SuperAdmin\DemoRequestController::class, 'submit'])->name('demo.submit');

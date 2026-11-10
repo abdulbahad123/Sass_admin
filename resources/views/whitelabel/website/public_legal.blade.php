@@ -902,7 +902,6 @@
                         <li><a href="{{ route('agency.privacy') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Privacy Policy</a></li>
                         <li><a href="{{ route('agency.terms') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Terms &amp; Conditions</a></li>
                         <li><a href="{{ route('agency.refund') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Refund Policy</a></li>
-                        <li><a href="{{ route('agency.contact') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                     </ul>
                 </div>
 

@@ -141,7 +141,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Primary CTA Button Text</label>
-                        <input type="text" name="cta_text" value="{{ old('cta_text', $agency->cta_text ?? 'View Products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                        <input type="text" name="cta_text" value="{{ old('cta_text', (!empty($agency->cta_text) && $agency->cta_text !== 'Start Free Today') ? $agency->cta_text : 'Get Started Now') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Primary CTA Button URL</label>
@@ -466,11 +466,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button Text</label>
-                    <input type="text" name="cta_button_text" value="{{ old('cta_button_text', $agency->cta_button_text ?? 'Get Started Free') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    <input type="text" name="cta_button_text" value="{{ old('cta_button_text', (!empty($agency->cta_button_text) && $agency->cta_button_text !== 'Get Started Free' && $agency->cta_button_text !== 'Enquire Us') ? $agency->cta_button_text : 'View Products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button URL</label>
-                    <input type="text" name="cta_button_url" value="{{ old('cta_button_url', $agency->cta_button_url ?? $agency->cta_url ?? 'https://wa.me/916374913298?text=I%20am%20interested%20on%20that%20business') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    <input type="text" name="cta_button_url" value="{{ old('cta_button_url', (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me') && $agency->cta_button_url !== '#contact') ? $agency->cta_button_url : '#products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                 </div>
             </div>
         </div>
