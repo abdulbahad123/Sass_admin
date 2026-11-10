@@ -1119,7 +1119,7 @@
 
                 // Dynamic Link Resolution
                 if ($isEcom) {
-                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecom.saasreselling.in';
+                    $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('ecombuilder') : 'https://ecombuilder.saasreselling.in';
                 } elseif ($isWeb) {
                     $prodLink = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.saasreselling.in';
                 } else {
@@ -1376,7 +1376,7 @@
                     {{-- CTA Button: Dynamically links to the product landing page --}}
                     @php
                         if ($isEcomPlan) {
-                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('launchshop') : 'https://ecombuilder.' . preg_replace('/^(www|app|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
+                            $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('ecombuilder') : 'https://ecombuilder.' . preg_replace('/^(www|app|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
                         } elseif ($isWebPlan) {
                             $planLandingUrl = isset($agency) ? $agency->getProductSubdomainUrl('websitebuilder') : 'https://websitebuilder.' . preg_replace('/^(www|app|checkout|launchshop|websitebuilder|website-builder|whatsappbulk)\./i', '', request()->getHost());
                         } elseif ($isWaPlan) {
@@ -1388,6 +1388,9 @@
                         // Strictly bypass /login and user dashboard; open product landing page or dedicated pricing dynamically
                         $defaultPlanPricingUrl = rtrim($planLandingUrl, '/') . '/#pricing';
                         $activeCtaUrl = (!empty($plan['cta_url']) && $plan['cta_url'] !== '/login' && !str_contains($plan['cta_url'], 'dashboard') && !str_contains($plan['cta_url'], 'wa.me')) ? $plan['cta_url'] : $defaultPlanPricingUrl;
+                        if ($isEcomPlan && !empty($activeCtaUrl)) {
+                            $activeCtaUrl = str_ireplace(['launchshop.', 'ecom.'], 'ecombuilder.', $activeCtaUrl);
+                        }
                     @endphp
                     <div>
                         <a href="{{ $activeCtaUrl }}" target="_blank"

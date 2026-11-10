@@ -631,7 +631,7 @@ class Agency extends Model
                 ],
                 'cta_text'      => 'View More Plans &rarr;',
                 'cta_subnote'   => '⚡ Instant Activation • Zero Setup Fees',
-                'cta_url'       => rtrim($this->getProductSubdomainUrl('launchshop'), '/') . '/#pricing',
+                'cta_url'       => rtrim($this->getProductSubdomainUrl('ecombuilder'), '/') . '/#pricing',
             ],
             [
                 'plan_name'     => 'Web builder Basic Plan',

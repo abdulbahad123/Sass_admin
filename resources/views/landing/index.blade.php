@@ -57,11 +57,14 @@
 
     <!-- Custom CSS matching Nooryak branding -->
     <style>
-        body {
+        html, body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f8fafc;
             color: #1e293b;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            width: 100% !important;
+            position: relative;
         }
         .font-space, .font-heading, h1, h2, h3, h4, h5, h6 {
             font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -238,7 +241,7 @@
                                 
                                 <div class="grid grid-cols-2 gap-2">
                                     <!-- Product 1: Ecom Builder -->
-                                    <a href="https://launchshop.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p1">
+                                    <a href="https://ecombuilder.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p1">
                                         <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-shopping-cart"></i>
                                         </div>
@@ -979,8 +982,8 @@
                     </div>
 
                     <div>
-                        <a href="https://launchshop.saasreselling.com" target="_blank" class="btn-gradient w-full py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
-                            <span>Explore Launchshop</span>
+                        <a href="https://ecombuilder.saasreselling.com" target="_blank" class="btn-gradient w-full py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                            <span>Explore Ecom Builder</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
                         <!-- Task 2: Highlighted Orange Gradient Trust Label (Increased Font Size) -->
@@ -1895,7 +1898,7 @@
         <div class="w-full relative">
             <img src="{{ asset('images/saasreselling_footer_background.png') }}" 
                  alt="SaaSReselling All-In-One White Label SaaS Ecosystem" 
-                 class="w-full h-auto block"
+                 class="w-full max-w-full h-auto block"
                  loading="lazy">
             
             {{-- Very subtle bottom edge fade (Only 20px so saasreselling.com & badges remain 100% visible) --}}
@@ -2141,8 +2144,8 @@
                     </ul>
                 </div>
 
-                <!-- Col 5: Ready to Launch Whitelabel Graphic (Task 2: Beside Policies with Zoom In/Out Animation & Transparent Background) -->
-                <div class="col-span-2 sm:col-span-2 lg:col-span-3 flex flex-col items-center lg:items-end justify-center pt-2 lg:pt-0">
+                <!-- Col 5: Ready to Launch Whitelabel Graphic (Task 1: Desktop Only - Hidden on Mobile) -->
+                <div class="hidden lg:flex col-span-2 sm:col-span-2 lg:col-span-3 flex-col items-center lg:items-end justify-center pt-2 lg:pt-0">
                     <a href="#pricing" class="whitelabel-launch-wrapper relative inline-block group" title="Ready to Launch Your White-Label Platform">
                         <img src="{{ asset('images/ready_to_launch_whitelabel.png') }}" 
                              alt="Ready to Launch White-Label SaaS Platform" 
