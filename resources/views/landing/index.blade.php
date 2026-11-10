@@ -1890,16 +1890,16 @@
         </div>
     </section>
 
-    <!-- SECTION 10.5: ECOSYSTEM SHOWCASE (Task 1: Full-Width with bottom overlay merge into Ready to Launch) -->
+    <!-- SECTION 10.5: ECOSYSTEM SHOWCASE (Task 1: Full-Width edge-to-edge without hiding bottom podium/text) -->
     <section class="w-full relative overflow-hidden bg-[#060A17] p-0 m-0 -mb-px">
         <div class="w-full relative">
             <img src="{{ asset('images/saasreselling_footer_background.png') }}" 
                  alt="SaaSReselling All-In-One White Label SaaS Ecosystem" 
-                 class="w-full h-auto block object-cover max-h-[820px] xl:max-h-[920px] object-top"
+                 class="w-full h-auto block"
                  loading="lazy">
             
-            {{-- Bottom Gradient Fade Overlay (Smoothly dissolves the image directly into Section 11) --}}
-            <div class="absolute inset-x-0 bottom-0 h-40 sm:h-60 md:h-80 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-transparent pointer-events-none z-10"></div>
+            {{-- Very subtle bottom edge fade (Only 20px so saasreselling.com & badges remain 100% visible) --}}
+            <div class="absolute inset-x-0 bottom-0 h-4 sm:h-6 bg-gradient-to-t from-[#020617] to-transparent pointer-events-none z-10"></div>
         </div>
     </section>
 
@@ -2141,12 +2141,12 @@
                     </ul>
                 </div>
 
-                <!-- Col 5: Ready to Launch Whitelabel Graphic (Task 2: Beside Policies with Zoom In/Out Animation) -->
-                <div class="col-span-2 sm:col-span-2 lg:col-span-3 flex flex-col items-center lg:items-end justify-center pt-4 lg:pt-0">
+                <!-- Col 5: Ready to Launch Whitelabel Graphic (Task 2: Beside Policies with Zoom In/Out Animation & Transparent Background) -->
+                <div class="col-span-2 sm:col-span-2 lg:col-span-3 flex flex-col items-center lg:items-end justify-center pt-2 lg:pt-0">
                     <a href="#pricing" class="whitelabel-launch-wrapper relative inline-block group" title="Ready to Launch Your White-Label Platform">
                         <img src="{{ asset('images/ready_to_launch_whitelabel.png') }}" 
                              alt="Ready to Launch White-Label SaaS Platform" 
-                             class="whitelabel-launch-img w-full max-w-[190px] sm:max-w-[210px] lg:max-w-[230px] h-auto object-contain rounded-2xl shadow-2xl shadow-orange-500/20 border border-slate-700/60"
+                             class="whitelabel-launch-img w-full max-w-[200px] sm:max-w-[230px] lg:max-w-[260px] h-auto object-contain block"
                              loading="lazy">
                     </a>
                 </div>
