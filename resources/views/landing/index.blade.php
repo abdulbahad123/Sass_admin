@@ -241,7 +241,7 @@
                                 
                                 <div class="grid grid-cols-2 gap-2">
                                     <!-- Product 1: Ecom Builder -->
-                                    <a href="https://ecombuilder.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p1">
+                                    <a href="https://ecombuilder.saasreselling.in" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p1">
                                         <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-shopping-cart"></i>
                                         </div>
@@ -251,7 +251,7 @@
                                         </div>
                                     </a>
                                     <!-- Product 2: Website Builder -->
-                                    <a href="https://websitebuilder.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p2">
+                                    <a href="https://websitebuilder.saasreselling.in" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all group/p2">
                                         <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fas fa-globe"></i>
                                         </div>
@@ -261,7 +261,7 @@
                                         </div>
                                     </a>
                                     <!-- Product 3: WhatsApp Automation -->
-                                    <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all col-span-2 group/p3">
+                                    <a href="https://whatsappbulk.saasreselling.in" target="_blank" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-800/90 border border-transparent hover:border-slate-700/60 transition-all col-span-2 group/p3">
                                         <div class="w-8 h-8 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <i class="fab fa-whatsapp"></i>
                                         </div>
@@ -982,7 +982,7 @@
                     </div>
 
                     <div>
-                        <a href="https://ecombuilder.saasreselling.com" target="_blank" class="btn-gradient w-full py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                        <a href="https://ecombuilder.saasreselling.in" target="_blank" class="btn-gradient w-full py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-orange-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                             <span>Explore Ecom Builder</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
@@ -1046,7 +1046,7 @@
                     </div>
 
                     <div>
-                        <a href="https://websitebuilder.saasreselling.com" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                        <a href="https://websitebuilder.saasreselling.in" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                             <span>Explore Website Builder</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
@@ -1112,7 +1112,7 @@
                     </div>
 
                     <div>
-                        <a href="https://whatsappbulk.saasreselling.com" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
+                        <a href="https://whatsappbulk.saasreselling.in" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 py-3.5 sm:py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm text-white text-center shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                             <span>Explore Whatsappbulk</span>
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
