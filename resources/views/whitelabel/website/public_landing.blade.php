@@ -248,12 +248,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- Strict Light Mode Initialization: Defaults to light mode for all new visitors --}}
+    {{-- Strict Light Mode Initialization (Task 4: Dark Mode Removed) --}}
     <script>
+        document.documentElement.classList.remove('dark');
         if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+            localStorage.removeItem('theme');
         }
     </script>
 
@@ -717,6 +716,20 @@
             }
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Task 3: How It Works Connected Timeline Responsive Controls */
+        @media (max-width: 900px) {
+            .hiw-desktop-timeline { display: none !important; }
+            .hiw-mobile-timeline { display: block !important; }
+        }
+        @media (min-width: 901px) {
+            .hiw-desktop-timeline { display: block !important; }
+            .hiw-mobile-timeline { display: none !important; }
+        }
+
         @media (min-width: 641px) and (max-width: 1024px) {
             .footer-grid {
                 grid-template-columns: 1fr 1fr !important;
@@ -755,13 +768,9 @@
             @endforeach
         </nav>
 
-        {{-- Desktop Header CTAs --}}
+        {{-- Desktop Header CTAs (Task 4: Removed Dark Mode button, Enquire redirects to #contact) --}}
         <div class="desktop-ctas" style="display:none;align-items:center;gap:14px">
-            <button onclick="toggleTheme()" style="width:40px;height:40px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
-                <i data-lucide="moon" id="moonIcon" style="width:17px;height:17px"></i>
-                <i data-lucide="sun" id="sunIcon" style="width:17px;height:17px;color:#fbbf24;display:none;"></i>
-            </button>
-            <a href="https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services" target="_blank" class="btn-brand" style="border-radius:12px;padding:12px 24px;font-size:14px;font-weight:800;display:inline-flex;align-items:center;gap:8px;">
+            <a href="#contact" class="btn-brand" style="border-radius:12px;padding:12px 24px;font-size:14px;font-weight:800;display:inline-flex;align-items:center;gap:8px;text-decoration:none;">
                 <span>Enquire</span>
                 <i data-lucide="message-circle" style="width:16px;height:16px"></i>
             </a>
@@ -786,7 +795,7 @@
             @endforeach
         </div>
         <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px">
-            <a href="https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services" target="_blank" class="btn-brand" style="text-align:center;padding:14px;border-radius:12px;font-weight:800">
+            <a href="#contact" onclick="toggleMobileMenu()" class="btn-brand" style="text-align:center;padding:14px;border-radius:12px;font-weight:800;text-decoration:none;">
                 Enquire Now
             </a>
         </div>
@@ -875,8 +884,8 @@
                         'float2' => ['title' => 'Growth Ready', 'subtitle' => 'Scale instantly',   'icon' => 'trending-up'],
                     ];
                 @endphp
-                {{-- Floating Element 1: AI Powered --}}
-                <div class="hero-float-badge" style="position:absolute; top:20px; right:-25px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
+                {{-- Floating Element 1: AI Powered (Task 1: Positioned above the hero banner right side image so products behind are not hidden) --}}
+                <div class="hero-float-badge" style="position:absolute; top:-28px; right:20px; z-index:10; background:rgba(30, 41, 59, 0.92); backdrop-filter:blur(8px); border-radius:16px; padding:14px 20px; box-shadow:0 12px 32px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:12px; animation: floatAnim 4s ease-in-out infinite;">
                     <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #7c3aed, #4f46e5); display:flex; align-items:center; justify-content:center;">
                         <i data-lucide="{{ $heroFloating['float1']['icon'] ?? 'sparkles' }}" style="width:18px; height:18px; color:#fff;"></i>
                     </div>
@@ -1427,89 +1436,127 @@ function switchPricingCycle(cycle) {
 </script>
 
 
-{{-- ══ SECTION 6: HOW IT WORKS (Enhanced Attractive UI/UX) ═════════════════ --}}
-<section id="how-it-works" style="background: linear-gradient(180deg, #f8faff 0%, #edf1ff 100%); padding: 48px 0 84px; overflow: visible; position: relative;">
+{{-- ══ SECTION 6: HOW IT WORKS (Task 3: Connected 4-Step Product Timeline) ════ --}}
+<section id="how-it-works" style="background: #ffffff; padding: 68px 0 92px; overflow: visible; position: relative; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px">
         
         {{-- Section Title & Badge --}}
-        <div style="text-align: center; margin-bottom: 40px">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.1)); color: #4f46e5; border: 1.5px solid rgba(79,70,229,0.22); font-size: 12px; font-weight: 900; padding: 7px 22px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em;">
-                <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #4f46e5;"></i>
-                <span>SIMPLE 3-STEP PROCESS</span>
+        <div style="text-align: center; margin-bottom: 56px">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: #fff7ed; color: #ff5500; border: 1.5px solid #fed7aa; font-size: 11.5px; font-weight: 900; padding: 6px 22px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; box-shadow: 0 2px 8px rgba(255,85,0,0.08);">
+                <i data-lucide="sparkles" style="width: 13px; height: 13px; color: #ff5500;"></i>
+                <span>HOW IT WORKS</span>
             </div>
             <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 3.8vw, 3rem); font-weight: 900; color: #0f172a; margin-bottom: 12px; letter-spacing: -0.5px;">
-                {{ $agency->how_it_works_title ?? 'How It Works?' }}
+                {{ !empty($agency->how_it_works_title) && $agency->how_it_works_title !== 'How It Works?' ? $agency->how_it_works_title : 'How It Works' }}
             </h2>
-            <p style="font-size: 16px; color: #64748b; font-weight: 500; max-width: 600px; margin: 0 auto; line-height: 1.7;">
-                {{ $agency->how_it_works_subtitle ?? 'Get started in 3 simple steps and transform your business today.' }}
+            <p style="font-size: 15.5px; color: #64748b; font-weight: 500; max-width: 620px; margin: 0 auto; line-height: 1.7;">
+                {{ !empty($agency->how_it_works_subtitle) && $agency->how_it_works_subtitle !== 'Get started in 3 simple steps and transform your business today.' ? $agency->how_it_works_subtitle : 'Launch your online store, build custom websites, and automate WhatsApp marketing in 4 simple steps.' }}
             </p>
         </div>
 
-        {{-- 3 Step Cards with Curved Connecting Arrows --}}
-        <div style="display: flex; align-items: stretch; gap: 0; position: relative;" class="steps-row">
-            @php
-                $stepThemes = [
-                    0 => [
-                        'grad'   => 'linear-gradient(135deg,#7c3aed,#4f46e5)',
-                        'iconBg' => '#ede9fe',
-                        'clr'    => '#7c3aed',
-                        'shadow' => 'rgba(124,58,237,.28)',
-                        'border' => '#ddd6fe',
-                        'cardBg' => '#ffffff',
-                    ],
-                    1 => [
-                        'grad'   => 'linear-gradient(135deg,#2563eb,#0284c7)',
-                        'iconBg' => '#dbeafe',
-                        'clr'    => '#2563eb',
-                        'shadow' => 'rgba(37,99,235,.28)',
-                        'border' => '#bfdbfe',
-                        'cardBg' => '#ffffff',
-                    ],
-                    2 => [
-                        'grad'   => 'linear-gradient(135deg,#10b981,#059669)',
-                        'iconBg' => '#d1fae5',
-                        'clr'    => '#059669',
-                        'shadow' => 'rgba(16,185,129,.28)',
-                        'border' => '#a7f3d0',
-                        'cardBg' => '#ffffff',
-                    ],
-                ];
-            @endphp
+        @php
+            // Task 3: 4 Matching Product Steps (Website Builder, Ecombuilder, WhatsApp Bulk Marketing)
+            $defaultProductSteps = [
+                [
+                    'num'   => '01',
+                    'title' => 'Choose Your Product',
+                    'desc'  => 'Select from Website Builder, E-Commerce Store, or WhatsApp Bulk Marketing to fit your business.',
+                    'icon'  => 'mouse-pointer',
+                ],
+                [
+                    'num'   => '02',
+                    'title' => 'Quick Setup & Customize',
+                    'desc'  => 'Pick ready templates, upload your products or branding, and configure settings in minutes.',
+                    'icon'  => 'edit-3',
+                ],
+                [
+                    'num'   => '03',
+                    'title' => 'Launch & Automate',
+                    'desc'  => 'Publish your website or store live and connect WhatsApp to automate customer orders and campaigns.',
+                    'icon'  => 'send',
+                ],
+                [
+                    'num'   => '04',
+                    'title' => 'Scale & Grow Your Sales',
+                    'desc'  => 'Accept online payments, broadcast promotional messages, track analytics, and grow revenue on autopilot.',
+                    'icon'  => 'trending-up',
+                ],
+            ];
 
-            @foreach($hiwSteps as $hIdx => $hStep)
-            @php $st = $stepThemes[$hIdx % 3]; @endphp
-            <div class="step-card-2" style="flex: 1; background: {{ $st['cardBg'] }}; border: 1.5px solid {{ $st['border'] }}; border-radius: 26px; padding: 48px 30px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; position: relative; z-index: 1; box-shadow: 0 10px 36px rgba(79,70,229,0.06); transition: all .28s cubic-bezier(0.16,1,0.3,1);"
-                 onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 22px 50px -10px ' + '{{ $st['shadow'] }}';this.style.borderColor='{{ $st['clr'] }}'"
-                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 10px 36px rgba(79,70,229,0.06)';this.style.borderColor='{{ $st['border'] }}'">
-                
-                {{-- Floating Step Pill Badge --}}
-                <div style="position: absolute; top: -18px; left: 24px; width: 44px; height: 44px; border-radius: 14px; background: {{ $st['grad'] }}; color: #fff; font-weight: 900; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px {{ $st['shadow'] }}; border: 2.5px solid #fff; letter-spacing: .5px;">
-                    {{ $hStep['num'] ?? sprintf('%02d', $hIdx + 1) }}
+            $activeSteps = (is_array($hiwSteps) && count($hiwSteps) === 4) ? $hiwSteps : $defaultProductSteps;
+        @endphp
+
+        {{-- Desktop Horizontal Connected Timeline (>= 901px) --}}
+        <div class="hiw-desktop-timeline" style="position: relative; max-width: 1120px; margin: 0 auto;">
+            {{-- Continuous Horizontal Dashed Orange Line --}}
+            <div style="position: absolute; top: 40px; left: 12%; right: 12%; border-top: 2.5px dashed #ff5500; z-index: 1; opacity: 0.85; pointer-events: none;"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 2;">
+                @foreach($activeSteps as $sIdx => $sItem)
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 14px; position: relative;" class="hiw-step-col">
+                    
+                    {{-- Central Orange Circle (80px, ring mask over dashed line) --}}
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #ff4d00, #ff7a18); display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 12px 30px -4px rgba(255, 77, 0, 0.45); border: 6px solid #ffffff; z-index: 3; transition: transform 0.28s ease, box-shadow 0.28s ease; flex-shrink: 0;"
+                         onmouseover="this.style.transform='scale(1.1) translateY(-4px)'; this.style.boxShadow='0 18px 36px -4px rgba(255, 77, 0, 0.55)'"
+                         onmouseout="this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 12px 30px -4px rgba(255, 77, 0, 0.45)'">
+                        <i data-lucide="{{ $sItem['icon'] ?? 'check' }}" style="width: 30px; height: 30px; color: #ffffff; stroke-width: 2.3;"></i>
+                    </div>
+
+                    {{-- Step Label (Orange uppercase) --}}
+                    <span style="font-size: 11.5px; font-weight: 900; color: #ff5500; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 18px; margin-bottom: 6px; display: block;">
+                        STEP {{ $sItem['num'] ?? sprintf('%02d', $sIdx + 1) }}
+                    </span>
+
+                    {{-- Step Title --}}
+                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 17.5px; font-weight: 800; color: #0f172a; margin: 0 0 8px 0; line-height: 1.35;">
+                        {{ $sItem['title'] ?? '' }}
+                    </h3>
+
+                    {{-- Step Description --}}
+                    <p style="font-size: 13.5px; color: #64748b; line-height: 1.6; margin: 0; font-weight: 500; max-width: 220px;">
+                        {{ $sItem['desc'] ?? '' }}
+                    </p>
+
                 </div>
 
-                {{-- Central Icon --}}
-                <div style="width: 72px; height: 72px; border-radius: 22px; background: {{ $st['iconBg'] }}; display: flex; align-items: center; justify-content: center; margin-top: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
-                    <i data-lucide="{{ $hStep['icon'] ?? 'layout-grid' }}" style="width: 32px; height: 32px; color: {{ $st['clr'] }};"></i>
+                {{-- Centered Arrow Badge on the Line Between Steps --}}
+                @if(!$loop->last)
+                <div style="position: absolute; top: 40px; transform: translate(-50%, -50%); width: 26px; height: 26px; border-radius: 50%; background: #ffffff; border: 1.5px solid #fed7aa; color: #ff5500; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); z-index: 4; left: calc({{ ($sIdx + 1) * 25 }}%);" class="hiw-arrow-badge">
+                    <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: #ff5500; stroke-width: 3;"></i>
                 </div>
-
-                <h3 style="font-size: 18px; font-weight: 900; color: #0f172a; margin: 0; line-height: 1.3;">
-                    {{ $hStep['title'] }}
-                </h3>
-
-                <p style="font-size: 14px; color: #64748b; line-height: 1.7; margin: 0; font-weight: 500;">
-                    {{ $hStep['desc'] }}
-                </p>
+                @endif
+                @endforeach
             </div>
+        </div>
 
-            @if(!$loop->last)
-            <div class="hiw-connector" style="width: 70px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; position: relative; z-index: 0;">
-                <svg width="70" height="24" viewBox="0 0 70 24" fill="none">
-                    <path d="M 4 12 Q 35 2 66 12" stroke="#a5b4fc" stroke-width="2.5" stroke-dasharray="6 5" fill="none" stroke-linecap="round"/>
-                    <path d="M 60 7 L 66 12 L 60 17" stroke="#a5b4fc" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+        {{-- Mobile Vertical Connected Timeline (< 901px) --}}
+        <div class="hiw-mobile-timeline" style="display: none; position: relative; max-width: 480px; margin: 0 auto; padding-left: 8px;">
+            {{-- Vertical Dashed Orange Line --}}
+            <div style="position: absolute; top: 32px; bottom: 40px; left: 38px; border-left: 2.5px dashed #ff5500; z-index: 1; opacity: 0.85;"></div>
+
+            <div style="display: flex; flex-direction: column; gap: 32px; position: relative; z-index: 2;">
+                @foreach($activeSteps as $sIdx => $sItem)
+                <div style="display: flex; align-items: flex-start; gap: 18px;">
+                    {{-- Circle --}}
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ff4d00, #ff7a18); display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 8px 20px -3px rgba(255, 77, 0, 0.4); border: 4px solid #ffffff; flex-shrink: 0;">
+                        <i data-lucide="{{ $sItem['icon'] ?? 'check' }}" style="width: 24px; height: 24px; color: #ffffff; stroke-width: 2.3;"></i>
+                    </div>
+
+                    {{-- Text Content --}}
+                    <div style="flex: 1; padding-top: 4px;">
+                        <span style="display: inline-block; font-size: 10px; font-weight: 900; color: #ff5500; background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">
+                            STEP {{ $sItem['num'] ?? sprintf('%02d', $sIdx + 1) }}
+                        </span>
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 16.5px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; line-height: 1.3;">
+                            {{ $sItem['title'] ?? '' }}
+                        </h3>
+                        <p style="font-size: 13px; color: #64748b; line-height: 1.6; margin: 0; font-weight: 500;">
+                            {{ $sItem['desc'] ?? '' }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach
             </div>
-            @endif
-            @endforeach
         </div>
 
     </div>
@@ -1819,9 +1866,9 @@ function switchPricingCycle(cycle) {
                      onerror="this.onerror=null; this.src='{{ asset('assets/landing_page/footer_card.png') }}';">
             </div>
 
-            {{-- Right Button --}}
+            {{-- Right Button (Task 4: Enquire Us redirects to #contact) --}}
             <div style="position:relative; z-index:2; flex-shrink:0;">
-                <a href="{{ !empty($agency->cta_button_url) ? $agency->cta_button_url : (!empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=I%20am%20ready%20to%20grow%20my%20business') }}"
+                <a href="{{ (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me')) ? $agency->cta_button_url : '#contact' }}"
                    style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
@@ -1839,7 +1886,7 @@ function switchPricingCycle(cycle) {
 <footer class="site-footer" style="background:#0f172a; padding:60px 0 36px">
     <div style="max-width:1240px;margin:0 auto;padding:0 24px">
 
-        <div style="display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:36px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
+        <div style="display:grid;grid-template-columns:220px 1fr 1fr 1.2fr 1fr;gap:32px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
 
             {{-- Col 1: Brand Info & Socials --}}
             <div style="display:flex;flex-direction:column;gap:16px">
@@ -1883,13 +1930,20 @@ function switchPricingCycle(cycle) {
                 </div>
             </div>
 
-            {{-- Col 2: Quick Links (Screenshot 5 Match) --}}
+            {{-- Col 2: Quick Links (Home, Products, Pricing) --}}
             <div style="display:flex;flex-direction:column;gap:14px">
                 <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Quick Links</h4>
                 <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                     <li><a href="/" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
                     <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
                     <li><a href="#pricing" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Pricing Plans</a></li>
+                </ul>
+            </div>
+
+            {{-- Col 3: Company (Task 2: Beside Quick Links: About Us, Contact Us, Reviews, FAQ) --}}
+            <div style="display:flex;flex-direction:column;gap:14px">
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Company</h4>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                     <li><a href="#about-section" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
                     <li><a href="#contact" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                     <li><a href="#testimonials" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>
@@ -1897,9 +1951,9 @@ function switchPricingCycle(cycle) {
                 </ul>
             </div>
 
-            {{-- Col 3: Our Products (Screenshot 5 Match) --}}
+            {{-- Col 4: Our Digital Products (Task 2: Renamed to Our Digital Products) --}}
             <div style="display:flex;flex-direction:column;gap:14px">
-                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Our Products</h4>
+                <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Our Digital Products</h4>
                 <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                     <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Ecombuilder</a></li>
                     <li><a href="#products" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Website Builder</a></li>
@@ -1907,7 +1961,7 @@ function switchPricingCycle(cycle) {
                 </ul>
             </div>
 
-            {{-- Col 4: Policies / Legal (policy.md Column) --}}
+            {{-- Col 5: Policies / Legal (policy.md Column) --}}
             <div style="display:flex;flex-direction:column;gap:14px">
                 <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Policies</h4>
                 <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">

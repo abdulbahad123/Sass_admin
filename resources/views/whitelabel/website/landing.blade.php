@@ -21,13 +21,18 @@
             ['title' => 'Reliable & Secure',   'desc' => 'Your business data is safe with enterprise-grade security.',     'icon' => 'shield-check'],
         ]);
 
-    $hiwSteps = is_array($agency->how_it_works_steps ?? null)
+    $hiwStepsRaw = is_array($agency->how_it_works_steps ?? null)
         ? $agency->how_it_works_steps
-        : (json_decode($agency->how_it_works_steps ?? '[]', true) ?: [
-            ['num' => '01', 'title' => 'Sign Up',              'desc' => 'Create your account in less than 2 minutes.',               'icon' => 'user-plus'],
-            ['num' => '02', 'title' => 'Set Up Your Business', 'desc' => 'Choose the tools you need and customize in minutes.',      'icon' => 'monitor'],
-            ['num' => '03', 'title' => 'Grow Faster',          'desc' => 'Get more customers, more reviews and more revenue.',         'icon' => 'bar-chart-2'],
-        ]);
+        : json_decode($agency->how_it_works_steps ?? '[]', true);
+
+    $hiwSteps = (!empty($hiwStepsRaw) && count($hiwStepsRaw) === 4)
+        ? $hiwStepsRaw
+        : [
+            ['num' => '01', 'title' => 'Choose Your Product',     'desc' => 'Select from Website Builder, E-Commerce Store, or WhatsApp Bulk Marketing to fit your business.', 'icon' => 'mouse-pointer'],
+            ['num' => '02', 'title' => 'Quick Setup & Customize', 'desc' => 'Pick ready templates, upload your products or branding, and configure settings in minutes.',            'icon' => 'edit-3'],
+            ['num' => '03', 'title' => 'Launch & Automate',        'desc' => 'Publish your website or store live and connect WhatsApp to automate customer orders and campaigns.',       'icon' => 'send'],
+            ['num' => '04', 'title' => 'Scale & Grow Your Sales',  'desc' => 'Accept online payments, broadcast promotional messages, track analytics, and grow revenue on autopilot.', 'icon' => 'trending-up'],
+        ];
 
     $ctaCheckmarksRaw = is_array($agency->cta_features_data ?? null)
         ? implode(', ', $agency->cta_features_data)
@@ -407,20 +412,20 @@
                     <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i>
                     <span>How It Works Section</span>
                 </span>
-                <span class="text-[11px] text-slate-400 font-normal">Controls the 3-step setup guide</span>
+                <span class="text-[11px] text-slate-400 font-normal">Controls the 4-step setup guide</span>
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Section Title</label>
-                    <input type="text" name="how_it_works_title" value="{{ old('how_it_works_title', $agency->how_it_works_title ?? 'How It Works?') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    <input type="text" name="how_it_works_title" value="{{ old('how_it_works_title', $agency->how_it_works_title ?? 'How It Works') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Section Subtitle</label>
-                    <input type="text" name="how_it_works_subtitle" value="{{ old('how_it_works_subtitle', $agency->how_it_works_subtitle ?? 'Get started in 3 simple steps and transform your business today.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
+                    <input type="text" name="how_it_works_subtitle" value="{{ old('how_it_works_subtitle', $agency->how_it_works_subtitle ?? 'Launch your online store, build custom websites, and automate WhatsApp marketing in 4 simple steps.') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs">
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
                 @foreach($hiwSteps as $hi => $step)
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
                     <div class="flex items-center justify-between">

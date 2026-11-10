@@ -363,23 +363,15 @@
                 <a href="{{ url('/') }}#faq" style="font-size:13px;font-weight:700;color:#475569;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">FAQ</a>
             </nav>
 
-            {{-- Desktop CTAs (Includes Light/Dark Mode Switcher) --}}
+            {{-- Desktop CTAs (Task 4: Dark Mode Button Removed, Enquire redirects to #contact) --}}
             <div class="hidden sm:flex items-center space-x-3">
-                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn" style="width:40px;height:40px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;flex-shrink:0;" title="Toggle Dark Mode">
-                    <i class="fas fa-moon" id="moonIcon" style="font-size:15px"></i>
-                    <i class="fas fa-sun" id="sunIcon" style="font-size:15px;color:#fbbf24;display:none;"></i>
-                </button>
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services' }}" class="text-white text-xs font-extrabold px-6 py-2.5 rounded-full shadow-lg transition-all" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
+                <a href="{{ url('/') }}#contact" class="text-white text-xs font-extrabold px-6 py-2.5 rounded-full shadow-lg transition-all" style="background:linear-gradient(135deg,#7c3aed,#ea580c);text-decoration:none;">
                     {{ !empty($agency->cta_text) && $agency->cta_text !== 'Start Free Today' ? $agency->cta_text : 'Enquire' }}
                 </a>
             </div>
 
-            {{-- Mobile Actions: Toggle + Hamburger --}}
+            {{-- Mobile Actions: Hamburger --}}
             <div class="flex items-center space-x-2 sm:hidden">
-                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn-mobile" style="width:36px;height:36px;border-radius:50%;border:1.5px solid #e2e8f0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569;transition:all .2s;" title="Toggle Dark Mode">
-                    <i class="fas fa-moon moonIconMobile" style="font-size:14px"></i>
-                    <i class="fas fa-sun sunIconMobile" style="font-size:14px;color:#fbbf24;display:none;"></i>
-                </button>
                 <button id="mobileMenuBtn" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 focus:outline-none">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
@@ -397,18 +389,9 @@
             <a href="{{ url('/') }}#contact" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Contact Us</a>
             <a href="{{ url('/') }}#testimonials" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">Reviews</a>
             <a href="{{ url('/') }}#faq" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQ</a>
-            
-            <div class="pt-2 border-t border-slate-100">
-                <button type="button" onclick="toggleTheme()" class="flex items-center justify-between w-full px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
-                    <span>Appearance</span>
-                    <span class="flex items-center gap-2 text-xs font-bold text-slate-500">
-                        <i class="fas fa-moon"></i> / <i class="fas fa-sun text-amber-500"></i> Switch Theme
-                    </span>
-                </button>
-            </div>
 
             <div class="pt-2 border-t border-slate-100 space-y-2">
-                <a href="{{ !empty($agency->cta_url) ? $agency->cta_url : 'https://wa.me/916374913298?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20services' }}" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,#7c3aed,#ea580c);">
+                <a href="{{ url('/') }}#contact" class="block w-full text-center text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md" style="background:linear-gradient(135deg,#7c3aed,#ea580c);text-decoration:none;">
                     {{ !empty($agency->cta_text) && $agency->cta_text !== 'Start Free Today' ? $agency->cta_text : 'Enquire' }}
                 </a>
             </div>
@@ -851,7 +834,7 @@
     @endphp
         <footer class="site-footer" style="background:#020617;border-top:1px solid #1e293b;padding:56px 0 28px;margin-top:auto">
         <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-            <div style="display:grid;grid-template-columns:260px 1fr 1fr 1fr;gap:36px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
+            <div style="display:grid;grid-template-columns:220px 1fr 1fr 1.2fr 1fr;gap:32px;padding-bottom:44px;border-bottom:1px solid #1e293b" class="footer-grid">
 
                 {{-- Col 1: Brand Info & Socials --}}
                 <div style="display:flex;flex-direction:column;gap:16px">
@@ -881,12 +864,20 @@
                     </div>
                 </div>
 
-                {{-- Col 2: Quick Links (Screenshot 5 Match) --}}
+                {{-- Col 2: Quick Links (Home, Products, Pricing Plans) --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
                     <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Quick Links</h4>
                     <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                         <li><a href="{{ url('/') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Home</a></li>
                         <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Products</a></li>
+                        <li><a href="{{ url('/#pricing') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Pricing Plans</a></li>
+                    </ul>
+                </div>
+
+                {{-- Col 3: Company (Task 2: Beside Quick Links: About Us, Contact Us, Reviews, FAQ) --}}
+                <div style="display:flex;flex-direction:column;gap:14px">
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Company</h4>
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                         <li><a href="{{ url('/#about-section') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">About Us</a></li>
                         <li><a href="{{ url('/#contact') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Contact Us</a></li>
                         <li><a href="{{ url('/#testimonials') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Reviews</a></li>
@@ -894,9 +885,9 @@
                     </ul>
                 </div>
 
-                {{-- Col 3: Our Products (Screenshot 5 Match) --}}
+                {{-- Col 4: Our Digital Products (Task 2: Renamed to Our Digital Products) --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
-                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Our Products</h4>
+                    <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Our Digital Products</h4>
                     <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
                         <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Ecombuilder</a></li>
                         <li><a href="{{ url('/#products') }}" style="font-size:12.5px;color:#94a3b8;text-decoration:none;transition:color .15s" onmouseover="this.style.color='#c7d2fe'" onmouseout="this.style.color='#94a3b8'">Website Builder</a></li>
@@ -904,7 +895,7 @@
                     </ul>
                 </div>
 
-                {{-- Col 4: Policies / Legal (policy.md Column) --}}
+                {{-- Col 5: Policies / Legal (policy.md Column) --}}
                 <div style="display:flex;flex-direction:column;gap:14px">
                     <h4 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#e2e8f0">Policies</h4>
                     <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;">
