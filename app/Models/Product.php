@@ -32,9 +32,6 @@ class Product extends Model
         $domain = rtrim($domain, '/');
         
         $rootDomain = preg_replace('/^(app|www|checkout|launchshop|ecombuilder|ecom-builder|websitebuilder|website-builder|whatsappbulk)\./i', '', $domain);
-        if ($rootDomain === 'saasreselling.com') {
-            $rootDomain = 'saasreselling.in';
-        }
         $slug = $this->slug ?? \Illuminate\Support\Str::slug($this->name);
 
         if ($slug === 'website-builder' || $slug === 'websitebuilder') {
