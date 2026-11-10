@@ -28,11 +28,15 @@
     $hiwSteps = (!empty($hiwStepsRaw) && count($hiwStepsRaw) === 4)
         ? $hiwStepsRaw
         : [
-            ['num' => '01', 'title' => 'Choose Your Product',     'desc' => 'Select from Website Builder, E-Commerce Store, or WhatsApp Bulk Marketing to fit your business.', 'icon' => 'mouse-pointer'],
+            ['num' => '01', 'title' => 'Choose Product Plan',     'desc' => 'Select from Website Builder, E-Commerce Store, or WhatsApp Bulk Marketing to fit your business.', 'icon' => 'mouse-pointer'],
             ['num' => '02', 'title' => 'Quick Setup & Customize', 'desc' => 'Pick ready templates, upload your products or branding, and configure settings in minutes.',            'icon' => 'edit-3'],
             ['num' => '03', 'title' => 'Launch & Automate',        'desc' => 'Publish your website or store live and connect WhatsApp to automate customer orders and campaigns.',       'icon' => 'send'],
             ['num' => '04', 'title' => 'Scale & Grow Your Sales',  'desc' => 'Accept online payments, broadcast promotional messages, track analytics, and grow revenue on autopilot.', 'icon' => 'trending-up'],
         ];
+
+    if (!empty($hiwSteps[0]) && ($hiwSteps[0]['title'] === 'Choose Your Product' || $hiwSteps[0]['title'] === 'Choose Your Solution')) {
+        $hiwSteps[0]['title'] = 'Choose Product Plan';
+    }
 
     $ctaCheckmarksRaw = is_array($agency->cta_features_data ?? null)
         ? implode(', ', $agency->cta_features_data)
@@ -145,7 +149,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Primary CTA Button URL</label>
-                        <input type="text" name="cta_url" value="{{ old('cta_url', $agency->cta_url ?? '#products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                        <input type="text" name="cta_url" value="{{ old('cta_url', (!empty($agency->cta_url) && !str_contains($agency->cta_url, 'login') && $agency->cta_url !== '/login' && $agency->cta_url !== '#products') ? $agency->cta_url : '#pricing') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                     </div>
                 </div>
 
@@ -470,7 +474,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">CTA Button URL</label>
-                    <input type="text" name="cta_button_url" value="{{ old('cta_button_url', (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me') && $agency->cta_button_url !== '#contact') ? $agency->cta_button_url : '#products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
+                    <input type="text" name="cta_button_url" value="{{ old('cta_button_url', (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me') && !str_contains($agency->cta_button_url, 'login') && $agency->cta_button_url !== '/login' && $agency->cta_button_url !== '#contact') ? $agency->cta_button_url : '#products') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold">
                 </div>
             </div>
         </div>

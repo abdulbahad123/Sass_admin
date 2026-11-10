@@ -1868,6 +1868,18 @@
         </div>
     </section>
 
+    <!-- SECTION 10.5: ECOSYSTEM SHOWCASE (Task 4: saasreselling_footer_background.png above Ready to Launch Your SaaS Business) -->
+    <section class="bg-[#060A17] py-6 sm:py-10 relative overflow-hidden reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 shadow-2xl shadow-orange-500/10">
+                <img src="{{ asset('images/saasreselling_footer_background.png') }}" 
+                     alt="SaaSReselling All-In-One White Label SaaS Ecosystem" 
+                     class="w-full h-auto block rounded-2xl sm:rounded-3xl hover:scale-[1.01] transition-transform duration-500"
+                     loading="lazy">
+            </div>
+        </div>
+    </section>
+
     <!-- SECTION 11: CTA BANNER (Task 1: Background image revenue_calculator.png & Task 2: Orange CTA Button) -->
     <section class="py-14 sm:py-16 text-white relative overflow-hidden reveal bg-cover bg-center" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}');">
         <!-- Dark tint backdrop overlay for readability -->
@@ -1913,7 +1925,7 @@
     </section>
 
         <!-- SECTION 11.5: CONTACT US (Task 4) -->
-    <section id="contact" class="py-16 sm:py-24 bg-gradient-to-b from-slate-50 to-indigo-50/40 dark:from-[#0B0F19] dark:to-[#0f172a] border-t border-slate-200/80 dark:border-slate-800 relative">
+    <section id="contact" class="pt-12 pb-6 sm:pt-16 sm:pb-8 bg-gradient-to-b from-slate-50 to-indigo-50/40 dark:from-[#0B0F19] dark:to-[#0f172a] border-t border-slate-200/80 dark:border-slate-800 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
                 <span class="inline-flex items-center space-x-1.5 bg-orange-100 dark:bg-orange-950/60 text-[#ff3d00] dark:text-orange-400 border border-orange-200 dark:border-orange-800 text-[11px] font-extrabold uppercase px-3 py-1 rounded-full mb-3 tracking-wider">
@@ -2030,7 +2042,7 @@
     </section>
 
     <!-- SECTION 12: FOOTER (Task 5: Mobile 2 columns per row & Dynamic active products only) -->
-    <footer class="bg-white dark:bg-[#0B0F19] text-slate-600 dark:text-slate-300 py-12 border-t border-slate-200 dark:border-slate-700/80">
+    <footer class="bg-white dark:bg-[#0B0F19] text-slate-600 dark:text-slate-300 pt-6 pb-10 sm:pt-8 sm:pb-12 border-t border-slate-200 dark:border-slate-700/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-10 border-b border-slate-200 dark:border-slate-700/80">
                 

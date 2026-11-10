@@ -858,9 +858,12 @@
                     {{ $agency->hero_subtitle ?? ($agencyName . ' helps businesses grow faster with powerful tools for marketing, sales, customer loyalty, and automation — all in one place.') }}
                 </p>
 
-                {{-- CTA Buttons (View Products -> #products, How It Works -> #how-it-works) --}}
+                {{-- CTA Buttons (Task 1: Get Started Now -> #pricing, How It Works -> #how-it-works) --}}
+                @php
+                    $heroCtaUrl = (!empty($agency->cta_url) && !str_contains($agency->cta_url, 'login') && $agency->cta_url !== '/login' && $agency->cta_url !== '#products') ? $agency->cta_url : '#pricing';
+                @endphp
                 <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-                    <a href="{{ $agency->cta_url ?? '#products' }}"
+                    <a href="{{ $heroCtaUrl }}"
                        style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary)); color:#fff; font-weight:800; font-size:14.5px; padding:15px 32px; border-radius:12px; text-decoration:none; box-shadow:0 8px 28px -6px rgba(79,70,229,.4); transition:transform .2s, box-shadow .2s; white-space:nowrap;"
                        onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 12px 36px -6px rgba(79,70,229,.5)'"
                        onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 28px -6px rgba(79,70,229,.4)'">
@@ -1486,7 +1489,7 @@ function switchPricingCycle(cycle) {
             $defaultProductSteps = [
                 [
                     'num'   => '01',
-                    'title' => 'Choose Your Product',
+                    'title' => 'Choose Product Plan',
                     'desc'  => 'Select from Website Builder, E-Commerce Store, or WhatsApp Bulk Marketing to fit your business.',
                     'icon'  => 'mouse-pointer',
                 ],
@@ -1511,6 +1514,9 @@ function switchPricingCycle(cycle) {
             ];
 
             $activeSteps = (is_array($hiwSteps) && count($hiwSteps) === 4) ? $hiwSteps : $defaultProductSteps;
+            if (!empty($activeSteps[0]) && ($activeSteps[0]['title'] === 'Choose Your Product' || $activeSteps[0]['title'] === 'Choose Your Solution')) {
+                $activeSteps[0]['title'] = 'Choose Product Plan';
+            }
         @endphp
 
         {{-- Desktop Horizontal Connected Timeline (>= 901px) --}}
@@ -1895,7 +1901,7 @@ function switchPricingCycle(cycle) {
 
             {{-- Right Button (Task 1: View Products redirects to #products) --}}
             <div style="position:relative; z-index:2; flex-shrink:0;">
-                <a href="{{ (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me') && $agency->cta_button_url !== '#contact') ? $agency->cta_button_url : '#products' }}"
+                <a href="{{ (!empty($agency->cta_button_url) && !str_contains($agency->cta_button_url, 'wa.me') && !str_contains($agency->cta_button_url, 'login') && $agency->cta_button_url !== '/login' && $agency->cta_button_url !== '#contact') ? $agency->cta_button_url : '#products' }}"
                    style="display:inline-flex; align-items:center; gap:9px; background:#fff; color:#1e1b4b; font-weight:800; font-size:14px; padding:15px 28px; border-radius:12px; text-decoration:none; box-shadow:0 6px 22px rgba(0,0,0,.18); white-space:nowrap; transition:transform .2s, box-shadow .2s"
                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.22)'"
                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 22px rgba(0,0,0,.18)'">
