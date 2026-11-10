@@ -98,6 +98,28 @@
             border: 1px solid #ffe3d1;
         }
 
+        /* Task 2: Whitelabel Launch Graphic Zoom Pulse Animation */
+        @keyframes whitelabelZoomPulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px rgba(255, 85, 0, 0.22));
+            }
+            50% {
+                transform: scale(1.08);
+                filter: drop-shadow(0 0 26px rgba(255, 85, 0, 0.5));
+            }
+        }
+        .whitelabel-launch-img {
+            animation: whitelabelZoomPulse 3.5s ease-in-out infinite;
+            transform-origin: center center;
+            will-change: transform, filter;
+            transition: transform 0.3s ease;
+        }
+        .whitelabel-launch-wrapper:hover .whitelabel-launch-img {
+            animation-play-state: paused;
+            transform: scale(1.12);
+        }
+
         /* Custom Range Slider */
         input[type=range] {
             -webkit-appearance: none;
@@ -1868,22 +1890,23 @@
         </div>
     </section>
 
-    <!-- SECTION 10.5: ECOSYSTEM SHOWCASE (Task 4: saasreselling_footer_background.png above Ready to Launch Your SaaS Business) -->
-    <section class="bg-[#060A17] py-6 sm:py-10 relative overflow-hidden reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 shadow-2xl shadow-orange-500/10">
-                <img src="{{ asset('images/saasreselling_footer_background.png') }}" 
-                     alt="SaaSReselling All-In-One White Label SaaS Ecosystem" 
-                     class="w-full h-auto block rounded-2xl sm:rounded-3xl hover:scale-[1.01] transition-transform duration-500"
-                     loading="lazy">
-            </div>
+    <!-- SECTION 10.5: ECOSYSTEM SHOWCASE (Task 1: Full-Width with bottom overlay merge into Ready to Launch) -->
+    <section class="w-full relative overflow-hidden bg-[#060A17] p-0 m-0 -mb-px">
+        <div class="w-full relative">
+            <img src="{{ asset('images/saasreselling_footer_background.png') }}" 
+                 alt="SaaSReselling All-In-One White Label SaaS Ecosystem" 
+                 class="w-full h-auto block object-cover max-h-[820px] xl:max-h-[920px] object-top"
+                 loading="lazy">
+            
+            {{-- Bottom Gradient Fade Overlay (Smoothly dissolves the image directly into Section 11) --}}
+            <div class="absolute inset-x-0 bottom-0 h-40 sm:h-60 md:h-80 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-transparent pointer-events-none z-10"></div>
         </div>
     </section>
 
-    <!-- SECTION 11: CTA BANNER (Task 1: Background image revenue_calculator.png & Task 2: Orange CTA Button) -->
-    <section class="py-14 sm:py-16 text-white relative overflow-hidden reveal bg-cover bg-center" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}');">
-        <!-- Dark tint backdrop overlay for readability -->
-        <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px]"></div>
+    <!-- SECTION 11: CTA BANNER (Ready to Launch Your SaaS Business) -->
+    <section class="pt-6 pb-14 sm:pt-8 sm:pb-16 text-white relative overflow-hidden reveal bg-[#020617] bg-cover bg-center" style="background-image: url('{{ asset('/images/revenue_calculator.png') }}');">
+        <!-- Dark tint backdrop overlay for seamless continuity -->
+        <div class="absolute inset-0 bg-[#020617]/90 backdrop-blur-[2px]"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -2108,7 +2131,7 @@
 
 
                 <!-- Col 4: Policies (Task 2 & 3: Matching saasreselling.in) -->
-                <div class="col-span-2 lg:col-span-3 space-y-3">
+                <div class="col-span-1 lg:col-span-2 space-y-3">
                     <h5 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Policies</h5>
                     <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-300">
                         <li><a href="{{ url('/privacy-policy') }}" class="hover:text-[#ff3d00] transition-colors">Privacy Policy</a></li>
@@ -2116,6 +2139,16 @@
                         <li><a href="{{ url('/refund-policy') }}" class="hover:text-[#ff3d00] transition-colors">Refund Policy</a></li>
                         <li><a href="#contact" class="hover:text-[#ff3d00] transition-colors">Contact Us</a></li>
                     </ul>
+                </div>
+
+                <!-- Col 5: Ready to Launch Whitelabel Graphic (Task 2: Beside Policies with Zoom In/Out Animation) -->
+                <div class="col-span-2 sm:col-span-2 lg:col-span-3 flex flex-col items-center lg:items-end justify-center pt-4 lg:pt-0">
+                    <a href="#pricing" class="whitelabel-launch-wrapper relative inline-block group" title="Ready to Launch Your White-Label Platform">
+                        <img src="{{ asset('images/ready_to_launch_whitelabel.png') }}" 
+                             alt="Ready to Launch White-Label SaaS Platform" 
+                             class="whitelabel-launch-img w-full max-w-[190px] sm:max-w-[210px] lg:max-w-[230px] h-auto object-contain rounded-2xl shadow-2xl shadow-orange-500/20 border border-slate-700/60"
+                             loading="lazy">
+                    </a>
                 </div>
 
             </div>
