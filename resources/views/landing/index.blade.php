@@ -2157,11 +2157,11 @@
             </div>
 
             <!-- Bottom Copyright: Clean Only (Task 1: Policies are in the 4th Column above) -->
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-center font-medium" style="color: #ffffff !important; font-size: 14.5px;">
-                <p style="color: #ffffff !important; font-size: 14.5px; font-weight: 500; margin: 0; text-align: center;">
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center text-center font-medium text-slate-600 dark:text-white text-[14.5px]">
+                <p class="text-slate-600 dark:text-white text-[14.5px] font-medium m-0 text-center">
                     &copy; copyrights saasreselling , all rights reserved
                     @if(empty($data['lp_hide_developer_attribution']))
-                        developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff !important; text-decoration: underline; font-weight: 700;">nooryak technologies</a>
+                        developed by <a href="https://nooryak.com/" target="_blank" rel="noopener noreferrer" class="text-slate-900 dark:text-white underline font-bold hover:text-[#ff3d00] dark:hover:text-orange-400 transition-colors">nooryak technologies</a>
                     @endif
                 </p>
             </div>
